@@ -237,8 +237,11 @@
       </nav>
     </div>
     <div class="sidebar__foot">
-      <div class="sidebar__avatar">🌿</div>
-      <div><div class="sidebar__name">Maya Johnson</div><div class="sidebar__stats"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>4.9 · 84 clients</div></div>
+      <div class="sidebar__foot-user">
+        <div class="sidebar__avatar">🌿</div>
+        <div><div class="sidebar__name">Maya Johnson</div><div class="sidebar__stats"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>4.9 · 84 clients</div></div>
+      </div>
+      <a href="#" class="sidebar__signout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Sign out</a>
     </div>
   </aside>
 
@@ -262,10 +265,7 @@
           Sunday, 29 Mar 2026
         </span>
         <button type="button" class="topbar__crisis">988 Helpline</button>
-        <button type="button" class="topbar__icon-btn">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
-          <span class="notif-dot"></span>
-        </button>
+        <div class="notif-wrap"><input type="checkbox" id="notif-toggle" class="notif-toggle state-input" /><label for="notif-toggle" class="topbar__icon-btn" role="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg><span class="notif-dot"></span></label><div class="notif-drop"><div class="notif-drop__head"><span class="notif-drop__title">Notifications <span style="background:var(--red);color:#fff;font-size:10px;padding:1px 6px;border-radius:var(--rf);margin-left:6px;">4</span></span><button type="button" class="notif-drop__mark">Mark all read</button></div><div class="notif-list"><div class="notif-item notif-item--unread"><div class="notif-item__icon" style="background:rgba(225,29,72,.1);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--red);"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg></div><div class="notif-item__body"><p class="notif-item__title">Welfare flag — Client A</p><p class="notif-item__meta">Low mood 3 days in a row · Review recommended</p></div><span class="notif-item__dot"></span></div><div class="notif-item notif-item--unread"><div class="notif-item__icon" style="background:rgba(15,45,69,.09);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--sb-bg);"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div><div class="notif-item__body"><p class="notif-item__title">Session in 30 mins — Client B</p><p class="notif-item__meta">Today at 1:30 PM · Video call</p></div><span class="notif-item__dot"></span></div><div class="notif-item notif-item--unread"><div class="notif-item__icon" style="background:rgba(45,150,116,.1);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--teal-deep);"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div><div class="notif-item__body"><p class="notif-item__title">New message — Client E</p><p class="notif-item__meta">"Thanks for today, it really helped…" · 12 mins ago</p></div><span class="notif-item__dot"></span></div><div class="notif-item notif-item--unread"><div class="notif-item__icon" style="background:rgba(245,158,11,.1);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#d97706;"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><div class="notif-item__body"><p class="notif-item__title">Note reminder — Client E</p><p class="notif-item__meta">Session was yesterday · No note written yet</p></div><span class="notif-item__dot"></span></div></div><div class="notif-drop__foot"><a href="amb-notifications.html">View all notifications</a></div></div></div>
       </div>
     </header>
 
