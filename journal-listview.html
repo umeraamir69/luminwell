@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Luminwell — Journal (List View)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="journal-listview.css" />
+</head>
+<body>
+
+<div class="lv-page">
+
+  <!-- ── Header ───────────────────────────────────── -->
+  <header class="lv-header">
+    <div class="lv-header__text">
+      <h1 class="lv-header__title">My Journal</h1>
+      <p class="lv-header__sub">Track your thoughts and feelings at your own pace</p>
+    </div>
+    <div class="lv-header__actions">
+      <a href="journal-pin.html" class="btn-lock">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg>
+        Lock Journal
+      </a>
+      <a href="journal-write.html" class="btn-new">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+        New Entry
+      </a>
+    </div>
+  </header>
+
+  <!-- ── Toolbar ───────────────────────────────────── -->
+  <div class="lv-toolbar" role="search" aria-label="Search and filter">
+
+    <!-- Row 1: search + filter button + view toggle -->
+    <div class="lv-toolbar__row">
+      <div class="lv-search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
+        <span class="lv-search__placeholder">Search by keyword, mood, or tag…</span>
+      </div>
+      <div class="btn-filter">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
+        Filters
+      </div>
+      <div class="view-toggle" aria-label="View mode">
+        <div class="view-btn" title="Grid view">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        </div>
+        <div class="view-btn view-btn--active" title="List view">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 2: active filter chips -->
+    <div class="lv-chips" aria-label="Active filters">
+      <span class="chip-label">Mood</span>
+      <span class="chip chip--active">All</span>
+      <span class="chip chip--pos">Positive</span>
+      <span class="chip chip--neu">Neutral</span>
+      <span class="chip chip--cha">Challenging</span>
+      <span class="chip-sep" aria-hidden="true"></span>
+      <span class="chip-label">Tags</span>
+      <span class="chip">Study</span>
+      <span class="chip">Gratitude</span>
+      <span class="chip">Session</span>
+      <span class="chip">Sleep</span>
+      <span class="chip">Rest</span>
+    </div>
+
+  </div>
+
+  <!-- ── Journal Reflections ───────────────────────── -->
+  <section class="lv-reflections" aria-labelledby="ref-heading">
+    <h2 class="lv-section-title" id="ref-heading">Journal Reflections</h2>
+    <p class="lv-section-sub">Automatically generated notes from your ambassador sessions</p>
+    <div class="lv-ref-grid" role="list">
+
+      <article class="lv-ref-card" role="listitem">
+        <div class="lv-ref-card__top">
+          <span class="lv-ref-card__date">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5c0-1 1-2 2.2-1.7C8.3 3.8 10 5.2 12 5.2S15.7 3.8 17.8 3.3C19 3 20 4 20 5v13c0 1-1 1.7-2.2 1.4-2-.4-3.8-1.6-5.8-1.6S8.2 19.4 6.2 19.8 4 19 4 18V5z"/><path d="M12 5.2v14.5"/></svg>
+            April 25, 2026
+          </span>
+          <span class="lv-ref-badge">Session Note</span>
+        </div>
+        <p class="lv-ref-card__text">Reflected on progress with managing study stress. Identified key triggers and explored coping mechanisms with Maya.</p>
+      </article>
+
+      <article class="lv-ref-card" role="listitem">
+        <div class="lv-ref-card__top">
+          <span class="lv-ref-card__date">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5c0-1 1-2 2.2-1.7C8.3 3.8 10 5.2 12 5.2S15.7 3.8 17.8 3.3C19 3 20 4 20 5v13c0 1-1 1.7-2.2 1.4-2-.4-3.8-1.6-5.8-1.6S8.2 19.4 6.2 19.8 4 19 4 18V5z"/><path d="M12 5.2v14.5"/></svg>
+            April 9, 2026
+          </span>
+          <span class="lv-ref-badge">Session Note</span>
+        </div>
+        <p class="lv-ref-card__text">Practiced gratitude journaling with Maya's guidance. Listed 5 meaningful things and discussed daily reflection habits.</p>
+      </article>
+
+      <article class="lv-ref-card" role="listitem">
+        <div class="lv-ref-card__top">
+          <span class="lv-ref-card__date">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5c0-1 1-2 2.2-1.7C8.3 3.8 10 5.2 12 5.2S15.7 3.8 17.8 3.3C19 3 20 4 20 5v13c0 1-1 1.7-2.2 1.4-2-.4-3.8-1.6-5.8-1.6S8.2 19.4 6.2 19.8 4 19 4 18V5z"/><path d="M12 5.2v14.5"/></svg>
+            March 20, 2026
+          </span>
+          <span class="lv-ref-badge">Session Note</span>
+        </div>
+        <p class="lv-ref-card__text">Explored setting boundaries and the pressure of over-commitment. Discussed strategies for saying no without guilt.</p>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ── Entries count ─────────────────────────────── -->
+  <div class="lv-count-row">
+    <p class="lv-count">My Entries <span>— 8 total</span></p>
+  </div>
+
+  <!-- ── List of entries ───────────────────────────── -->
+  <div class="lv-list" role="list" aria-label="Journal entries">
+
+    <!-- Apr 25 — Neutral -->
+    <article class="lv-item" data-mood="neu" role="listitem">
+      <div class="lv-item__stripe" aria-hidden="true"></div>
+      <div class="lv-item__content">
+        <div class="lv-item__date-block" aria-label="April 25">
+          <span class="lv-item__day">25</span>
+          <span class="lv-item__month">Apr</span>
+        </div>
+        <span class="lv-item__mood">Neutral</span>
+        <div class="lv-item__text">
+          <p class="lv-item__title">Pre-deadline reflections</p>
+          <p class="lv-item__preview">Deadline on Monday. Trying not to spiral. Done is better than perfect. Had a decent study session in the evening.</p>
+        </div>
+        <div class="lv-item__tags">
+          <span class="lv-item__tag">Study</span>
+          <span class="lv-item__tag">Anxiety</span>
+        </div>
+        <div class="lv-item__meta">
+          <span class="lv-item__time">8:42 pm · 3 min</span>
+          <a href="calendar-view.html" class="btn-read">
+            Read
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+          </a>
+        </div>
+      </div>
+    </article>
+
+    <!-- Apr 23 — Positive -->
+    <article class="lv-item" data-mood="pos" role="listitem">
+      <div class="lv-item__stripe" aria-hidden="true"></div>
+      <div class="lv-item__content">
+        <div class="lv-item__date-block" aria-label="April 23">
+          <span class="lv-item__day">23</span>
+          <span class="lv-item__month">Apr</span>
+        </div>
+        <span class="lv-item__mood">Positive</span>
+        <div class="lv-item__text">
+          <p class="lv-item__title">Weekend thoughts</p>
+          <p class="lv-item__preview">Spent the morning at the library. No real pressure. Got a coffee, read for a bit. Simple and peaceful.</p>
+        </div>
+        <div class="lv-item__tags">
+          <span class="lv-item__tag">Gratitude</span>
+          <span class="lv-item__tag">Self-care</span>
+        </div>
+        <div class="lv-item__meta">
+          <span class="lv-item__time">11:20 am · 2 min</span>
+          <a href="calendar-view.html" class="btn-read">
+            Read
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+          </a>
+        </div>
+      </div>
+    </article>
+
+    <!-- Apr 10 — Positive -->
+    <article class="lv-item" data-mood="pos" role="listitem">
+      <div class="lv-item__stripe" aria-hidden="true"></div>
+      <div class="lv-item__content">
+        <div class="lv-item__date-block" aria-label="April 10">
+          <span class="lv-item__day">10</span>
+          <span class="lv-item__month">Apr</span>
+        </div>
+        <span class="lv-item__mood">Positive</span>
+        <div class="lv-item__text">
+          <p class="lv-item__title">A calmer day</p>
+          <p class="lv-item__preview">Yesterday was rough but waking up today felt lighter. Made breakfast properly. Maya's advice is actually helping.</p>
+        </div>
+        <div class="lv-item__tags">
+          <span class="lv-item__tag">Recovery</span>
+          <span class="lv-item__tag">Gratitude</span>
+        </div>
+        <div class="lv-item__meta">
+          <span class="lv-item__time">9:05 am · 4 min</span>
+          <a href="calendar-view.html" class="btn-read">
+            Read
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+          </a>
+        </div>
+      </div>
+    </article>
+
+    <!-- Apr 9 — Challenging -->
+    <article class="lv-item" data-mood="cha" role="listitem">
+      <div class="lv-item__stripe" aria-hidden="true"></div>
+      <div class="lv-item__content">
+        <div class="lv-item__date-block" aria-label="April 9">
+          <span class="lv-item__day">9</span>
+          <span class="lv-item__month">Apr</span>
+        </div>
+        <span class="lv-item__mood">Challenging</span>
+        <div class="lv-item__text">
+          <p class="lv-item__title">Processing last session</p>
+          <p class="lv-item__preview">Today's session with Maya was harder than expected. We talked about housing and I got pretty emotional.</p>
+        </div>
+        <div class="lv-item__tags">
+          <span class="lv-item__tag">Session</span>
+          <span class="lv-item__tag">Housing</span>
+        </div>
+        <div class="lv-item__meta">
+          <span class="lv-item__time">8:14 pm · 6 min</span>
+          <a href="calendar-view.html" class="btn-read">
+            Read
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+          </a>
+        </div>
+      </div>
+    </article>
+
+    <!-- Apr 2 — Positive -->
+    <article class="lv-item" data-mood="pos" role="listitem">
+      <div class="lv-item__stripe" aria-hidden="true"></div>
+      <div class="lv-item__content">
+        <div class="lv-item__date-block" aria-label="April 2">
+          <span class="lv-item__day">2</span>
+          <span class="lv-item__month">Apr</span>
+        </div>
+        <span class="lv-item__mood">Positive</span>
+        <div class="lv-item__text">
+          <p class="lv-item__title">Starting fresh</p>
+          <p class="lv-item__preview">Woke up feeling lighter. Good sleep for once. Morning tea, no phone for 30 minutes — felt grounded.</p>
+        </div>
+        <div class="lv-item__tags">
+          <span class="lv-item__tag">Morning</span>
+          <span class="lv-item__tag">Self-care</span>
+        </div>
+        <div class="lv-item__meta">
+          <span class="lv-item__time">7:50 am · 3 min</span>
+          <a href="calendar-view.html" class="btn-read">
+            Read
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+          </a>
+        </div>
+      </div>
+    </article>
+
+    <!-- Mar 28 — Neutral -->
+    <article class="lv-item" data-mood="neu" role="listitem">
+      <div class="lv-item__stripe" aria-hidden="true"></div>
+      <div class="lv-item__content">
+        <div class="lv-item__date-block" aria-label="March 28">
+          <span class="lv-item__day">28</span>
+          <span class="lv-item__month">Mar</span>
+        </div>
+        <span class="lv-item__mood">Neutral</span>
+        <div class="lv-item__text">
+          <p class="lv-item__title">Late night thoughts</p>
+          <p class="lv-item__preview">Can't sleep again. Brain won't quiet down. Replaying the argument with my flatmate. It's sitting heavy.</p>
+        </div>
+        <div class="lv-item__tags">
+          <span class="lv-item__tag">Sleep</span>
+          <span class="lv-item__tag">Social</span>
+        </div>
+        <div class="lv-item__meta">
+          <span class="lv-item__time">1:33 am · 2 min</span>
+          <a href="calendar-view.html" class="btn-read">
+            Read
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+          </a>
+        </div>
+      </div>
+    </article>
+
+    <!-- Mar 20 — Positive -->
+    <article class="lv-item" data-mood="pos" role="listitem">
+      <div class="lv-item__stripe" aria-hidden="true"></div>
+      <div class="lv-item__content">
+        <div class="lv-item__date-block" aria-label="March 20">
+          <span class="lv-item__day">20</span>
+          <span class="lv-item__month">Mar</span>
+        </div>
+        <span class="lv-item__mood">Positive</span>
+        <div class="lv-item__text">
+          <p class="lv-item__title">Spring break starts</p>
+          <p class="lv-item__preview">First day with nothing scheduled. Felt strange at first — then amazing. Walked, called my sister, cooked.</p>
+        </div>
+        <div class="lv-item__tags">
+          <span class="lv-item__tag">Rest</span>
+          <span class="lv-item__tag">Gratitude</span>
+        </div>
+        <div class="lv-item__meta">
+          <span class="lv-item__time">3:15 pm · 3 min</span>
+          <a href="calendar-view.html" class="btn-read">
+            Read
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+          </a>
+        </div>
+      </div>
+    </article>
+
+    <!-- Mar 15 — Challenging -->
+    <article class="lv-item" data-mood="cha" role="listitem">
+      <div class="lv-item__stripe" aria-hidden="true"></div>
+      <div class="lv-item__content">
+        <div class="lv-item__date-block" aria-label="March 15">
+          <span class="lv-item__day">15</span>
+          <span class="lv-item__month">Mar</span>
+        </div>
+        <span class="lv-item__mood">Challenging</span>
+        <div class="lv-item__text">
+          <p class="lv-item__title">Midterms week</p>
+          <p class="lv-item__preview">Three exams in four days. 12 hours in the library. Exhausted and starting to shut down. Don't know if I can keep this pace.</p>
+        </div>
+        <div class="lv-item__tags">
+          <span class="lv-item__tag">Study</span>
+          <span class="lv-item__tag">Burnout</span>
+        </div>
+        <div class="lv-item__meta">
+          <span class="lv-item__time">11:58 pm · 4 min</span>
+          <a href="calendar-view.html" class="btn-read">
+            Read
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+          </a>
+        </div>
+      </div>
+    </article>
+
+  </div><!-- /lv-list -->
+
+  <!-- ── Crisis + privacy ──────────────────────────── -->
+  <div class="lv-footer-strip">
+    <div class="lv-crisis" role="note">
+      <div class="lv-crisis__body">
+        <p class="lv-crisis__title">Need immediate support?</p>
+        <p class="lv-crisis__text">Free, confidential help is available 24/7. You don't have to carry this alone.</p>
+      </div>
+      <div class="lv-crisis__links">
+        <a href="tel:988" class="crisis-btn crisis-btn--call">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+          Call 988
+        </a>
+        <a href="sms:741741" class="crisis-btn crisis-btn--text">Text 741741</a>
+      </div>
+    </div>
+    <div class="lv-privacy" role="note">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      Your journal is encrypted end-to-end. Nobody at Luminwell can read your entries. You can delete everything at any time.
+    </div>
+  </div>
+
+</div><!-- /lv-page -->
+
+</body>
+</html>

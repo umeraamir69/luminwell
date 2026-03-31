@@ -1,0 +1,1264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Luminwell — Peer Mental Health Support</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,300;1,9..144,400;1,9..144,500&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Tokens ─────────────────────────────── */
+    :root {
+      --navy:       #175d92;
+      --navy-deep:  #0f3154;
+      --navy-mid:   #1a6aaa;
+      --navy-pale:  #e8f1fc;
+      --teal:       #2d9676;
+      --teal-deep:  #1d6e55;
+      --teal-pale:  #eaf5f1;
+      --mint:       #7ee8c8;
+      --surface:    #ffffff;
+      --bg-soft:    #f5faf8;
+      --text:       #0f172a;
+      --text-mid:   #1e3a5f;
+      --text-muted: #64748b;
+      --text-soft:  #94a3b8;
+      --border:     #e2e8f0;
+      --r:    14px;
+      --r-lg: 22px;
+      --font:         "DM Sans", system-ui, -apple-system, sans-serif;
+      --font-display: "Fraunces", Georgia, serif;
+      --shadow: 0 2px 8px rgba(0,0,0,0.04), 0 8px 28px rgba(0,0,0,0.06);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 16px; -webkit-font-smoothing: antialiased; }
+    body { font-family: var(--font); color: var(--text); background: var(--surface); }
+    a { color: inherit; }
+    img { max-width: 100%; display: block; }
+    button { font-family: inherit; }
+
+    /* ── Layout util ────────────────────────── */
+    .wrap {
+      width: 100%;
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 0 28px;
+    }
+
+    .sr-only {
+      position: absolute; width: 1px; height: 1px; padding: 0;
+      margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0;
+    }
+
+    /* ── Buttons ────────────────────────────── */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+      font-family: var(--font); font-size: 14px; font-weight: 600;
+      text-decoration: none; cursor: pointer; border: 1.5px solid transparent;
+      border-radius: 11px; padding: 10px 20px; min-height: 44px;
+      transition: background .17s ease, color .17s ease, border-color .17s ease,
+                  box-shadow .17s ease, transform .17s ease;
+      white-space: nowrap;
+    }
+    .btn svg { width: 16px; height: 16px; flex-shrink: 0; }
+
+    .btn--ghost { background: transparent; color: var(--text-muted); border-color: var(--border); }
+    .btn--ghost:hover { border-color: rgba(23,93,146,.4); color: var(--navy); background: var(--navy-pale); }
+
+    .btn--navy { background: var(--navy); color: #fff; border-color: var(--navy); }
+    .btn--navy:hover { background: var(--navy-deep); border-color: var(--navy-deep);
+      box-shadow: 0 4px 18px rgba(23,93,146,.4); transform: translateY(-1px); }
+
+    .btn--teal { background: var(--teal); color: #fff; border-color: var(--teal); }
+    .btn--teal:hover { background: var(--teal-deep); border-color: var(--teal-deep);
+      box-shadow: 0 4px 18px rgba(45,150,118,.4); transform: translateY(-1px); }
+
+    .btn--outline-white { background: transparent; color: #fff; border-color: rgba(255,255,255,.45); }
+    .btn--outline-white:hover { background: rgba(255,255,255,.1); border-color: rgba(255,255,255,.7); }
+
+    .btn--lg { font-size: 15.5px; padding: 14px 32px; min-height: 52px; border-radius: 13px; }
+    .btn--full { width: 100%; }
+
+    /* ── Nav ────────────────────────────────── */
+    .nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(255,255,255,.94);
+      backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(15,23,42,.07);
+    }
+    .nav__inner {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 20px; height: 64px;
+    }
+    .nav__brand {
+      display: flex; align-items: center; gap: 9px;
+      text-decoration: none; flex-shrink: 0;
+    }
+    .nav__logo { width: 34px; height: 34px; object-fit: contain; }
+    .nav__wordmark {
+      font-family: var(--font-display); font-size: 19px; font-weight: 600;
+      color: var(--navy); letter-spacing: -.02em;
+    }
+    .nav__links { display: flex; align-items: center; gap: 2px; list-style: none; }
+    .nav__links a {
+      font-size: 14px; font-weight: 500; color: var(--text-muted);
+      text-decoration: none; padding: 8px 14px; border-radius: 9px;
+      transition: color .14s, background .14s;
+    }
+    .nav__links a:hover { color: var(--navy); background: var(--navy-pale); }
+    .nav__right { display: flex; align-items: center; gap: 8px; }
+    .nav__crisis {
+      display: flex; align-items: center; gap: 7px; font-size: 12px; font-weight: 700;
+      color: var(--navy); text-decoration: none; padding: 7px 13px;
+      border-radius: 10px; border: 1.5px solid rgba(23,93,146,.28);
+      transition: background .14s, border-color .14s;
+    }
+    .nav__crisis:hover { background: var(--navy-pale); border-color: var(--navy); }
+    .nav__crisis svg { width: 13px; height: 13px; }
+
+    /* ── Hero ───────────────────────────────── */
+    .hero {
+      background: linear-gradient(140deg, var(--navy-deep) 0%, var(--navy) 48%, #167a5e 100%);
+      padding: 88px 0 130px; position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: ""; position: absolute; inset: 0; pointer-events: none;
+      background:
+        radial-gradient(ellipse 75% 60% at 72% -5%, rgba(45,150,118,.28), transparent 52%),
+        radial-gradient(ellipse 55% 55% at -8% 85%, rgba(23,93,146,.35), transparent 55%);
+    }
+    .hero::after {
+      content: ""; position: absolute; bottom: -2px; left: 0; right: 0;
+      height: 80px; background: var(--surface);
+      clip-path: ellipse(56% 100% at 50% 100%);
+    }
+    .hero__inner {
+      position: relative; z-index: 1;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 52px; align-items: center;
+    }
+    .hero__pill {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 11.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+      color: rgba(255,255,255,.75); background: rgba(255,255,255,.1);
+      padding: 6px 14px; border-radius: 999px; margin-bottom: 22px;
+    }
+    .hero__pill-dot {
+      width: 7px; height: 7px; border-radius: 50%; background: var(--mint); flex-shrink: 0;
+    }
+    .hero__h1 {
+      font-family: var(--font-display); font-size: clamp(38px,5vw,60px);
+      font-weight: 400; line-height: 1.11; letter-spacing: -.025em;
+      color: #fff; margin-bottom: 20px;
+    }
+    .hero__h1 em { font-style: italic; color: var(--mint); }
+    .hero__sub {
+      font-size: clamp(15px,1.5vw,17px); color: rgba(255,255,255,.78);
+      line-height: 1.68; margin-bottom: 36px; max-width: 430px;
+    }
+    .hero__ctas { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+    .hero__trust {
+      display: flex; flex-wrap: wrap; gap: 6px 18px; margin-top: 20px;
+    }
+    .hero__trust-item {
+      display: flex; align-items: center; gap: 5px;
+      font-size: 12px; color: rgba(255,255,255,.52);
+    }
+    .hero__trust-item svg { width: 12px; height: 12px; }
+
+    /* Phone mockup */
+    .hero__visual { display: flex; justify-content: center; align-items: center; }
+    .phone {
+      width: 270px; height: 510px; background: #091f35;
+      border-radius: 34px; border: 8px solid rgba(255,255,255,.11);
+      box-shadow: 0 40px 80px rgba(0,0,0,.45), 0 0 0 1px rgba(255,255,255,.05);
+      overflow: hidden; display: flex; flex-direction: column;
+    }
+    .phone__bar {
+      background: var(--navy); padding: 14px 18px 11px; flex-shrink: 0;
+    }
+    .phone__name { font-size: 12.5px; font-weight: 700; color: #fff; }
+    .phone__status { font-size: 10.5px; color: rgba(255,255,255,.55); margin-top: 2px; }
+    .phone__body {
+      flex: 1; background: #0c2336; padding: 14px 12px;
+      display: flex; flex-direction: column; gap: 10px; overflow: hidden;
+    }
+    .bubble {
+      max-width: 82%; padding: 9px 13px; border-radius: 13px;
+      font-size: 11.5px; line-height: 1.55;
+    }
+    .bubble--them {
+      background: rgba(255,255,255,.1); color: rgba(255,255,255,.88);
+      align-self: flex-start; border-bottom-left-radius: 4px;
+    }
+    .bubble--me {
+      background: var(--teal); color: #fff;
+      align-self: flex-end; border-bottom-right-radius: 4px;
+    }
+    .phone__match {
+      background: rgba(255,255,255,.07); border-radius: 11px; padding: 11px;
+      border: 1px solid rgba(255,255,255,.1); margin-top: 4px;
+    }
+    .phone__match-label {
+      font-size: 9.5px; font-weight: 700; color: var(--mint);
+      letter-spacing: .07em; text-transform: uppercase; margin-bottom: 7px;
+    }
+    .phone__match-row { display: flex; align-items: center; gap: 8px; }
+    .phone__av {
+      width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
+      background: linear-gradient(135deg, var(--navy-mid), var(--teal));
+    }
+    .phone__match-name { font-size: 11.5px; font-weight: 700; color: #fff; }
+    .phone__tags { display: flex; gap: 4px; margin-top: 4px; flex-wrap: wrap; }
+    .phone__tag {
+      font-size: 9.5px; background: rgba(45,150,118,.22); color: var(--mint);
+      padding: 2px 6px; border-radius: 999px; font-weight: 600;
+    }
+    .phone__input {
+      background: rgba(255,255,255,.05); border-top: 1px solid rgba(255,255,255,.07);
+      padding: 10px 12px; display: flex; align-items: center; gap: 7px; flex-shrink: 0;
+    }
+    .phone__input-bar {
+      flex: 1; background: rgba(255,255,255,.07); border-radius: 18px; height: 30px;
+    }
+    .phone__send {
+      width: 30px; height: 30px; border-radius: 50%; background: var(--teal);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+
+    /* ── Stats strip ─────────────────────────── */
+    .stats { padding: 18px 0; border-bottom: 1px solid var(--border); }
+    .stats__row {
+      display: flex; align-items: center; justify-content: center;
+      flex-wrap: wrap; gap: 0;
+    }
+    .stat {
+      display: flex; align-items: center; gap: 8px;
+      padding: 6px 26px; border-right: 1px solid var(--border);
+    }
+    .stat:last-child { border-right: none; }
+    .stat__icon { width: 17px; height: 17px; color: var(--teal); flex-shrink: 0; }
+    .stat__txt { font-size: 13px; font-weight: 600; color: var(--text-mid); }
+
+    /* ── Section shell ──────────────────────── */
+    .sec { padding: 84px 0; }
+    .sec--alt { background: var(--bg-soft); }
+    .sec--navy {
+      background: linear-gradient(140deg, var(--navy-deep) 0%, var(--navy) 100%);
+      color: #fff;
+    }
+    .sec--dark { background: #08192b; color: #fff; }
+
+    .sec__tag {
+      font-size: 11.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+      color: var(--teal); margin-bottom: 10px; text-align: center;
+    }
+    .sec--navy .sec__tag, .sec--dark .sec__tag { color: rgba(255,255,255,.5); }
+
+    .sec__h {
+      font-family: var(--font-display); font-size: clamp(28px,4vw,44px);
+      font-weight: 500; line-height: 1.18; letter-spacing: -.02em;
+      color: var(--text); text-align: center; margin-bottom: 12px;
+    }
+    .sec--navy .sec__h, .sec--dark .sec__h { color: #fff; }
+
+    .sec__lead {
+      font-size: 16.5px; color: var(--text-muted); text-align: center;
+      line-height: 1.68; max-width: 560px; margin: 0 auto 56px;
+    }
+    .sec--navy .sec__lead, .sec--dark .sec__lead { color: rgba(255,255,255,.68); }
+
+    /* ── Explain: peer support ──────────────── */
+    .explain-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+
+    .explain__h {
+      font-family: var(--font-display); font-size: clamp(26px,3.5vw,40px);
+      font-weight: 500; line-height: 1.2; letter-spacing: -.02em;
+      color: var(--text); margin-bottom: 16px;
+    }
+    .explain__p { font-size: 15.5px; color: var(--text-muted); line-height: 1.72; margin-bottom: 14px; }
+    .explain__p:last-of-type { margin-bottom: 26px; }
+
+    .badge-row { display: flex; flex-wrap: wrap; gap: 9px; }
+    .badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 13px; font-weight: 600; padding: 8px 15px; border-radius: 999px;
+    }
+    .badge svg { width: 13px; height: 13px; flex-shrink: 0; }
+    .badge--navy { background: var(--navy-pale); color: var(--navy); }
+    .badge--teal { background: var(--teal-pale); color: var(--teal-deep); }
+
+    .compare-stack { display: flex; flex-direction: column; gap: 14px; }
+    .ccard {
+      border-radius: var(--r-lg); padding: 22px 24px; border: 1.5px solid var(--border);
+      background: var(--surface); box-shadow: var(--shadow);
+    }
+    .ccard--navy { background: var(--navy); border-color: var(--navy); }
+    .ccard__label {
+      font-size: 10.5px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .09em; color: var(--text-soft); margin-bottom: 6px;
+    }
+    .ccard--navy .ccard__label { color: rgba(255,255,255,.45); }
+    .ccard__title { font-size: 15.5px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+    .ccard--navy .ccard__title { color: #fff; }
+    .ccard__desc { font-size: 13.5px; color: var(--text-muted); line-height: 1.62; }
+    .ccard--navy .ccard__desc { color: rgba(255,255,255,.66); }
+    .ccard__tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+    .ccard__tag { font-size: 11.5px; font-weight: 600; padding: 4px 10px; border-radius: 999px; }
+    .ccard .ccard__tag { background: var(--bg-soft); color: var(--text-muted); }
+    .ccard--navy .ccard__tag { background: rgba(255,255,255,.12); color: rgba(255,255,255,.78); }
+
+    /* ── How it works ───────────────────────── */
+    .steps { display: grid; grid-template-columns: repeat(3,1fr); gap: 18px; }
+    .step {
+      background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.11);
+      border-radius: var(--r-lg); padding: 28px 22px;
+      transition: background .2s;
+    }
+    .step:hover { background: rgba(255,255,255,.12); }
+    .step__num {
+      width: 38px; height: 38px; border-radius: 50%; background: var(--teal);
+      color: #fff; font-size: 17px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center; margin-bottom: 16px;
+    }
+    .step__h { font-family: var(--font-display); font-size: 19px; font-weight: 500; color: #fff; margin-bottom: 9px; }
+    .step__p { font-size: 13.5px; color: rgba(255,255,255,.65); line-height: 1.68; }
+    .step__p em { color: var(--mint); font-style: italic; }
+
+    /* ── Feature cards ──────────────────────── */
+    .features { display: grid; grid-template-columns: repeat(3,1fr); gap: 18px; }
+    .fcard {
+      background: var(--surface); border: 1.5px solid var(--border);
+      border-radius: var(--r-lg); padding: 28px 22px;
+      transition: box-shadow .2s, transform .2s, border-color .2s;
+    }
+    .fcard:hover {
+      box-shadow: 0 8px 30px rgba(23,93,146,.1);
+      border-color: rgba(23,93,146,.25); transform: translateY(-2px);
+    }
+    .fcard__icon {
+      width: 46px; height: 46px; border-radius: 13px;
+      display: flex; align-items: center; justify-content: center; margin-bottom: 16px;
+    }
+    .fcard__icon svg { width: 22px; height: 22px; }
+    .fcard__icon--navy { background: var(--navy-pale); color: var(--navy); }
+    .fcard__icon--teal { background: var(--teal-pale); color: var(--teal-deep); }
+    .fcard__icon--warm { background: #fef3c7; color: #92400e; }
+    .fcard__h { font-size: 15.5px; font-weight: 700; color: var(--text); margin-bottom: 7px; letter-spacing: -.01em; }
+    .fcard__p { font-size: 13.5px; color: var(--text-muted); line-height: 1.65; }
+
+    /* ── Matching section ───────────────────── */
+    .match-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
+
+    .match-ui {
+      border-radius: var(--r-lg); overflow: hidden; border: 1.5px solid var(--border);
+      box-shadow: 0 6px 28px rgba(0,0,0,.07);
+    }
+    .match-ui__head { background: var(--navy); padding: 16px 20px; }
+    .match-ui__title { font-size: 13px; font-weight: 700; color: #fff; }
+    .match-ui__sub { font-size: 11px; color: rgba(255,255,255,.55); margin-top: 2px; }
+    .match-ui__body { padding: 18px; display: flex; flex-direction: column; gap: 12px; background: var(--surface); }
+
+    .mprofile {
+      display: flex; align-items: flex-start; gap: 11px; padding: 14px;
+      background: var(--bg-soft); border-radius: 11px;
+      border: 1.5px solid transparent; transition: border-color .2s;
+    }
+    .mprofile--sel { border-color: var(--navy); background: var(--navy-pale); }
+    .mprofile__av { width: 38px; height: 38px; border-radius: 50%; flex-shrink: 0; }
+    .mprofile__av--a { background: linear-gradient(135deg,var(--navy-mid),var(--teal)); }
+    .mprofile__av--b { background: linear-gradient(135deg,#6d28d9,var(--teal)); }
+    .mprofile__name { font-size: 13.5px; font-weight: 700; color: var(--text); }
+    .mprofile__best { font-size: 11.5px; color: var(--teal); font-weight: 600; margin-left: 6px; }
+    .mprofile__why { font-size: 12px; color: var(--text-muted); margin-top: 3px; line-height: 1.5; }
+    .mprofile__tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 7px; }
+    .mprofile__tag {
+      font-size: 11px; font-weight: 600; padding: 3px 9px;
+      border-radius: 999px; background: rgba(23,93,146,.1); color: var(--navy);
+    }
+    .mprofile__meta { display: flex; gap: 12px; margin-top: 7px; flex-wrap: wrap; }
+    .mprofile__meta-i { font-size: 11.5px; color: var(--text-soft); display: flex; align-items: center; gap: 3px; }
+    .mprofile__meta-i svg { width: 11px; height: 11px; }
+
+    .match-content__h {
+      font-family: var(--font-display); font-size: clamp(26px,3.5vw,40px);
+      font-weight: 500; line-height: 1.2; letter-spacing: -.02em;
+      color: var(--text); margin-bottom: 12px;
+    }
+    .match-content__h em { font-style: italic; color: var(--navy); }
+    .match-content__p { font-size: 15.5px; color: var(--text-muted); line-height: 1.7; margin-bottom: 24px; }
+
+    .points { display: flex; flex-direction: column; gap: 16px; }
+    .point { display: flex; align-items: flex-start; gap: 13px; }
+    .point__icon {
+      width: 36px; height: 36px; border-radius: 10px;
+      background: var(--teal-pale); color: var(--teal-deep);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .point__icon svg { width: 18px; height: 18px; }
+    .point__h { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 3px; }
+    .point__p { font-size: 13.5px; color: var(--text-muted); line-height: 1.58; }
+
+    /* ── Ambassadors ────────────────────────── */
+    .amb-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 18px; }
+    .acard {
+      background: var(--surface); border-radius: var(--r-lg);
+      border: 1.5px solid var(--border); overflow: hidden;
+      transition: box-shadow .2s, transform .2s, border-color .2s;
+    }
+    .acard:hover { box-shadow: 0 8px 30px rgba(23,93,146,.1); border-color: rgba(23,93,146,.25); transform: translateY(-2px); }
+    .acard__top { height: 76px; position: relative; }
+    .acard__top--a { background: linear-gradient(135deg,var(--navy-deep),var(--navy)); }
+    .acard__top--b { background: linear-gradient(135deg,var(--teal-deep),var(--teal)); }
+    .acard__top--c { background: linear-gradient(135deg,#1d4e89,#0f3154); }
+    .acard__level {
+      position: absolute; top: 10px; right: 13px;
+      font-size: 10.5px; font-weight: 700; padding: 3px 9px;
+      border-radius: 999px; background: rgba(255,255,255,.17); color: #fff;
+    }
+    .acard__av-wrap { position: absolute; bottom: -20px; left: 18px; }
+    .acard__av {
+      width: 50px; height: 50px; border-radius: 50%; border: 3px solid var(--surface);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 19px; font-weight: 700; color: #fff;
+    }
+    .acard__body { padding: 28px 18px 18px; }
+    .acard__name { font-size: 15px; font-weight: 700; color: var(--text); }
+    .acard__role { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+    .acard__tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+    .acard__tag { font-size: 11.5px; font-weight: 600; padding: 4px 10px; border-radius: 999px; background: var(--bg-soft); color: var(--text-muted); }
+    .acard__quote { font-size: 13px; color: var(--text-muted); line-height: 1.62; margin-top: 10px; font-style: italic; }
+    .acard__foot {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border);
+    }
+    .acard__stars { display: flex; gap: 1px; }
+    .acard__stars svg { width: 13px; height: 13px; fill: #fbbf24; }
+    .acard__meta-txt { font-size: 11.5px; color: var(--text-muted); }
+    .acard__meta-txt strong { color: var(--text); }
+
+    /* ── Privacy section ────────────────────── */
+    .priv-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 16px; margin-top: 48px; }
+    .pcard {
+      display: flex; align-items: flex-start; gap: 15px;
+      background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.1);
+      border-radius: var(--r-lg); padding: 22px 20px;
+    }
+    .pcard__icon {
+      width: 42px; height: 42px; border-radius: 11px;
+      background: rgba(255,255,255,.1); flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .pcard__icon svg { width: 21px; height: 21px; stroke: rgba(255,255,255,.88); fill: none; stroke-width: 1.75; }
+    .pcard__h { font-size: 14.5px; font-weight: 700; color: #fff; margin-bottom: 6px; }
+    .pcard__p { font-size: 13px; color: rgba(255,255,255,.62); line-height: 1.62; }
+
+    /* ── Pricing ────────────────────────────── */
+    .price-grid {
+      display: grid; grid-template-columns: repeat(2,1fr); gap: 20px;
+      max-width: 740px; margin: 0 auto;
+    }
+    .prc {
+      border-radius: var(--r-lg); overflow: hidden;
+      border: 1.5px solid var(--border);
+    }
+    .prc--feat { border-color: var(--navy); box-shadow: 0 8px 30px rgba(23,93,146,.16); }
+    .prc__head { padding: 24px 26px; border-bottom: 1px solid var(--border); }
+    .prc--feat .prc__head { background: var(--navy); border-bottom-color: rgba(255,255,255,.12); }
+    .prc__tier { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--text-muted); margin-bottom: 8px; }
+    .prc--feat .prc__tier { color: rgba(255,255,255,.55); }
+    .prc__price {
+      font-family: var(--font-display); font-size: 42px; font-weight: 500;
+      color: var(--text); line-height: 1; letter-spacing: -.03em;
+    }
+    .prc--feat .prc__price { color: #fff; }
+    .prc__price sup { font-size: 20px; vertical-align: top; margin-top: 6px; font-family: var(--font); }
+    .prc__price small { font-size: 14px; font-weight: 500; opacity: .6; }
+    .prc__desc { font-size: 13px; color: var(--text-muted); margin-top: 8px; line-height: 1.55; }
+    .prc--feat .prc__desc { color: rgba(255,255,255,.62); }
+    .prc__body { padding: 22px 26px; background: var(--surface); }
+    .prc__list { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-bottom: 22px; }
+    .prc__list li { display: flex; align-items: flex-start; gap: 9px; font-size: 13.5px; color: var(--text-muted); line-height: 1.5; }
+    .prc__list li svg { width: 15px; height: 15px; color: var(--teal); flex-shrink: 0; margin-top: 2px; }
+
+    /* ── Crisis bar ─────────────────────────── */
+    .crisis { background: var(--bg-soft); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 22px 0; }
+    .crisis__inner {
+      display: flex; align-items: center; justify-content: center;
+      flex-wrap: wrap; gap: 14px 40px;
+    }
+    .crisis__copy { font-size: 14px; color: var(--text-muted); text-align: center; }
+    .crisis__copy strong { color: var(--text); }
+    .crisis__items { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+    .citem {
+      display: flex; align-items: center; gap: 9px; padding: 11px 18px;
+      border-radius: 11px; border: 1.5px solid var(--border); background: var(--surface);
+      text-decoration: none; transition: border-color .14s, box-shadow .14s;
+    }
+    .citem:hover { border-color: rgba(23,93,146,.35); box-shadow: 0 2px 10px rgba(23,93,146,.1); }
+    .citem svg { width: 20px; height: 20px; color: var(--teal); flex-shrink: 0; }
+    .citem__label { font-size: 13px; font-weight: 700; color: var(--navy); }
+    .citem__sub { font-size: 11px; color: var(--text-soft); }
+
+    /* ── Final CTA ──────────────────────────── */
+    .cta {
+      padding: 96px 0; text-align: center;
+      background: linear-gradient(140deg, var(--navy-deep) 0%, var(--navy) 50%, #167a5e 100%);
+      position: relative; overflow: hidden;
+    }
+    .cta::before {
+      content: ""; position: absolute; inset: 0; pointer-events: none;
+      background: radial-gradient(ellipse 70% 60% at 30% 50%, rgba(45,150,118,.22), transparent 58%);
+    }
+    .cta__inner { position: relative; z-index: 1; }
+    .cta__h {
+      font-family: var(--font-display); font-size: clamp(30px,5vw,54px);
+      font-weight: 400; color: #fff; line-height: 1.13; letter-spacing: -.025em; margin-bottom: 16px;
+    }
+    .cta__h em { font-style: italic; color: var(--mint); }
+    .cta__sub {
+      font-size: 17px; color: rgba(255,255,255,.72); margin-bottom: 36px;
+      max-width: 460px; margin-left: auto; margin-right: auto; line-height: 1.68;
+    }
+    .cta__btns { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+    .cta__note { margin-top: 18px; font-size: 12.5px; color: rgba(255,255,255,.4); }
+
+    /* ── Footer ─────────────────────────────── */
+    .footer { background: #08192b; color: rgba(255,255,255,.6); padding: 52px 0 30px; }
+    .footer__grid {
+      display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 36px;
+      padding-bottom: 36px; border-bottom: 1px solid rgba(255,255,255,.07);
+    }
+    .footer__brand-name {
+      font-family: var(--font-display); font-size: 20px; font-weight: 600;
+      color: #fff; letter-spacing: -.02em; margin-bottom: 9px;
+    }
+    .footer__brand-desc { font-size: 13px; line-height: 1.65; color: rgba(255,255,255,.45); margin-bottom: 18px; max-width: 260px; }
+    .footer__crisis-link {
+      display: inline-flex; align-items: center; gap: 7px;
+      font-size: 13px; font-weight: 700; color: var(--mint); text-decoration: none;
+      border: 1px solid rgba(126,232,200,.28); padding: 8px 13px; border-radius: 9px;
+      transition: background .14s;
+    }
+    .footer__crisis-link:hover { background: rgba(126,232,200,.07); }
+    .footer__col-h {
+      font-size: 10.5px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .1em; color: rgba(255,255,255,.3); margin-bottom: 14px;
+    }
+    .footer__links { list-style: none; display: flex; flex-direction: column; gap: 9px; }
+    .footer__links a { font-size: 13.5px; color: rgba(255,255,255,.52); text-decoration: none; transition: color .14s; }
+    .footer__links a:hover { color: #fff; }
+    .footer__bottom {
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;
+      gap: 12px; padding-top: 22px; font-size: 12.5px; color: rgba(255,255,255,.3);
+    }
+
+    /* ── Responsive ─────────────────────────── */
+    @media (max-width: 920px) {
+      .hero__inner, .explain-grid, .match-grid { grid-template-columns: 1fr; }
+      .hero__visual { display: none; }
+      .steps, .features, .amb-grid { grid-template-columns: repeat(2,1fr); }
+      .footer__grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 620px) {
+      .nav__links { display: none; }
+      .nav__crisis span { display: none; }
+      .steps, .features, .amb-grid, .price-grid, .priv-grid { grid-template-columns: 1fr; }
+      .stat { border-right: none; padding: 5px 14px; }
+      .footer__grid { grid-template-columns: 1fr; }
+      .hero__h1 { font-size: 36px; }
+      .sec { padding: 60px 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ══ Nav ═══════════════════════════════════════════════════════ -->
+  <nav class="nav" aria-label="Main navigation">
+    <div class="wrap">
+      <div class="nav__inner">
+        <a class="nav__brand" href="landing.html">
+          <img class="nav__logo" src="logo.png" alt="Luminwell" width="34" height="34" decoding="async" />
+          <span class="nav__wordmark">Luminwell</span>
+        </a>
+
+        <ul class="nav__links">
+          <li><a href="#how-it-works">How it Works</a></li>
+          <li><a href="#matching">Matching</a></li>
+          <li><a href="#ambassadors">Ambassadors</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+        </ul>
+
+        <div class="nav__right">
+          <a class="nav__crisis" href="tel:988" aria-label="Call 988 crisis lifeline">
+            <svg fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+            <span>988 Crisis</span>
+          </a>
+          <a class="btn btn--ghost" href="index.html">Log In</a>
+          <a class="btn btn--navy" href="onboarding-01-age.html">Get Started</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ══ Hero ══════════════════════════════════════════════════════ -->
+  <section class="hero" aria-label="Welcome to Luminwell">
+    <div class="wrap">
+      <div class="hero__inner">
+
+        <div class="hero__copy">
+          <div class="hero__pill">
+            <span class="hero__pill-dot"></span>
+            Peer mental health support
+          </div>
+          <h1 class="hero__h1">
+            Support that feels<br>
+            <em>genuinely human</em>
+          </h1>
+          <p class="hero__sub">
+            Connect with trained peer ambassadors who share your lived experiences.
+            Private, judgment-free, and accessible for every student — start your
+            wellness journey today.
+          </p>
+          <div class="hero__ctas">
+            <a class="btn btn--teal btn--lg" href="onboarding-01-age.html">
+              Get Started Free
+              <svg fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+            <a class="btn btn--outline-white btn--lg" href="#how-it-works">How it works</a>
+          </div>
+          <div class="hero__trust">
+            <span class="hero__trust-item">
+              <svg fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+              No credit card required
+            </span>
+            <span class="hero__trust-item">
+              <svg fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+              Free to start
+            </span>
+            <span class="hero__trust-item">
+              <svg fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+              Private &amp; encrypted
+            </span>
+          </div>
+        </div>
+
+        <!-- CSS phone mockup showing the app -->
+        <div class="hero__visual" aria-hidden="true">
+          <div class="phone">
+            <div class="phone__bar">
+              <div class="phone__name">Chat with Maya</div>
+              <div class="phone__status">Peer Ambassador &middot; Online now</div>
+            </div>
+            <div class="phone__body">
+              <div class="bubble bubble--them">Hey! I saw you&rsquo;ve been navigating some housing stress. I&rsquo;ve been there — want to talk?</div>
+              <div class="bubble bubble--me">Yeah, it&rsquo;s been really overwhelming lately...</div>
+              <div class="bubble bubble--them">That makes total sense. Let&rsquo;s take it one step at a time. 💙</div>
+              <div class="phone__match">
+                <div class="phone__match-label">Why you were matched</div>
+                <div class="phone__match-row">
+                  <div class="phone__av"></div>
+                  <div>
+                    <div class="phone__match-name">Maya Chen</div>
+                    <div class="phone__tags">
+                      <span class="phone__tag">Housing</span>
+                      <span class="phone__tag">Anxiety</span>
+                      <span class="phone__tag">Student</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="phone__input">
+              <div class="phone__input-bar"></div>
+              <div class="phone__send">
+                <svg width="13" height="13" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24">
+                  <path d="M22 2L11 13"/><path d="M22 2L15 22l-4-9-9-4 20-7z"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ Stats strip ════════════════════════════════════════════════ -->
+  <div class="stats" role="list" aria-label="Platform statistics">
+    <div class="wrap">
+      <div class="stats__row">
+        <div class="stat" role="listitem">
+          <svg class="stat__icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+          <span class="stat__txt">5,000+ students supported</span>
+        </div>
+        <div class="stat" role="listitem">
+          <svg class="stat__icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <span class="stat__txt">End-to-end encrypted</span>
+        </div>
+        <div class="stat" role="listitem">
+          <svg class="stat__icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          <span class="stat__txt">Avg. reply under 2 hours</span>
+        </div>
+        <div class="stat" role="listitem">
+          <svg class="stat__icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+          <span class="stat__txt">WCAG 2.1 AA accessible</span>
+        </div>
+        <div class="stat" role="listitem">
+          <svg class="stat__icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4 2 7L12 17l-6.5 5 2-7L2 9h7l3-7z"/></svg>
+          <span class="stat__txt">4.9 / 5 satisfaction</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ What is Luminwell ══════════════════════════════════════════ -->
+  <section class="sec" id="about" aria-labelledby="about-h">
+    <div class="wrap">
+      <div class="explain-grid">
+
+        <div>
+          <p class="sec__tag" style="text-align:left;">What is Luminwell?</p>
+          <h2 class="explain__h" id="about-h">Peer support, clearly explained</h2>
+          <p class="explain__p">
+            Luminwell connects you with <strong>trained peer ambassadors</strong> — people who have
+            lived through similar challenges and are certified to offer structured emotional support.
+            It&rsquo;s not therapy, and that&rsquo;s entirely intentional.
+          </p>
+          <p class="explain__p">
+            Peer support is built on shared human experience. Your ambassador isn&rsquo;t a licensed
+            therapist, but they&rsquo;re trained, supervised, and genuinely committed to walking
+            alongside you at your own pace — with no wait lists.
+          </p>
+          <div class="badge-row">
+            <span class="badge badge--navy">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+              Trained ambassadors
+            </span>
+            <span class="badge badge--teal">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              Supervised &amp; certified
+            </span>
+            <span class="badge badge--navy">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+              Lived experience
+            </span>
+          </div>
+        </div>
+
+        <div class="compare-stack">
+          <div class="ccard ccard--navy">
+            <div class="ccard__label">Luminwell Peer Support</div>
+            <div class="ccard__title">Shared experience &amp; human connection</div>
+            <div class="ccard__desc">Your ambassador has navigated something similar. Trained, supervised, and available within hours — not weeks. No insurance needed.</div>
+            <div class="ccard__tags">
+              <span class="ccard__tag">Affordable</span>
+              <span class="ccard__tag">Fast access</span>
+              <span class="ccard__tag">Judgment-free</span>
+              <span class="ccard__tag">Free trial</span>
+            </div>
+          </div>
+          <div class="ccard">
+            <div class="ccard__label">Traditional Therapy</div>
+            <div class="ccard__title">Licensed clinical treatment</div>
+            <div class="ccard__desc">Best for diagnosed conditions requiring clinical intervention. We&rsquo;ll always refer you to a professional when it&rsquo;s needed.</div>
+            <div class="ccard__tags">
+              <span class="ccard__tag">Licensed professionals</span>
+              <span class="ccard__tag">Insurance-based</span>
+              <span class="ccard__tag">Wait times apply</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ How it works ═══════════════════════════════════════════════ -->
+  <section class="sec sec--navy" id="how-it-works" aria-labelledby="hiw-h">
+    <div class="wrap">
+      <p class="sec__tag">Simple process</p>
+      <h2 class="sec__h" id="hiw-h">From sign-up to support in minutes</h2>
+      <p class="sec__lead">A clear, step-by-step flow with one question at a time. No jargon, no overwhelming forms.</p>
+
+      <div class="steps" role="list">
+        <div class="step" role="listitem">
+          <div class="step__num">1</div>
+          <h3 class="step__h">Tell us about yourself</h3>
+          <p class="step__p">
+            A short, private questionnaire — 5 questions, one at a time, takes under 3 minutes.
+            Designed to be calm and never overwhelming.
+          </p>
+        </div>
+        <div class="step" role="listitem">
+          <div class="step__num">2</div>
+          <h3 class="step__h">See your match explained</h3>
+          <p class="step__p">
+            We show you compatible ambassadors and tell you <em>exactly why</em> each one was
+            suggested — shared experiences, expertise, and availability. You choose.
+          </p>
+        </div>
+        <div class="step" role="listitem">
+          <div class="step__num">3</div>
+          <h3 class="step__h">Start your journey</h3>
+          <p class="step__p">
+            Chat, book sessions, track moods, and journal privately. Everything in one calm,
+            secure space — on your schedule.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ Features ═══════════════════════════════════════════════════ -->
+  <section class="sec sec--alt" aria-labelledby="feat-h">
+    <div class="wrap">
+      <p class="sec__tag">Everything you need</p>
+      <h2 class="sec__h" id="feat-h">Built around your wellbeing</h2>
+      <p class="sec__lead">Every feature is thoughtfully designed for students and young adults navigating mental health.</p>
+
+      <div class="features" role="list">
+        <div class="fcard" role="listitem">
+          <div class="fcard__icon fcard__icon--navy">
+            <svg fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M2 12s3.636-7 10-7 10 7 10 7-3.636 7-10 7-10-7-10-7z"/></svg>
+          </div>
+          <h3 class="fcard__h">Transparent Matching</h3>
+          <p class="fcard__p">See exactly why you were matched — shared experiences, compatibility, and expertise. No mystery algorithm, no random pairing.</p>
+        </div>
+
+        <div class="fcard" role="listitem">
+          <div class="fcard__icon fcard__icon--teal">
+            <svg fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+          </div>
+          <h3 class="fcard__h">Password-Protected Journal</h3>
+          <p class="fcard__p">An encrypted private space for your thoughts. A lock icon is always visible — only you can read it. Biometric login supported.</p>
+        </div>
+
+        <div class="fcard" role="listitem">
+          <div class="fcard__icon fcard__icon--navy">
+            <svg fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 11h16"/></svg>
+          </div>
+          <h3 class="fcard__h">Clear Booking</h3>
+          <p class="fcard__p">Book sessions with date, time, and pricing shown upfront — always. No hidden fees, no confusion. Clear and simple, every time.</p>
+        </div>
+
+        <div class="fcard" role="listitem">
+          <div class="fcard__icon fcard__icon--teal">
+            <svg fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          </div>
+          <h3 class="fcard__h">Mood Check-ins</h3>
+          <p class="fcard__p">Gentle, non-judgmental daily check-ins using neutral language. "How are you feeling today?" — a safe space for honesty, not evaluation.</p>
+        </div>
+
+        <div class="fcard" role="listitem">
+          <div class="fcard__icon fcard__icon--navy">
+            <svg fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+          </div>
+          <h3 class="fcard__h">Verified Ambassadors</h3>
+          <p class="fcard__p">Every ambassador is background-checked and supervised. Tap their verified badge to see credentials, training level, experience, and reviews.</p>
+        </div>
+
+        <div class="fcard" role="listitem">
+          <div class="fcard__icon fcard__icon--warm">
+            <svg fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5c0-1 1-2 2.2-1.7C8.3 3.8 10 5.2 12 5.2S15.7 3.8 17.8 3.3C19 3 20 4 20 5v13c0 1-1 1.7-2.2 1.4-2-.4-3.8-1.6-5.8-1.6S8.2 19.4 6.2 19.8 4 19 4 18V5z"/><path d="M12 5.2v14.5"/></svg>
+          </div>
+          <h3 class="fcard__h">Journaling Prompts</h3>
+          <p class="fcard__p">Thoughtfully crafted prompts delivered at your chosen pace. Designed to help you reflect without feeling overwhelmed.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ Matching transparency ══════════════════════════════════════ -->
+  <section class="sec" id="matching" aria-labelledby="match-h">
+    <div class="wrap">
+      <div class="match-grid">
+
+        <!-- Mock matching UI -->
+        <div class="match-ui" aria-hidden="true">
+          <div class="match-ui__head">
+            <div class="match-ui__title">Your ambassador matches</div>
+            <div class="match-ui__sub">We explain every recommendation</div>
+          </div>
+          <div class="match-ui__body">
+            <div class="mprofile mprofile--sel">
+              <div class="mprofile__av mprofile__av--a"></div>
+              <div>
+                <div class="mprofile__name">Maya Chen <span class="mprofile__best">Best match</span></div>
+                <div class="mprofile__why">Shared: housing stress &amp; academic pressure as int&rsquo;l student</div>
+                <div class="mprofile__tags">
+                  <span class="mprofile__tag">Housing</span>
+                  <span class="mprofile__tag">Anxiety</span>
+                  <span class="mprofile__tag">International</span>
+                </div>
+                <div class="mprofile__meta">
+                  <span class="mprofile__meta-i">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                    Replies in ~45 min
+                  </span>
+                  <span class="mprofile__meta-i">&#9733; 4.9 &middot; 83 sessions</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="mprofile">
+              <div class="mprofile__av mprofile__av--b"></div>
+              <div>
+                <div class="mprofile__name">Jordan Lee</div>
+                <div class="mprofile__why">Shared: family pressure &amp; academic burnout</div>
+                <div class="mprofile__tags">
+                  <span class="mprofile__tag">Burnout</span>
+                  <span class="mprofile__tag">Family</span>
+                </div>
+                <div class="mprofile__meta">
+                  <span class="mprofile__meta-i">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                    Replies in ~2 hrs
+                  </span>
+                  <span class="mprofile__meta-i">&#9733; 4.7 &middot; 51 sessions</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Content -->
+        <div>
+          <p class="sec__tag" style="text-align:left;">Matching transparency</p>
+          <h2 class="match-content__h" id="match-h">You&rsquo;ll always know <em>why</em> you were matched</h2>
+          <p class="match-content__p">
+            We don&rsquo;t believe in black-box algorithms. Every ambassador recommendation comes
+            with a clear, plain-language explanation of why they&rsquo;re a good fit for you.
+          </p>
+
+          <div class="points">
+            <div class="point">
+              <div class="point__icon">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+              </div>
+              <div>
+                <div class="point__h">Shared lived experiences</div>
+                <p class="point__p">Your ambassador has navigated challenges similar to yours — housing, academic pressure, family stress, or more.</p>
+              </div>
+            </div>
+            <div class="point">
+              <div class="point__icon">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+              </div>
+              <div>
+                <div class="point__h">Availability &amp; response times</div>
+                <p class="point__p">See exactly when each ambassador is available and their average reply time before you decide who to connect with.</p>
+              </div>
+            </div>
+            <div class="point">
+              <div class="point__icon">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><polyline points="22 4 12 14.01 9 11.01"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+              </div>
+              <div>
+                <div class="point__h">You choose your ambassador</div>
+                <p class="point__p">Review profiles, read reviews from others, and make the choice yourself. You&rsquo;re always in control.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ Ambassadors ════════════════════════════════════════════════ -->
+  <section class="sec sec--alt" id="ambassadors" aria-labelledby="amb-h">
+    <div class="wrap">
+      <p class="sec__tag">Meet our ambassadors</p>
+      <h2 class="sec__h" id="amb-h">Real people, real experience</h2>
+      <p class="sec__lead">Every Luminwell ambassador is background-checked, trained in peer support, and supervised by a licensed professional. Full transparency on every profile.</p>
+
+      <div class="amb-grid" role="list">
+
+        <article class="acard" role="listitem">
+          <div class="acard__top acard__top--a">
+            <span class="acard__level">Peer</span>
+            <div class="acard__av-wrap">
+              <div class="acard__av" style="background:linear-gradient(135deg,var(--navy-mid),var(--teal));">M</div>
+            </div>
+          </div>
+          <div class="acard__body">
+            <div class="acard__name">Maya Chen</div>
+            <div class="acard__role">Peer Ambassador &middot; 2 yrs experience</div>
+            <div class="acard__tags">
+              <span class="acard__tag">Housing stress</span>
+              <span class="acard__tag">Anxiety</span>
+              <span class="acard__tag">Int&rsquo;l students</span>
+            </div>
+            <p class="acard__quote">&ldquo;I moved countries for university and felt completely alone. I&rsquo;m here to make sure you don&rsquo;t navigate that by yourself.&rdquo;</p>
+            <div class="acard__foot">
+              <div class="acard__stars" aria-label="4.9 out of 5 stars">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4 2 7L12 17l-6.5 5 2-7L2 9h7l3-7z"/></svg>
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4 2 7L12 17l-6.5 5 2-7L2 9h7l3-7z"/></svg>
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4 2 7L12 17l-6.5 5 2-7L2 9h7l3-7z"/></svg>
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4 2 7L12 17l-6.5 5 2-7L2 9h7l3-7z"/></svg>
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4 2 7L12 17l-6.5 5 2-7L2 9h7l3-7z"/></svg>
+              </div>
+              <span class="acard__meta-txt"><strong>83</strong> sessions &middot; ~45 min reply</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="acard" role="listitem">
+          <div class="acard__top acard__top--b">
+            <span class="acard__level">Specialized</span>
+            <div class="acard__av-wrap">
+              <div class="acard__av" style="background:linear-gradient(135deg,var(--teal-deep),var(--teal));">J</div>
+            </div>
+          </div>
+          <div class="acard__body">
+            <div class="acard__name">Jordan Lee</div>
+            <div class="acard__role">Specialized Counselor &middot; CBT-informed</div>
+            <div class="acard__tags">
+              <span class="acard__tag">Burnout</span>
+              <span class="acard__tag">Career stress</span>
+              <span class="acard__tag">Family</span>
+            </div>
+            <p class="acard__quote">&ldquo;After burning out in my first year of work, I retrained to help others recognise the signs earlier and build sustainable habits.&rdquo;</p>
+            <div class="acard__foot">
+              <div class="acard__stars" aria-label="4.8 out of 5 stars">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4 2 7L12 17l-6.5 5 2-7L2 9h7l3-7z"/></svg>
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4 2 7L12 17l-6.5 5 2-7L2 9h7l3-7z"/></svg>
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4 2 7L12 17l-6.5 5 2-7L2 9h7l3-7z"/></svg>
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4 2 7L12 17l-6.5 5 2-7L2 9h7l3-7z"/></svg>
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4 2 7L12 17l-6.5 5 2-7L2 9h7l3-7z"/></svg>
+              </div>
+              <span class="acard__meta-txt"><strong>51</strong> sessions &middot; ~2 hr reply</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="acard" role="listitem">
+          <div class="acard__top acard__top--c">
+            <span class="acard__level">Professional</span>
+            <div class="acard__av-wrap">
+              <div class="acard__av" style="background:linear-gradient(135deg,#1d4e89,#6d28d9);">A</div>
+            </div>
+          </div>
+          <div class="acard__body">
+            <div class="acard__name">Aisha Okonkwo</div>
+            <div class="acard__role">Licensed Counselor &middot; 5 yrs experience</div>
+            <div class="acard__tags">
+              <span class="acard__tag">Anxiety</span>
+              <span class="acard__tag">Depression</span>
+              <span class="acard__tag">Trauma</span>
+            </div>
+            <p class="acard__quote">&ldquo;My practice is built on radical honesty and safety. I offer sliding-scale pricing and identity-protected session notes.&rdquo;</p>
+            <div class="acard__foot">
+              <div class="acard__stars" aria-label="5 out of 5 stars">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4 2 7L12 17l-6.5 5 2-7L2 9h7l3-7z"/></svg>
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4 2 7L12 17l-6.5 5 2-7L2 9h7l3-7z"/></svg>
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4 2 7L12 17l-6.5 5 2-7L2 9h7l3-7z"/></svg>
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4 2 7L12 17l-6.5 5 2-7L2 9h7l3-7z"/></svg>
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4 2 7L12 17l-6.5 5 2-7L2 9h7l3-7z"/></svg>
+              </div>
+              <span class="acard__meta-txt"><strong>5.0</strong>/5 &middot; Sliding scale</span>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ Privacy & Security ═════════════════════════════════════════ -->
+  <section class="sec sec--navy" aria-labelledby="priv-h">
+    <div class="wrap">
+      <p class="sec__tag">Your privacy, always</p>
+      <h2 class="sec__h" id="priv-h">Built for trust from the ground up</h2>
+      <p class="sec__lead">When you share something deeply personal, security isn&rsquo;t optional. Every layer of Luminwell is designed to protect you.</p>
+
+      <div class="priv-grid" role="list">
+        <div class="pcard" role="listitem">
+          <div class="pcard__icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+          </div>
+          <div>
+            <div class="pcard__h">Password-protected journals</div>
+            <p class="pcard__p">Your journal is encrypted end-to-end and locked behind a password or biometric. Nobody — not even Luminwell — can read it.</p>
+          </div>
+        </div>
+        <div class="pcard" role="listitem">
+          <div class="pcard__icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <div>
+            <div class="pcard__h">Encrypted conversations</div>
+            <p class="pcard__p">All chats are end-to-end encrypted. Session notes are identity-protected. Your conversations stay between you and your ambassador.</p>
+          </div>
+        </div>
+        <div class="pcard" role="listitem">
+          <div class="pcard__icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22C12 22 3 17.5 3 11V6l9-3 9 3v5c0 6.5-9 11-9 11z"/><path d="M9 12l2 2 4-4"/></svg>
+          </div>
+          <div>
+            <div class="pcard__h">No third-party authentication</div>
+            <p class="pcard__p">We don&rsquo;t use Google or Facebook login. Biometric and passcode options are available — secure, simple, no third-party tracking.</p>
+          </div>
+        </div>
+        <div class="pcard" role="listitem">
+          <div class="pcard__icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          </div>
+          <div>
+            <div class="pcard__h">Transparent data practices</div>
+            <p class="pcard__p">We explain exactly what data is collected, how it&rsquo;s stored, and why. Export or delete your data from Settings at any time.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ Pricing ════════════════════════════════════════════════════ -->
+  <section class="sec" id="pricing" aria-labelledby="price-h">
+    <div class="wrap">
+      <p class="sec__tag">Accessible pricing</p>
+      <h2 class="sec__h" id="price-h">Start free. Upgrade when you&rsquo;re ready.</h2>
+      <p class="sec__lead">Support shouldn&rsquo;t be gated behind a paywall. Try Luminwell free — upgrade for premium features when it feels right.</p>
+
+      <div class="price-grid">
+
+        <div class="prc">
+          <div class="prc__head">
+            <div class="prc__tier">Free forever</div>
+            <div class="prc__price">$0</div>
+            <p class="prc__desc">Everything you need to get started and find support.</p>
+          </div>
+          <div class="prc__body">
+            <ul class="prc__list">
+              <li><svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg> Onboarding &amp; peer matching</li>
+              <li><svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg> 3 chat sessions per month</li>
+              <li><svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg> Basic mood check-ins</li>
+              <li><svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg> Journal (up to 5 entries)</li>
+              <li><svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg> 988 crisis access, always</li>
+            </ul>
+            <a class="btn btn--ghost btn--full" href="onboarding-01-age.html">Get started free</a>
+          </div>
+        </div>
+
+        <div class="prc prc--feat">
+          <div class="prc__head">
+            <div class="prc__tier">Premium</div>
+            <div class="prc__price"><sup>$</sup>12<small>/mo</small></div>
+            <p class="prc__desc">Full access for students who want consistent, ongoing support.</p>
+          </div>
+          <div class="prc__body">
+            <ul class="prc__list">
+              <li><svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg> Unlimited chat sessions</li>
+              <li><svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg> Priority booking with specialists</li>
+              <li><svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg> Unlimited journal &amp; prompts</li>
+              <li><svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg> Advanced mood tracking</li>
+              <li><svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg> Community credit system</li>
+            </ul>
+            <a class="btn btn--navy btn--full" href="onboarding-01-age.html">Start free trial</a>
+          </div>
+        </div>
+
+      </div>
+      <p style="text-align:center;font-size:13px;color:var(--text-soft);margin-top:16px;">No credit card required for free tier &middot; Cancel anytime &middot; Student discounts available</p>
+    </div>
+  </section>
+
+  <!-- ══ Crisis bar ═════════════════════════════════════════════════ -->
+  <div class="crisis" role="complementary" aria-label="Crisis support resources">
+    <div class="wrap">
+      <div class="crisis__inner">
+        <p class="crisis__copy"><strong>Need support right now?</strong> Help is available 24 / 7 &mdash; you are not alone.</p>
+        <div class="crisis__items">
+          <a class="citem" href="tel:988">
+            <svg fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.72A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+            <div>
+              <div class="citem__label">Call or Text 988</div>
+              <div class="citem__sub">Suicide &amp; Crisis Lifeline</div>
+            </div>
+          </a>
+          <a class="citem" href="sms:741741?body=HOME">
+            <svg fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+            <div>
+              <div class="citem__label">Text HOME to 741741</div>
+              <div class="citem__sub">Crisis Text Line</div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ Final CTA ══════════════════════════════════════════════════ -->
+  <section class="cta" aria-labelledby="cta-h">
+    <div class="wrap cta__inner">
+      <h2 class="cta__h" id="cta-h">Ready to feel <em>genuinely supported?</em></h2>
+      <p class="cta__sub">Join thousands of students who&rsquo;ve found their peer ambassador on Luminwell. Free to start. No judgment. No pressure.</p>
+      <div class="cta__btns">
+        <a class="btn btn--teal btn--lg" href="onboarding-01-age.html">
+          Get Started Free
+          <svg fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <a class="btn btn--outline-white btn--lg" href="#about">Learn more first</a>
+      </div>
+      <p class="cta__note">No credit card required &middot; Cancel anytime &middot; WCAG 2.1 AA compliant</p>
+    </div>
+  </section>
+
+  <!-- ══ Footer ═════════════════════════════════════════════════════ -->
+  <footer class="footer" aria-label="Site footer">
+    <div class="wrap">
+      <div class="footer__grid">
+
+        <div>
+          <div class="footer__brand-name">Luminwell</div>
+          <p class="footer__brand-desc">Peer mental health support for students and young adults. Judgment-free, private, and accessible.</p>
+          <a class="footer__crisis-link" href="tel:988">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            988 Crisis Line &mdash; always available
+          </a>
+        </div>
+
+        <div>
+          <div class="footer__col-h">Platform</div>
+          <ul class="footer__links">
+            <li><a href="#how-it-works">How it Works</a></li>
+            <li><a href="#matching">Matching</a></li>
+            <li><a href="#ambassadors">Ambassadors</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <div class="footer__col-h">Support</div>
+          <ul class="footer__links">
+            <li><a href="#">Help Centre</a></li>
+            <li><a href="#">Community Forum</a></li>
+            <li><a href="#">Crisis Resources</a></li>
+            <li><a href="#">Contact Us</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <div class="footer__col-h">Legal</div>
+          <ul class="footer__links">
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms of Service</a></li>
+            <li><a href="#">Accessibility</a></li>
+            <li><a href="#">Cookie Policy</a></li>
+          </ul>
+        </div>
+
+      </div>
+      <div class="footer__bottom">
+        <span>&copy; 2026 Luminwell. All rights reserved.</span>
+        <span>Built with care for student wellbeing.</span>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

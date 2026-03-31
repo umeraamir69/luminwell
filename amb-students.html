@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Luminwell Ambassador — My Clients</title>
+  <link rel="stylesheet" href="ambassador.css" />
+  <style>
+    .client-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
+    .client-card {
+      background: var(--surface); border-radius: 16px;
+      border: 1.5px solid var(--border); box-shadow: var(--shadow-sm);
+      overflow: hidden; display: flex; flex-direction: column;
+      text-decoration: none; color: inherit;
+      transition: box-shadow .18s, border-color .18s, transform .15s;
+    }
+    .client-card:hover { box-shadow: var(--shadow); border-color: rgba(15,45,69,.2); transform: translateY(-2px); }
+    .client-card__bar { height: 4px; width: 100%; }
+    .client-card__top { padding: 16px 16px 12px; display: flex; align-items: center; gap: 12px; }
+    .client-card__avatar { width: 48px; height: 48px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 20px; box-shadow: 0 2px 8px rgba(12,25,41,.1); }
+    .client-card__name { font-size: 15px; font-weight: 800; letter-spacing: -0.02em; }
+    .client-card__since { font-size: 11px; color: var(--muted); margin-top: 2px; }
+    .client-card__body { padding: 0 16px 14px; display: flex; flex-direction: column; gap: 10px; }
+    .client-card__row { display: flex; align-items: center; justify-content: space-between; }
+    .client-card__stat-label { font-size: 11px; color: var(--soft); font-weight: 600; }
+    .client-card__stat-val   { font-size: 12px; font-weight: 800; color: var(--text); }
+    .client-card__mood-row { display: flex; align-items: center; gap: 8px; }
+    .client-card__mood-label { font-size: 11px; color: var(--soft); font-weight: 600; }
+    .client-card__divider { height: 1px; background: var(--border-soft); }
+    .client-card__foot { padding: 11px 16px; border-top: 1px solid var(--border-soft); display: flex; align-items: center; justify-content: space-between; }
+    .client-card__next { font-size: 11px; color: var(--muted); display: flex; align-items: center; gap: 5px; }
+    .client-card__next svg { width: 11px; height: 11px; }
+
+    .filter-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .filter-chip { padding: 6px 14px; border-radius: var(--rf); background: var(--surface); border: 1.5px solid var(--border); font-size: 12px; font-weight: 600; color: var(--muted); cursor: pointer; transition: all .14s; box-shadow: var(--shadow-sm); }
+    .filter-chip:hover { border-color: var(--sb-bg); color: var(--sb-bg); }
+    .filter-chip--active { background: var(--sb-bg); color: #fff; border-color: var(--sb-bg); }
+    .search-box { display: flex; align-items: center; gap: 8px; padding: 9px 14px; background: var(--surface); border: 1.5px solid var(--border); border-radius: 10px; box-shadow: var(--shadow-sm); flex: 1; max-width: 280px; }
+    .search-box svg { width: 15px; height: 15px; color: var(--soft); flex-shrink: 0; }
+    .search-box input { flex: 1; border: none; outline: none; font-family: var(--font); font-size: 13px; color: var(--text); background: transparent; }
+    .search-box input::placeholder { color: var(--soft); }
+  </style>
+</head>
+<body>
+<div class="app">
+  <input type="checkbox" id="sb-toggle" class="state-input" />
+  <aside class="sidebar" aria-label="Ambassador navigation">
+    <div class="sidebar__head">
+      <img class="sidebar__logo-img" src="logo.png" alt="Luminwell" width="28" height="28" decoding="async" />
+      <div class="sidebar__logo-wrap"><span class="sidebar__logo">LUMINWELL</span><span class="sidebar__role-tag">Ambassador</span></div>
+      <label for="sb-toggle" class="sb-collapse-btn" aria-label="Collapse sidebar">
+        <svg class="icon-collapse" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+        <svg class="icon-expand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+      </label>
+    </div>
+    <div class="sidebar__block">
+      <div class="sidebar__label">Main</div>
+      <nav class="sb-nav">
+        <a href="amb-home.html" class="sb-nav__link"><svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5L12 4l9 6.5V20a1 1 0 01-1 1h-5v-7H9v7H4a1 1 0 01-1-1v-9.5z"/></svg>Home</a>
+        <a href="amb-schedule.html" class="sb-nav__link"><svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Schedule<span class="sb-nav__badge sb-nav__badge--teal">3</span></a>
+        <a href="amb-students.html" class="sb-nav__link is-active" aria-current="page"><svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>My Clients</a>
+        <a href="amb-notes.html" class="sb-nav__link"><svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Session Notes<span class="sb-nav__badge sb-nav__badge--amber">2</span></a>
+        <a href="amb-tasks.html" class="sb-nav__link"><svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>Tasks<span class="sb-nav__badge">5</span></a>
+        <a href="amb-messages.html" class="sb-nav__link"><svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>Messages<span class="sb-nav__badge">3</span></a>
+        <a href="amb-profile.html" class="sb-nav__link"><svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>My Profile</a>
+      </nav>
+    </div>
+    <div class="sidebar__block sidebar__block--fill">
+      <div class="sidebar__label">Priority</div>
+      <div class="sb-alerts">
+        <div class="sb-alert sb-alert--red"><span class="sb-alert__title">Client A — High priority</span><span class="sb-alert__meta">Low mood · 3 consecutive days</span></div>
+        <div class="sb-alert sb-alert--amber"><span class="sb-alert__title">Client C — Missed session</span><span class="sb-alert__meta">No-show · Tue 25 Mar</span></div>
+      </div>
+    </div>
+    <div class="sidebar__foot">
+      <div class="sidebar__avatar">🌿</div>
+      <div><div class="sidebar__name">Maya Johnson</div><div class="sidebar__stats"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>4.9 · 84 clients</div></div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="topbar__left">
+        <img class="topbar__logo-img" src="logo.png" alt="Luminwell" width="26" height="26" decoding="async" />
+        <span class="topbar__title">Ambassador Dashboard</span>
+        <span class="topbar__divider"></span>
+        <span class="topbar__sub">My Clients</span>
+      </div>
+      <div class="topbar__right">
+        <span class="topbar__today"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Sunday, 29 Mar 2026</span>
+        <button type="button" class="topbar__crisis">988 Helpline</button>
+        <button type="button" class="topbar__icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg><span class="notif-dot"></span></button>
+      </div>
+    </header>
+
+    <div class="amb-page">
+      <div class="amb-inner">
+        <div class="amb-header">
+          <div class="amb-header__text">
+            <h1 class="amb-header__title">My Clients</h1>
+            <p class="amb-header__sub">12 active clients · 2 require attention · 1 new this week</p>
+          </div>
+          <div class="amb-header__actions">
+            <div class="search-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg><input type="text" placeholder="Search clients…" /></div>
+          </div>
+        </div>
+
+        <!-- Filter row -->
+        <div class="filter-row">
+          <span class="filter-chip filter-chip--active">All clients</span>
+          <span class="filter-chip">Needs attention</span>
+          <span class="filter-chip">Active this week</span>
+          <span class="filter-chip">No upcoming session</span>
+          <span class="filter-chip">New clients</span>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-row">
+          <div class="stat-card"><div class="stat-card__icon stat-card__icon--navy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div><div><div class="stat-card__val">12</div><div class="stat-card__label">Active clients</div></div></div>
+          <div class="stat-card"><div class="stat-card__icon stat-card__icon--red"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div><div><div class="stat-card__val">2</div><div class="stat-card__label">Need attention</div></div></div>
+          <div class="stat-card"><div class="stat-card__icon stat-card__icon--teal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg></div><div><div class="stat-card__val">9</div><div class="stat-card__label">Mood trending up</div></div></div>
+          <div class="stat-card"><div class="stat-card__icon stat-card__icon--amber"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></div><div><div class="stat-card__val">8</div><div class="stat-card__label">Sessions this week</div></div></div>
+        </div>
+
+        <!-- Client grid -->
+        <div class="client-grid">
+          <!-- Client A — high priority -->
+          <a href="amb-student-detail.html" class="client-card">
+            <div class="client-card__bar" style="background:linear-gradient(90deg,var(--red),#f87171);"></div>
+            <div class="client-card__top">
+              <div class="client-card__avatar" style="background:linear-gradient(135deg,#7c3aed,#c084fc);">🌸</div>
+              <div><p class="client-card__name">Client A</p><p class="client-card__since">Since Dec 2025 · 8 sessions</p></div>
+              <span class="flag-badge flag-badge--red" style="margin-left:auto;">High priority</span>
+            </div>
+            <div class="client-card__body">
+              <div class="client-card__row"><span class="client-card__stat-label">Focus area</span><span class="client-card__stat-val">Anxiety · Academic stress</span></div>
+              <div class="client-card__divider"></div>
+              <div class="client-card__mood-row">
+                <span class="client-card__mood-label">Last 5 moods</span>
+                <div class="mood-bar"><span class="mood-dot mood-dot--okay"></span><span class="mood-dot mood-dot--low"></span><span class="mood-dot mood-dot--low"></span><span class="mood-dot mood-dot--low"></span><span class="mood-dot mood-dot--low"></span></div>
+              </div>
+              <div class="client-card__row"><span class="client-card__stat-label">Last journal</span><span class="client-card__stat-val">3 days ago</span></div>
+            </div>
+            <div class="client-card__foot">
+              <span class="client-card__next"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Thu 2 Apr · 2:00 PM</span>
+              <span class="type-badge type-badge--video">Video</span>
+            </div>
+          </a>
+          <!-- Client B -->
+          <a href="amb-student-detail.html" class="client-card">
+            <div class="client-card__bar" style="background:linear-gradient(90deg,var(--teal),#34d399);"></div>
+            <div class="client-card__top">
+              <div class="client-card__avatar" style="background:linear-gradient(135deg,#059669,#34d399);">🌍</div>
+              <div><p class="client-card__name">Client B</p><p class="client-card__since">Since Feb 2026 · 3 sessions</p></div>
+              <span class="flag-badge flag-badge--none" style="margin-left:auto;">Stable</span>
+            </div>
+            <div class="client-card__body">
+              <div class="client-card__row"><span class="client-card__stat-label">Focus area</span><span class="client-card__stat-val">Academic stress</span></div>
+              <div class="client-card__divider"></div>
+              <div class="client-card__mood-row">
+                <span class="client-card__mood-label">Last 5 moods</span>
+                <div class="mood-bar"><span class="mood-dot mood-dot--good"></span><span class="mood-dot mood-dot--okay"></span><span class="mood-dot mood-dot--good"></span><span class="mood-dot mood-dot--great"></span><span class="mood-dot mood-dot--good"></span></div>
+              </div>
+              <div class="client-card__row"><span class="client-card__stat-label">Last journal</span><span class="client-card__stat-val">Yesterday</span></div>
+            </div>
+            <div class="client-card__foot">
+              <span class="client-card__next"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Today 1:30 PM</span>
+              <span class="type-badge type-badge--video">Video</span>
+            </div>
+          </a>
+          <!-- Client C -->
+          <div class="client-card">
+            <div class="client-card__bar" style="background:linear-gradient(90deg,var(--amber),#fbbf24);"></div>
+            <div class="client-card__top">
+              <div class="client-card__avatar" style="background:linear-gradient(135deg,#d97706,#fbbf24);">☀️</div>
+              <div><p class="client-card__name">Client C</p><p class="client-card__since">Since Jan 2026 · 5 sessions</p></div>
+              <span class="flag-badge flag-badge--amber" style="margin-left:auto;">No-show</span>
+            </div>
+            <div class="client-card__body">
+              <div class="client-card__row"><span class="client-card__stat-label">Focus area</span><span class="client-card__stat-val">Family stress · Grief</span></div>
+              <div class="client-card__divider"></div>
+              <div class="client-card__mood-row">
+                <span class="client-card__mood-label">Last 5 moods</span>
+                <div class="mood-bar"><span class="mood-dot mood-dot--good"></span><span class="mood-dot mood-dot--okay"></span><span class="mood-dot mood-dot--okay"></span><span class="mood-dot mood-dot--low"></span><span class="mood-dot mood-dot--empty"></span></div>
+              </div>
+              <div class="client-card__row"><span class="client-card__stat-label">Last journal</span><span class="client-card__stat-val">5 days ago</span></div>
+            </div>
+            <div class="client-card__foot">
+              <span class="client-card__next" style="color:var(--red);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Missed Tue 25 Mar</span>
+              <div style="display:flex;gap:5px;">
+                <a href="amb-messages.html" class="btn-ghost" style="font-size:11px;padding:4px 8px;">Message</a>
+                <a href="amb-student-detail.html" class="btn-ghost" style="font-size:11px;padding:4px 8px;">Profile</a>
+              </div>
+            </div>
+          </div>
+          <!-- Client D -->
+          <a href="amb-student-detail.html" class="client-card">
+            <div class="client-card__bar" style="background:linear-gradient(90deg,#0ea5e9,#38bdf8);"></div>
+            <div class="client-card__top">
+              <div class="client-card__avatar" style="background:linear-gradient(135deg,#0ea5e9,#38bdf8);">🧘</div>
+              <div><p class="client-card__name">Client D</p><p class="client-card__since">Since Nov 2025 · 6 sessions</p></div>
+              <span class="flag-badge flag-badge--none" style="margin-left:auto;">Improving</span>
+            </div>
+            <div class="client-card__body">
+              <div class="client-card__row"><span class="client-card__stat-label">Focus area</span><span class="client-card__stat-val">LGBTQ+ · Identity · Isolation</span></div>
+              <div class="client-card__divider"></div>
+              <div class="client-card__mood-row">
+                <span class="client-card__mood-label">Last 5 moods</span>
+                <div class="mood-bar"><span class="mood-dot mood-dot--low"></span><span class="mood-dot mood-dot--okay"></span><span class="mood-dot mood-dot--okay"></span><span class="mood-dot mood-dot--good"></span><span class="mood-dot mood-dot--good"></span></div>
+              </div>
+              <div class="client-card__row"><span class="client-card__stat-label">Last journal</span><span class="client-card__stat-val">2 days ago</span></div>
+            </div>
+            <div class="client-card__foot">
+              <span class="client-card__next"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Tue 31 Mar · 2:30 PM</span>
+              <span class="type-badge type-badge--video">Video</span>
+            </div>
+          </a>
+          <!-- Client E -->
+          <a href="amb-student-detail.html" class="client-card">
+            <div class="client-card__bar" style="background:linear-gradient(90deg,var(--teal),#34d399);"></div>
+            <div class="client-card__top">
+              <div class="client-card__avatar" style="background:linear-gradient(135deg,#059669,#34d399);">🌿</div>
+              <div><p class="client-card__name">Client E</p><p class="client-card__since">Since Oct 2025 · 10 sessions</p></div>
+              <span class="flag-badge flag-badge--none" style="margin-left:auto;">Stable</span>
+            </div>
+            <div class="client-card__body">
+              <div class="client-card__row"><span class="client-card__stat-label">Focus area</span><span class="client-card__stat-val">Housing · Anxiety</span></div>
+              <div class="client-card__divider"></div>
+              <div class="client-card__mood-row">
+                <span class="client-card__mood-label">Last 5 moods</span>
+                <div class="mood-bar"><span class="mood-dot mood-dot--okay"></span><span class="mood-dot mood-dot--good"></span><span class="mood-dot mood-dot--good"></span><span class="mood-dot mood-dot--good"></span><span class="mood-dot mood-dot--great"></span></div>
+              </div>
+              <div class="client-card__row"><span class="client-card__stat-label">Last journal</span><span class="client-card__stat-val">Today</span></div>
+            </div>
+            <div class="client-card__foot">
+              <span class="client-card__next"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Today 2:00 PM</span>
+              <span class="type-badge type-badge--video">Video</span>
+            </div>
+          </a>
+          <!-- Client F -->
+          <div class="client-card">
+            <div class="client-card__bar" style="background:linear-gradient(90deg,var(--amber),#fbbf24);"></div>
+            <div class="client-card__top">
+              <div class="client-card__avatar" style="background:linear-gradient(135deg,#475569,#94a3b8);">👤</div>
+              <div><p class="client-card__name">Client F</p><p class="client-card__since">Since Mar 2026 · 2 sessions</p></div>
+              <span class="flag-badge flag-badge--amber" style="margin-left:auto;">No check-in</span>
+            </div>
+            <div class="client-card__body">
+              <div class="client-card__row"><span class="client-card__stat-label">Focus area</span><span class="client-card__stat-val">Loneliness · International student</span></div>
+              <div class="client-card__divider"></div>
+              <div class="client-card__mood-row">
+                <span class="client-card__mood-label">Last 5 moods</span>
+                <div class="mood-bar"><span class="mood-dot mood-dot--okay"></span><span class="mood-dot mood-dot--okay"></span><span class="mood-dot mood-dot--empty"></span><span class="mood-dot mood-dot--empty"></span><span class="mood-dot mood-dot--empty"></span></div>
+              </div>
+              <div class="client-card__row"><span class="client-card__stat-label">Last active</span><span class="client-card__stat-val">5 days ago</span></div>
+            </div>
+            <div class="client-card__foot">
+              <span class="client-card__next"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Mon 6 Apr · 11:00 AM</span>
+              <div style="display:flex;gap:5px;">
+                <span class="type-badge type-badge--video">Video</span>
+                <a href="amb-student-detail.html" class="btn-ghost" style="font-size:11px;padding:4px 8px;">Profile</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="privacy-strip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>All client data is anonymised. Names, identifiers, and personal details are never stored. Mood and journal data is visible only to you as their assigned ambassador.</div>
+
+      </div>
+    </div>
+  </main>
+</div>
+</body>
+</html>

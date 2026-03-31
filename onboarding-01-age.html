@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Luminwell — Your age</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="onboarding.css" />
+</head>
+<body>
+
+  <div class="ob-card" role="main">
+
+    <!-- Header -->
+    <header class="ob-header">
+      <span class="ob-logo">Luminwell</span>
+      <a class="ob-skip" href="index.html">Skip setup</a>
+    </header>
+
+    <!-- Progress stepper -->
+    <div class="ob-stepper">
+      <p class="ob-step-label"><strong>Step 1</strong> of 5 &mdash; Your Age</p>
+      <div class="ob-dots" role="group" aria-label="Onboarding progress, step 1 of 5">
+        <span class="ob-dot ob-dot--current" aria-current="step" aria-label="Step 1, current">1</span>
+        <span class="ob-line" aria-hidden="true"></span>
+        <span class="ob-dot ob-dot--todo" aria-label="Step 2">2</span>
+        <span class="ob-line" aria-hidden="true"></span>
+        <span class="ob-dot ob-dot--todo" aria-label="Step 3">3</span>
+        <span class="ob-line" aria-hidden="true"></span>
+        <span class="ob-dot ob-dot--todo" aria-label="Step 4">4</span>
+        <span class="ob-line" aria-hidden="true"></span>
+        <span class="ob-dot ob-dot--todo" aria-label="Step 5">5</span>
+      </div>
+    </div>
+
+    <!-- Illustration -->
+    <div class="ob-art" aria-hidden="true">
+      <img src="age-question-image%201.png" alt="" width="220" height="165" decoding="async" />
+    </div>
+
+    <!-- Body -->
+    <div class="ob-body">
+      <h1 class="ob-question">What is your age group?</h1>
+      <p class="ob-context">
+        We use your age to match you with peer ambassadors who truly understand
+        where you are in life &mdash; no one-size-fits-all here.
+      </p>
+
+      <div class="ob-select-wrap">
+        <label class="sr-only" for="age">Age group</label>
+        <select class="ob-select" id="age" name="age_group">
+          <option value="" disabled selected>Select your age range&hellip;</option>
+          <option value="under18">Under 18</option>
+          <option value="18-24">18 &ndash; 24</option>
+          <option value="25-34">25 &ndash; 34</option>
+          <option value="35-44">35 &ndash; 44</option>
+          <option value="45+">45 and above</option>
+        </select>
+        <!-- chevron icon -->
+        <svg class="ob-select-arrow" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M4 6l4 4 4-4"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="ob-footer">
+      <div class="ob-privacy">
+        <!-- shield icon -->
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </svg>
+        Your responses are private and used only to personalise your experience.
+      </div>
+
+      <div class="ob-actions ob-actions--right">
+        <a class="btn btn--primary btn--disabled"
+           id="next-btn"
+           href="onboarding-02-user-gender.html"
+           aria-disabled="true"
+           tabindex="-1">
+          Next &rarr;
+        </a>
+      </div>
+
+      <p class="ob-settings-note">You can update this anytime in Settings.</p>
+    </div>
+
+  </div>
+
+  <!-- Gentle crisis support link -->
+  <div class="ob-crisis" aria-label="Crisis support">
+    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+      <path d="M12 21.593c-5.63-5.539-11-10.297-11-14.402C1 3.604 3.322 2 5.5 2c1.919 0 3.422 1.119 4.5 2.5C11.078 3.119 12.581 2 14.5 2c2.178 0 4.5 1.604 4.5 5.191 0 4.105-5.37 8.863-11 14.402z" stroke-width="1.5" fill="none"/>
+    </svg>
+    Need support right now? &nbsp;<a href="tel:988">Call or text 988</a> — free &amp; confidential.
+  </div>
+
+  <script>
+    (function () {
+      var sel = document.getElementById('age');
+      var btn = document.getElementById('next-btn');
+
+      function refresh() {
+        var ok = sel.value !== '';
+        btn.classList.toggle('btn--disabled', !ok);
+        btn.setAttribute('aria-disabled', String(!ok));
+        btn.tabIndex = ok ? 0 : -1;
+      }
+
+      sel.addEventListener('change', refresh);
+      refresh();
+    })();
+  </script>
+
+</body>
+</html>

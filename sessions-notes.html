@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Luminwell — Session Notes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="sessions.css" />
+  <style>
+    /* ── Static tab bar ─────────────────────────────── */
+    .static-tabs {
+      display: flex; gap: 4px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: 4px;
+      width: fit-content; box-shadow: var(--shadow-sm);
+    }
+    .stab {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 8px 20px; border-radius: 9px;
+      font-size: 13px; font-weight: 600; color: var(--muted);
+      text-decoration: none; transition: all .15s;
+    }
+    .stab svg { width: 15px; height: 15px; }
+    .stab__count {
+      display: inline-flex; align-items: center; justify-content: center;
+      min-width: 18px; height: 18px; padding: 0 5px;
+      border-radius: var(--rf); font-size: 10px; font-weight: 800;
+      background: var(--page-bg); color: var(--muted);
+    }
+    .stab--active { background: var(--sb-bg); color: #fff; }
+    .stab--active .stab__count { background: rgba(255,255,255,.22); color: #fff; }
+
+    /* ── Notes view header ──────────────────────────── */
+    .notes-view-head {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      gap: 14px; flex-wrap: wrap;
+    }
+    .notes-view-head__left { display: flex; flex-direction: column; gap: 3px; }
+    .notes-view-head__title { font-size: 18px; font-weight: 800; letter-spacing: -0.03em; }
+    .notes-view-head__sub   { font-size: 13px; color: var(--muted); }
+    .notes-view-head__right { display: flex; align-items: center; gap: 8px; }
+
+    .btn-export-all {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 8px 16px; border-radius: 9px;
+      border: 1.5px solid var(--border); background: var(--surface);
+      color: var(--muted); font-size: 12px; font-weight: 600;
+      font-family: var(--font); cursor: pointer; transition: all .14s;
+      text-decoration: none;
+    }
+    .btn-export-all:hover { border-color: var(--teal); color: var(--teal); background: var(--teal-pale); }
+    .btn-export-all svg { width: 13px; height: 13px; }
+
+    /* ── Enhanced note card ─────────────────────────── */
+    .snc {
+      background: var(--surface); border-radius: 16px;
+      border: 1px solid var(--border); box-shadow: var(--shadow-card);
+      overflow: hidden; transition: box-shadow .2s, border-color .2s;
+    }
+    .snc:hover { box-shadow: var(--shadow); border-color: rgba(23,93,146,.15); }
+
+    /* Accent bar with mood colour */
+    .snc__accent { height: 4px; }
+    .snc__accent--pos  { background: linear-gradient(90deg, #059669, #34d399); }
+    .snc__accent--mid  { background: linear-gradient(90deg, #d97706, #fbbf24); }
+    .snc__accent--neu  { background: linear-gradient(90deg, #475569, #94a3b8); }
+
+    /* Card header */
+    .snc__head {
+      display: flex; align-items: flex-start;
+      justify-content: space-between; gap: 12px;
+      padding: 16px 20px 14px;
+      border-bottom: 1px solid var(--border-soft);
+    }
+    .snc__head-left { display: flex; align-items: center; gap: 12px; }
+    .snc__date-icon {
+      width: 44px; height: 44px; border-radius: 12px;
+      background: rgba(23,93,146,.07); color: var(--sb-bg);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .snc__date-icon svg { width: 20px; height: 20px; }
+    .snc__date-title { font-size: 15px; font-weight: 800; letter-spacing: -0.02em; }
+    .snc__date-meta  { font-size: 12px; color: var(--muted); margin-top: 2px; display: flex; align-items: center; gap: 8px; }
+    .snc__date-meta svg { width: 12px; height: 12px; }
+
+    /* Badges */
+    .snc__badges { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .snc__badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 4px 10px; border-radius: var(--rf);
+      font-size: 11px; font-weight: 700;
+    }
+    .snc__badge--note { background: rgba(23,93,146,.08); color: var(--sb-bg); border: 1px solid rgba(23,93,146,.15); }
+    .snc__badge--pos  { background: rgba(5,150,105,.1);  color: #065f46;  border: 1px solid rgba(5,150,105,.2); }
+    .snc__badge--mid  { background: rgba(217,119,6,.1);  color: #92400e;  border: 1px solid rgba(217,119,6,.2); }
+    .snc__badge--neu  { background: rgba(100,116,139,.1); color: var(--muted); border: 1px solid rgba(100,116,139,.2); }
+    .snc__badge-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+
+    /* Card body */
+    .snc__body { padding: 18px 20px; display: flex; flex-direction: column; gap: 16px; }
+
+    /* Two-column layout */
+    .snc__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 700px) { .snc__grid { grid-template-columns: 1fr; } }
+
+    .snc__section-label {
+      font-size: 11px; font-weight: 700; letter-spacing: .08em;
+      text-transform: uppercase; color: var(--soft); margin-bottom: 7px;
+    }
+    .snc__section-text {
+      font-size: 13px; color: var(--muted); line-height: 1.7;
+    }
+
+    /* Key points */
+    .snc__points { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 6px; }
+    .snc__points li {
+      display: flex; align-items: flex-start; gap: 8px;
+      font-size: 13px; color: var(--muted); line-height: 1.55;
+    }
+    .snc__points li::before {
+      content: '';
+      flex-shrink: 0; width: 6px; height: 6px; border-radius: 50%;
+      background: var(--teal-mid); margin-top: 5px;
+    }
+
+    /* Homework block */
+    .snc__hw {
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 12px 14px; border-radius: 10px;
+      background: rgba(23,93,146,.04); border: 1px solid rgba(23,93,146,.1);
+    }
+    .snc__hw-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+    .snc__hw-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--sb-bg); margin-bottom: 3px; }
+    .snc__hw-text  { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+    /* Techniques block */
+    .snc__techniques { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px; }
+    .snc__tech-tag {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 4px 10px; border-radius: var(--rf);
+      background: var(--teal-pale); border: 1px solid var(--teal-mid);
+      font-size: 11px; font-weight: 600; color: var(--teal-deep);
+    }
+
+    /* Card footer */
+    .snc__foot {
+      padding: 12px 20px 16px;
+      border-top: 1px solid var(--border-soft);
+      display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
+    }
+    .btn-read-full {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 9px 18px; border-radius: 9px;
+      background: var(--sb-bg); color: #fff;
+      font-size: 13px; font-weight: 700; font-family: var(--font);
+      border: none; cursor: pointer; text-decoration: none;
+      box-shadow: 0 2px 8px rgba(23,93,146,.25); transition: background .14s;
+    }
+    .btn-read-full:hover { background: var(--sb-deep); }
+    .btn-read-full svg { width: 13px; height: 13px; }
+    .btn-export-sm {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 8px 14px; border-radius: 9px;
+      border: 1.5px solid var(--border); background: var(--surface);
+      color: var(--muted); font-size: 12px; font-weight: 600; font-family: var(--font);
+      cursor: pointer; transition: all .14s; text-decoration: none;
+    }
+    .btn-export-sm:hover { border-color: var(--teal); color: var(--teal); background: var(--teal-pale); }
+    .btn-export-sm svg { width: 12px; height: 12px; }
+    .snc__foot-meta {
+      margin-left: auto;
+      display: flex; align-items: center; gap: 5px;
+      font-size: 11px; color: var(--soft);
+    }
+    .snc__foot-meta svg { width: 11px; height: 11px; }
+
+    /* ── AI generation tag ──────────────────────────── */
+    .ai-tag {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 3px 9px; border-radius: var(--rf);
+      background: rgba(139,92,246,.08); border: 1px solid rgba(139,92,246,.18);
+      font-size: 10px; font-weight: 700; color: #6d28d9;
+    }
+
+    /* ── Privacy strip ──────────────────────────────── */
+    .sess-privacy {
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 14px 18px; border-radius: 12px;
+      background: var(--surface); border: 1px solid var(--border);
+      font-size: 12px; color: var(--muted); line-height: 1.6;
+      box-shadow: var(--shadow-sm);
+    }
+    .sess-privacy svg { width: 14px; height: 14px; flex-shrink: 0; margin-top: 2px; color: var(--teal); }
+  </style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ══ Sidebar ══════════════════════════════════════ -->
+  <aside class="sidebar" aria-label="Navigation">
+    <div class="sidebar__head">
+      <img class="sidebar__logo-img" src="logo.png" alt="Luminwell" width="30" height="30" decoding="async" />
+      <span class="sidebar__logo">LUMINWELL</span>
+    </div>
+    <div class="sidebar__block">
+      <a href="index.html" class="sidebar__new">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+        New chat
+      </a>
+    </div>
+    <div class="sidebar__block">
+      <div class="sidebar__label">Menu</div>
+      <nav class="sb-nav" aria-label="Sections">
+        <a href="index.html" class="sb-nav__link">
+          <svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5L12 4l9 6.5V20a1 1 0 01-1 1h-5v-7H9v7H4a1 1 0 01-1-1v-9.5z"/></svg>
+          Home
+        </a>
+        <a href="#" class="sb-nav__link">
+          <svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 11h16"/></svg>
+          Book
+        </a>
+        <a href="sessions.html" class="sb-nav__link is-active" aria-current="page">
+          <svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          Sessions
+        </a>
+        <a href="journal-pin.html" class="sb-nav__link">
+          <svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5c0-1 1-2 2.2-1.7C8.3 3.8 10 5.2 12 5.2S15.7 3.8 17.8 3.3C19 3 20 4 20 5v13c0 1-1 1.7-2.2 1.4-2-.4-3.8-1.6-5.8-1.6S8.2 19.4 6.2 19.8 4 19 4 18V5z"/><path d="M12 5.2v14.5"/></svg>
+          Journal
+        </a>
+        <a href="calendar.html" class="sb-nav__link">
+          <svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+          Calendar
+        </a>
+      </nav>
+    </div>
+    <div class="sidebar__block sidebar__block--fill">
+      <div class="sidebar__label">Recent Notes</div>
+      <div class="sb-recent">
+        <button type="button" class="sb-recent__btn">
+          <div class="sb-recent__title">Managing pre-deadline anxiety</div>
+          <div class="sb-recent__meta">Apr 25 · 30 min</div>
+        </button>
+        <button type="button" class="sb-recent__btn">
+          <div class="sb-recent__title">Processing housing stress</div>
+          <div class="sb-recent__meta">Apr 9 · 45 min</div>
+        </button>
+        <button type="button" class="sb-recent__btn">
+          <div class="sb-recent__title">Boundaries and saying no</div>
+          <div class="sb-recent__meta">Mar 20 · 30 min</div>
+        </button>
+        <button type="button" class="sb-recent__btn">
+          <div class="sb-recent__title">Midterm stress — coping toolkit</div>
+          <div class="sb-recent__meta">Mar 6 · 45 min</div>
+        </button>
+      </div>
+    </div>
+    <div class="sidebar__foot">
+      <div class="sidebar__avatar" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="3.5"/><path d="M6 19c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke-linecap="round"/></svg>
+      </div>
+      <div>
+        <div class="sidebar__name">Umer</div>
+        <div class="sidebar__credits">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><ellipse cx="12" cy="6" rx="6" ry="2"/><path d="M6 6v4c0 1.1 2.7 2 6 2s6-.9 6-2V6"/><path d="M6 10v4c0 1.1 2.7 2 6 2s6-.9 6-2v-4"/></svg>
+          500
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ══ Main ══════════════════════════════════════════ -->
+  <main class="main">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <div class="topbar__left">
+        <img class="topbar__logo-img" src="logo.png" alt="Luminwell" width="28" height="28" decoding="async" />
+        <span class="topbar__title">Session Notes</span>
+      </div>
+      <div class="topbar__right">
+        <button type="button" class="topbar__crisis" aria-label="988 Crisis and Suicide Lifeline">988 Helpline</button>
+        <a href="journal-pin.html" class="btn-lock-sess" aria-label="Lock and return to PIN screen">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg>
+          Lock
+        </a>
+        <button type="button" class="topbar__icon-btn" aria-label="Notifications">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+        </button>
+        <button type="button" class="topbar__icon-btn" aria-label="Settings">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Page content -->
+    <div class="sess-page">
+      <div class="sess-inner">
+
+        <!-- Page header -->
+        <div class="sess-header">
+          <div class="sess-header__text">
+            <h1 class="sess-header__title">Session Notes</h1>
+            <p class="sess-header__sub">AI-generated summaries from your sessions with Maya Johnson</p>
+          </div>
+          <div class="sess-header__actions">
+            <a href="session-ambassador.html" class="btn-book" style="background:var(--surface);color:var(--muted);border:1.5px solid var(--border);box-shadow:var(--shadow-sm);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              My Ambassador
+            </a>
+            <a href="session-book.html" class="btn-book">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+              Book a session
+            </a>
+          </div>
+        </div>
+
+        <!-- ── Ambassador card ──────────────────────── -->
+        <div class="ambassador-card" role="region" aria-label="Your ambassador">
+          <div class="ambassador-card__avatar" aria-hidden="true">🌿</div>
+          <div class="ambassador-card__info">
+            <p class="ambassador-card__role">Your Wellbeing Ambassador</p>
+            <p class="ambassador-card__name">Maya Johnson</p>
+            <p class="ambassador-card__bio">Peer support specialist · University of Manchester · Focused on student wellbeing, academic stress, and building resilience.</p>
+            <div class="ambassador-card__tags">
+              <span class="ambassador-tag">Academic stress</span>
+              <span class="ambassador-tag">Anxiety</span>
+              <span class="ambassador-tag">CBT techniques</span>
+              <span class="ambassador-tag">Goal setting</span>
+            </div>
+          </div>
+          <div class="ambassador-card__meta">
+            <div class="ambassador-card__stat">
+              <div class="ambassador-card__stat-val">12</div>
+              <div class="ambassador-card__stat-label">Sessions total</div>
+            </div>
+            <div class="ambassador-card__stat">
+              <div class="ambassador-card__stat-val">4 mo</div>
+              <div class="ambassador-card__stat-label">Working together</div>
+            </div>
+            <a href="#" class="btn-msg">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+              Message Maya
+            </a>
+          </div>
+        </div>
+
+        <!-- ── Stats row ─────────────────────────────── -->
+        <div class="stats-row" role="list" aria-label="Session statistics">
+          <div class="stat-card" role="listitem">
+            <div class="stat-card__icon stat-card__icon--blue" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+            </div>
+            <div>
+              <div class="stat-card__val">12</div>
+              <div class="stat-card__label">Sessions completed</div>
+            </div>
+          </div>
+          <div class="stat-card" role="listitem">
+            <div class="stat-card__icon stat-card__icon--teal" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+            </div>
+            <div>
+              <div class="stat-card__val">3</div>
+              <div class="stat-card__label">Upcoming booked</div>
+            </div>
+          </div>
+          <div class="stat-card" role="listitem">
+            <div class="stat-card__icon stat-card__icon--amber" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+            </div>
+            <div>
+              <div class="stat-card__val">18 h</div>
+              <div class="stat-card__label">Total time invested</div>
+            </div>
+          </div>
+          <div class="stat-card" role="listitem">
+            <div class="stat-card__icon stat-card__icon--green" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>
+            </div>
+            <div>
+              <div class="stat-card__val">9</div>
+              <div class="stat-card__label">Goals achieved</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Static tabs — Notes active -->
+        <div class="static-tabs" role="tablist">
+          <a href="sessions.html" class="stab" role="tab">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+            Upcoming
+            <span class="stab__count">3</span>
+          </a>
+          <a href="sessions-past.html" class="stab" role="tab">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+            Past Sessions
+            <span class="stab__count">12</span>
+          </a>
+          <span class="stab stab--active" role="tab" aria-selected="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5c0-1 1-2 2.2-1.7C8.3 3.8 10 5.2 12 5.2S15.7 3.8 17.8 3.3C19 3 20 4 20 5v13c0 1-1 1.7-2.2 1.4-2-.4-3.8-1.6-5.8-1.6S8.2 19.4 6.2 19.8 4 19 4 18V5z"/><path d="M12 5.2v14.5"/></svg>
+            Session Notes
+            <span class="stab__count">12</span>
+          </span>
+        </div>
+
+        <!-- View header with export all -->
+        <div class="notes-view-head">
+          <div class="notes-view-head__left">
+            <p class="notes-view-head__title">AI Session Notes</p>
+            <p class="notes-view-head__sub">Automatically generated summaries from your ambassador sessions · 12 notes total</p>
+          </div>
+          <div class="notes-view-head__right">
+            <span class="ai-tag">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:10px;height:10px;" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+              AI-generated
+            </span>
+            <button type="button" class="btn-export-all">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Export all
+            </button>
+          </div>
+        </div>
+
+        <!-- ── Note card 1: April 25 ─────────────────── -->
+        <div class="snc" role="article" aria-label="Session note: Managing pre-deadline anxiety — April 25">
+          <div class="snc__accent snc__accent--pos"></div>
+          <div class="snc__head">
+            <div class="snc__head-left">
+              <div class="snc__date-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5c0-1 1-2 2.2-1.7C8.3 3.8 10 5.2 12 5.2S15.7 3.8 17.8 3.3C19 3 20 4 20 5v13c0 1-1 1.7-2.2 1.4-2-.4-3.8-1.6-5.8-1.6S8.2 19.4 6.2 19.8 4 19 4 18V5z"/><path d="M12 5.2v14.5"/></svg>
+              </div>
+              <div>
+                <p class="snc__date-title">Managing pre-deadline anxiety</p>
+                <div class="snc__date-meta">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                  April 25, 2026 · Weekly check-in · 30 min
+                </div>
+              </div>
+            </div>
+            <div class="snc__badges">
+              <span class="snc__badge snc__badge--pos">
+                <span class="snc__badge-dot" style="background:#059669;"></span>
+                Felt better after
+              </span>
+              <span class="snc__badge snc__badge--note">Session Note</span>
+            </div>
+          </div>
+          <div class="snc__body">
+            <div class="snc__grid">
+              <div>
+                <p class="snc__section-label">Summary</p>
+                <p class="snc__section-text">Session focused on managing pre-deadline anxiety. Umer discussed feeling overwhelmed by upcoming coursework and difficulties with concentration. Maya introduced the "done is better than perfect" reframing technique.</p>
+              </div>
+              <div>
+                <p class="snc__section-label">Techniques used</p>
+                <div class="snc__techniques">
+                  <span class="snc__tech-tag">CBT reframing</span>
+                  <span class="snc__tech-tag">Time-blocking</span>
+                  <span class="snc__tech-tag">Thought records</span>
+                  <span class="snc__tech-tag">Perfectionism work</span>
+                </div>
+              </div>
+            </div>
+            <div>
+              <p class="snc__section-label">Key discussion points</p>
+              <ul class="snc__points">
+                <li>Identified perfectionism as a key driver of procrastination and anxiety</li>
+                <li>Explored time-blocking as a strategy for tackling large tasks</li>
+                <li>Discussed the role of sleep in cognitive performance during exam periods</li>
+                <li>Reflected on progress since last session — noted improved self-awareness</li>
+              </ul>
+            </div>
+            <div class="snc__hw">
+              <span class="snc__hw-icon">📋</span>
+              <div>
+                <p class="snc__hw-label">Homework from this session</p>
+                <p class="snc__hw-text">Practice thought records once daily this week. Note any moments of perfectionist thinking and apply the reframing technique. Share observations at next session.</p>
+              </div>
+            </div>
+          </div>
+          <div class="snc__foot">
+            <a href="session-view.html" class="btn-read-full">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              Read full notes
+            </a>
+            <button type="button" class="btn-export-sm">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Export PDF
+            </button>
+            <span class="snc__foot-meta">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              Private to you &amp; Maya
+            </span>
+          </div>
+        </div>
+
+        <!-- ── Note card 2: April 9 ──────────────────── -->
+        <div class="snc" role="article" aria-label="Session note: Processing housing stress — April 9">
+          <div class="snc__accent snc__accent--mid"></div>
+          <div class="snc__head">
+            <div class="snc__head-left">
+              <div class="snc__date-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5c0-1 1-2 2.2-1.7C8.3 3.8 10 5.2 12 5.2S15.7 3.8 17.8 3.3C19 3 20 4 20 5v13c0 1-1 1.7-2.2 1.4-2-.4-3.8-1.6-5.8-1.6S8.2 19.4 6.2 19.8 4 19 4 18V5z"/><path d="M12 5.2v14.5"/></svg>
+              </div>
+              <div>
+                <p class="snc__date-title">Processing housing stress</p>
+                <div class="snc__date-meta">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                  April 9, 2026 · Extended session · 45 min
+                </div>
+              </div>
+            </div>
+            <div class="snc__badges">
+              <span class="snc__badge snc__badge--mid">
+                <span class="snc__badge-dot" style="background:#d97706;"></span>
+                Emotional but helpful
+              </span>
+              <span class="snc__badge snc__badge--note">Session Note</span>
+            </div>
+          </div>
+          <div class="snc__body">
+            <div class="snc__grid">
+              <div>
+                <p class="snc__section-label">Summary</p>
+                <p class="snc__section-text">Session focused on housing stress and the emotional weight of uncertainty around accommodation for next year. Umer became emotional — this was noted as a significant moment of vulnerability and trust.</p>
+              </div>
+              <div>
+                <p class="snc__section-label">Techniques used</p>
+                <div class="snc__techniques">
+                  <span class="snc__tech-tag">Active listening</span>
+                  <span class="snc__tech-tag">Normalisation</span>
+                  <span class="snc__tech-tag">Problem-solving</span>
+                  <span class="snc__tech-tag">Support mapping</span>
+                </div>
+              </div>
+            </div>
+            <div>
+              <p class="snc__section-label">Key discussion points</p>
+              <ul class="snc__points">
+                <li>Discussed feelings of embarrassment around emotional responses — normalised in session</li>
+                <li>Explored the housing situation and practical next steps Umer can take</li>
+                <li>Identified support networks available both within and outside the university</li>
+                <li>Reflected on the value of allowing yourself to feel and express difficult emotions</li>
+              </ul>
+            </div>
+            <div class="snc__hw">
+              <span class="snc__hw-icon">📋</span>
+              <div>
+                <p class="snc__hw-label">Homework from this session</p>
+                <p class="snc__hw-text">Write one journal entry about the housing situation — focus on what is in your control. Contact Student Services regarding housing options this week.</p>
+              </div>
+            </div>
+          </div>
+          <div class="snc__foot">
+            <a href="session-view.html" class="btn-read-full">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              Read full notes
+            </a>
+            <button type="button" class="btn-export-sm">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Export PDF
+            </button>
+            <span class="snc__foot-meta">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              Private to you &amp; Maya
+            </span>
+          </div>
+        </div>
+
+        <!-- ── Note card 3: March 20 ─────────────────── -->
+        <div class="snc" role="article" aria-label="Session note: Boundaries and saying no — March 20">
+          <div class="snc__accent snc__accent--pos"></div>
+          <div class="snc__head">
+            <div class="snc__head-left">
+              <div class="snc__date-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5c0-1 1-2 2.2-1.7C8.3 3.8 10 5.2 12 5.2S15.7 3.8 17.8 3.3C19 3 20 4 20 5v13c0 1-1 1.7-2.2 1.4-2-.4-3.8-1.6-5.8-1.6S8.2 19.4 6.2 19.8 4 19 4 18V5z"/><path d="M12 5.2v14.5"/></svg>
+              </div>
+              <div>
+                <p class="snc__date-title">Boundaries and saying no</p>
+                <div class="snc__date-meta">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                  March 20, 2026 · Weekly check-in · 30 min
+                </div>
+              </div>
+            </div>
+            <div class="snc__badges">
+              <span class="snc__badge snc__badge--pos">
+                <span class="snc__badge-dot" style="background:#059669;"></span>
+                Felt empowered
+              </span>
+              <span class="snc__badge snc__badge--note">Session Note</span>
+            </div>
+          </div>
+          <div class="snc__body">
+            <div class="snc__grid">
+              <div>
+                <p class="snc__section-label">Summary</p>
+                <p class="snc__section-text">Session focused on personal boundaries and the challenge of over-commitment. Explored the guilt that often accompanies saying no to others, and how this impacts wellbeing and energy levels.</p>
+              </div>
+              <div>
+                <p class="snc__section-label">Techniques used</p>
+                <div class="snc__techniques">
+                  <span class="snc__tech-tag">Assertive communication</span>
+                  <span class="snc__tech-tag">Boundary setting</span>
+                  <span class="snc__tech-tag">Values exploration</span>
+                </div>
+              </div>
+            </div>
+            <div>
+              <p class="snc__section-label">Key discussion points</p>
+              <ul class="snc__points">
+                <li>Discussed the difference between guilt and responsibility when declining requests</li>
+                <li>Practised assertive communication scripts for common situations</li>
+                <li>Explored where the need to please others may originate from</li>
+                <li>Good session overall — notable progress in self-advocacy awareness</li>
+              </ul>
+            </div>
+            <div class="snc__hw">
+              <span class="snc__hw-icon">📋</span>
+              <div>
+                <p class="snc__hw-label">Homework from this session</p>
+                <p class="snc__hw-text">Practice saying no to at least one request this week without over-explaining. Journal about how it felt before and after.</p>
+              </div>
+            </div>
+          </div>
+          <div class="snc__foot">
+            <a href="session-view.html" class="btn-read-full">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              Read full notes
+            </a>
+            <button type="button" class="btn-export-sm">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Export PDF
+            </button>
+            <span class="snc__foot-meta">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              Private to you &amp; Maya
+            </span>
+          </div>
+        </div>
+
+        <!-- Privacy strip -->
+        <div class="sess-privacy" role="note">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Session notes are encrypted end-to-end and shared only between you and your ambassador. Luminwell staff cannot access your notes. AI summaries are generated locally and never leave your device. You can request deletion at any time.
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+</div>
+
+</body>
+</html>

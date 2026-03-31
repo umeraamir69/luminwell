@@ -1,0 +1,297 @@
+/* ══════════════════════════════════════════════════
+   Luminwell — Journal PIN Screen
+   Pure CSS · no JavaScript
+══════════════════════════════════════════════════ */
+
+:root {
+  --sb-bg:    #175d92;
+  --sb-deep:  #134a75;
+  --teal:     #2d9676;
+  --teal-pale:#eaf5f1;
+  --text:     #0c1929;
+  --muted:    #64748b;
+  --soft:     #94a3b8;
+  --border:   rgba(12,25,41,.10);
+  --page-bg:  #f8f9fb;
+  --surface:  #ffffff;
+  --font:     "DM Sans", system-ui, -apple-system, sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body {
+  margin: 0; height: 100%; min-height: 100dvh;
+  font-family: var(--font); font-size: 14px;
+  color: var(--text); -webkit-font-smoothing: antialiased;
+  background: var(--page-bg);
+}
+a { color: inherit; text-decoration: none; }
+p, h1, h2, h3 { margin: 0; }
+button { font-family: var(--font); }
+
+/* ── Page layout: left brand panel + right form panel ── */
+.pin-page {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 100dvh;
+}
+
+/* ════════════════════════════════════════════════
+   LEFT — Brand panel
+════════════════════════════════════════════════ */
+.pin-brand-panel {
+  background:
+    radial-gradient(ellipse at 20% 15%, rgba(255,255,255,.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 85%, rgba(45,150,118,.3) 0%, transparent 55%),
+    linear-gradient(145deg, #0b2e50 0%, var(--sb-bg) 55%, #1d6e55 100%);
+  color: #fff;
+  display: flex; flex-direction: column;
+  padding: 40px 48px;
+  position: relative; overflow: hidden;
+}
+
+/* Decorative rings */
+.pin-brand-panel::before,
+.pin-brand-panel::after {
+  content: '';
+  position: absolute; border-radius: 50%;
+  border: 1px solid rgba(255,255,255,.06);
+  pointer-events: none;
+}
+.pin-brand-panel::before {
+  width: 520px; height: 520px;
+  bottom: -180px; left: -120px;
+}
+.pin-brand-panel::after {
+  width: 320px; height: 320px;
+  top: -100px; right: -100px;
+}
+
+.pin-brand-panel__logo {
+  display: flex; align-items: center; gap: 10px; margin-bottom: auto;
+}
+.pin-brand-panel__logo img {
+  width: 34px; height: 34px; border-radius: 8px; object-fit: contain;
+}
+.pin-brand-panel__logo span {
+  font-size: 11px; font-weight: 800; letter-spacing: .2em; opacity: .9;
+}
+
+/* Central illustration area */
+.pin-brand-panel__centre {
+  flex: 1; display: flex; flex-direction: column;
+  justify-content: center; gap: 24px; padding: 40px 0;
+}
+
+.pin-brand-panel__icon-wrap {
+  display: flex; align-items: center; justify-content: flex-start;
+}
+.pin-brand-panel__icon {
+  width: 80px; height: 80px; border-radius: 22px;
+  background: rgba(255,255,255,.14);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,.18);
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 8px 32px rgba(0,0,0,.2);
+}
+.pin-brand-panel__icon svg { width: 36px; height: 36px; }
+
+.pin-brand-panel__tagline {
+  font-size: 32px; font-weight: 800; letter-spacing: -0.04em;
+  line-height: 1.18;
+}
+.pin-brand-panel__tagline span {
+  opacity: .55; font-weight: 400; font-style: italic;
+}
+
+.pin-brand-panel__desc {
+  font-size: 14px; line-height: 1.7; opacity: .65;
+  max-width: 340px;
+}
+
+/* Feature pills */
+.pin-features {
+  display: flex; flex-direction: column; gap: 10px;
+}
+.pin-feature {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 13px; font-weight: 600; opacity: .82;
+}
+.pin-feature__dot {
+  width: 28px; height: 28px; border-radius: 8px;
+  background: rgba(255,255,255,.12);
+  border: 1px solid rgba(255,255,255,.14);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.pin-feature__dot svg { width: 13px; height: 13px; }
+
+/* Footer */
+.pin-brand-panel__foot {
+  font-size: 11px; opacity: .4;
+}
+
+/* ════════════════════════════════════════════════
+   RIGHT — Form panel
+════════════════════════════════════════════════ */
+.pin-form-panel {
+  background: var(--surface);
+  display: flex; align-items: center; justify-content: center;
+  padding: 40px 32px;
+}
+
+.pin-form-inner {
+  width: 100%; max-width: 380px;
+  display: flex; flex-direction: column; align-items: center; gap: 0;
+  animation: pin-in .4s cubic-bezier(.34,1.4,.64,1) both;
+}
+
+@keyframes pin-in {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Lock icon */
+.pin-lock-wrap {
+  margin-bottom: 22px;
+}
+.pin-lock-ring {
+  width: 76px; height: 76px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--sb-deep), var(--sb-bg));
+  display: flex; align-items: center; justify-content: center;
+  color: #fff;
+  box-shadow:
+    0 0 0 0 rgba(23,93,146,.45),
+    0 8px 28px rgba(23,93,146,.3);
+  animation: lw-pulse 2.4s ease-in-out infinite;
+}
+.pin-lock-ring svg { width: 32px; height: 32px; }
+
+@keyframes lw-pulse {
+  0%   { box-shadow: 0 0 0 0   rgba(23,93,146,.45), 0 8px 28px rgba(23,93,146,.3); }
+  60%  { box-shadow: 0 0 0 16px rgba(23,93,146,.0), 0 8px 28px rgba(23,93,146,.25); }
+  100% { box-shadow: 0 0 0 0   rgba(23,93,146,.0),  0 8px 28px rgba(23,93,146,.3); }
+}
+
+/* Heading */
+.pin-title {
+  font-size: 22px; font-weight: 800; letter-spacing: -0.035em;
+  color: var(--text); margin-bottom: 8px; text-align: center;
+}
+.pin-sub {
+  font-size: 13px; color: var(--muted); line-height: 1.65;
+  text-align: center; max-width: 300px; margin: 0 auto 28px;
+}
+
+/* 4 PIN boxes */
+.pin-inputs {
+  display: flex; gap: 12px; justify-content: center;
+  margin-bottom: 8px;
+}
+.pin-input {
+  width: 60px; height: 68px;
+  border-radius: 14px;
+  border: 2px solid var(--border);
+  background: var(--page-bg);
+  font-size: 26px; font-weight: 800;
+  text-align: center; color: var(--text);
+  font-family: var(--font);
+  outline: none; appearance: none; -moz-appearance: textfield;
+  transition: border-color .15s, box-shadow .15s, background .15s;
+  caret-color: var(--sb-bg);
+  letter-spacing: .05em;
+}
+.pin-input::-webkit-outer-spin-button,
+.pin-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.pin-input:focus {
+  border-color: var(--sb-bg);
+  background: rgba(23,93,146,.04);
+  box-shadow: 0 0 0 4px rgba(23,93,146,.14);
+}
+.pin-input:not(:placeholder-shown) {
+  border-color: var(--teal);
+  background: var(--teal-pale);
+}
+
+.pin-hint {
+  font-size: 11px; font-weight: 600; color: var(--soft);
+  text-align: center; margin: 0 0 24px; min-height: 16px;
+}
+
+/* Number pad */
+.pin-numpad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px; width: 100%; margin-bottom: 18px;
+}
+.pin-key {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  height: 60px; border-radius: 12px;
+  border: 1.5px solid var(--border);
+  background: var(--page-bg);
+  cursor: pointer; transition: all .12s; user-select: none;
+  gap: 0;
+}
+.pin-key:hover  { background: rgba(23,93,146,.05); border-color: rgba(23,93,146,.25); transform: translateY(-1px); box-shadow: 0 3px 10px rgba(12,25,41,.09); }
+.pin-key:active { transform: translateY(0) scale(.97); }
+.pin-key--wide  { grid-column: span 1; }
+.pin-key__num   { font-size: 20px; font-weight: 700; color: var(--text); line-height: 1; }
+.pin-key__alpha { font-size: 8px; font-weight: 700; letter-spacing: .12em; color: var(--soft); margin-top: 2px; }
+.pin-key--action { background: transparent; border-color: transparent; }
+.pin-key--action:hover { background: rgba(12,25,41,.05); border-color: var(--border); }
+.pin-key--action svg { width: 20px; height: 20px; color: var(--text); }
+
+/* Unlock button (navigates to journal.html) */
+.btn-pin-unlock {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  width: 100%; padding: 15px 20px; border-radius: 14px;
+  background: linear-gradient(135deg, var(--sb-deep), var(--sb-bg));
+  color: #fff; font-size: 15px; font-weight: 700;
+  font-family: var(--font); cursor: pointer;
+  border: none; text-decoration: none;
+  box-shadow: 0 4px 18px rgba(23,93,146,.38);
+  transition: opacity .14s, transform .12s, box-shadow .14s;
+  margin-bottom: 10px;
+}
+.btn-pin-unlock:hover  { opacity: .92; transform: translateY(-1px); box-shadow: 0 6px 24px rgba(23,93,146,.45); }
+.btn-pin-unlock:active { transform: translateY(0); }
+.btn-pin-unlock svg { width: 17px; height: 17px; }
+
+/* Biometric */
+.btn-pin-bio {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  width: 100%; padding: 12px 20px; border-radius: 12px;
+  background: transparent; border: 1.5px solid var(--border);
+  color: var(--muted); font-size: 13px; font-weight: 600;
+  font-family: var(--font); cursor: pointer;
+  transition: all .14s; margin-bottom: 20px;
+}
+.btn-pin-bio:hover { background: var(--page-bg); border-color: var(--sb-bg); color: var(--sb-bg); }
+.btn-pin-bio svg { width: 16px; height: 16px; }
+
+/* Footer links */
+.pin-links {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 20px;
+}
+.pin-links__item {
+  font-size: 12px; font-weight: 600; color: var(--sb-bg);
+  text-decoration: none; transition: opacity .14s;
+}
+.pin-links__item:hover { opacity: .65; }
+.pin-links__sep { color: var(--soft); font-size: 12px; }
+
+/* Privacy note */
+.pin-privacy {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 14px; border-radius: 10px;
+  background: var(--teal-pale); border: 1px solid rgba(45,150,118,.18);
+  font-size: 11px; font-weight: 600; color: var(--teal);
+  width: 100%; text-align: left;
+}
+.pin-privacy svg { width: 14px; height: 14px; flex-shrink: 0; }
+
+/* ── Responsive: stack on small screens ── */
+@media (max-width: 780px) {
+  .pin-page { grid-template-columns: 1fr; }
+  .pin-brand-panel { display: none; }
+  .pin-form-panel { padding: 28px 20px; align-items: flex-start; padding-top: 48px; }
+}

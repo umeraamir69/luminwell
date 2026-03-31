@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Luminwell — Prepare Session Notes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="sessions.css" />
+  <style>
+    .pr-page  { flex: 1; overflow-y: auto; background: var(--page-bg); }
+    .pr-inner { padding: 28px 28px 60px; display: flex; flex-direction: column; gap: 24px; max-width: 1100px; }
+
+    /* Breadcrumb */
+    .pr-breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); }
+    .pr-breadcrumb a { color: var(--muted); transition: color .14s; }
+    .pr-breadcrumb a:hover { color: var(--text); }
+    .pr-breadcrumb__sep { color: var(--soft); font-size: 10px; }
+    .pr-breadcrumb__cur { color: var(--text); font-weight: 600; }
+
+    /* Session context banner */
+    .sess-context {
+      background: linear-gradient(135deg, var(--sb-bg) 0%, #1e7ab8 100%);
+      border-radius: 16px; padding: 20px 24px;
+      color: #fff; display: flex; align-items: center; gap: 18px;
+      box-shadow: 0 3px 16px rgba(23,93,146,.25);
+    }
+    .sess-context__icon {
+      width: 48px; height: 48px; border-radius: 12px;
+      background: rgba(255,255,255,.18);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+      font-size: 22px;
+    }
+    .sess-context__info { flex: 1; }
+    .sess-context__eyebrow {
+      font-size: 11px; font-weight: 700; letter-spacing: .08em;
+      text-transform: uppercase; opacity: .65; margin-bottom: 4px;
+    }
+    .sess-context__title { font-size: 18px; font-weight: 800; letter-spacing: -.03em; }
+    .sess-context__meta  {
+      display: flex; gap: 16px; flex-wrap: wrap; margin-top: 6px;
+    }
+    .sess-context__meta-item {
+      display: flex; align-items: center; gap: 5px;
+      font-size: 12px; opacity: .8; font-weight: 500;
+    }
+    .sess-context__meta-item svg { width: 13px; height: 13px; }
+    .sess-context__countdown {
+      flex-shrink: 0;
+      background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.25);
+      border-radius: 10px; padding: 10px 16px; text-align: center;
+    }
+    .sess-context__countdown-val  { font-size: 22px; font-weight: 800; letter-spacing: -.04em; }
+    .sess-context__countdown-label{ font-size: 11px; opacity: .7; margin-top: 1px; }
+
+    /* Main grid */
+    .pr-grid { display: grid; grid-template-columns: 1fr 300px; gap: 22px; align-items: start; }
+    .pr-main  { display: flex; flex-direction: column; gap: 18px; }
+    .pr-aside { display: flex; flex-direction: column; gap: 16px; position: sticky; top: 20px; }
+
+    /* Cards */
+    .pr-card {
+      background: var(--surface); border-radius: 16px;
+      border: 1px solid var(--border); box-shadow: var(--shadow-sm);
+      overflow: hidden;
+    }
+    .pr-card__head {
+      display: flex; align-items: center; gap: 10px;
+      padding: 15px 20px 13px; border-bottom: 1px solid var(--border-soft);
+    }
+    .pr-card__icon {
+      width: 30px; height: 30px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .pr-card__icon svg { width: 14px; height: 14px; }
+    .pr-card__icon--blue  { background: rgba(23,93,146,.1);  color: var(--sb-bg); }
+    .pr-card__icon--teal  { background: rgba(45,150,118,.1); color: var(--teal); }
+    .pr-card__icon--amber { background: rgba(217,119,6,.1);  color: #d97706; }
+    .pr-card__icon--green { background: rgba(5,150,105,.1);  color: #059669; }
+    .pr-card__title { font-size: 14px; font-weight: 800; }
+    .pr-card__optional { font-size: 11px; color: var(--soft); font-weight: 500; margin-left: 4px; }
+    .pr-card__body  { padding: 18px 20px; display: flex; flex-direction: column; gap: 14px; }
+
+    /* Field label */
+    .pr-field-label {
+      font-size: 12px; font-weight: 700; color: var(--muted);
+      letter-spacing: .03em; margin-bottom: 6px;
+    }
+
+    /* Textarea */
+    .pr-textarea {
+      width: 100%; padding: 13px 15px;
+      border: 1.5px solid var(--border); border-radius: 11px;
+      background: var(--page-bg); font-family: var(--font);
+      font-size: 13px; color: var(--text); line-height: 1.7;
+      resize: vertical; outline: none; min-height: 80px;
+      transition: border-color .14s, box-shadow .14s;
+    }
+    .pr-textarea:focus { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(45,150,118,.1); }
+    .pr-textarea::placeholder { color: var(--soft); }
+
+    /* Mood check-in radio */
+    .mood-radio-prep { display: none; }
+    .mood-check-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+    .mood-check-pill {
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
+      padding: 12px 8px 10px; border-radius: 11px;
+      border: 1.5px solid var(--border); background: var(--page-bg);
+      cursor: pointer; user-select: none; transition: all .15s; text-align: center;
+    }
+    .mood-check-pill:hover { border-color: var(--teal); }
+    .mood-check-pill__emoji { font-size: 22px; }
+    .mood-check-pill__name  { font-size: 11px; font-weight: 700; color: var(--text); }
+    .mood-check-pill__desc  { font-size: 10px; color: var(--soft); line-height: 1.35; }
+    html:has(#pm-great:checked) label[for="pm-great"] { border-color: #059669; background: rgba(5,150,105,.07); box-shadow: 0 0 0 3px rgba(5,150,105,.1); }
+    html:has(#pm-good:checked)  label[for="pm-good"]  { border-color: var(--teal); background: var(--teal-pale); box-shadow: 0 0 0 3px rgba(45,150,118,.1); }
+    html:has(#pm-okay:checked)  label[for="pm-okay"]  { border-color: #d97706; background: rgba(217,119,6,.06); box-shadow: 0 0 0 3px rgba(217,119,6,.1); }
+    html:has(#pm-low:checked)   label[for="pm-low"]   { border-color: #e11d48; background: rgba(225,29,72,.06); box-shadow: 0 0 0 3px rgba(225,29,72,.1); }
+
+    /* Goal chips */
+    .goal-check { display: none; }
+    .goals-grid  { display: flex; gap: 7px; flex-wrap: wrap; }
+    .goal-chip {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 6px 13px; border-radius: var(--rf);
+      border: 1.5px solid var(--border); background: var(--page-bg);
+      font-size: 12px; font-weight: 600; color: var(--muted);
+      cursor: pointer; user-select: none; transition: all .14s;
+    }
+    .goal-chip:hover { border-color: var(--sb-bg); color: var(--sb-bg); }
+    #gc-anxiety:checked + .goal-chip,
+    #gc-sleep:checked   + .goal-chip,
+    #gc-study:checked   + .goal-chip,
+    #gc-social:checked  + .goal-chip,
+    #gc-work:checked    + .goal-chip,
+    #gc-family:checked  + .goal-chip,
+    #gc-goals:checked   + .goal-chip,
+    #gc-other:checked   + .goal-chip {
+      background: rgba(23,93,146,.08); border-color: var(--sb-bg); color: var(--sb-bg);
+    }
+
+    /* Homework checkbox */
+    .hw-check { display: none; }
+    .hw-item {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 13px 15px; border-radius: 11px;
+      border: 1.5px solid var(--border); background: var(--page-bg);
+      cursor: pointer; user-select: none; transition: all .15s;
+    }
+    .hw-item:hover { border-color: var(--teal); background: var(--teal-pale); }
+    .hw-box {
+      width: 18px; height: 18px; border-radius: 5px;
+      border: 2px solid var(--border); flex-shrink: 0;
+      margin-top: 1px; transition: all .15s;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--surface);
+    }
+    .hw-box svg { width: 10px; height: 10px; display: none; }
+    #hw1:checked + .hw-item { border-color: var(--teal); background: var(--teal-pale); }
+    #hw1:checked + .hw-item .hw-box { background: var(--teal); border-color: var(--teal); }
+    #hw1:checked + .hw-item .hw-box svg { display: block; }
+    #hw2:checked + .hw-item { border-color: var(--teal); background: var(--teal-pale); }
+    #hw2:checked + .hw-item .hw-box { background: var(--teal); border-color: var(--teal); }
+    #hw2:checked + .hw-item .hw-box svg { display: block; }
+    #hw3:checked + .hw-item { border-color: var(--teal); background: var(--teal-pale); }
+    #hw3:checked + .hw-item .hw-box { background: var(--teal); border-color: var(--teal); }
+    #hw3:checked + .hw-item .hw-box svg { display: block; }
+    .hw-item__text { flex: 1; }
+    .hw-item__title { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
+    .hw-item__sub   { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+    /* Privacy note */
+    .pr-privacy {
+      display: flex; gap: 9px; align-items: flex-start;
+      padding: 11px 14px; border-radius: 10px;
+      background: var(--teal-pale); border: 1px solid rgba(45,150,118,.2);
+      font-size: 12px; color: var(--teal-deep); line-height: 1.6;
+    }
+    .pr-privacy svg { width: 13px; height: 13px; flex-shrink: 0; margin-top: 1px; color: var(--teal); }
+
+    /* Previous session recap */
+    .prev-recap {
+      background: var(--surface); border-radius: 14px;
+      border: 1px solid var(--border); box-shadow: var(--shadow-sm);
+      overflow: hidden;
+    }
+    .prev-recap__head {
+      padding: 13px 16px 11px;
+      border-bottom: 1px solid var(--border-soft);
+      font-size: 12px; font-weight: 700; letter-spacing: .04em;
+      text-transform: uppercase; color: var(--soft);
+    }
+    .prev-recap__body { padding: 14px 16px; }
+    .prev-recap__date { font-size: 11px; font-weight: 600; color: var(--muted); margin-bottom: 6px; }
+    .prev-recap__text { font-size: 13px; color: var(--muted); line-height: 1.65; }
+    .prev-recap__hw {
+      margin-top: 12px; padding: 10px 12px; border-radius: 9px;
+      background: var(--teal-pale); border: 1px solid rgba(45,150,118,.2);
+      font-size: 12px; color: var(--teal-deep);
+    }
+    .prev-recap__hw-label { font-weight: 700; margin-bottom: 3px; font-size: 11px; }
+    .prev-recap__link {
+      display: inline-flex; align-items: center; gap: 4px;
+      margin-top: 10px; font-size: 12px; font-weight: 700;
+      color: var(--sb-bg); text-decoration: none;
+    }
+    .prev-recap__link svg { width: 11px; height: 11px; }
+
+    /* Action buttons */
+    .pr-actions { display: flex; gap: 10px; }
+    .btn-save-prep {
+      flex: 1; padding: 13px; border-radius: 11px;
+      background: var(--sb-bg); color: #fff;
+      font-size: 13px; font-weight: 800; font-family: var(--font);
+      border: none; cursor: pointer; text-decoration: none;
+      display: flex; align-items: center; justify-content: center; gap: 7px;
+      box-shadow: 0 2px 10px rgba(23,93,146,.28);
+      transition: background .14s;
+    }
+    .btn-save-prep:hover { background: var(--sb-deep); }
+    .btn-save-prep svg { width: 14px; height: 14px; }
+    .btn-back-prep {
+      padding: 13px 18px; border-radius: 11px;
+      border: 1.5px solid var(--border); background: var(--surface);
+      color: var(--muted); font-size: 13px; font-weight: 600;
+      font-family: var(--font); cursor: pointer; text-decoration: none;
+      display: inline-flex; align-items: center; gap: 6px;
+      transition: all .14s;
+    }
+    .btn-back-prep:hover { border-color: var(--text); color: var(--text); }
+    .btn-back-prep svg { width: 13px; height: 13px; }
+
+    @media (max-width: 900px) {
+      .pr-grid { grid-template-columns: 1fr; }
+      .pr-aside { position: static; }
+      .mood-check-grid { grid-template-columns: repeat(4, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══ CSS-only state inputs ════════════════════════ -->
+<input type="radio" name="prep-mood" id="pm-great" class="state-input" />
+<input type="radio" name="prep-mood" id="pm-good"  class="state-input" checked />
+<input type="radio" name="prep-mood" id="pm-okay"  class="state-input" />
+<input type="radio" name="prep-mood" id="pm-low"   class="state-input" />
+<input type="checkbox" id="gc-anxiety" class="state-input" checked />
+<input type="checkbox" id="gc-sleep"   class="state-input" />
+<input type="checkbox" id="gc-study"   class="state-input" checked />
+<input type="checkbox" id="gc-social"  class="state-input" />
+<input type="checkbox" id="gc-work"    class="state-input" />
+<input type="checkbox" id="gc-family"  class="state-input" />
+<input type="checkbox" id="gc-goals"   class="state-input" />
+<input type="checkbox" id="gc-other"   class="state-input" />
+<input type="checkbox" id="hw1" class="state-input" checked />
+<input type="checkbox" id="hw2" class="state-input" />
+<input type="checkbox" id="hw3" class="state-input" checked />
+
+<div class="app">
+
+  <!-- ══ Sidebar ══════════════════════════════════════ -->
+  <aside class="sidebar" aria-label="Navigation">
+    <div class="sidebar__head">
+      <img class="sidebar__logo-img" src="logo.png" alt="Luminwell" width="30" height="30" decoding="async" />
+      <span class="sidebar__logo">LUMINWELL</span>
+    </div>
+    <div class="sidebar__block">
+      <a href="index.html" class="sidebar__new">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+        New chat
+      </a>
+    </div>
+    <div class="sidebar__block">
+      <div class="sidebar__label">Menu</div>
+      <nav class="sb-nav" aria-label="Sections">
+        <a href="index.html" class="sb-nav__link">
+          <svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5L12 4l9 6.5V20a1 1 0 01-1 1h-5v-7H9v7H4a1 1 0 01-1-1v-9.5z"/></svg>
+          Home
+        </a>
+        <a href="#" class="sb-nav__link">
+          <svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 11h16"/></svg>
+          Book
+        </a>
+        <a href="sessions.html" class="sb-nav__link is-active" aria-current="page">
+          <svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          Sessions
+        </a>
+        <a href="journal-pin.html" class="sb-nav__link">
+          <svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5c0-1 1-2 2.2-1.7C8.3 3.8 10 5.2 12 5.2S15.7 3.8 17.8 3.3C19 3 20 4 20 5v13c0 1-1 1.7-2.2 1.4-2-.4-3.8-1.6-5.8-1.6S8.2 19.4 6.2 19.8 4 19 4 18V5z"/><path d="M12 5.2v14.5"/></svg>
+          Journal
+        </a>
+        <a href="calendar.html" class="sb-nav__link">
+          <svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+          Calendar
+        </a>
+      </nav>
+    </div>
+    <div class="sidebar__block sidebar__block--fill">
+      <div class="sidebar__label">Upcoming</div>
+      <div class="sb-recent">
+        <button type="button" class="sb-recent__btn">
+          <div class="sb-recent__title">Check-in with Maya</div>
+          <div class="sb-recent__meta">May 2 · 3:00 pm</div>
+        </button>
+        <button type="button" class="sb-recent__btn">
+          <div class="sb-recent__title">Goal-setting session</div>
+          <div class="sb-recent__meta">May 9 · 4:00 pm</div>
+        </button>
+      </div>
+    </div>
+    <div class="sidebar__foot">
+      <div class="sidebar__avatar" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="3.5"/><path d="M6 19c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke-linecap="round"/></svg>
+      </div>
+      <div>
+        <div class="sidebar__name">Umer</div>
+        <div class="sidebar__credits">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><ellipse cx="12" cy="6" rx="6" ry="2"/><path d="M6 6v4c0 1.1 2.7 2 6 2s6-.9 6-2V6"/><path d="M6 10v4c0 1.1 2.7 2 6 2s6-.9 6-2v-4"/></svg>
+          500
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="topbar__left">
+        <img class="topbar__logo-img" src="logo.png" alt="Luminwell" width="28" height="28" decoding="async" />
+        <span class="topbar__title">Prepare for Session</span>
+      </div>
+      <div class="topbar__right">
+        <button type="button" class="topbar__crisis">988 Helpline</button>
+        <a href="journal-pin.html" class="btn-lock-sess" aria-label="Lock and return to PIN screen">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg>
+          Lock
+        </a>
+        <button type="button" class="topbar__icon-btn" aria-label="Notifications">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <div class="pr-page">
+      <div class="pr-inner">
+
+        <nav class="pr-breadcrumb" aria-label="Breadcrumb">
+          <a href="sessions.html">Sessions</a>
+          <span class="pr-breadcrumb__sep">›</span>
+          <span class="pr-breadcrumb__cur">Prepare notes</span>
+        </nav>
+
+        <!-- Session context banner -->
+        <div class="sess-context" role="region" aria-label="Upcoming session">
+          <div class="sess-context__icon" aria-hidden="true">💬</div>
+          <div class="sess-context__info">
+            <p class="sess-context__eyebrow">Preparing for</p>
+            <p class="sess-context__title">Weekly check-in with Maya</p>
+            <div class="sess-context__meta">
+              <span class="sess-context__meta-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                Friday, May 2 · 3:00 pm
+              </span>
+              <span class="sess-context__meta-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+                Video call · 30 min
+              </span>
+              <span class="sess-context__meta-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                Maya Johnson
+              </span>
+            </div>
+          </div>
+          <div class="sess-context__countdown" aria-label="Time until session">
+            <div class="sess-context__countdown-val">2 h</div>
+            <div class="sess-context__countdown-label">until session</div>
+          </div>
+        </div>
+
+        <div class="pr-grid">
+          <div class="pr-main">
+
+            <!-- Current mood -->
+            <div class="pr-card">
+              <div class="pr-card__head">
+                <div class="pr-card__icon pr-card__icon--teal" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+                </div>
+                <p class="pr-card__title">How are you feeling right now?</p>
+              </div>
+              <div class="pr-card__body">
+                <div class="mood-check-grid">
+                  <input type="radio" name="prep-mood" id="pm-great" class="mood-radio-prep" />
+                  <label for="pm-great" class="mood-check-pill">
+                    <span class="mood-check-pill__emoji">😄</span>
+                    <span class="mood-check-pill__name">Great</span>
+                    <span class="mood-check-pill__desc">Things are going well</span>
+                  </label>
+                  <input type="radio" name="prep-mood" id="pm-good" class="mood-radio-prep" checked />
+                  <label for="pm-good" class="mood-check-pill">
+                    <span class="mood-check-pill__emoji">😊</span>
+                    <span class="mood-check-pill__name">Good</span>
+                    <span class="mood-check-pill__desc">Feeling steady</span>
+                  </label>
+                  <input type="radio" name="prep-mood" id="pm-okay" class="mood-radio-prep" />
+                  <label for="pm-okay" class="mood-check-pill">
+                    <span class="mood-check-pill__emoji">😐</span>
+                    <span class="mood-check-pill__name">Okay</span>
+                    <span class="mood-check-pill__desc">Getting through it</span>
+                  </label>
+                  <input type="radio" name="prep-mood" id="pm-low" class="mood-radio-prep" />
+                  <label for="pm-low" class="mood-check-pill">
+                    <span class="mood-check-pill__emoji">😞</span>
+                    <span class="mood-check-pill__name">Low</span>
+                    <span class="mood-check-pill__desc">A harder day</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- What to discuss -->
+            <div class="pr-card">
+              <div class="pr-card__head">
+                <div class="pr-card__icon pr-card__icon--blue" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+                </div>
+                <p class="pr-card__title">What would you like to discuss today?</p>
+              </div>
+              <div class="pr-card__body">
+                <div>
+                  <p class="pr-field-label">Topics to cover — select all that apply</p>
+                  <div class="goals-grid">
+                    <input type="checkbox" id="gc-anxiety" class="goal-check" checked />
+                    <label for="gc-anxiety" class="goal-chip">Anxiety</label>
+                    <input type="checkbox" id="gc-study" class="goal-check" checked />
+                    <label for="gc-study" class="goal-chip">Study stress</label>
+                    <input type="checkbox" id="gc-sleep" class="goal-check" />
+                    <label for="gc-sleep" class="goal-chip">Sleep</label>
+                    <input type="checkbox" id="gc-social" class="goal-check" />
+                    <label for="gc-social" class="goal-chip">Social life</label>
+                    <input type="checkbox" id="gc-work" class="goal-check" />
+                    <label for="gc-work" class="goal-chip">Work / finances</label>
+                    <input type="checkbox" id="gc-family" class="goal-check" />
+                    <label for="gc-family" class="goal-chip">Family</label>
+                    <input type="checkbox" id="gc-goals" class="goal-check" />
+                    <label for="gc-goals" class="goal-chip">Goals &amp; future</label>
+                    <input type="checkbox" id="gc-other" class="goal-check" />
+                    <label for="gc-other" class="goal-chip">Something else</label>
+                  </div>
+                </div>
+                <div>
+                  <p class="pr-field-label">Describe what's on your mind</p>
+                  <textarea class="pr-textarea" rows="4" placeholder="What's been happening since your last session? What would you most like support with today?" aria-label="Session focus"></textarea>
+                </div>
+                <div class="pr-privacy">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                  These notes are shared with Maya before your session to help her prepare. Only you and Maya can see them.
+                </div>
+              </div>
+            </div>
+
+            <!-- Homework review -->
+            <div class="pr-card">
+              <div class="pr-card__head">
+                <div class="pr-card__icon pr-card__icon--amber" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+                </div>
+                <p class="pr-card__title">Homework from last session <span class="pr-card__optional">(optional)</span></p>
+              </div>
+              <div class="pr-card__body">
+                <p style="font-size:13px;color:var(--muted);">Tick off anything you completed since your last session. No pressure — this is just for you.</p>
+
+                <input type="checkbox" id="hw1" class="hw-check" checked />
+                <label for="hw1" class="hw-item">
+                  <div class="hw-box">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>
+                  </div>
+                  <div class="hw-item__text">
+                    <p class="hw-item__title">Daily thought records</p>
+                    <p class="hw-item__sub">Write down perfectionist thoughts and apply the reframing technique once per day</p>
+                  </div>
+                </label>
+
+                <input type="checkbox" id="hw2" class="hw-check" />
+                <label for="hw2" class="hw-item">
+                  <div class="hw-box">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>
+                  </div>
+                  <div class="hw-item__text">
+                    <p class="hw-item__title">Wind-down routine at 10:30 pm</p>
+                    <p class="hw-item__sub">No screens 30 min before bed — note any changes in focus the next morning</p>
+                  </div>
+                </label>
+
+                <input type="checkbox" id="hw3" class="hw-check" checked />
+                <label for="hw3" class="hw-item">
+                  <div class="hw-box">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>
+                  </div>
+                  <div class="hw-item__text">
+                    <p class="hw-item__title">Journal entry about deadline anxiety</p>
+                    <p class="hw-item__sub">Write at least one entry about how the deadline period felt</p>
+                  </div>
+                </label>
+
+                <div>
+                  <p class="pr-field-label">Notes about your homework (optional)</p>
+                  <textarea class="pr-textarea" rows="2" placeholder="How did it go? Anything you want to share with Maya about your progress?" aria-label="Homework reflection"></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- Anything else -->
+            <div class="pr-card">
+              <div class="pr-card__head">
+                <div class="pr-card__icon pr-card__icon--green" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                </div>
+                <p class="pr-card__title">Anything else for Maya? <span class="pr-card__optional">(optional)</span></p>
+              </div>
+              <div class="pr-card__body">
+                <textarea class="pr-textarea" rows="3" placeholder="Anything you want Maya to know before the session — no matter how small it feels…" aria-label="Additional context for ambassador"></textarea>
+              </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="pr-actions">
+              <a href="sessions.html" class="btn-back-prep">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+                Back
+              </a>
+              <a href="sessions.html" class="btn-save-prep">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>
+                Save &amp; send to Maya
+              </a>
+            </div>
+
+          </div><!-- /pr-main -->
+
+          <!-- Right aside -->
+          <div class="pr-aside">
+
+            <!-- Previous session recap -->
+            <div class="prev-recap">
+              <div class="prev-recap__head">Last session recap</div>
+              <div class="prev-recap__body">
+                <p class="prev-recap__date">April 25, 2026 · Weekly check-in</p>
+                <p class="prev-recap__text">Worked on managing pre-deadline anxiety. Introduced thought records and time-blocking. Discussed perfectionism as a driver of procrastination.</p>
+                <div class="prev-recap__hw">
+                  <p class="prev-recap__hw-label">📋 Homework set</p>
+                  Daily thought records + sleep wind-down routine
+                </div>
+                <a href="session-view.html" class="prev-recap__link">
+                  Read full notes
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+                </a>
+              </div>
+            </div>
+
+            <!-- Tips card -->
+            <div class="prev-recap">
+              <div class="prev-recap__head">💡 Prepare well</div>
+              <div class="prev-recap__body" style="display:flex;flex-direction:column;gap:9px;">
+                <p style="font-size:13px;color:var(--muted);line-height:1.6;">A good session starts with a few minutes of honest reflection. Even a short note makes a real difference.</p>
+                <ul style="padding-left:18px;margin:0;display:flex;flex-direction:column;gap:6px;">
+                  <li style="font-size:12px;color:var(--muted);line-height:1.5;">Be honest — there's no wrong thing to say</li>
+                  <li style="font-size:12px;color:var(--muted);line-height:1.5;">Mention both good and difficult moments</li>
+                  <li style="font-size:12px;color:var(--muted);line-height:1.5;">You can edit your notes right up until the session</li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Ambassador -->
+            <div class="prev-recap">
+              <div class="prev-recap__head">Your ambassador</div>
+              <div class="prev-recap__body" style="display:flex;align-items:center;gap:12px;">
+                <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--sb-bg),#2d9676);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">🌿</div>
+                <div>
+                  <p style="font-size:13px;font-weight:800;">Maya Johnson</p>
+                  <p style="font-size:11px;color:var(--muted);margin-top:2px;">Wellbeing Ambassador</p>
+                  <a href="session-ambassador.html" style="display:inline-flex;align-items:center;gap:4px;margin-top:6px;font-size:11px;font-weight:700;color:var(--sb-bg);text-decoration:none;">
+                    View profile
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" width="10" height="10" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+                  </a>
+                </div>
+              </div>
+            </div>
+
+          </div><!-- /pr-aside -->
+        </div><!-- /pr-grid -->
+
+      </div><!-- /pr-inner -->
+    </div><!-- /pr-page -->
+  </main>
+
+</div><!-- /app -->
+</body>
+</html>

@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Luminwell — Write Journal Entry</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="journal-write.css" />
+</head>
+<body>
+<div class="app">
+
+  <!-- ══ Sidebar ══════════════════════════════════════ -->
+  <aside class="sidebar" aria-label="Navigation">
+    <div class="sidebar__head">
+      <img class="sidebar__logo-img" src="logo.png" alt="Luminwell" width="30" height="30" decoding="async" />
+      <span class="sidebar__logo">LUMINWELL</span>
+    </div>
+
+    <div class="sidebar__block">
+      <a href="index.html" class="sidebar__new">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+        New chat
+      </a>
+    </div>
+
+    <div class="sidebar__block">
+      <div class="sidebar__label">Menu</div>
+      <nav class="sb-nav" aria-label="Sections">
+        <a href="index.html" class="sb-nav__link">
+          <svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5L12 4l9 6.5V20a1 1 0 01-1 1h-5v-7H9v7H4a1 1 0 01-1-1v-9.5z"/></svg>
+          Home
+        </a>
+        <a href="#" class="sb-nav__link">
+          <svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 11h16"/></svg>
+          Book
+        </a>
+        <a href="#" class="sb-nav__link">
+          <svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          Sessions
+        </a>
+        <a href="journal.html" class="sb-nav__link is-active" aria-current="page">
+          <svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5c0-1 1-2 2.2-1.7C8.3 3.8 10 5.2 12 5.2S15.7 3.8 17.8 3.3C19 3 20 4 20 5v13c0 1-1 1.7-2.2 1.4-2-.4-3.8-1.6-5.8-1.6S8.2 19.4 6.2 19.8 4 19 4 18V5z"/><path d="M12 5.2v14.5"/></svg>
+          Journal
+        </a>
+        <a href="calendar.html" class="sb-nav__link">
+          <svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+          Calendar
+        </a>
+      </nav>
+    </div>
+
+    <div class="sidebar__block sidebar__block--fill">
+      <div class="sidebar__label">Recent entries</div>
+      <div class="sb-recent">
+        <button type="button" class="sb-recent__btn">
+          <div class="sb-recent__title">Pre-deadline reflections</div>
+          <div class="sb-recent__meta">Apr 25</div>
+        </button>
+        <button type="button" class="sb-recent__btn">
+          <div class="sb-recent__title">Weekend thoughts</div>
+          <div class="sb-recent__meta">Apr 23</div>
+        </button>
+        <button type="button" class="sb-recent__btn">
+          <div class="sb-recent__title">A calmer day</div>
+          <div class="sb-recent__meta">Apr 10</div>
+        </button>
+      </div>
+    </div>
+
+    <div class="sidebar__foot">
+      <div class="sidebar__avatar" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="3.5"/><path d="M6 19c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke-linecap="round"/></svg>
+      </div>
+      <div>
+        <div class="sidebar__name">Umer</div>
+        <div class="sidebar__credits">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><ellipse cx="12" cy="6" rx="6" ry="2"/><path d="M6 6v4c0 1.1 2.7 2 6 2s6-.9 6-2V6"/><path d="M6 10v4c0 1.1 2.7 2 6 2s6-.9 6-2v-4"/></svg>
+          500
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ══ Main ══════════════════════════════════════════ -->
+  <main class="main">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <div class="topbar__left">
+        <img class="topbar__logo-img" src="logo.png" alt="Luminwell" width="30" height="30" decoding="async" />
+        <span class="topbar__title">New Journal Entry</span>
+      </div>
+      <div class="topbar__right">
+        <a class="topbar__crisis" href="tel:988">988 Crisis Line</a>
+        <button type="button" class="topbar__icon-btn" aria-label="Notifications">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+        </button>
+        <button type="button" class="topbar__icon-btn" aria-label="Settings">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Write page -->
+    <div class="write-page">
+
+      <!-- Breadcrumb -->
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="journal.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+        </a>
+        <a href="journal.html">My Journal</a>
+        <span class="breadcrumb__sep" aria-hidden="true">›</span>
+        <span>New entry</span>
+      </nav>
+
+      <!-- Two-column layout -->
+      <form class="write-layout" action="journal.html" method="get" aria-label="New journal entry">
+
+        <!-- ── Left: Editor ──────────────────────── -->
+        <div class="write-main">
+
+          <!-- Editor card -->
+          <div class="editor-card">
+
+            <!-- Header (colour changes per mood via CSS :has()) -->
+            <div class="editor-header">
+              <div class="editor-header__row">
+                <div class="editor-header__icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5c0-1 1-2 2.2-1.7C8.3 3.8 10 5.2 12 5.2S15.7 3.8 17.8 3.3C19 3 20 4 20 5v13c0 1-1 1.7-2.2 1.4-2-.4-3.8-1.6-5.8-1.6S8.2 19.4 6.2 19.8 4 19 4 18V5z"/><path d="M12 5.2v14.5"/></svg>
+                </div>
+                <div>
+                  <div class="editor-header__title">This is your space, Umer.</div>
+                  <div class="editor-header__sub">No rules, no judgement — just you and your thoughts.</div>
+                </div>
+              </div>
+              <!-- Mood-aware encouragement messages (shown via CSS :has()) -->
+              <p class="editor-mood-message editor-mood-message--great">Capture this feeling — your future self will come back to this entry on harder days. 🌟</p>
+              <p class="editor-mood-message editor-mood-message--good">Good days are worth recording too. Writing when things feel steady helps you notice what's working. 🌿</p>
+              <p class="editor-mood-message editor-mood-message--okay">No pressure to make it profound. Even noticing the small things is valuable. Just write honestly. ☁️</p>
+              <p class="editor-mood-message editor-mood-message--low">Writing on a hard day takes real courage. Even three sentences is enough. Take your time — this space is safe. 💙</p>
+            </div>
+
+            <!-- Entry title -->
+            <div class="editor-title-wrap">
+              <input
+                type="text"
+                name="title"
+                class="editor-title"
+                placeholder="Give this entry a title (optional)…"
+                maxlength="80"
+                aria-label="Entry title"
+              />
+            </div>
+
+            <div class="editor-divider"></div>
+
+            <!-- Writing area -->
+            <div class="editor-body-wrap">
+              <textarea
+                name="body"
+                class="editor-textarea"
+                placeholder="What's on your mind? Write as much or as little as you like. There are no right or wrong answers here — this space is just for you."
+                rows="12"
+                aria-label="Journal entry body"
+              ></textarea>
+            </div>
+
+            <!-- Toolbar (visual, formatting hints) -->
+            <div class="editor-toolbar" role="toolbar" aria-label="Formatting options">
+              <button type="button" class="toolbar-btn" title="Bold" aria-label="Bold">
+                <strong>B</strong>
+              </button>
+              <button type="button" class="toolbar-btn" title="Italic" aria-label="Italic">
+                <em>I</em>
+              </button>
+              <button type="button" class="toolbar-btn" title="Bullet list" aria-label="Bullet list">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4" cy="6" r="1" fill="currentColor" stroke="none"/><circle cx="4" cy="12" r="1" fill="currentColor" stroke="none"/><circle cx="4" cy="18" r="1" fill="currentColor" stroke="none"/></svg>
+              </button>
+              <span class="toolbar-sep" aria-hidden="true"></span>
+              <button type="button" class="toolbar-btn" title="Add heading" aria-label="Heading">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h8M4 18h16"/></svg>
+              </button>
+              <button type="button" class="toolbar-btn" title="Add quote" aria-label="Quote">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z"/><path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z"/></svg>
+              </button>
+              <span class="toolbar-hint">Markdown supported</span>
+            </div>
+
+          </div><!-- /editor-card -->
+
+          <!-- Save / Cancel actions -->
+          <div class="write-actions">
+            <a href="journal.html" class="btn-cancel">← Cancel</a>
+            <a href="journal.html" class="btn-save" role="button">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>
+              Save my thoughts
+            </a>
+          </div>
+
+        </div><!-- /write-main -->
+
+        <!-- ── Right: Meta panel ──────────────────── -->
+        <aside class="write-meta" aria-label="Entry details">
+
+          <!-- Date -->
+          <div class="meta-card">
+            <div class="meta-card__head">Date</div>
+            <div class="meta-card__body">
+              <div class="meta-date">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                Monday, April 27, 2026
+              </div>
+            </div>
+          </div>
+
+          <!-- Mood picker -->
+          <div class="meta-card">
+            <div class="meta-card__head">How are you feeling?</div>
+            <div class="meta-card__body">
+              <div class="mood-grid" role="group" aria-label="Select your mood">
+                <input type="radio" name="mood" id="wr-great" value="great" class="mood-radio" />
+                <label for="wr-great" class="mood-pill">
+                  <span class="mood-pill__emoji">😄</span>
+                  <span class="mood-pill__label">Great</span>
+                  <span class="mood-pill__desc">Things are going well</span>
+                </label>
+
+                <input type="radio" name="mood" id="wr-good" value="good" class="mood-radio" />
+                <label for="wr-good" class="mood-pill">
+                  <span class="mood-pill__emoji">😊</span>
+                  <span class="mood-pill__label">Good</span>
+                  <span class="mood-pill__desc">Feeling steady</span>
+                </label>
+
+                <input type="radio" name="mood" id="wr-okay" value="okay" class="mood-radio" />
+                <label for="wr-okay" class="mood-pill">
+                  <span class="mood-pill__emoji">😐</span>
+                  <span class="mood-pill__label">Okay</span>
+                  <span class="mood-pill__desc">Getting through it</span>
+                </label>
+
+                <input type="radio" name="mood" id="wr-low" value="low" class="mood-radio" />
+                <label for="wr-low" class="mood-pill">
+                  <span class="mood-pill__emoji">😞</span>
+                  <span class="mood-pill__label">Low</span>
+                  <span class="mood-pill__desc">A harder day</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tags -->
+          <div class="meta-card">
+            <div class="meta-card__head">Tags</div>
+            <div class="meta-card__body">
+              <div class="tag-grid" role="group" aria-label="Select tags">
+                <input type="checkbox" id="tag-anxiety"   name="tags" value="anxiety"   class="tag-checkbox" />
+                <label for="tag-anxiety"   class="tag-pill">Anxiety</label>
+
+                <input type="checkbox" id="tag-gratitude" name="tags" value="gratitude" class="tag-checkbox" />
+                <label for="tag-gratitude" class="tag-pill">Gratitude</label>
+
+                <input type="checkbox" id="tag-sleep"     name="tags" value="sleep"     class="tag-checkbox" />
+                <label for="tag-sleep"     class="tag-pill">Sleep</label>
+
+                <input type="checkbox" id="tag-family"    name="tags" value="family"    class="tag-checkbox" />
+                <label for="tag-family"    class="tag-pill">Family</label>
+
+                <input type="checkbox" id="tag-study"     name="tags" value="study"     class="tag-checkbox" />
+                <label for="tag-study"     class="tag-pill">Study</label>
+
+                <input type="checkbox" id="tag-social"    name="tags" value="social"    class="tag-checkbox" />
+                <label for="tag-social"    class="tag-pill">Social</label>
+
+                <input type="checkbox" id="tag-session"   name="tags" value="session"   class="tag-checkbox" />
+                <label for="tag-session"   class="tag-pill">Session</label>
+
+                <input type="checkbox" id="tag-recovery"  name="tags" value="recovery"  class="tag-checkbox" />
+                <label for="tag-recovery"  class="tag-pill">Recovery</label>
+
+                <input type="checkbox" id="tag-selfcare"  name="tags" value="self-care" class="tag-checkbox" />
+                <label for="tag-selfcare"  class="tag-pill">Self-care</label>
+
+                <input type="checkbox" id="tag-burnout"   name="tags" value="burnout"   class="tag-checkbox" />
+                <label for="tag-burnout"   class="tag-pill">Burnout</label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Writing prompts -->
+          <div class="meta-card">
+            <div class="meta-card__head">Stuck? Pick a starting point</div>
+            <div class="meta-card__body">
+              <div class="prompt-list" role="group" aria-label="Writing prompts">
+                <input type="radio" name="prompt" id="pr-1" value="1" class="prompt-radio" />
+                <label for="pr-1" class="prompt-pill">Something I'm carrying that I'd like to put down is…</label>
+
+                <input type="radio" name="prompt" id="pr-2" value="2" class="prompt-radio" />
+                <label for="pr-2" class="prompt-pill">A small thing that helped me today was…</label>
+
+                <input type="radio" name="prompt" id="pr-3" value="3" class="prompt-radio" />
+                <label for="pr-3" class="prompt-pill">If I were talking to a friend right now, I'd say…</label>
+
+                <input type="radio" name="prompt" id="pr-4" value="4" class="prompt-radio" />
+                <label for="pr-4" class="prompt-pill">What I want to remember when I feel better…</label>
+
+                <input type="radio" name="prompt" id="pr-5" value="5" class="prompt-radio" />
+                <label for="pr-5" class="prompt-pill">I'm proud of myself for showing up, even though…</label>
+
+                <input type="radio" name="prompt" id="pr-6" value="6" class="prompt-radio" />
+                <label for="pr-6" class="prompt-pill">Right now I need…</label>
+
+                <input type="radio" name="prompt" id="pr-7" value="7" class="prompt-radio" />
+                <label for="pr-7" class="prompt-pill">One thing I'm grateful for, no matter how small…</label>
+
+                <input type="radio" name="prompt" id="pr-8" value="8" class="prompt-radio" />
+                <label for="pr-8" class="prompt-pill">If today had a colour, it would be… because…</label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Privacy note -->
+          <div class="privacy-card" role="note" aria-label="Privacy information">
+            <div class="privacy-card__row">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              <span>Your entry is <strong>encrypted end-to-end</strong>. Only you can read it.</span>
+            </div>
+            <div class="privacy-card__row">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+              <span>Luminwell staff <strong>cannot access</strong> your journal entries.</span>
+            </div>
+            <div class="privacy-card__row">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>
+              <span>You can delete any entry <strong>at any time</strong>.</span>
+            </div>
+          </div>
+
+        </aside><!-- /write-meta -->
+      </form><!-- /write-layout -->
+
+    </div><!-- /write-page -->
+  </main>
+</div>
+</body>
+</html>

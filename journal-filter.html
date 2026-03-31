@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Luminwell — Journal Filter Popup (Figma Reference)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Tokens (self-contained — no dependency on journal.css) ── */
+    :root {
+      --font:      "DM Sans", system-ui, -apple-system, sans-serif;
+      --text:      #0c1929;
+      --muted:     #64748b;
+      --soft:      #94a3b8;
+      --border:    rgba(12,25,41,.09);
+      --page-bg:   #f4f6f9;
+      --surface:   #ffffff;
+      --teal:      #2d9676;
+      --teal-deep: #1d6e55;
+      --teal-pale: #eaf5f1;
+      --teal-mid:  #c2e8db;
+      --sb-bg:     #175d92;
+      --sb-deep:   #0f4571;
+      --rf:        9999px;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body {
+      margin: 0; padding: 0;
+      font-family: var(--font); font-size: 14px;
+      color: var(--text); -webkit-font-smoothing: antialiased;
+      /* Blurred page simulation behind the modal */
+      background: linear-gradient(135deg, #eaf5f1 0%, #f4f6f9 40%, #e8f0f8 100%);
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+    }
+    p, h1, h2, h3 { margin: 0; }
+
+    /* ── Frosted backdrop simulation ────────────────── */
+    .backdrop-sim {
+      position: fixed; inset: 0;
+      background: rgba(12,25,41,.38);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      display: flex; align-items: center; justify-content: center;
+      padding: 20px;
+    }
+
+    /* ── Modal ──────────────────────────────────────── */
+    .filter-modal {
+      width: 100%;
+      max-width: 460px;
+      background: var(--surface);
+      border-radius: 20px;
+      box-shadow:
+        0 8px 40px rgba(12,25,41,.22),
+        0 2px 8px  rgba(12,25,41,.12);
+      overflow: hidden;
+      display: flex; flex-direction: column;
+    }
+
+    /* ── Header ─────────────────────────────────────── */
+    .filter-modal__head {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 22px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .filter-modal__title {
+      font-size: 16px; font-weight: 800; letter-spacing: -0.02em;
+      color: var(--text); display: flex; align-items: center; gap: 8px;
+    }
+    .filter-modal__title svg { width: 17px; height: 17px; color: var(--teal); }
+    .filter-modal__close {
+      width: 30px; height: 30px; border-radius: 8px; border: none;
+      background: var(--page-bg); color: var(--muted);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+    }
+    .filter-modal__close svg { width: 14px; height: 14px; }
+
+    /* ── Body ───────────────────────────────────────── */
+    .filter-modal__body {
+      padding: 20px 22px;
+      display: flex; flex-direction: column; gap: 22px;
+      overflow-y: auto; max-height: 62vh;
+    }
+
+    /* Section labels */
+    .filter-section__label {
+      font-size: 11px; font-weight: 700; letter-spacing: .08em;
+      text-transform: uppercase; color: var(--soft); margin: 0 0 10px;
+    }
+
+    /* ── Mood pills ─────────────────────────────────── */
+    .filter-mood-row { display: flex; gap: 8px; flex-wrap: wrap; }
+    .filter-mood-radio { display: none; }
+    .filter-mood-pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 8px 16px; border-radius: var(--rf);
+      border: 1.5px solid var(--border); background: var(--page-bg);
+      font-size: 13px; font-weight: 600; color: var(--muted);
+      cursor: pointer; user-select: none;
+    }
+    /* Show "All Moods" active by default for Figma */
+    .filter-mood-pill--active-all   { background: var(--sb-bg);              color: #fff;     border-color: var(--sb-bg); }
+    .filter-mood-pill--active-pos   { background: rgba(5,150,105,.1);         border-color: #059669; color: #065f46; }
+    .filter-mood-pill--active-neu   { background: rgba(71,85,105,.1);         border-color: #475569; color: #334155; }
+    .filter-mood-pill--active-cha   { background: rgba(217,119,6,.1);         border-color: #d97706; color: #92400e; }
+
+    /* ── Tag chips ──────────────────────────────────── */
+    .filter-tags-grid { display: flex; gap: 8px; flex-wrap: wrap; }
+    .filter-tag-pill {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 7px 14px; border-radius: var(--rf);
+      border: 1.5px solid var(--border); background: var(--page-bg);
+      font-size: 12px; font-weight: 600; color: var(--muted); cursor: pointer;
+    }
+    .filter-tag-pill--active {
+      background: rgba(23,93,146,.09); border-color: var(--sb-bg); color: var(--sb-bg);
+    }
+
+    /* ── Date range pills ───────────────────────────── */
+    .filter-date-row { display: flex; gap: 8px; flex-wrap: wrap; }
+    .filter-date-pill {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 7px 14px; border-radius: var(--rf);
+      border: 1.5px solid var(--border); background: var(--page-bg);
+      font-size: 12px; font-weight: 600; color: var(--muted); cursor: pointer;
+    }
+    .filter-date-pill--active-all {
+      background: var(--text); color: #fff; border-color: var(--text);
+    }
+    .filter-date-pill--active {
+      background: var(--teal-pale); border-color: var(--teal); color: var(--teal);
+    }
+
+    /* ── Sort rows ──────────────────────────────────── */
+    .filter-sort-col { display: flex; flex-direction: column; gap: 6px; }
+    .filter-sort-row {
+      display: flex; align-items: center; gap: 10px;
+      padding: 11px 14px; border-radius: 10px;
+      border: 1.5px solid var(--border); background: var(--page-bg);
+      cursor: pointer;
+    }
+    .filter-sort-row--active { border-color: var(--teal); background: var(--teal-pale); }
+    .filter-sort-row__dot {
+      width: 16px; height: 16px; border-radius: 50%;
+      border: 2px solid var(--border); flex-shrink: 0;
+    }
+    .filter-sort-row--active .filter-sort-row__dot {
+      border-color: var(--teal); background: var(--teal);
+    }
+    .filter-sort-row__text { font-size: 13px; font-weight: 600; color: var(--text); }
+    .filter-sort-row__sub  { font-size: 11px; color: var(--soft); margin-left: auto; }
+
+    /* ── Footer ─────────────────────────────────────── */
+    .filter-modal__foot {
+      padding: 14px 22px 18px;
+      border-top: 1px solid var(--border);
+      display: flex; gap: 10px;
+    }
+    .btn-filter-clear {
+      flex: 1; padding: 11px; border-radius: 10px;
+      border: 1.5px solid var(--border); background: var(--page-bg);
+      color: var(--muted); font-size: 13px; font-weight: 700;
+      font-family: var(--font); cursor: pointer;
+      text-align: center; text-decoration: none; display: block;
+    }
+    .btn-filter-apply {
+      flex: 2; padding: 11px; border-radius: 10px;
+      background: var(--sb-bg); color: #fff;
+      font-size: 13px; font-weight: 700; font-family: var(--font);
+      border: none; cursor: pointer;
+      text-align: center; text-decoration: none; display: block;
+      box-shadow: 0 2px 8px rgba(23,93,146,.28);
+    }
+  </style>
+</head>
+<body>
+
+<div class="backdrop-sim">
+  <div class="filter-modal" role="dialog" aria-modal="true" aria-label="Filter and sort entries">
+
+    <!-- Header -->
+    <div class="filter-modal__head">
+      <p class="filter-modal__title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
+        Filter &amp; Sort
+      </p>
+      <button class="filter-modal__close" aria-label="Close filter panel">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+
+    <!-- Body -->
+    <div class="filter-modal__body">
+
+      <!-- Mood filter -->
+      <div>
+        <p class="filter-section__label">Mood</p>
+        <div class="filter-mood-row">
+          <span class="filter-mood-pill filter-mood-pill--active-all">All moods</span>
+          <span class="filter-mood-pill filter-mood-pill--active-pos">😄 Positive</span>
+          <span class="filter-mood-pill filter-mood-pill--active-neu">😐 Neutral</span>
+          <span class="filter-mood-pill filter-mood-pill--active-cha">😞 Challenging</span>
+        </div>
+      </div>
+
+      <!-- Tag filter -->
+      <div>
+        <p class="filter-section__label">Tags</p>
+        <div class="filter-tags-grid">
+          <span class="filter-tag-pill filter-tag-pill--active">Study</span>
+          <span class="filter-tag-pill filter-tag-pill--active">Gratitude</span>
+          <span class="filter-tag-pill">Session</span>
+          <span class="filter-tag-pill">Sleep</span>
+          <span class="filter-tag-pill">Rest</span>
+          <span class="filter-tag-pill">Anxiety</span>
+          <span class="filter-tag-pill">Family</span>
+          <span class="filter-tag-pill">Burnout</span>
+          <span class="filter-tag-pill">Recovery</span>
+          <span class="filter-tag-pill">Morning</span>
+        </div>
+      </div>
+
+      <!-- Date range -->
+      <div>
+        <p class="filter-section__label">Date range</p>
+        <div class="filter-date-row">
+          <span class="filter-date-pill filter-date-pill--active-all">All time</span>
+          <span class="filter-date-pill">This week</span>
+          <span class="filter-date-pill">This month</span>
+          <span class="filter-date-pill">Last 3 months</span>
+        </div>
+      </div>
+
+      <!-- Sort -->
+      <div>
+        <p class="filter-section__label">Sort by</p>
+        <div class="filter-sort-col">
+          <div class="filter-sort-row filter-sort-row--active">
+            <span class="filter-sort-row__dot"></span>
+            <span class="filter-sort-row__text">Newest first</span>
+            <span class="filter-sort-row__sub">Default</span>
+          </div>
+          <div class="filter-sort-row">
+            <span class="filter-sort-row__dot"></span>
+            <span class="filter-sort-row__text">Oldest first</span>
+          </div>
+          <div class="filter-sort-row">
+            <span class="filter-sort-row__dot"></span>
+            <span class="filter-sort-row__text">Longest entries</span>
+          </div>
+          <div class="filter-sort-row">
+            <span class="filter-sort-row__dot"></span>
+            <span class="filter-sort-row__text">Shortest entries</span>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /body -->
+
+    <!-- Footer -->
+    <div class="filter-modal__foot">
+      <span class="btn-filter-clear">Clear all</span>
+      <span class="btn-filter-apply">Apply filters</span>
+    </div>
+
+  </div><!-- /filter-modal -->
+</div><!-- /backdrop-sim -->
+
+</body>
+</html>

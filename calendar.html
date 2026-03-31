@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Luminwell — Calendar</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Fraunces:opsz,wght@9..144,600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="calendar.css" />
+</head>
+<body>
+
+<!-- Hidden radio inputs for CSS-only filter (must precede the body so :has() works globally) -->
+<input type="radio" name="filter" id="filter-all"     class="filter-input" checked />
+<input type="radio" name="filter" id="filter-journal" class="filter-input" />
+<input type="radio" name="filter" id="filter-session" class="filter-input" />
+
+<div class="app">
+
+  <!-- ══ Sidebar ══════════════════════════════════════ -->
+  <aside class="sidebar" aria-label="Navigation">
+    <div class="sidebar__head">
+      <img class="sidebar__logo-img" src="logo.png" alt="Luminwell" width="30" height="30" decoding="async" />
+      <span class="sidebar__logo">LUMINWELL</span>
+    </div>
+
+    <div class="sidebar__block">
+      <a href="index.html" class="sidebar__new">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+        New chat
+      </a>
+    </div>
+
+    <div class="sidebar__block">
+      <div class="sidebar__label">Menu</div>
+      <nav class="sb-nav" aria-label="Sections">
+        <a href="index.html" class="sb-nav__link">
+          <svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5L12 4l9 6.5V20a1 1 0 01-1 1h-5v-7H9v7H4a1 1 0 01-1-1v-9.5z"/></svg>
+          Home
+        </a>
+        <a href="#" class="sb-nav__link">
+          <svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 11h16"/></svg>
+          Book
+        </a>
+        <a href="#" class="sb-nav__link">
+          <svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          Sessions
+        </a>
+        <a href="journal-pin.html" class="sb-nav__link">
+          <svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5c0-1 1-2 2.2-1.7C8.3 3.8 10 5.2 12 5.2S15.7 3.8 17.8 3.3C19 3 20 4 20 5v13c0 1-1 1.7-2.2 1.4-2-.4-3.8-1.6-5.8-1.6S8.2 19.4 6.2 19.8 4 19 4 18V5z"/><path d="M12 5.2v14.5"/></svg>
+          Journal
+        </a>
+        <a href="calendar.html" class="sb-nav__link is-active" aria-current="page">
+          <svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+          Calendar
+        </a>
+      </nav>
+    </div>
+
+    <div class="sidebar__block sidebar__block--fill">
+      <div class="sidebar__label">Recent</div>
+      <div class="sb-recent">
+        <button type="button" class="sb-recent__btn">
+          <div class="sb-recent__title">Peer matching · housing &amp; anxiety</div>
+          <div class="sb-recent__meta">Today</div>
+        </button>
+        <button type="button" class="sb-recent__btn">
+          <div class="sb-recent__title">Sleep &amp; mood check-in</div>
+          <div class="sb-recent__meta">Yesterday</div>
+        </button>
+        <button type="button" class="sb-recent__btn">
+          <div class="sb-recent__title">Mindfulness &amp; stress tools</div>
+          <div class="sb-recent__meta">Mar 26</div>
+        </button>
+      </div>
+    </div>
+
+    <div class="sidebar__foot">
+      <div class="sidebar__avatar" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="3.5"/><path d="M6 19c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke-linecap="round"/></svg>
+      </div>
+      <div class="sidebar__who">
+        <div class="sidebar__name">Umer</div>
+        <div class="sidebar__credits">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><ellipse cx="12" cy="6" rx="6" ry="2"/><path d="M6 6v4c0 1.1 2.7 2 6 2s6-.9 6-2V6"/><path d="M6 10v4c0 1.1 2.7 2 6 2s6-.9 6-2v-4"/></svg>
+          500
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ══ Main ══════════════════════════════════════════ -->
+  <main class="main">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <div class="topbar__left">
+        <img class="topbar__logo-img" src="logo.png" alt="Luminwell" width="30" height="30" decoding="async" />
+        <span class="topbar__title">My Calendar</span>
+      </div>
+      <div class="topbar__right">
+        <a class="topbar__crisis" href="tel:988">988 Crisis Line</a>
+        <button type="button" class="topbar__icon-btn" aria-label="Notifications">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+        </button>
+        <button type="button" class="topbar__icon-btn" aria-label="Settings">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- ── Calendar page content ─────────────────── -->
+    <div class="cal-page">
+
+      <!-- Dashboard header: greeting + new entry button -->
+      <div class="cal-header">
+        <div class="cal-greeting">
+          <p class="cal-greeting__eyebrow">April 2026</p>
+          <h1 class="cal-greeting__title">Your month, at a glance</h1>
+          <p class="cal-greeting__sub">A record of your reflections, moods, and sessions.</p>
+        </div>
+        <a href="calendar-add.html" class="btn-new">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+          New Entry
+        </a>
+      </div>
+
+      <!-- Stats strip -->
+      <div class="dash-strip" aria-label="April summary">
+        <div class="dash-stat dash-stat--journal">
+          <div class="dash-stat__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5c0-1 1-2 2.2-1.7C8.3 3.8 10 5.2 12 5.2S15.7 3.8 17.8 3.3C19 3 20 4 20 5v13c0 1-1 1.7-2.2 1.4-2-.4-3.8-1.6-5.8-1.6S8.2 19.4 6.2 19.8 4 19 4 18V5z"/><path d="M12 5.2v14.5"/></svg>
+          </div>
+          <div class="dash-stat__num">5</div>
+          <div class="dash-stat__label">Journal entries</div>
+          <div class="dash-stat__trend">↑ 2 more than last month</div>
+        </div>
+
+        <div class="dash-stat dash-stat--session">
+          <div class="dash-stat__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          </div>
+          <div class="dash-stat__num">4</div>
+          <div class="dash-stat__label">Sessions completed</div>
+          <div class="dash-stat__trend">Maya Chen · Jordan Lee · Aisha</div>
+        </div>
+
+        <div class="dash-stat dash-stat--active">
+          <div class="dash-stat__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          </div>
+          <div class="dash-stat__num">9</div>
+          <div class="dash-stat__label">Active days</div>
+          <div class="dash-stat__trend">Out of 27 days this month</div>
+        </div>
+
+        <div class="dash-stat dash-stat--mood">
+          <div class="dash-stat__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8.5 14s1.5 2 3.5 2 3.5-2 3.5-2M9 9h.01M15 9h.01"/></svg>
+          </div>
+          <div class="dash-stat__num">😊</div>
+          <div class="dash-stat__label">Avg mood this month</div>
+          <div class="dash-stat__trend">Mostly Good · 1 Low day</div>
+        </div>
+      </div>
+
+      <!-- Controls: month nav + filter chips -->
+      <div class="cal-controls">
+        <div class="cal-nav" aria-label="Month navigation">
+          <a href="#" class="cal-nav-btn" aria-label="Previous month">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+          </a>
+          <h2 class="cal-month-h">April 2026</h2>
+          <a href="#" class="cal-nav-btn" aria-label="Next month">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+          </a>
+        </div>
+
+        <!-- CSS-only filter labels (linked to hidden radio inputs at top of page) -->
+        <div class="cal-chips" role="group" aria-label="Filter entries">
+          <label for="filter-all"     class="chip">All</label>
+          <label for="filter-journal" class="chip">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 5c0-1 1-2 2.2-1.7C8.3 3.8 10 5.2 12 5.2S15.7 3.8 17.8 3.3C19 3 20 4 20 5v13c0 1-1 1.7-2.2 1.4-2-.4-3.8-1.6-5.8-1.6S8.2 19.4 6.2 19.8 4 19 4 18V5z"/></svg>
+            Journal
+          </label>
+          <label for="filter-session" class="chip">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+            Sessions
+          </label>
+        </div>
+      </div>
+
+      <!-- Two-column: calendar + right panel -->
+      <div class="cal-content">
+
+        <!-- ── Left: Calendar grid ─────────────────── -->
+        <div class="cal-main">
+          <div class="cal-body" role="grid" aria-label="April 2026 calendar">
+
+            <div class="cal-dow-row" role="row" aria-hidden="true">
+              <div class="cal-dow">Sun</div>
+              <div class="cal-dow">Mon</div>
+              <div class="cal-dow">Tue</div>
+              <div class="cal-dow">Wed</div>
+              <div class="cal-dow">Thu</div>
+              <div class="cal-dow">Fri</div>
+              <div class="cal-dow">Sat</div>
+            </div>
+
+            <div class="cal-grid" role="rowgroup">
+
+              <!-- ── Week 1 ── -->
+              <div class="cal-cell cal-cell--other-month" role="gridcell" aria-label="March 29">
+                <div class="cell-top"><span class="day-num">29</span></div>
+              </div>
+              <div class="cal-cell cal-cell--other-month" role="gridcell" aria-label="March 30">
+                <div class="cell-top"><span class="day-num">30</span></div>
+              </div>
+              <div class="cal-cell cal-cell--other-month" role="gridcell" aria-label="March 31">
+                <div class="cell-top"><span class="day-num">31</span></div>
+              </div>
+              <div class="cal-cell" role="gridcell" aria-label="April 1">
+                <div class="cell-top"><span class="day-num">1</span></div>
+              </div>
+
+              <!-- Apr 2 — Journal -->
+              <div class="cal-cell cal-cell--has-event" role="gridcell" aria-label="April 2, journal entry">
+                <div class="cell-top">
+                  <span class="day-num">2</span>
+                  <span class="mood-dot mood--good" title="Mood: Good"></span>
+                </div>
+                <div class="cal-events">
+                  <a href="calendar-view.html" class="cal-event cal-event--journal">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 5c0-1 1-2 2.2-1.7C8.3 3.8 10 5.2 12 5.2S15.7 3.8 17.8 3.3C19 3 20 4 20 5v13c0 1-1 1.7-2.2 1.4-2-.4-3.8-1.6-5.8-1.6S8.2 19.4 6.2 19.8 4 19 4 18V5z"/></svg>
+                    <span>Starting fresh</span>
+                  </a>
+                </div>
+              </div>
+
+              <div class="cal-cell" role="gridcell" aria-label="April 3">
+                <div class="cell-top"><span class="day-num">3</span></div>
+              </div>
+              <div class="cal-cell" role="gridcell" aria-label="April 4">
+                <div class="cell-top"><span class="day-num">4</span></div>
+              </div>
+
+              <!-- ── Week 2 ── -->
+              <div class="cal-cell" role="gridcell" aria-label="April 5">
+                <div class="cell-top"><span class="day-num">5</span></div>
+              </div>
+              <div class="cal-cell" role="gridcell" aria-label="April 6">
+                <div class="cell-top"><span class="day-num">6</span></div>
+              </div>
+              <div class="cal-cell" role="gridcell" aria-label="April 7">
+                <div class="cell-top"><span class="day-num">7</span></div>
+              </div>
+              <div class="cal-cell" role="gridcell" aria-label="April 8">
+                <div class="cell-top"><span class="day-num">8</span></div>
+              </div>
+
+              <!-- Apr 9 — Journal + Session -->
+              <div class="cal-cell cal-cell--has-event" role="gridcell" aria-label="April 9, journal and session">
+                <div class="cell-top">
+                  <span class="day-num">9</span>
+                  <span class="mood-dot mood--low" title="Mood: Low"></span>
+                </div>
+                <div class="cal-events">
+                  <a href="calendar-view.html" class="cal-event cal-event--journal">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 5c0-1 1-2 2.2-1.7C8.3 3.8 10 5.2 12 5.2S15.7 3.8 17.8 3.3C19 3 20 4 20 5v13c0 1-1 1.7-2.2 1.4-2-.4-3.8-1.6-5.8-1.6S8.2 19.4 6.2 19.8 4 19 4 18V5z"/></svg>
+                    <span>Processing</span>
+                  </a>
+                  <a href="calendar-view.html" class="cal-event cal-event--session">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+                    <span>Maya Chen</span>
+                  </a>
+                </div>
+              </div>
+
+              <!-- Apr 10 — Journal -->
+              <div class="cal-cell cal-cell--has-event" role="gridcell" aria-label="April 10, journal entry">
+                <div class="cell-top">
+                  <span class="day-num">10</span>
+                  <span class="mood-dot mood--good" title="Mood: Good"></span>
+                </div>
+                <div class="cal-events">
+                  <a href="calendar-view.html" class="cal-event cal-event--journal">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 5c0-1 1-2 2.2-1.7C8.3 3.8 10 5.2 12 5.2S15.7 3.8 17.8 3.3C19 3 20 4 20 5v13c0 1-1 1.7-2.2 1.4-2-.4-3.8-1.6-5.8-1.6S8.2 19.4 6.2 19.8 4 19 4 18V5z"/></svg>
+                    <span>A calmer day</span>
+                  </a>
+                </div>
+              </div>
+
+              <div class="cal-cell" role="gridcell" aria-label="April 11">
+                <div class="cell-top"><span class="day-num">11</span></div>
+              </div>
+
+              <!-- ── Week 3 ── -->
+              <div class="cal-cell" role="gridcell" aria-label="April 12">
+                <div class="cell-top"><span class="day-num">12</span></div>
+              </div>
+              <div class="cal-cell" role="gridcell" aria-label="April 13">
+                <div class="cell-top"><span class="day-num">13</span></div>
+              </div>
+
+              <!-- Apr 14 — Session -->
+              <div class="cal-cell cal-cell--has-event" role="gridcell" aria-label="April 14, session">
+                <div class="cell-top">
+                  <span class="day-num">14</span>
+                  <span class="mood-dot mood--okay" title="Mood: Okay"></span>
+                </div>
+                <div class="cal-events">
+                  <a href="calendar-view.html" class="cal-event cal-event--session">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+                    <span>Jordan Lee</span>
+                  </a>
+                </div>
+              </div>
+
+              <div class="cal-cell" role="gridcell" aria-label="April 15">
+                <div class="cell-top"><span class="day-num">15</span></div>
+              </div>
+              <div class="cal-cell" role="gridcell" aria-label="April 16">
+                <div class="cell-top"><span class="day-num">16</span></div>
+              </div>
+
+              <!-- Apr 17 — mood only -->
+              <div class="cal-cell" role="gridcell" aria-label="April 17">
+                <div class="cell-top">
+                  <span class="day-num">17</span>
+                  <span class="mood-dot mood--great" title="Mood: Great"></span>
+                </div>
+              </div>
+
+              <div class="cal-cell" role="gridcell" aria-label="April 18">
+                <div class="cell-top"><span class="day-num">18</span></div>
+              </div>
+
+              <!-- ── Week 4 ── -->
+              <div class="cal-cell" role="gridcell" aria-label="April 19">
+                <div class="cell-top"><span class="day-num">19</span></div>
+              </div>
+
+              <!-- Apr 20 — Session -->
+              <div class="cal-cell cal-cell--has-event" role="gridcell" aria-label="April 20, session">
+                <div class="cell-top">
+                  <span class="day-num">20</span>
+                  <span class="mood-dot mood--okay" title="Mood: Okay"></span>
+                </div>
+                <div class="cal-events">
+                  <a href="calendar-view.html" class="cal-event cal-event--session">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+                    <span>Maya Chen</span>
+                  </a>
+                </div>
+              </div>
+
+              <div class="cal-cell" role="gridcell" aria-label="April 21">
+                <div class="cell-top"><span class="day-num">21</span></div>
+              </div>
+              <div class="cal-cell" role="gridcell" aria-label="April 22">
+                <div class="cell-top"><span class="day-num">22</span></div>
+              </div>
+
+              <!-- Apr 23 — Journal -->
+              <div class="cal-cell cal-cell--has-event" role="gridcell" aria-label="April 23, journal entry">
+                <div class="cell-top">
+                  <span class="day-num">23</span>
+                  <span class="mood-dot mood--great" title="Mood: Great"></span>
+                </div>
+                <div class="cal-events">
+                  <a href="calendar-view.html" class="cal-event cal-event--journal">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 5c0-1 1-2 2.2-1.7C8.3 3.8 10 5.2 12 5.2S15.7 3.8 17.8 3.3C19 3 20 4 20 5v13c0 1-1 1.7-2.2 1.4-2-.4-3.8-1.6-5.8-1.6S8.2 19.4 6.2 19.8 4 19 4 18V5z"/></svg>
+                    <span>Weekend thoughts</span>
+                  </a>
+                </div>
+              </div>
+
+              <div class="cal-cell" role="gridcell" aria-label="April 24">
+                <div class="cell-top"><span class="day-num">24</span></div>
+              </div>
+
+              <!-- Apr 25 — Journal -->
+              <div class="cal-cell cal-cell--has-event" role="gridcell" aria-label="April 25, journal entry">
+                <div class="cell-top">
+                  <span class="day-num">25</span>
+                  <span class="mood-dot mood--okay" title="Mood: Okay"></span>
+                </div>
+                <div class="cal-events">
+                  <a href="calendar-view.html" class="cal-event cal-event--journal">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 5c0-1 1-2 2.2-1.7C8.3 3.8 10 5.2 12 5.2S15.7 3.8 17.8 3.3C19 3 20 4 20 5v13c0 1-1 1.7-2.2 1.4-2-.4-3.8-1.6-5.8-1.6S8.2 19.4 6.2 19.8 4 19 4 18V5z"/></svg>
+                    <span>Pre-deadline</span>
+                  </a>
+                </div>
+              </div>
+
+              <!-- ── Week 5 ── -->
+              <div class="cal-cell" role="gridcell" aria-label="April 26">
+                <div class="cell-top"><span class="day-num">26</span></div>
+              </div>
+
+              <!-- Apr 27 — Session + TODAY -->
+              <div class="cal-cell cal-cell--today cal-cell--has-event" role="gridcell" aria-label="April 27 (today), session">
+                <div class="cell-top">
+                  <span class="day-num">27</span>
+                  <span class="mood-dot mood--good" title="Mood: Good"></span>
+                </div>
+                <div class="cal-events">
+                  <a href="calendar-view.html" class="cal-event cal-event--session">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+                    <span>Aisha · 3 pm</span>
+                  </a>
+                </div>
+              </div>
+
+              <div class="cal-cell" role="gridcell" aria-label="April 28">
+                <div class="cell-top"><span class="day-num">28</span></div>
+              </div>
+              <div class="cal-cell" role="gridcell" aria-label="April 29">
+                <div class="cell-top"><span class="day-num">29</span></div>
+              </div>
+              <div class="cal-cell" role="gridcell" aria-label="April 30">
+                <div class="cell-top"><span class="day-num">30</span></div>
+              </div>
+              <div class="cal-cell cal-cell--other-month" role="gridcell" aria-label="May 1">
+                <div class="cell-top"><span class="day-num">1</span></div>
+              </div>
+              <div class="cal-cell cal-cell--other-month" role="gridcell" aria-label="May 2">
+                <div class="cell-top"><span class="day-num">2</span></div>
+              </div>
+
+            </div><!-- /cal-grid -->
+          </div><!-- /cal-body -->
+
+          <!-- Legend -->
+          <div class="cal-legend" aria-label="Calendar legend">
+            <span class="leg-item"><span class="leg-dot leg-dot--journal"></span> Journal entry</span>
+            <span class="leg-item"><span class="leg-dot leg-dot--session"></span> Session</span>
+            <span class="leg-item"><span class="leg-dot leg-dot--today"></span> Today</span>
+            <span class="leg-item"><span class="leg-dot leg-dot--mood"></span> Daily mood</span>
+          </div>
+
+        </div><!-- /cal-main -->
+
+        <!-- ── Right panel ─────────────────────────── -->
+        <aside class="cal-panel" aria-label="Events and mood summary">
+
+          <!-- Upcoming: today's session -->
+          <div class="panel-section">
+            <div class="panel-section__head">
+              <h2 class="panel-section__title">Upcoming today</h2>
+              <span class="panel-section__badge">Apr 27</span>
+            </div>
+            <div class="upcoming-wrap">
+              <div class="upcoming-card">
+                <div class="upcoming-badge">
+                  <span class="upcoming-pulse" aria-hidden="true"></span>
+                  Today · 3:00 pm
+                </div>
+                <div class="upcoming-title">Session with Aisha</div>
+                <div class="upcoming-meta">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+                  Video call · Anxiety management
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Mood distribution chart -->
+          <div class="panel-section">
+            <div class="panel-section__head">
+              <h2 class="panel-section__title">Mood this month</h2>
+              <span class="panel-section__badge">9 days tracked</span>
+            </div>
+            <div class="mood-chart" aria-label="Mood breakdown">
+              <div class="mood-bar-row">
+                <span class="mood-bar-label">Great</span>
+                <div class="mood-bar-track"><div class="mood-bar-fill mood-bar-fill--great" style="width:22%"></div></div>
+                <span class="mood-bar-count">2</span>
+              </div>
+              <div class="mood-bar-row">
+                <span class="mood-bar-label">Good</span>
+                <div class="mood-bar-track"><div class="mood-bar-fill mood-bar-fill--good" style="width:33%"></div></div>
+                <span class="mood-bar-count">3</span>
+              </div>
+              <div class="mood-bar-row">
+                <span class="mood-bar-label">Okay</span>
+                <div class="mood-bar-track"><div class="mood-bar-fill mood-bar-fill--okay" style="width:33%"></div></div>
+                <span class="mood-bar-count">3</span>
+              </div>
+              <div class="mood-bar-row">
+                <span class="mood-bar-label">Low</span>
+                <div class="mood-bar-track"><div class="mood-bar-fill mood-bar-fill--low" style="width:11%"></div></div>
+                <span class="mood-bar-count">1</span>
+              </div>
+            </div>
+
+            <!-- Activity heatmap row -->
+            <div class="heat-wrap">
+              <div class="heat-label">Active days in April</div>
+              <div class="heat-row" role="list" aria-label="Days with activity">
+                <div class="heat-dot heat-dot--journal" role="listitem" title="Apr 2 — Journal">2</div>
+                <div class="heat-dot" role="listitem" title="No activity">·</div>
+                <div class="heat-dot" role="listitem" title="No activity">·</div>
+                <div class="heat-dot" role="listitem" title="No activity">·</div>
+                <div class="heat-dot" role="listitem" title="No activity">·</div>
+                <div class="heat-dot" role="listitem" title="No activity">·</div>
+                <div class="heat-dot heat-dot--both"    role="listitem" title="Apr 9 — Journal + Session">9</div>
+                <div class="heat-dot heat-dot--journal" role="listitem" title="Apr 10 — Journal">10</div>
+                <div class="heat-dot" role="listitem" title="No activity">·</div>
+                <div class="heat-dot" role="listitem" title="No activity">·</div>
+                <div class="heat-dot" role="listitem" title="No activity">·</div>
+                <div class="heat-dot heat-dot--session" role="listitem" title="Apr 14 — Session">14</div>
+                <div class="heat-dot" role="listitem" title="No activity">·</div>
+                <div class="heat-dot" role="listitem" title="No activity">·</div>
+                <div class="heat-dot" role="listitem" title="No activity">·</div>
+                <div class="heat-dot" role="listitem" title="No activity">·</div>
+                <div class="heat-dot" role="listitem" title="No activity">·</div>
+                <div class="heat-dot heat-dot--session" role="listitem" title="Apr 20 — Session">20</div>
+                <div class="heat-dot" role="listitem" title="No activity">·</div>
+                <div class="heat-dot" role="listitem" title="No activity">·</div>
+                <div class="heat-dot heat-dot--journal" role="listitem" title="Apr 23 — Journal">23</div>
+                <div class="heat-dot" role="listitem" title="No activity">·</div>
+                <div class="heat-dot heat-dot--journal" role="listitem" title="Apr 25 — Journal">25</div>
+                <div class="heat-dot" role="listitem" title="No activity">·</div>
+                <div class="heat-dot heat-dot--session heat-dot--today" role="listitem" title="Apr 27 — Session (today)">27</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- All entries list — filtered by CSS-only chips -->
+          <div class="panel-section">
+            <div class="panel-section__head">
+              <h2 class="panel-section__title">April entries</h2>
+              <span class="panel-section__badge">9 total</span>
+            </div>
+            <div class="ev-list" aria-label="All April entries">
+
+              <!-- Apr 2 — Journal -->
+              <div class="ev-card ev-card--journal">
+                <div class="ev-card__header">
+                  <span class="ev-type ev-type--journal">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 5c0-1 1-2 2.2-1.7C8.3 3.8 10 5.2 12 5.2S15.7 3.8 17.8 3.3C19 3 20 4 20 5v13c0 1-1 1.7-2.2 1.4-2-.4-3.8-1.6-5.8-1.6S8.2 19.4 6.2 19.8 4 19 4 18V5z"/></svg>
+                    Journal
+                  </span>
+                  <span class="ev-card__date">Apr 2</span>
+                </div>
+                <div class="ev-card__title">Starting fresh</div>
+                <div class="ev-card__preview">Woke up feeling a bit lighter today. Good sleep, no phone first 30 minutes — it helped.</div>
+                <div class="ev-card__footer">
+                  <span class="ev-mood-badge ev-mood-badge--good">😊 Good</span>
+                  <a href="calendar-view.html" class="ev-card__link">Read →</a>
+                </div>
+              </div>
+
+              <!-- Apr 9 — Journal -->
+              <div class="ev-card ev-card--journal">
+                <div class="ev-card__header">
+                  <span class="ev-type ev-type--journal">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 5c0-1 1-2 2.2-1.7C8.3 3.8 10 5.2 12 5.2S15.7 3.8 17.8 3.3C19 3 20 4 20 5v13c0 1-1 1.7-2.2 1.4-2-.4-3.8-1.6-5.8-1.6S8.2 19.4 6.2 19.8 4 19 4 18V5z"/></svg>
+                    Journal
+                  </span>
+                  <span class="ev-card__date">Apr 9</span>
+                </div>
+                <div class="ev-card__title">Processing last session</div>
+                <div class="ev-card__preview">Today's session with Maya was harder than I expected. We talked about the housing stuff and I got emotional.</div>
+                <div class="ev-card__footer">
+                  <span class="ev-mood-badge ev-mood-badge--low">😞 Low</span>
+                  <a href="calendar-view.html" class="ev-card__link">Read →</a>
+                </div>
+              </div>
+
+              <!-- Apr 9 — Session -->
+              <div class="ev-card ev-card--session">
+                <div class="ev-card__header">
+                  <span class="ev-type ev-type--session">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+                    Session
+                  </span>
+                  <span class="ev-card__date">Apr 9</span>
+                </div>
+                <div class="ev-card__title">Maya Chen</div>
+                <div class="ev-card__meta">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                  3:00 pm · 60 min · Video call
+                </div>
+                <div class="ev-card__meta">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10M7 12h7"/></svg>
+                  Housing stress, family dynamics
+                </div>
+              </div>
+
+              <!-- Apr 10 — Journal -->
+              <div class="ev-card ev-card--journal">
+                <div class="ev-card__header">
+                  <span class="ev-type ev-type--journal">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 5c0-1 1-2 2.2-1.7C8.3 3.8 10 5.2 12 5.2S15.7 3.8 17.8 3.3C19 3 20 4 20 5v13c0 1-1 1.7-2.2 1.4-2-.4-3.8-1.6-5.8-1.6S8.2 19.4 6.2 19.8 4 19 4 18V5z"/></svg>
+                    Journal
+                  </span>
+                  <span class="ev-card__date">Apr 10</span>
+                </div>
+                <div class="ev-card__title">A calmer day</div>
+                <div class="ev-card__preview">Yesterday was rough but waking up today felt different. Lighter. I even made breakfast properly.</div>
+                <div class="ev-card__footer">
+                  <span class="ev-mood-badge ev-mood-badge--good">😊 Good</span>
+                  <a href="calendar-view.html" class="ev-card__link">Read →</a>
+                </div>
+              </div>
+
+              <!-- Apr 14 — Session -->
+              <div class="ev-card ev-card--session">
+                <div class="ev-card__header">
+                  <span class="ev-type ev-type--session">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+                    Session
+                  </span>
+                  <span class="ev-card__date">Apr 14</span>
+                </div>
+                <div class="ev-card__title">Jordan Lee</div>
+                <div class="ev-card__meta">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                  2:00 pm · 60 min · Video call
+                </div>
+                <div class="ev-card__meta">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10M7 12h7"/></svg>
+                  Academic stress, burnout
+                </div>
+              </div>
+
+              <!-- Apr 20 — Session -->
+              <div class="ev-card ev-card--session">
+                <div class="ev-card__header">
+                  <span class="ev-type ev-type--session">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+                    Session
+                  </span>
+                  <span class="ev-card__date">Apr 20</span>
+                </div>
+                <div class="ev-card__title">Maya Chen</div>
+                <div class="ev-card__meta">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                  1:00 pm · 60 min · Video call
+                </div>
+                <div class="ev-card__meta">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10M7 12h7"/></svg>
+                  Coping strategies, daily routine
+                </div>
+              </div>
+
+              <!-- Apr 23 — Journal -->
+              <div class="ev-card ev-card--journal">
+                <div class="ev-card__header">
+                  <span class="ev-type ev-type--journal">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 5c0-1 1-2 2.2-1.7C8.3 3.8 10 5.2 12 5.2S15.7 3.8 17.8 3.3C19 3 20 4 20 5v13c0 1-1 1.7-2.2 1.4-2-.4-3.8-1.6-5.8-1.6S8.2 19.4 6.2 19.8 4 19 4 18V5z"/></svg>
+                    Journal
+                  </span>
+                  <span class="ev-card__date">Apr 23</span>
+                </div>
+                <div class="ev-card__title">Weekend thoughts</div>
+                <div class="ev-card__preview">Spent the morning at the library. No real pressure. It reminded me that I actually like being here when it's not stressful.</div>
+                <div class="ev-card__footer">
+                  <span class="ev-mood-badge ev-mood-badge--great">😄 Great</span>
+                  <a href="calendar-view.html" class="ev-card__link">Read →</a>
+                </div>
+              </div>
+
+              <!-- Apr 25 — Journal -->
+              <div class="ev-card ev-card--journal">
+                <div class="ev-card__header">
+                  <span class="ev-type ev-type--journal">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 5c0-1 1-2 2.2-1.7C8.3 3.8 10 5.2 12 5.2S15.7 3.8 17.8 3.3C19 3 20 4 20 5v13c0 1-1 1.7-2.2 1.4-2-.4-3.8-1.6-5.8-1.6S8.2 19.4 6.2 19.8 4 19 4 18V5z"/></svg>
+                    Journal
+                  </span>
+                  <span class="ev-card__date">Apr 25</span>
+                </div>
+                <div class="ev-card__title">Pre-deadline reflections</div>
+                <div class="ev-card__preview">Deadline on Monday. Trying not to spiral. I keep reminding myself: done is better than perfect.</div>
+                <div class="ev-card__footer">
+                  <span class="ev-mood-badge ev-mood-badge--okay">😐 Okay</span>
+                  <a href="calendar-view.html" class="ev-card__link">Read →</a>
+                </div>
+              </div>
+
+              <!-- Apr 27 — Session (TODAY) -->
+              <div class="ev-card ev-card--session ev-card--today">
+                <div class="ev-card__header">
+                  <span class="ev-type ev-type--session">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+                    Session
+                  </span>
+                  <span class="ev-card__date">Apr 27</span>
+                </div>
+                <div class="ev-card__today-badge">
+                  <span class="ev-card__today-dot" aria-hidden="true"></span>
+                  Today
+                </div>
+                <div class="ev-card__title">Aisha</div>
+                <div class="ev-card__meta">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                  3:00 pm · 60 min · Video call
+                </div>
+                <div class="ev-card__meta">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10M7 12h7"/></svg>
+                  Anxiety management, self-care
+                </div>
+              </div>
+
+            </div><!-- /ev-list -->
+          </div><!-- /panel-section entries -->
+
+        </aside><!-- /cal-panel -->
+      </div><!-- /cal-content -->
+
+    </div><!-- /cal-page -->
+  </main>
+</div>
+
+</body>
+</html>

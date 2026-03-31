@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Luminwell Ambassador — Home</title>
+  <link rel="stylesheet" href="ambassador.css" />
+</head>
+<body>
+<div class="app">
+  <input type="checkbox" id="sb-toggle" class="state-input" />
+
+  <!-- ══ SIDEBAR ══════════════════════════════════════ -->
+  <aside class="sidebar" aria-label="Ambassador navigation">
+    <div class="sidebar__head">
+      <img class="sidebar__logo-img" src="logo.png" alt="Luminwell" width="28" height="28" decoding="async" />
+      <div class="sidebar__logo-wrap">
+        <span class="sidebar__logo">LUMINWELL</span>
+        <span class="sidebar__role-tag">Ambassador</span>
+      </div>
+      <label for="sb-toggle" class="sb-collapse-btn" aria-label="Collapse sidebar">
+        <svg class="icon-collapse" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+        <svg class="icon-expand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+      </label>
+    </div>
+
+    <div class="sidebar__block">
+      <div class="sidebar__label">Main</div>
+      <nav class="sb-nav" aria-label="Primary navigation">
+        <a href="amb-home.html" class="sb-nav__link is-active" aria-current="page">
+          <svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5L12 4l9 6.5V20a1 1 0 01-1 1h-5v-7H9v7H4a1 1 0 01-1-1v-9.5z"/></svg>
+          Home
+        </a>
+        <a href="amb-schedule.html" class="sb-nav__link">
+          <svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+          Schedule
+          <span class="sb-nav__badge sb-nav__badge--teal">3</span>
+        </a>
+        <a href="amb-students.html" class="sb-nav__link">
+          <svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+          My Clients
+        </a>
+        <a href="amb-notes.html" class="sb-nav__link">
+          <svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          Session Notes
+          <span class="sb-nav__badge sb-nav__badge--amber">2</span>
+        </a>
+        <a href="amb-tasks.html" class="sb-nav__link">
+          <svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+          Tasks
+          <span class="sb-nav__badge">5</span>
+        </a>
+        <a href="amb-messages.html" class="sb-nav__link">
+          <svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          Messages
+          <span class="sb-nav__badge">3</span>
+        </a>
+        <a href="amb-profile.html" class="sb-nav__link">
+          <svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          My Profile
+        </a>
+      </nav>
+    </div>
+
+    <div class="sidebar__block sidebar__block--fill">
+      <div class="sidebar__label">Welfare Alerts</div>
+      <div class="sb-alerts">
+        <div class="sb-alert sb-alert--red">
+          <span class="sb-alert__title">Client A — Low mood 3 days</span>
+          <span class="sb-alert__meta">Flagged · Review recommended</span>
+        </div>
+        <div class="sb-alert sb-alert--amber">
+          <span class="sb-alert__title">Client C — Missed session</span>
+          <span class="sb-alert__meta">No-show · Tue 25 Mar</span>
+        </div>
+        <div class="sb-alert sb-alert--amber">
+          <span class="sb-alert__title">Client F — No check-in 5 days</span>
+          <span class="sb-alert__meta">Last active Mon 24 Mar</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar__foot">
+      <div class="sidebar__avatar" aria-hidden="true">🌿</div>
+      <div>
+        <div class="sidebar__name">Maya Johnson</div>
+        <div class="sidebar__stats">
+          <svg viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          4.9 · 84 clients helped
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ══ MAIN ══════════════════════════════════════════ -->
+  <main class="main">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <div class="topbar__left">
+        <img class="topbar__logo-img" src="logo.png" alt="Luminwell" width="26" height="26" decoding="async" />
+        <span class="topbar__title">Ambassador Dashboard</span>
+        <span class="topbar__divider" aria-hidden="true"></span>
+        <span class="topbar__sub">Good morning, Maya 👋</span>
+      </div>
+      <div class="topbar__right">
+        <span class="topbar__today">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+          Sunday, 29 Mar 2026
+        </span>
+        <button type="button" class="topbar__crisis" aria-label="988 Crisis Helpline">988 Helpline</button>
+        <button type="button" class="topbar__icon-btn" aria-label="Notifications — 4 unread">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+          <span class="notif-dot" aria-hidden="true"></span>
+        </button>
+        <button type="button" class="topbar__icon-btn" aria-label="Settings">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- ══ Page content ══════════════════════════════ -->
+    <div class="amb-page">
+      <div class="amb-inner">
+
+        <!-- ── Header ──────────────────────────────── -->
+        <div class="amb-header">
+          <div class="amb-header__text">
+            <h1 class="amb-header__title">Your Overview</h1>
+            <p class="amb-header__sub">3 sessions today · 2 notes pending · 3 new booking requests · 12 active clients</p>
+
+          </div>
+          <div class="amb-header__actions">
+            <a href="amb-notes.html" class="btn-secondary">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              Write notes
+            </a>
+            <a href="amb-schedule.html" class="btn-primary">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+              Manage schedule
+            </a>
+          </div>
+        </div>
+
+        <!-- ── Stats row ────────────────────────────── -->
+        <div class="stats-row" role="list" aria-label="Dashboard statistics">
+          <div class="stat-card" role="listitem">
+            <div class="stat-card__icon stat-card__icon--navy" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+            </div>
+            <div>
+              <div class="stat-card__val">3</div>
+              <div class="stat-card__label">Sessions today</div>
+              <div class="stat-card__delta stat-card__delta--up">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg>
+                2:00 PM next
+              </div>
+            </div>
+          </div>
+          <div class="stat-card" role="listitem">
+            <div class="stat-card__icon stat-card__icon--teal" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+            </div>
+            <div>
+              <div class="stat-card__val">12</div>
+              <div class="stat-card__label">Active clients</div>
+              <div class="stat-card__delta stat-card__delta--up">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg>
+                2 new this month
+              </div>
+            </div>
+          </div>
+          <div class="stat-card" role="listitem">
+            <div class="stat-card__icon stat-card__icon--amber" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+            </div>
+            <div>
+              <div class="stat-card__val">3</div>
+              <div class="stat-card__label">Pending requests</div>
+              <div class="stat-card__delta stat-card__delta--down">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+                Needs response
+              </div>
+            </div>
+          </div>
+          <div class="stat-card" role="listitem">
+            <div class="stat-card__icon stat-card__icon--green" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>
+            </div>
+            <div>
+              <div class="stat-card__val">4.9</div>
+              <div class="stat-card__label">Avg rating</div>
+              <div class="stat-card__delta stat-card__delta--up">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg>
+                84 clients helped
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── Welfare alerts ────────────────────────── -->
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <p class="divider-label">Welfare &amp; Attention Required</p>
+          <div class="welfare-alert" role="alert" aria-label="High priority welfare alert">
+            <div class="welfare-alert__icon welfare-alert__icon--red" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            </div>
+            <div>
+              <p class="welfare-alert__title">Client A — Persistent low mood (3 days)</p>
+              <p class="welfare-alert__sub">Client A has logged "Low" mood three consecutive days and referenced feeling overwhelmed and isolated. Their last session was 8 days ago. Consider reaching out before their next scheduled appointment (Thu 2 Apr).</p>
+              <div class="welfare-alert__actions">
+                <a href="amb-messages.html" class="btn-welfare-act btn-welfare-act--red">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:11px;height:11px;" aria-hidden="true"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+                  Message now
+                </a>
+                <a href="amb-student-detail.html" class="btn-welfare-act btn-welfare-act--outline">View profile</a>
+                <a href="#" class="btn-welfare-act btn-welfare-act--outline">Flag for support team</a>
+              </div>
+            </div>
+          </div>
+          <div class="welfare-alert welfare-alert--amber" role="alert" aria-label="Medium priority welfare alert">
+            <div class="welfare-alert__icon welfare-alert__icon--amber" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            </div>
+            <div>
+              <p class="welfare-alert__title">Client C — Missed session (no-show)</p>
+              <p class="welfare-alert__sub">Client C did not attend their scheduled session on Tue 25 Mar and hasn't responded to the automated reminder. This is the first missed session in their history.</p>
+              <div class="welfare-alert__actions">
+                <a href="amb-messages.html" class="btn-welfare-act btn-welfare-act--outline">Send check-in message</a>
+                <a href="amb-student-detail.html" class="btn-welfare-act btn-welfare-act--outline">View history</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── Two-column body ───────────────────────── -->
+        <div class="two-col">
+
+          <!-- LEFT column -->
+          <div class="left-col">
+
+            <!-- Today's agenda -->
+            <div class="section-card" role="region" aria-label="Today's sessions">
+              <div class="section-card__head">
+                <span class="section-card__title">
+                  <span class="section-card__title-icon section-card__title-icon--navy" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                  </span>
+                  Today's Sessions
+                </span>
+                <span class="badge badge--info">3 scheduled</span>
+              </div>
+              <div class="section-card__body">
+
+                <!-- Session 1 — in 30 min -->
+                <div class="session-item" role="article" aria-label="Session with Client B at 1:30 PM">
+                  <div class="session-item__accent" style="background:linear-gradient(180deg,var(--teal),#34d399);"></div>
+                  <div class="session-item__body">
+                    <div class="session-item__time-col">
+                      <span class="session-item__time">1:30</span>
+                      <span class="session-item__dur">50 min</span>
+                    </div>
+                    <div class="session-item__divider" aria-hidden="true"></div>
+                    <div class="session-item__avatar" style="background:linear-gradient(135deg,#7c3aed,#c084fc);" aria-hidden="true">🌸</div>
+                    <div class="session-item__info">
+                      <p class="session-item__name">Client B — Initial session</p>
+                      <div class="session-item__meta">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 10l-4 4-4-4"/><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+                        Video call
+                        <span aria-hidden="true">·</span>
+                        Academic stress
+                      </div>
+                      <div class="session-item__tags">
+                        <span class="type-badge type-badge--video">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 10l-4 4-4-4"/><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+                          Video
+                        </span>
+                        <span class="prep-pill prep-pill--done">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                          Notes prepared
+                        </span>
+                        <span class="badge badge--new">Starting soon</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="session-item__actions">
+                    <a href="#" class="btn-join">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+                      Join call
+                    </a>
+                    <a href="amb-notes.html" class="btn-prep">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                      View notes
+                    </a>
+                  </div>
+                </div>
+
+                <!-- Session 2 -->
+                <div class="session-item" role="article" aria-label="Session with Client E at 2:00 PM">
+                  <div class="session-item__accent" style="background:linear-gradient(180deg,var(--sb-bg),#1a7ab8);"></div>
+                  <div class="session-item__body">
+                    <div class="session-item__time-col">
+                      <span class="session-item__time">2:00</span>
+                      <span class="session-item__dur">50 min</span>
+                    </div>
+                    <div class="session-item__divider" aria-hidden="true"></div>
+                    <div class="session-item__avatar" style="background:linear-gradient(135deg,#059669,#34d399);" aria-hidden="true">🌍</div>
+                    <div class="session-item__info">
+                      <p class="session-item__name">Client E — Follow-up session</p>
+                      <div class="session-item__meta">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 10l-4 4-4-4"/><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+                        Video call
+                        <span aria-hidden="true">·</span>
+                        Housing &amp; anxiety
+                      </div>
+                      <div class="session-item__tags">
+                        <span class="type-badge type-badge--video">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 10l-4 4-4-4"/><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+                          Video
+                        </span>
+                        <span class="prep-pill prep-pill--none">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                          No prep notes
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="session-item__actions">
+                    <a href="#" class="btn-join">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+                      Join call
+                    </a>
+                    <a href="amb-notes.html" class="btn-prep">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
+                      Add notes
+                    </a>
+                  </div>
+                </div>
+
+                <!-- Session 3 -->
+                <div class="session-item" role="article" aria-label="Session with Client H at 4:30 PM">
+                  <div class="session-item__accent" style="background:linear-gradient(180deg,var(--amber),#fbbf24);"></div>
+                  <div class="session-item__body">
+                    <div class="session-item__time-col">
+                      <span class="session-item__time">4:30</span>
+                      <span class="session-item__dur">30 min</span>
+                    </div>
+                    <div class="session-item__divider" aria-hidden="true"></div>
+                    <div class="session-item__avatar" style="background:linear-gradient(135deg,#d97706,#fbbf24);" aria-hidden="true">☀️</div>
+                    <div class="session-item__info">
+                      <p class="session-item__name">Client H — Check-in</p>
+                      <div class="session-item__meta">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 11a19.79 19.79 0 01-3.07-8.67A2 2 0 014 .18h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
+                        Phone call
+                        <span aria-hidden="true">·</span>
+                        Goal review
+                      </div>
+                      <div class="session-item__tags">
+                        <span class="type-badge type-badge--chat">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 11 19.79 19.79 0 01.4 2.33 2 2 0 012.38.18h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.36 8a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
+                          Phone
+                        </span>
+                        <span class="prep-pill prep-pill--done">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                          Notes prepared
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="session-item__actions">
+                    <a href="#" class="btn-join">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 11 19.79 19.79 0 01.4 2.33 2 2 0 012.38.18h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.36 8a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
+                      Call
+                    </a>
+                    <a href="amb-notes.html" class="btn-prep">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                      View notes
+                    </a>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- This week -->
+            <div class="section-card" role="region" aria-label="This week's schedule">
+              <div class="section-card__head">
+                <span class="section-card__title">
+                  <span class="section-card__title-icon section-card__title-icon--teal" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                  </span>
+                  This Week
+                </span>
+                <a href="amb-schedule.html" class="btn-ghost">
+                  View full schedule
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </a>
+              </div>
+              <div class="section-card__body">
+                <!-- Week strip -->
+                <div class="week-strip" role="list" aria-label="Week days">
+                  <div class="week-day" role="listitem" aria-label="Sunday — no sessions">
+                    <span class="week-day__label">Sun</span>
+                    <span class="week-day__num week-day--today" style="width:32px;height:32px;border-radius:50%;background:var(--sb-bg);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;box-shadow:0 2px 8px rgba(15,45,69,.25);">29</span>
+                  </div>
+                  <div class="week-day week-day--has-session" role="listitem" aria-label="Monday — 2 sessions">
+                    <span class="week-day__label">Mon</span>
+                    <span class="week-day__num">30</span>
+                    <span class="week-day__dot" aria-hidden="true"></span>
+                  </div>
+                  <div class="week-day week-day--has-session" role="listitem" aria-label="Tuesday — 3 sessions">
+                    <span class="week-day__label">Tue</span>
+                    <span class="week-day__num">31</span>
+                    <span class="week-day__dot" aria-hidden="true"></span>
+                  </div>
+                  <div class="week-day week-day--has-session" role="listitem" aria-label="Wednesday — 1 session">
+                    <span class="week-day__label">Wed</span>
+                    <span class="week-day__num">1</span>
+                    <span class="week-day__dot" aria-hidden="true"></span>
+                  </div>
+                  <div class="week-day" role="listitem" aria-label="Thursday — no sessions">
+                    <span class="week-day__label">Thu</span>
+                    <span class="week-day__num">2</span>
+                  </div>
+                  <div class="week-day week-day--has-session" role="listitem" aria-label="Friday — 2 sessions">
+                    <span class="week-day__label">Fri</span>
+                    <span class="week-day__num">3</span>
+                    <span class="week-day__dot" aria-hidden="true"></span>
+                  </div>
+                  <div class="week-day" role="listitem" aria-label="Saturday — no sessions">
+                    <span class="week-day__label">Sat</span>
+                    <span class="week-day__num">4</span>
+                  </div>
+                </div>
+
+                <p class="divider-label" style="font-size:10px;">Upcoming sessions</p>
+
+                <!-- Compact session list -->
+                <div style="display:flex;flex-direction:column;gap:8px;">
+                  <div style="display:flex;align-items:center;gap:11px;padding:10px 12px;background:var(--page-bg);border-radius:10px;border:1px solid var(--border);">
+                    <div style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#c084fc);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;" aria-hidden="true">🌸</div>
+                    <div style="flex:1;">
+                      <p style="font-size:13px;font-weight:700;">Client B</p>
+                      <p style="font-size:11px;color:var(--muted);margin-top:2px;">Mon 30 Mar · 10:00 AM · Video · Academic stress</p>
+                    </div>
+                    <span class="type-badge type-badge--video">Video</span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:11px;padding:10px 12px;background:var(--page-bg);border-radius:10px;border:1px solid var(--border);">
+                    <div style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#0ea5e9,#38bdf8);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;" aria-hidden="true">🧘</div>
+                    <div style="flex:1;">
+                      <p style="font-size:13px;font-weight:700;">Client D</p>
+                      <p style="font-size:11px;color:var(--muted);margin-top:2px;">Tue 31 Mar · 2:30 PM · Video · LGBTQ+ &amp; Identity</p>
+                    </div>
+                    <span class="type-badge type-badge--video">Video</span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:11px;padding:10px 12px;background:var(--page-bg);border-radius:10px;border:1px solid var(--border);">
+                    <div style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#059669,#34d399);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;" aria-hidden="true">🌿</div>
+                    <div style="flex:1;">
+                      <p style="font-size:13px;font-weight:700;">Client G</p>
+                      <p style="font-size:11px;color:var(--muted);margin-top:2px;">Wed 1 Apr · 11:00 AM · In person · Goal setting</p>
+                    </div>
+                    <span class="type-badge type-badge--person">In person</span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:11px;padding:10px 12px;background:var(--page-bg);border-radius:10px;border:1px solid var(--border);">
+                    <div style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#d97706,#fbbf24);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;" aria-hidden="true">☀️</div>
+                    <div style="flex:1;">
+                      <p style="font-size:13px;font-weight:700;">Client J &amp; Client K</p>
+                      <p style="font-size:11px;color:var(--muted);margin-top:2px;">Fri 3 Apr · 3:00 PM · Group session · Resilience</p>
+                    </div>
+                    <span class="type-badge type-badge--person">Group</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Monthly sessions chart -->
+            <div class="section-card" role="region" aria-label="Monthly sessions chart">
+              <div class="section-card__head">
+                <span class="section-card__title">
+                  <span class="section-card__title-icon section-card__title-icon--navy" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                  </span>
+                  Sessions — Last 8 Weeks
+                </span>
+                <div style="display:flex;gap:8px;align-items:center;">
+                  <span class="badge badge--new">32 total this month</span>
+                </div>
+              </div>
+              <div class="section-card__body">
+                <div class="chart-bars">
+                  <div class="chart-col chart-col--low">
+                    <span class="chart-col__val">4</span>
+                    <div class="chart-col__bar" style="height:40%;"></div>
+                    <span class="chart-col__label">1 Feb</span>
+                  </div>
+                  <div class="chart-col chart-col--active">
+                    <span class="chart-col__val">6</span>
+                    <div class="chart-col__bar" style="height:60%;"></div>
+                    <span class="chart-col__label">8 Feb</span>
+                  </div>
+                  <div class="chart-col chart-col--active">
+                    <span class="chart-col__val">5</span>
+                    <div class="chart-col__bar" style="height:50%;"></div>
+                    <span class="chart-col__label">15 Feb</span>
+                  </div>
+                  <div class="chart-col chart-col--active">
+                    <span class="chart-col__val">7</span>
+                    <div class="chart-col__bar" style="height:70%;"></div>
+                    <span class="chart-col__label">22 Feb</span>
+                  </div>
+                  <div class="chart-col chart-col--active">
+                    <span class="chart-col__val">8</span>
+                    <div class="chart-col__bar" style="height:80%;"></div>
+                    <span class="chart-col__label">1 Mar</span>
+                  </div>
+                  <div class="chart-col chart-col--active">
+                    <span class="chart-col__val">9</span>
+                    <div class="chart-col__bar" style="height:90%;"></div>
+                    <span class="chart-col__label">8 Mar</span>
+                  </div>
+                  <div class="chart-col chart-col--active">
+                    <span class="chart-col__val">10</span>
+                    <div class="chart-col__bar" style="height:100%;"></div>
+                    <span class="chart-col__label">15 Mar</span>
+                  </div>
+                  <div class="chart-col chart-col--today">
+                    <span class="chart-col__val" style="color:var(--sb-bg);">8</span>
+                    <div class="chart-col__bar" style="height:80%;"></div>
+                    <span class="chart-col__label" style="color:var(--sb-bg);font-weight:800;">This wk</span>
+                  </div>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;padding-top:4px;border-top:1px solid var(--border-soft);">
+                  <div style="text-align:center;">
+                    <p style="font-size:18px;font-weight:800;letter-spacing:-0.04em;color:var(--sb-bg);">32</p>
+                    <p style="font-size:11px;color:var(--muted);margin-top:2px;">Sessions this month</p>
+                  </div>
+                  <div style="text-align:center;">
+                    <p style="font-size:18px;font-weight:800;letter-spacing:-0.04em;color:var(--teal);">+18%</p>
+                    <p style="font-size:11px;color:var(--muted);margin-top:2px;">vs last month</p>
+                  </div>
+                  <div style="text-align:center;">
+                    <p style="font-size:18px;font-weight:800;letter-spacing:-0.04em;">4.9</p>
+                    <p style="font-size:11px;color:var(--muted);margin-top:2px;">Avg satisfaction</p>
+                  </div>
+                </div>
+                <div class="chart-legend">
+                  <span class="chart-legend__item"><span class="chart-legend__dot" style="background:var(--sb-bg);"></span>Current week</span>
+                  <span class="chart-legend__item"><span class="chart-legend__dot" style="background:var(--teal);"></span>Completed</span>
+                  <span class="chart-legend__item"><span class="chart-legend__dot" style="background:#cbd5e1;"></span>Low week</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Client caseload snapshot -->
+            <div class="section-card" role="region" aria-label="Client caseload">
+              <div class="section-card__head">
+                <span class="section-card__title">
+                  <span class="section-card__title-icon section-card__title-icon--teal" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+                  </span>
+                  Client Caseload
+                </span>
+                <a href="amb-students.html" class="btn-ghost">
+                  View all 12 clients
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </a>
+              </div>
+              <div class="section-card__body">
+                <a href="amb-student-detail.html" class="student-card" aria-label="Client A — view profile">
+                  <div class="student-card__avatar" style="background:linear-gradient(135deg,#7c3aed,#c084fc);" aria-hidden="true">🌸</div>
+                  <div class="student-card__info">
+                    <p class="student-card__name">Client A</p>
+                    <div class="student-card__meta">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                      Next: Thu 2 Apr · 8 sessions total
+                    </div>
+                  </div>
+                  <div class="student-card__right">
+                    <div class="mood-bar" aria-label="Mood trend: low, low, low">
+                      <span class="mood-dot mood-dot--okay"></span>
+                      <span class="mood-dot mood-dot--low"></span>
+                      <span class="mood-dot mood-dot--low"></span>
+                      <span class="mood-dot mood-dot--low"></span>
+                      <span class="mood-dot mood-dot--low"></span>
+                    </div>
+                    <span class="flag-badge flag-badge--red">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+                      High priority
+                    </span>
+                  </div>
+                </a>
+                <a href="amb-student-detail.html" class="student-card" aria-label="Client B — view profile">
+                  <div class="student-card__avatar" style="background:linear-gradient(135deg,#059669,#34d399);" aria-hidden="true">🌍</div>
+                  <div class="student-card__info">
+                    <p class="student-card__name">Client B</p>
+                    <div class="student-card__meta">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                      Today 1:30 PM · 3 sessions total
+                    </div>
+                  </div>
+                  <div class="student-card__right">
+                    <div class="mood-bar" aria-label="Mood trend: mixed to good">
+                      <span class="mood-dot mood-dot--good"></span>
+                      <span class="mood-dot mood-dot--okay"></span>
+                      <span class="mood-dot mood-dot--good"></span>
+                      <span class="mood-dot mood-dot--great"></span>
+                      <span class="mood-dot mood-dot--good"></span>
+                    </div>
+                    <span class="flag-badge flag-badge--none">Stable</span>
+                  </div>
+                </a>
+                <a href="amb-student-detail.html" class="student-card" aria-label="Client C — view profile">
+                  <div class="student-card__avatar" style="background:linear-gradient(135deg,#d97706,#fbbf24);" aria-hidden="true">☀️</div>
+                  <div class="student-card__info">
+                    <p class="student-card__name">Client C</p>
+                    <div class="student-card__meta">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                      Missed Tue 25 Mar · 5 sessions total
+                    </div>
+                  </div>
+                  <div class="student-card__right">
+                    <div class="mood-bar" aria-label="Mood trend: declining">
+                      <span class="mood-dot mood-dot--good"></span>
+                      <span class="mood-dot mood-dot--okay"></span>
+                      <span class="mood-dot mood-dot--okay"></span>
+                      <span class="mood-dot mood-dot--low"></span>
+                      <span class="mood-dot mood-dot--empty"></span>
+                    </div>
+                    <span class="flag-badge flag-badge--amber">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                      No-show
+                    </span>
+                  </div>
+                </a>
+                <a href="amb-student-detail.html" class="student-card" aria-label="Client D — view profile">
+                  <div class="student-card__avatar" style="background:linear-gradient(135deg,#0ea5e9,#38bdf8);" aria-hidden="true">🧘</div>
+                  <div class="student-card__info">
+                    <p class="student-card__name">Client D</p>
+                    <div class="student-card__meta">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                      Tue 31 Mar · 6 sessions total
+                    </div>
+                  </div>
+                  <div class="student-card__right">
+                    <div class="mood-bar" aria-label="Mood trend: improving">
+                      <span class="mood-dot mood-dot--low"></span>
+                      <span class="mood-dot mood-dot--okay"></span>
+                      <span class="mood-dot mood-dot--okay"></span>
+                      <span class="mood-dot mood-dot--good"></span>
+                      <span class="mood-dot mood-dot--good"></span>
+                    </div>
+                    <span class="flag-badge flag-badge--none">Improving</span>
+                  </div>
+                </a>
+              </div>
+            </div>
+
+          </div><!-- /left-col -->
+
+          <!-- RIGHT column -->
+          <div class="right-col">
+
+            <!-- Quick actions -->
+            <div class="section-card" role="region" aria-label="Quick actions">
+              <div class="section-card__head">
+                <span class="section-card__title">Quick Actions</span>
+              </div>
+              <div style="padding:14px;">
+                <div class="quick-actions">
+                  <a href="amb-notes.html" class="quick-action" aria-label="Write session notes">
+                    <div class="quick-action__icon quick-action__icon--navy" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
+                    </div>
+                    <span class="quick-action__label">Write notes</span>
+                  </a>
+                  <a href="amb-schedule.html" class="quick-action" aria-label="Update availability">
+                    <div class="quick-action__icon quick-action__icon--teal" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                    </div>
+                    <span class="quick-action__label">Update availability</span>
+                  </a>
+                  <a href="amb-messages.html" class="quick-action" aria-label="Message a client">
+                    <div class="quick-action__icon quick-action__icon--amber" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+                    </div>
+                    <span class="quick-action__label">Message client</span>
+                  </a>
+                  <a href="amb-tasks.html" class="quick-action" aria-label="Add a task">
+                    <div class="quick-action__icon quick-action__icon--green" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+                    </div>
+                    <span class="quick-action__label">Add task</span>
+                  </a>
+                  <a href="amb-students.html" class="quick-action" aria-label="View all clients">
+                    <div class="quick-action__icon quick-action__icon--red" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                    </div>
+                    <span class="quick-action__label">Welfare alerts</span>
+                  </a>
+                  <a href="amb-profile.html" class="quick-action" aria-label="View my profile">
+                    <div class="quick-action__icon quick-action__icon--navy" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    </div>
+                    <span class="quick-action__label">My profile</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Pending booking requests -->
+            <div class="section-card" role="region" aria-label="Pending booking requests">
+              <div class="section-card__head">
+                <span class="section-card__title">
+                  <span class="section-card__title-icon section-card__title-icon--amber" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                  </span>
+                  Booking Requests
+                </span>
+                <span class="badge badge--warn">3 pending</span>
+              </div>
+              <div class="section-card__body">
+                <div class="booking-req">
+                  <div class="booking-req__head">
+                    <div class="booking-req__avatar" style="background:linear-gradient(135deg,#475569,#94a3b8);" aria-hidden="true">👤</div>
+                    <div>
+                      <p class="booking-req__name">New client</p>
+                      <p class="booking-req__meta">Wed 2 Apr · 10:00 AM · Video · Anxiety</p>
+                    </div>
+                    <span class="badge badge--new booking-req__new">New</span>
+                  </div>
+                  <div class="booking-req__actions">
+                    <button type="button" class="btn-accept">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                      Accept
+                    </button>
+                    <button type="button" class="btn-decline">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                      Decline
+                    </button>
+                  </div>
+                </div>
+                <div class="booking-req">
+                  <div class="booking-req__head">
+                    <div class="booking-req__avatar" style="background:linear-gradient(135deg,#059669,#34d399);" aria-hidden="true">🌿</div>
+                    <div>
+                      <p class="booking-req__name">Client L (returning)</p>
+                      <p class="booking-req__meta">Thu 3 Apr · 3:30 PM · Video · Check-in</p>
+                    </div>
+                    <span class="badge badge--info booking-req__new">Returning</span>
+                  </div>
+                  <div class="booking-req__actions">
+                    <button type="button" class="btn-accept">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                      Accept
+                    </button>
+                    <button type="button" class="btn-decline">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                      Decline
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tasks -->
+            <div class="section-card" role="region" aria-label="Today's tasks">
+              <div class="section-card__head">
+                <span class="section-card__title">
+                  <span class="section-card__title-icon section-card__title-icon--green" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+                  </span>
+                  Tasks Today
+                </span>
+                <a href="amb-tasks.html" class="btn-ghost">
+                  All tasks
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </a>
+              </div>
+              <div class="section-card__body">
+                <div class="task-item">
+                  <span class="priority-dot priority-dot--high" aria-label="High priority"></span>
+                  <div class="task-item__check" aria-label="Mark as done" role="button" tabindex="0"></div>
+                  <div class="task-item__body">
+                    <p class="task-item__title">Write notes for Client E (yesterday's session)</p>
+                    <div class="task-item__meta">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                      Overdue · Due today
+                    </div>
+                  </div>
+                </div>
+                <div class="task-item">
+                  <span class="priority-dot priority-dot--high" aria-label="High priority"></span>
+                  <div class="task-item__check" aria-label="Mark as done" role="button" tabindex="0"></div>
+                  <div class="task-item__body">
+                    <p class="task-item__title">Review Client A welfare — consider early contact</p>
+                    <div class="task-item__meta">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                      Due today · Welfare
+                    </div>
+                  </div>
+                </div>
+                <div class="task-item">
+                  <span class="priority-dot priority-dot--medium" aria-label="Medium priority"></span>
+                  <div class="task-item__check task-item__check--done" aria-label="Completed" role="status">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                  </div>
+                  <div class="task-item__body">
+                    <p class="task-item__title task-item__title--done">Respond to Client B's message</p>
+                    <div class="task-item__meta">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                      Done · 9:15 AM
+                    </div>
+                  </div>
+                </div>
+                <div class="task-item">
+                  <span class="priority-dot priority-dot--low" aria-label="Low priority"></span>
+                  <div class="task-item__check" aria-label="Mark as done" role="button" tabindex="0"></div>
+                  <div class="task-item__body">
+                    <p class="task-item__title">Update availability for April</p>
+                    <div class="task-item__meta">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                      Due Fri 3 Apr
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Notifications -->
+            <div class="section-card" role="region" aria-label="Notifications">
+              <div class="section-card__head">
+                <span class="section-card__title">Notifications</span>
+                <span class="badge badge--alert">4 new</span>
+              </div>
+              <div class="section-card__body">
+                <div class="notif-row">
+                  <span class="notif-row__dot notif-row__dot--red"></span>
+                  <p class="notif-row__text"><strong>Client A</strong> logged "Low" mood for the 3rd day in a row</p>
+                  <span class="notif-row__time">8:30 AM</span>
+                </div>
+                <div class="notif-row">
+                  <span class="notif-row__dot notif-row__dot--amber"></span>
+                  <p class="notif-row__text"><strong>New booking request</strong> from an unmatched client — review required</p>
+                  <span class="notif-row__time">7:52 AM</span>
+                </div>
+                <div class="notif-row">
+                  <span class="notif-row__dot notif-row__dot--teal"></span>
+                  <p class="notif-row__text"><strong>Client D</strong> submitted prep notes for Tuesday's session</p>
+                  <span class="notif-row__time">Yesterday</span>
+                </div>
+                <div class="notif-row">
+                  <span class="notif-row__dot notif-row__dot--blue"></span>
+                  <p class="notif-row__text"><strong>Session note reminder</strong> — Client E's notes from Fri 28 Mar still unpublished</p>
+                  <span class="notif-row__time">Yesterday</span>
+                </div>
+                <div class="notif-row">
+                  <span class="notif-row__dot notif-row__dot--grey"></span>
+                  <p class="notif-row__text"><strong>Client L</strong> left a 5-star rating for your last session</p>
+                  <span class="notif-row__time">2 days ago</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Messages preview -->
+            <div class="section-card" role="region" aria-label="Recent messages">
+              <div class="section-card__head">
+                <span class="section-card__title">Messages</span>
+                <a href="amb-messages.html" class="btn-ghost">
+                  View all
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </a>
+              </div>
+              <div class="section-card__body">
+                <a href="amb-messages.html" class="msg-preview" aria-label="Message from Client B">
+                  <div class="msg-preview__avatar" style="background:linear-gradient(135deg,#7c3aed,#c084fc);" aria-hidden="true">🌸</div>
+                  <div style="flex:1;min-width:0;">
+                    <p class="msg-preview__name">Client B</p>
+                    <p class="msg-preview__text">Hi Maya, just confirming today's session still at 1:30?</p>
+                  </div>
+                  <div class="msg-preview__right">
+                    <span class="msg-preview__time">9:41 AM</span>
+                    <span class="msg-preview__unread">1</span>
+                  </div>
+                </a>
+                <a href="amb-messages.html" class="msg-preview" aria-label="Message from Client E">
+                  <div class="msg-preview__avatar" style="background:linear-gradient(135deg,#059669,#34d399);" aria-hidden="true">🌍</div>
+                  <div style="flex:1;min-width:0;">
+                    <p class="msg-preview__name">Client E</p>
+                    <p class="msg-preview__text">I've been feeling a bit better after last week, wanted to share before our session today.</p>
+                  </div>
+                  <div class="msg-preview__right">
+                    <span class="msg-preview__time">8:15 AM</span>
+                    <span class="msg-preview__unread">2</span>
+                  </div>
+                </a>
+                <a href="amb-messages.html" class="msg-preview" aria-label="Message from Client H">
+                  <div class="msg-preview__avatar" style="background:linear-gradient(135deg,#d97706,#fbbf24);" aria-hidden="true">☀️</div>
+                  <div style="flex:1;min-width:0;">
+                    <p class="msg-preview__name">Client H</p>
+                    <p class="msg-preview__text">Can we move our call 15 mins earlier if possible?</p>
+                  </div>
+                  <div class="msg-preview__right">
+                    <span class="msg-preview__time">Yesterday</span>
+                  </div>
+                </a>
+              </div>
+            </div>
+
+            <!-- Privacy -->
+            <div class="privacy-strip" role="note">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              All client data is anonymised. Full names and personal details are never stored or displayed. Welfare flags are visible only to you and the Luminwell support team.
+            </div>
+
+          </div><!-- /right-col -->
+        </div><!-- /two-col -->
+
+      </div>
+    </div>
+  </main>
+</div>
+</body>
+</html>

@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Luminwell — Journal · No Results</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="journal.css" />
+  <link rel="stylesheet" href="journal-filter.css" />
+  <style>
+    /* ── No-result state styles (page-specific) ─────── */
+    .nr-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 64px 24px 80px;
+      gap: 0;
+    }
+
+    /* Illustration ring */
+    .nr-ring {
+      width: 108px; height: 108px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #eaf5f1 0%, #e8f0f8 100%);
+      border: 2px solid rgba(45,150,118,.15);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 26px;
+      position: relative;
+    }
+    .nr-ring::before {
+      content: '';
+      position: absolute; inset: -8px;
+      border-radius: 50%;
+      border: 1.5px dashed rgba(45,150,118,.2);
+    }
+    .nr-ring svg {
+      width: 44px; height: 44px;
+      color: #2d9676;
+    }
+
+    /* Text */
+    .nr-title {
+      font-size: 21px; font-weight: 800;
+      letter-spacing: -0.03em; color: #0c1929;
+      margin-bottom: 10px;
+    }
+    .nr-sub {
+      font-size: 14px; color: #64748b;
+      line-height: 1.65; max-width: 380px;
+      margin-bottom: 30px;
+    }
+
+    /* Active filter chips shown as "reason" */
+    .nr-active-filters {
+      display: flex; align-items: center; gap: 8px;
+      flex-wrap: wrap; justify-content: center;
+      margin-bottom: 32px;
+    }
+    .nr-active-filters__label {
+      font-size: 12px; font-weight: 600; color: #94a3b8;
+    }
+    .nr-chip {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 5px 12px; border-radius: 9999px;
+      background: #f4f6f9; border: 1.5px solid rgba(12,25,41,.1);
+      font-size: 12px; font-weight: 600; color: #475569;
+    }
+    .nr-chip--mood {
+      background: rgba(71,85,105,.07);
+      border-color: #475569; color: #334155;
+    }
+    .nr-chip--tag {
+      background: rgba(23,93,146,.07);
+      border-color: #175d92; color: #175d92;
+    }
+    .nr-chip--date {
+      background: rgba(45,150,118,.07);
+      border-color: #2d9676; color: #1d6e55;
+    }
+    .nr-chip__x {
+      font-size: 10px; opacity: .55; margin-left: 2px;
+    }
+
+    /* CTA buttons */
+    .nr-actions {
+      display: flex; gap: 12px; flex-wrap: wrap;
+      justify-content: center;
+    }
+    .nr-btn-clear {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 12px 24px; border-radius: 11px;
+      border: 1.5px solid rgba(12,25,41,.12);
+      background: #ffffff; color: #475569;
+      font-size: 14px; font-weight: 700;
+      font-family: "DM Sans", system-ui, sans-serif;
+      cursor: pointer; text-decoration: none;
+    }
+    .nr-btn-clear svg { width: 15px; height: 15px; }
+    .nr-btn-write {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 12px 24px; border-radius: 11px;
+      border: none;
+      background: #175d92; color: #fff;
+      font-size: 14px; font-weight: 700;
+      font-family: "DM Sans", system-ui, sans-serif;
+      cursor: pointer; text-decoration: none;
+      box-shadow: 0 3px 14px rgba(23,93,146,.3);
+    }
+    .nr-btn-write svg { width: 15px; height: 15px; }
+
+    /* Gentle divider before footer */
+    .nr-divider {
+      width: 100%; max-width: 420px;
+      height: 1px; background: rgba(12,25,41,.07);
+      margin: 40px auto 0;
+    }
+
+    /* Suggestion row — write a new entry nudge */
+    .nr-nudge {
+      margin-top: 40px;
+      padding: 20px 22px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #eaf5f1 0%, #e8f0fb 100%);
+      border: 1.5px solid rgba(45,150,118,.15);
+      max-width: 520px;
+      width: 100%;
+      display: flex; align-items: center; gap: 16px;
+      text-align: left;
+    }
+    .nr-nudge__icon {
+      font-size: 28px; flex-shrink: 0;
+    }
+    .nr-nudge__text { flex: 1; }
+    .nr-nudge__title {
+      font-size: 14px; font-weight: 700; color: #0c1929;
+      margin-bottom: 4px;
+    }
+    .nr-nudge__sub {
+      font-size: 12px; color: #64748b; line-height: 1.55;
+    }
+    .nr-nudge__link {
+      display: inline-flex; align-items: center; gap: 5px;
+      margin-top: 8px; font-size: 12px; font-weight: 700;
+      color: #2d9676; text-decoration: none;
+    }
+    .nr-nudge__link svg { width: 13px; height: 13px; }
+  </style>
+</head>
+<body>
+
+<!-- ══ CSS-only state inputs ════════════════════════ -->
+<input type="checkbox" id="show-form"     class="state-input" />
+<input type="checkbox" id="filter-open"   class="state-input" />
+<input type="radio" name="qmood" id="qm-pos" class="state-input" />
+<input type="radio" name="qmood" id="qm-neu" class="state-input" checked />
+<input type="radio" name="qmood" id="qm-cha" class="state-input" />
+<input type="radio" name="mood-filter" id="mood-all" class="state-input" />
+<input type="radio" name="mood-filter" id="mood-pos" class="state-input" />
+<input type="radio" name="mood-filter" id="mood-neu" class="state-input" checked />
+<input type="radio" name="mood-filter" id="mood-cha" class="state-input" />
+<input type="radio" name="view-mode"   id="view-grid" class="state-input" checked />
+<input type="radio" name="view-mode"   id="view-list" class="state-input" />
+<input type="checkbox" id="tag-study"     class="state-input" checked />
+<input type="checkbox" id="tag-gratitude" class="state-input" />
+<input type="checkbox" id="tag-session"   class="state-input" />
+<input type="checkbox" id="tag-sleep"     class="state-input" />
+<input type="checkbox" id="tag-rest"      class="state-input" />
+<input type="radio" name="fm-mood" id="fm-all" class="state-input" checked />
+<input type="radio" name="fm-mood" id="fm-pos" class="state-input" />
+<input type="radio" name="fm-mood" id="fm-neu" class="state-input" />
+<input type="radio" name="fm-mood" id="fm-cha" class="state-input" />
+<input type="checkbox" id="ft-study"    class="state-input" />
+<input type="checkbox" id="ft-grat"     class="state-input" />
+<input type="checkbox" id="ft-session"  class="state-input" />
+<input type="checkbox" id="ft-sleep"    class="state-input" />
+<input type="checkbox" id="ft-rest"     class="state-input" />
+<input type="checkbox" id="ft-anxiety"  class="state-input" />
+<input type="checkbox" id="ft-family"   class="state-input" />
+<input type="checkbox" id="ft-burnout"  class="state-input" />
+<input type="checkbox" id="ft-recovery" class="state-input" />
+<input type="checkbox" id="ft-morning"  class="state-input" />
+<input type="radio" name="fs-sort" id="fs-new"   class="state-input" checked />
+<input type="radio" name="fs-sort" id="fs-old"   class="state-input" />
+<input type="radio" name="fs-sort" id="fs-long"  class="state-input" />
+<input type="radio" name="fs-sort" id="fs-short" class="state-input" />
+<input type="radio" name="fd-range" id="fd-all"    class="state-input" checked />
+<input type="radio" name="fd-range" id="fd-week"   class="state-input" />
+<input type="radio" name="fd-range" id="fd-month"  class="state-input" />
+<input type="radio" name="fd-range" id="fd-3month" class="state-input" />
+
+<!-- ══ Filter popup backdrop ══════════════════════ -->
+<label for="filter-open" class="filter-backdrop" aria-hidden="true"></label>
+
+<!-- ══ Filter & Sort modal ══════════════════════════ -->
+<div class="filter-modal" role="dialog" aria-modal="true" aria-label="Filter and sort entries">
+  <div class="filter-modal__head">
+    <span class="filter-modal__title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
+      Filter &amp; Sort
+    </span>
+    <label for="filter-open" class="filter-modal__close" role="button" aria-label="Close filter panel">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </label>
+  </div>
+  <div class="filter-modal__body">
+    <div>
+      <p class="filter-section__label">Mood</p>
+      <div class="filter-mood-row" role="group" aria-label="Filter by mood">
+        <input type="radio" name="fm-mood" id="fm-all" class="filter-mood-radio" checked />
+        <label for="fm-all" class="filter-mood-pill">All moods</label>
+        <input type="radio" name="fm-mood" id="fm-pos" class="filter-mood-radio" />
+        <label for="fm-pos" class="filter-mood-pill"><svg width="8" height="8" viewBox="0 0 8 8" aria-hidden="true"><circle cx="4" cy="4" r="4" fill="#059669"/></svg>Positive</label>
+        <input type="radio" name="fm-mood" id="fm-neu" class="filter-mood-radio" />
+        <label for="fm-neu" class="filter-mood-pill"><svg width="8" height="8" viewBox="0 0 8 8" aria-hidden="true"><circle cx="4" cy="4" r="4" fill="#475569"/></svg>Neutral</label>
+        <input type="radio" name="fm-mood" id="fm-cha" class="filter-mood-radio" />
+        <label for="fm-cha" class="filter-mood-pill"><svg width="8" height="8" viewBox="0 0 8 8" aria-hidden="true"><circle cx="4" cy="4" r="4" fill="#d97706"/></svg>Challenging</label>
+      </div>
+    </div>
+    <div>
+      <p class="filter-section__label">Tags</p>
+      <div class="filter-tags-grid" role="group" aria-label="Filter by tag">
+        <input type="checkbox" id="ft-study"    class="filter-tag-check" /><label for="ft-study"    class="filter-tag-pill">Study</label>
+        <input type="checkbox" id="ft-grat"     class="filter-tag-check" /><label for="ft-grat"     class="filter-tag-pill">Gratitude</label>
+        <input type="checkbox" id="ft-session"  class="filter-tag-check" /><label for="ft-session"  class="filter-tag-pill">Session</label>
+        <input type="checkbox" id="ft-sleep"    class="filter-tag-check" /><label for="ft-sleep"    class="filter-tag-pill">Sleep</label>
+        <input type="checkbox" id="ft-rest"     class="filter-tag-check" /><label for="ft-rest"     class="filter-tag-pill">Rest</label>
+        <input type="checkbox" id="ft-anxiety"  class="filter-tag-check" /><label for="ft-anxiety"  class="filter-tag-pill">Anxiety</label>
+        <input type="checkbox" id="ft-family"   class="filter-tag-check" /><label for="ft-family"   class="filter-tag-pill">Family</label>
+        <input type="checkbox" id="ft-burnout"  class="filter-tag-check" /><label for="ft-burnout"  class="filter-tag-pill">Burnout</label>
+        <input type="checkbox" id="ft-recovery" class="filter-tag-check" /><label for="ft-recovery" class="filter-tag-pill">Recovery</label>
+        <input type="checkbox" id="ft-morning"  class="filter-tag-check" /><label for="ft-morning"  class="filter-tag-pill">Morning</label>
+      </div>
+    </div>
+    <div>
+      <p class="filter-section__label">Date range</p>
+      <div class="filter-date-row" role="group" aria-label="Filter by date range">
+        <input type="radio" name="fd-range" id="fd-all"    class="filter-date-radio" checked /><label for="fd-all"    class="filter-date-pill">All time</label>
+        <input type="radio" name="fd-range" id="fd-week"   class="filter-date-radio" /><label for="fd-week"   class="filter-date-pill">Past 7 days</label>
+        <input type="radio" name="fd-range" id="fd-month"  class="filter-date-radio" /><label for="fd-month"  class="filter-date-pill">This month</label>
+        <input type="radio" name="fd-range" id="fd-3month" class="filter-date-radio" /><label for="fd-3month" class="filter-date-pill">Last 3 months</label>
+      </div>
+    </div>
+    <div>
+      <p class="filter-section__label">Sort by</p>
+      <div class="filter-sort-col" role="group" aria-label="Sort entries">
+        <input type="radio" name="fs-sort" id="fs-new"   class="filter-sort-radio" checked />
+        <label for="fs-new" class="filter-sort-row"><span class="filter-sort-row__dot"></span><span class="filter-sort-row__text">Newest first</span><span class="filter-sort-row__sub">Most recent at top</span></label>
+        <input type="radio" name="fs-sort" id="fs-old"   class="filter-sort-radio" />
+        <label for="fs-old" class="filter-sort-row"><span class="filter-sort-row__dot"></span><span class="filter-sort-row__text">Oldest first</span><span class="filter-sort-row__sub">Earliest entries first</span></label>
+        <input type="radio" name="fs-sort" id="fs-long"  class="filter-sort-radio" />
+        <label for="fs-long" class="filter-sort-row"><span class="filter-sort-row__dot"></span><span class="filter-sort-row__text">Longest entries</span><span class="filter-sort-row__sub">More words first</span></label>
+        <input type="radio" name="fs-sort" id="fs-short" class="filter-sort-radio" />
+        <label for="fs-short" class="filter-sort-row"><span class="filter-sort-row__dot"></span><span class="filter-sort-row__text">Shortest entries</span><span class="filter-sort-row__sub">Quick notes first</span></label>
+      </div>
+    </div>
+  </div>
+  <div class="filter-modal__foot">
+    <label for="filter-open" class="btn-filter-clear" role="button">Clear all</label>
+    <label for="filter-open" class="btn-filter-apply" role="button">Apply filters</label>
+  </div>
+</div><!-- /filter-modal -->
+
+<div class="app">
+
+  <!-- ══ Sidebar ══════════════════════════════════════ -->
+  <aside class="sidebar" aria-label="Navigation">
+    <div class="sidebar__head">
+      <img class="sidebar__logo-img" src="logo.png" alt="Luminwell" width="30" height="30" decoding="async" />
+      <span class="sidebar__logo">LUMINWELL</span>
+    </div>
+    <div class="sidebar__block">
+      <a href="index.html" class="sidebar__new">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+        New chat
+      </a>
+    </div>
+    <div class="sidebar__block">
+      <div class="sidebar__label">Menu</div>
+      <nav class="sb-nav" aria-label="Sections">
+        <a href="index.html" class="sb-nav__link">
+          <svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5L12 4l9 6.5V20a1 1 0 01-1 1h-5v-7H9v7H4a1 1 0 01-1-1v-9.5z"/></svg>
+          Home
+        </a>
+        <a href="#" class="sb-nav__link">
+          <svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 11h16"/></svg>
+          Book
+        </a>
+        <a href="#" class="sb-nav__link">
+          <svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          Sessions
+        </a>
+        <a href="journal.html" class="sb-nav__link is-active" aria-current="page">
+          <svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5c0-1 1-2 2.2-1.7C8.3 3.8 10 5.2 12 5.2S15.7 3.8 17.8 3.3C19 3 20 4 20 5v13c0 1-1 1.7-2.2 1.4-2-.4-3.8-1.6-5.8-1.6S8.2 19.4 6.2 19.8 4 19 4 18V5z"/><path d="M12 5.2v14.5"/></svg>
+          Journal
+        </a>
+        <a href="calendar.html" class="sb-nav__link">
+          <svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+          Calendar
+        </a>
+      </nav>
+    </div>
+    <div class="sidebar__block sidebar__block--fill">
+      <div class="sidebar__label">Recent entries</div>
+      <div class="sb-recent">
+        <button type="button" class="sb-recent__btn">
+          <div class="sb-recent__title">Pre-deadline reflections</div>
+          <div class="sb-recent__meta">Apr 25</div>
+        </button>
+        <button type="button" class="sb-recent__btn">
+          <div class="sb-recent__title">Weekend thoughts</div>
+          <div class="sb-recent__meta">Apr 23</div>
+        </button>
+        <button type="button" class="sb-recent__btn">
+          <div class="sb-recent__title">A calmer day</div>
+          <div class="sb-recent__meta">Apr 10</div>
+        </button>
+      </div>
+    </div>
+    <div class="sidebar__foot">
+      <div class="sidebar__avatar" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="3.5"/><path d="M6 19c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke-linecap="round"/></svg>
+      </div>
+      <div>
+        <div class="sidebar__name">Umer</div>
+        <div class="sidebar__credits">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><ellipse cx="12" cy="6" rx="6" ry="2"/><path d="M6 6v4c0 1.1 2.7 2 6 2s6-.9 6-2V6"/><path d="M6 10v4c0 1.1 2.7 2 6 2s6-.9 6-2v-4"/></svg>
+          500
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ══ Main ══════════════════════════════════════════ -->
+  <main class="main">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <div class="topbar__left">
+        <img class="topbar__logo-img" src="logo.png" alt="Luminwell" width="28" height="28" decoding="async" />
+        <span class="topbar__title">My Journal</span>
+      </div>
+      <div class="topbar__right">
+        <button type="button" class="topbar__crisis" aria-label="988 Crisis and Suicide Lifeline">988 Helpline</button>
+        <button type="button" class="topbar__icon-btn" aria-label="Notifications">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+        </button>
+        <button type="button" class="topbar__icon-btn" aria-label="Settings">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Journal page content -->
+    <div class="jnl-page">
+      <div class="jnl-inner">
+
+        <!-- ── Page header ───────────────────────────── -->
+        <div class="jnl-header">
+          <div class="jnl-header__text">
+            <h1 class="jnl-header__title">My Journal</h1>
+            <p class="jnl-header__sub">Track your thoughts and feelings at your own pace</p>
+          </div>
+          <div class="jnl-header__actions">
+            <a href="journal-pin.html" class="btn-lock" aria-label="Lock journal">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg>
+              Lock Journal
+            </a>
+            <a href="journal-write.html" class="btn-new-entry">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+              New Journal Entry
+            </a>
+          </div>
+        </div>
+
+        <!-- ── Sticky search + filter toolbar ──────────── -->
+        <div class="jnl-toolbar" role="search" aria-label="Search and filter entries">
+
+          <!-- Row 1: search + filter button + view toggle -->
+          <div class="jnl-toolbar__top">
+            <div class="jnl-search">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
+              <!-- Search term shown in input to explain "no results" -->
+              <input class="jnl-search__input" type="search" value="burnout housing exam" aria-label="Search journal entries" />
+            </div>
+            <label for="filter-open" class="btn-filter-open" role="button" aria-label="Open filter and sort panel">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
+              Filters
+              <!-- dot indicates active filters -->
+              <span class="btn-filter-open__dot" aria-hidden="true"></span>
+            </label>
+            <div class="view-toggle" role="group" aria-label="Switch view">
+              <label for="view-grid" class="view-btn" title="Grid view">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+              </label>
+              <label for="view-list" class="view-btn" title="List view">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+              </label>
+            </div>
+          </div>
+
+          <!-- Row 2: filter chips (showing active state) -->
+          <div class="jnl-toolbar__filters" role="group" aria-label="Filter entries">
+            <span class="filter-label">Mood</span>
+            <input type="radio" name="mood-filter" id="mood-all" class="mood-radio" />
+            <label for="mood-all" class="mood-pill">All</label>
+            <input type="radio" name="mood-filter" id="mood-pos" class="mood-radio" />
+            <label for="mood-pos" class="mood-pill"><svg width="8" height="8" viewBox="0 0 8 8" aria-hidden="true"><circle cx="4" cy="4" r="4" fill="#059669"/></svg>Positive</label>
+            <input type="radio" name="mood-filter" id="mood-neu" class="mood-radio" checked />
+            <label for="mood-neu" class="mood-pill"><svg width="8" height="8" viewBox="0 0 8 8" aria-hidden="true"><circle cx="4" cy="4" r="4" fill="#475569"/></svg>Neutral</label>
+            <input type="radio" name="mood-filter" id="mood-cha" class="mood-radio" />
+            <label for="mood-cha" class="mood-pill"><svg width="8" height="8" viewBox="0 0 8 8" aria-hidden="true"><circle cx="4" cy="4" r="4" fill="#d97706"/></svg>Challenging</label>
+            <span class="filter-sep" aria-hidden="true"></span>
+            <span class="filter-label">Tags</span>
+            <input type="checkbox" id="tag-study"     class="tag-radio" checked />
+            <label for="tag-study"     class="tag-filter-pill">Study</label>
+            <input type="checkbox" id="tag-gratitude" class="tag-radio" />
+            <label for="tag-gratitude" class="tag-filter-pill">Gratitude</label>
+            <input type="checkbox" id="tag-session"   class="tag-radio" />
+            <label for="tag-session"   class="tag-filter-pill">Session</label>
+            <input type="checkbox" id="tag-sleep"     class="tag-radio" />
+            <label for="tag-sleep"     class="tag-filter-pill">Sleep</label>
+            <input type="checkbox" id="tag-rest"      class="tag-radio" />
+            <label for="tag-rest"      class="tag-filter-pill">Rest</label>
+          </div>
+        </div>
+
+        <!-- ── My entries header ─────────────────────── -->
+        <section aria-labelledby="entries-heading">
+          <div class="entries-header">
+            <h2 class="section-title" id="entries-heading">My Entries</h2>
+            <span class="entries-header__count">0 results</span>
+          </div>
+        </section>
+
+        <!-- ══ NO RESULTS STATE ══════════════════════ -->
+        <div class="nr-wrap" role="status" aria-live="polite" aria-label="No results found">
+
+          <!-- Icon ring -->
+          <div class="nr-ring" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="7"/>
+              <path d="M21 21l-4.35-4.35"/>
+              <path d="M8 11h6M11 8v6" opacity=".35"/>
+            </svg>
+          </div>
+
+          <!-- Message -->
+          <p class="nr-title">No entries found</p>
+          <p class="nr-sub">
+            Your search and active filters didn't match any journal entries. Try adjusting the filters or clearing your search to see all entries.
+          </p>
+
+          <!-- Active filter chips — show what's causing no results -->
+          <div class="nr-active-filters" aria-label="Active filters">
+            <span class="nr-active-filters__label">Active:</span>
+            <span class="nr-chip nr-chip--mood">
+              <svg width="7" height="7" viewBox="0 0 8 8" aria-hidden="true"><circle cx="4" cy="4" r="4" fill="#475569"/></svg>
+              Neutral mood
+              <span class="nr-chip__x" aria-hidden="true">✕</span>
+            </span>
+            <span class="nr-chip nr-chip--tag">
+              Study
+              <span class="nr-chip__x" aria-hidden="true">✕</span>
+            </span>
+            <span class="nr-chip nr-chip--date">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+              Past 7 days
+              <span class="nr-chip__x" aria-hidden="true">✕</span>
+            </span>
+          </div>
+
+          <!-- CTA buttons -->
+          <div class="nr-actions">
+            <a href="journal.html" class="nr-btn-clear">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              Clear all filters
+            </a>
+            <a href="journal-write.html" class="nr-btn-write">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+              Write a new entry
+            </a>
+          </div>
+
+          <!-- Gentle nudge card -->
+          <div class="nr-nudge" role="note">
+            <span class="nr-nudge__icon">📝</span>
+            <div class="nr-nudge__text">
+              <p class="nr-nudge__title">Nothing here yet for this search</p>
+              <p class="nr-nudge__sub">That's completely okay. Your journal grows with you — even one honest entry is a step forward.</p>
+              <a href="journal-write.html" class="nr-nudge__link">
+                Start writing now
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+              </a>
+            </div>
+          </div>
+
+        </div><!-- /nr-wrap -->
+
+        <!-- Crisis support -->
+        <div class="crisis-banner" role="note" aria-label="Crisis support resources">
+          <div class="crisis-banner__body">
+            <p class="crisis-banner__title">Need immediate support?</p>
+            <p class="crisis-banner__text">Free, confidential help is available 24/7. You don't have to carry this alone.</p>
+          </div>
+          <div class="crisis-banner__links">
+            <a href="tel:988" class="crisis-link crisis-link--call">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+              Call 988
+            </a>
+            <a href="sms:741741" class="crisis-link crisis-link--text">Text 741741</a>
+          </div>
+        </div>
+
+        <!-- Privacy -->
+        <div class="jnl-privacy" role="note">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Your journal is encrypted end-to-end. Nobody at Luminwell can read your entries. You can delete everything at any time.
+        </div>
+
+      </div><!-- /jnl-inner -->
+    </div><!-- /jnl-page -->
+  </main>
+
+</div><!-- /app -->
+
+</body>
+</html>

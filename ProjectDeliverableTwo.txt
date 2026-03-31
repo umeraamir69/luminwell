@@ -1,0 +1,751 @@
+Project Deliverable 2
+
+Luminwell
+
+Section 1: Cognitive Design
+
+Our interface is designed to alleviate this kind of mental overload by catering to users who are already experiencing some form of mental distress through our application of Hick's Law, which asserts that decision time is directly proportional to the number of possible choices. This is evident when users are choosing their support options or relating their own experiences, where we do not overwhelm them with a multitude of questions but instead present them with a single question on our interface.
+
+The principle of visibility will be observed in the application by including a progress indicator during the onboarding process where the users can always see how many steps are remaining to be completed. This will ensure that the users are not left wondering what is to be done. This also relates to Norman’s principle where users need to be able to see the system at all times. Additionally, we will ensure clean feedback is observed by including buttons that will change color when pressed and messages that will appear after an action like logging a mood or sending a message to a peer has been completed.
+
+Constraints will be used to ensure that no errors are made by users, the "Next" button will be in a grey color until users complete the required fields or actions, which will ensure that users do not skip any steps that are very important in matching the questionnaire. This will ensure that users do not get frustrated later on when they try to proceed, resulting in errors. This will ensure that users are naturally directed through the process that is required of them. The consistency of this application is ensured by having the navigation buttons in the same place on all screens, which ensures that users are not confused and are able to get familiar with the application easily by its consistency in button style, icons, etc.
+
+Section 2: Social Design
+
+Luminwell’s social design in relation to trust and transparency in the peer matching process is a significant scope that is applied and utilized. The scope is “mapping,” which is a logical relationship between controls and their effects. Once the user gets their results for the matching peer supporter, the interface will show the user why they were matched with a specific peer supporter. The user will be able to view the shared living experiences, personality match percentage, and areas of expertise that the user focuses on. Once the user can view this relationship, he/she will be able to see the logic of the system compared to feeling that he/she was randomly matched.
+
+Affordance is implemented through interactive items that visually indicate their functions, verified badges on the peer profiles that will be tappable, which will encourage users to click on the peer’s profile, credentials, level of training, and background. This is the affordance that the follower has learned from the patterns that users bring from other applications such as instagram, linkedin, etc., which will make the interface easy to use without the need for a lot of instruction. The social proof is further implemented by showing the level of support that the peer will be able to give (Peer, Specialized, or Professional), as well as any relevant certifications.
+
+Section 3: Emotional Design
+
+Emotional design is an important part for Luminwell since our users are users looking for mental health services and may be in a vulnerable emotional state. Therefore, in line with SAMHSA's trauma-informed care principles, we have decided on a soothing color scheme that includes soft teal (#2D9676), light lavender (#E8E4F4), etc. According to color psychology theory, blue-green colors are soothing since they imply trust and healing. On the other hand, harsh colors like red have high anxiety-provoking potential. Red will be avoided in our user interface except for the 988 crisis button that will be used as a signaling device.
+
+Also, the issue of accessibility and inclusiveness is part of our emotional design, the interface complies with the WCAG 2.1 AA level for color contrast, which ensures that users with impaired vision, whether permanent, temporary, or situational, can read the content. The font size is readable, the buttons are the right size for users with motor impairments, and everything is screen reader-friendly. The inclusiveness of the system involves the language used, so the mood tracking system would use neutral language, not inform the user whether the day is good or bad, which ensures the system is not judgmental, as this may discourage the user from being honest with themselves, for instance, the question, “How are you feeling today?” is not judgmental and can create a safe space for the user to open up and express themselves.
+
+Safety is included in the emotional design through the access to the crisis resources The 988 Suicide and Crisis Lifeline button will be visible and accessible from any screen to ensure the user can access it immediately if they need it needed, The password protection on the journal will provide the user with the power to control their innermost thoughts, which will not be visible to anyone. The visual design will make use of rounded corners, soft shadows, and subtle animations to provide a cozy and welcoming feel to the users of the system, which in turn will contribute to the overall user experience.
+
+Questionnaire / Interviews
+
+OverviewThe initial approach to conduct individual interviews for the project was to find willing Wilfrid Laurier undergraduate students. The common observation with that approach was that very few students were open to the idea of participating in interviews. When told what the interviews were for, the majority of the students were uninterested in giving their opinions due to other commitments and time constraints. The 2 students who did agree to give interviews declined the request to record them. Furthermore, conducting the interviews took over 45 minutes each, which posed a challenge in finding appropriate interviewees willing to dedicate the required time. In light of these findings, the interview method was modified into a questionnaire. The idea was to distribute the questionnaire to the appropriate audience (high school or undergraduate students), with the flexibility that it could be completed at the student’s discretion. An additional benefit of using questionnaires was that the responses are easier to analyze since they are in a structured format.
+
+Target Participants:The target participants of the questionnaire were high school or undergraduate students, and it was shared with undergraduate students of Wilfrid Laurier University and high school students of Elsie MacGill Public School, Oshawa, Ontario. The participants fit well with the intended users of the Luminwell project. These participants are also familiar with similar digital platforms and would benefit from the peer-to-peer support that the Luminwell platform will offer. This selection is well in line with the guidelines mentioned in Lecture 10 of CP650. The responses from these participants greatly improved the external validity of the findings for the intended early-stage product direction.
+
+Questionnaire Design Approach:The questions in the questionnaire were designed using the principles described in Lecture 9 of the course. To make it easy for the participants, the question formats used were the Likert-scale and Multiple-choice
+
+A few questions also included the option to specify an “other” choice so that participants could add their own option if none of the provided options expressed their preference.
+
+Questionnaire Wording and Tone:The questions were intentionally kept short, and the tone was kept neutral and easy to understand. The wording of every question avoided the following: Long questions, Compounding questions, Jargon, Leading language, and Assumptions about the participant
+
+This was especially important because the topic of mental health support is sensitive for many people and requires a calm, non-judgmental tone.
+
+Question Order and Structure:The order of the questions was considered very carefully because question order can influence participants’ responses. The questionnaire moved from easier and more general questions to more specific, platform-related questions.
+
+Administration and Distribution:
+
+The questionnaire was created using Google Forms because it provides automated response linking to Google Sheets and analytics on the responses. Google Forms also supports multiple-choice and Likert-scale question formats. The form was created and shared within the team for review. After internal alignment, pilot testing was done with 2 individuals from outside the team, which helped check the following: Clarity of questions, Survey length, Ease of completion, and Wording and tone
+
+Ethical Considerations:
+
+Keeping the ethical guidelines described in the lectures and book in mind, the form clearly explained the following: Purpose of study, Voluntary participation, Anonymity of the participant, and Ability to leave the form at any point in time
+
+The form did not save the participant’s identity or link their response to them in any other way, ensuring privacy and reducing risk. Moreover, the form did not, at any point, ask the participant to explain their choices, especially on socially sensitive topics. This reduced bias and removed any pressure the participant might feel to respond in a socially acceptable way rather than honestly.
+
+Reliability and Validity:
+
+The reliability of the study was supported by giving every participant the same questionnaire in the same format. The validity of the questionnaire was supported by ensuring that the questions were aligned with the research goals and design issues described by the partner, Luminwell.
+
+Limitations:
+
+Although the questionnaire provides breadth of information, it does not offer depth on the subjects discussed. The questionnaire also does not guarantee a fully representative sample of the target user base of the platform, primarily because the intended user base is too wide to capture in a smaller sample. An additional point to consider is that although the questionnaire made the analysis of the responses easier, much more information could have been collected if the interviews had been conducted in person.
+
+Contribution to the Design Process:
+
+The questionnaire findings will be used to guide: Color and visual consistency decisions, User onboarding flow simplification, Trust and privacy messaging, Missing feature prioritization and Improvement of existing designs
+
+Focus Group Interview
+
+The focus group interview involved three international students who moved to the country to study for their undergraduate and master’s degrees. The candidates selected highlighted that they have struggled with mental health challenges in the past, from feeling lonely and confused about finding the “right way” to do things, to struggling with pressure from home to perform in terms of studies and career. They were more than happy to take part in the group activity to help provide a better understanding of how our target users may feel.
+
+Section 1: First Impressions & Trust (Visual + Cognitive Emotional Design)
+
+The first set of questions revolved around first impressions of the usual generic designs of applications and how these designs made users feel cognitively and emotionally.
+
+When you open a mental health app or website, what makes you immediately trust or distrust it?
+
+The candidates spoke about simplicity. Non-complex designs that are easy to navigate, easy language with no jargon, intuitive interfaces, and accessibility features. They also spoke about the need for designs to be straightforward. Candidates highlighted that mental health is a big deal, so the design needs to be cool and the content displayed would be really important. Discussions around the credibility of the information on the website were also important. For example, hyperlinks and how the information presents itself matter. If the website looks sketchy, they would be put off.
+
+How important are colours, fonts, and layout in something dealing with emotional support?
+
+The candidates spoke about how users are already feeling stressed or anxious, and they would hate for that to be amplified. They suggested that smaller fonts would be good and that nothing too complicated would be appreciated. They said colours are a big deal and affect how people feel. Red, to them, meant danger and should be avoided. They felt light shades of green or blue would feel more calming and reassuring.
+
+What would make a mental health platform feel  visually overwhelming?
+
+They spoke about how website designs with too many options are usually overwhelming. Scrolling and seeing content such as “About Us” sections or overloaded areas that are not as necessary adds to this feeling. They would prefer a straightforward design that reduces the number of options available. One candidate suggested that a chatbot would be nice. The menu should also be intuitive, using a recognizable hamburger menu icon.
+
+Section 2: Onboarding & Matching Experience (Interaction Design)
+
+This section focused on the web application’s onboarding design and how it would resonate with users. Discussions around AI trust were also included to see how comfortable users were with AI-based matching.
+
+How would you expect the matching results to be displayed?
+
+Candidates said that when users are onboarded, there should be options. These options should be associated with the person they matched with, meaning users need to understand why they were matched with a particular professional. This explanation should be displayed on the peer support profile. They also felt it would be nice if the counsellor’s response time or average response time was displayed. They suggested there should be an option for a user to be allocated to a professional for a short period, such as 2–3 weeks. The candidates also suggested adding more visuals to the onboarding process, as text alone can feel boring.
+
+Would seeing a compatibility percentage increase your confidence or feel artificial?
+
+They did not think it was appropriate to have a percentage or numerical value to quantify compatibility because someone who is rated at 50% could still be very beneficial. Instead of numbers, they suggested explaining why the user matched with the support counsellor. Using words rather than numbers would help build confidence.
+
+How much information would you want to see about a peer counsellor before booking?
+
+The general consensus was that displaying response times, the number of people the counsellor has helped, and the number of years they have been practicing would help build trust with primary users.
+
+What profile elements would matter most to you? (Photo, lived experience, personality type, reviews?)
+
+They felt feedback and reviews would be good to have on counsellor profiles. There was some debate around having profile pictures. The benefit is that pictures could help build trust with primary users. However, there were concerns that users might judge based on appearance or race. Despite this, the group concluded that the benefits of having a counsellor’s photo outweighed the downsides.
+
+Section 3: Booking Flow (Friction + UX)
+
+We shifted to discussing the booking process in the app and how the design could best suit our primary users. From our client (Luminwell), there was discussion about incorporating pricing into the peer-to-peer platform. We also wanted to understand how pricing design would resonate with users.
+
+What makes a booking process feel smooth versus frustrating?
+
+One candidate highlighted that schedules need to be clear. The date, time, and location of the meeting should be very clear, with no confusion. In general, clarity should always be maintained for the user.
+
+How do you feel about a paywall appearing before booking?
+
+They felt that immediate payment would not be the best approach for the platform because users are first trying to feel seen and build trust. One suggestion was to make the service free initially and then charge after a few sessions. Another option was to charge for additional features instead. They also mentioned that if users know they can get a similar service cheaper elsewhere, then the platform should consider offering a discounted option.
+
+Would you prefer seeing pricing upfront or later in the flow?
+
+Although the candidates did not like the idea of paying, they made it clear that they would rather see pricing upfront than discover it later in the process. This would help build trust and avoid wasting the user’s time.
+
+Section 4: Privacy & Reflection Folder (Security UX)
+
+In this segment, we discussed privacy and password-protected journal entries. The concept was clearly explained to the candidates. They then had an open conversation about confidentiality and the importance of protecting user information, especially in a world where information privacy is often disregarded.
+
+Would a second password make you feel safer or annoyed?
+
+The group generally said security questions would be helpful, similar to how banking apps verify users before they sign in. However, they were clear that they do not want authentication methods that require third-parties.
+
+What design would reassure you that your journal entries are secure?Adding a lock icon like that of the notes app on Apple for password protected entries would be helpful and reassure them that it is safe and secured. They would like a statement to tell the users how their information is collected, stored and used throughout the entire process.
+
+Would you prefer biometric login, passcode, or just account login?They would like a biometric and passcode login to access the app. Nothing complicated.
+
+Section 5: AI Transcription & Suicide Trigger (Sensitive UI)
+
+This section addresses design around AI transcription technology and the trigger system regarding key words to help the primary users get quick access to helplines.
+
+How should a sensitive pop-up like this appear without causing panic?The group suggested that instead of 988 popping up aggressively it should appear calmly and should come as a notification which notifies the user gently and then recommend a helpline. One candidate mentioned thet people that are suicidal don’t usually call so if there was another option then this should be done or looked into. Candidates suggested that the user should definitely be flagged but a video that helps the user feel calm should be presented.
+
+Would a pause in the meeting feel supportive or intrusive?
+
+They did not like the idea of pausing a meeting because it would make them feel that their emotions and time are not being validated and respected.
+
+What tone should emergency trigger messaging use: direct, gentle, or urgent?
+
+The group mentioned the use of gentle, cool colours, nothing aggressive, and easy transitions as this would be more appropriate.
+
+Where should this feature be explained in the interface: onboarding, settings, or during a session?They felt that this should not be clearly stated as it takes away the ability of the user to be expressive and have their tongue in cheek. If it was to be stated then it should be stated in the settings, not a section where the users constantly see.
+
+Section 6: Dashboard & Navigation
+
+The dashboard and navigation are important aspects of our designs so we asked the group what they would like to be displayed on the dashboard and how the navigation should work on our platform
+
+What makes a dashboard feel simple versus cluttered?They highlighted that the amount of buttons are vital, the use of dropdowns would help reduce clutter. Spacing should be noted. There should be little to no visuals on the dashboard.
+
+Would you prefer a minimal design or more guided steps?The group had a strong feeling that a minimalistic design would be a good choice with dropdown sections. They didn't necessarily feel a guide was needed. The best thing to do is to make the app speak for itself. If there should be a guide to navigation they would like to see it after onboarding and there should also be an option to skip the guide. Even if the guide is skipped, the user should be able to go into settings and enable the guide again if they need it.
+
+Observational Studies
+
+​​An observational study was conducted using the current Luminwell Figma design screens because the website is not working. The purpose of the observation was to understand how a user reacts to the interface for the first time at a website without being guided. The study focused on the colour palette, ease of navigation, trust-building elements, and the emotional appropriateness of the design for a mental health support platform.
+
+The observational study was designed to answer three main questions:
+
+Do the current colours used in websites which are white, purple, green, blue and black and gradient palette feel appropriate for a mental health support platform?
+
+Can the participant move through the screens without confusion, hesitation, or backtracking?
+
+Which UI components and elements increase user trust, and which ones create uncertainty or emotional discomfort?
+
+Participants
+
+We conducted interviews with two participants which are Luminwell’s target audience. Interviews were conducted by showing participants the existing Luminwell screens.
+
+The first participant is a young adult student in high school and familiar with digital mental health and support applications.
+
+The second participant is an undergraduate student which is going through bad mental health after having a car accident
+
+Observation Guide and Procedure
+
+The research design used in the interviews is a direct observation method. In this method, the participant is requested to think aloud as they are going through the prototype’s screen. Using this method, we can capture the impression, confusion, emotional response, and trust response as well as the difficulty the participant faces as they navigate through the screen. There are three observation states which are what to observe, what to note, and what to measure.What we observed:
+
+First user impressions of each screen
+
+Responses to colour palette and gradient used in the design
+
+Understanding of page labels, buttons, and navigation of application
+
+Responses and difficulty to privacy and crisis support features
+
+Trust, uncertainty, or emotional discomfort
+
+What we taken note of:
+
+A video of participants using the application
+
+Verbal responses given during think-aloud sessions
+
+Difficulty in clicking or understanding labels when finding something
+
+Moments of confusion or backtracking
+
+Emotional responses to colour schemes and layout designs
+
+Verbal responses regarding professionalism, privacy, and understanding
+
+What was measured:
+
+The participant’s understanding of the purpose of each screen
+
+The participant’s ability to identify the main call to action on a screen
+
+The participant’s response to the colour schemes in terms of building trust and using website
+
+The participant’s immediate understanding of information displayed on a screen
+
+The participant’s perception of privacy features being supportive rather than alarming
+
+Key Observations
+
+Homepage
+
+The participant's first reaction to the homepage was positive. As observed the layout was clean, calm, and easy to approach. Their attention was drawn first to the main headline and then to the CTA (call to action) button Get Started button in the blue colour which is visually effective. The white background and blue accents were described as trustworthy and professional, and the green colours and gradient is associated with health and reassurance. However, the participant must scroll down at the end of the page to get the immediate support and emergency services.
+
+Crisis Support Section
+
+The participant noticed the immediate support section and understood that it was intended to provide urgent help. The yellow warning-style area was considered noticeable but slightly disconnected from the calmer tone of the page. The participant said the section should remain easy to find, but its tone should stay gentle rather than alarming.
+
+About Us Page
+
+The About Us page is most noticeable and is inconsistent with the design in terms of colors and design. The participant observed that the purple and violet elements felt different from the blue and green tone established on the homepage. Although the colours were not seen as unattractive, so much textual content and this page feel is bad overall.
+
+Chat interfaceThe live chat button is on the home screen but at bottom. Participants have to scroll down. The chat page has different colours, it is using white and blue and has a different tone. It did not match with the website overall.DashboardThe overall feel of the dashboard is good, as reported and observed by participants. But there are still purple colours used at many places which make participants uncomfortable. Also, the content is scattered and the user faces problems in navigating, for example if a user must access its session notes they go to the reflection tab and then further goes to session and then can access notes.
+
+Data Analytics
+
+Interview Data CodingInterview responses were coded to identify recurring themes and patterns
+
+Interview Observation / Statement
+
+Code
+
+Category
+
+User Interviews
+
+Prefer step-by-step onboarding flow
+
+Guided onboarding
+
+Onboarding Experience
+
+Minimal questions per step
+
+Low cognitive load
+
+Onboarding Experience
+
+6–10 questions in total is acceptable
+
+Limited onboarding questions
+
+Onboarding Experience
+
+Personal questions during sign-up are acceptable
+
+Acceptable personal data collection
+
+Onboarding Experience
+
+Need clear explanation of the platform elements
+
+Platform clarity
+
+Platform Understanding
+
+Need explanation of what peer support is
+
+Peer support understanding
+
+Platform Understanding
+
+Want to know the difference between peer support and therapy
+
+Service differentiation
+
+Platform Understanding
+
+Need explanation of peer counselors
+
+Role clarity
+
+Platform Understanding
+
+Need to differentiate peer counselor vs licensed professional
+
+Professional credibility awareness
+
+Platform Understanding
+
+Some users prefer professional therapy instead of peer support
+
+Preference for professional services
+
+Service Trust
+
+Want explanation of how matching works
+
+Matching transparency
+
+Matching System
+
+Want to know why they are matched with someone
+
+Matching justification
+
+Matching System
+
+Prefer Compatibility percentage for matches
+
+Compatibility indicator
+
+Matching System
+
+Want ability to choose best fit based on compatibility
+
+User control in matching
+
+Matching System
+
+Prefer hands-on features with high privacy
+
+Privacy concern
+
+Privacy & Trust
+
+Want to reduce manual work
+
+Automation preference
+
+System Usability
+
+Credit system does not add much value
+
+Low perceived value of credit system
+
+Feature Evaluation
+
+Users tend to use professional therapy instead
+
+Alternative service preference
+
+Feature Evaluation
+
+Prefer clean and simple interface
+
+Minimal interface design
+
+UI Design
+
+Prefer calm color palette (blue/green)
+
+Calm visual design, Calming color palette
+
+UI Design
+
+Clear navigation improves usability
+
+Navigation clarity
+
+UI Design
+
+Focus Group Interview
+
+Simple interface reduces stress and builds trust
+
+Interface trust
+
+UI Design
+
+Photo builds trust
+
+Interface trust
+
+UI Design
+
+Prefer matching explanation for matches
+
+Compatibility indicator
+
+Matching System
+
+Professional presentation increases credibility
+
+Professional credibility
+
+UI Design
+
+Jargon-free language preferred
+
+Clear language
+
+UI Design
+
+Red creates stress
+
+Negative emotional color
+
+Emotional Design
+
+Fewer font styles preferred
+
+Calming color palette
+
+Typography simplicity
+
+Overwhelming Visually
+
+Excessive scrolling
+
+Visual overload problem
+
+Unnecessary “About Us” sections
+
+Visual overload problem
+
+Overloaded page layouts
+
+Visual overload problem
+
+Too many options
+
+Visual overload problem
+
+The dashboard’s preferences
+
+Minimal interface
+
+Dashboard and Navigation
+
+Dropdown navigation
+
+Dashboard and Navigation
+
+Booking UX
+
+Clear scheduling information
+
+Booking flow
+
+Simple booking flow
+
+Booking flow
+
+No ambiguity
+
+Booking flow
+
+Payment Model
+
+Free trial preferred
+
+Feature evaluation
+
+Paywall reduces trust
+
+Feature evaluation
+
+Observational Study
+
+Positive reaction to the blue and white homepage and description of it as calm and professional
+
+Calm visual trust
+
+UI Design
+
+Too many homepage sections could reduce focus for emotionally overwhelmed users | Information overload
+
+Information overload
+
+Visual overload problem
+
+Hesitation when interpreting the label "Book Ambassador"
+
+Navigation confusion
+
+Dashboard and Navigation
+
+Purple and violet elements on the About Us page felt inconsistent with the homepage
+
+Brand inconsistency
+
+UI Design
+
+Lock icon on the journal screen made the interface feel private and secure
+
+Visible privacy cue
+
+Privacy & Trust
+
+Green highlight on the recommended subscription plan was noticed quickly and interpreted positively
+
+Positive colour signal
+
+Feature Evaluation
+
+Yellow crisis section was easy to notice, but should remain gentle rather than alarming
+
+Gentle urgency needed
+
+Emotional Design
+
+Themes
+
+Theme
+
+Subcategory
+
+Codes
+
+Simple and Guided Onboarding
+
+Onboarding Experience
+
+UI Design
+
+Visual Overload Problem
+
+Guided onboarding
+
+Low cognitive load
+
+Limited onboarding questions
+
+Acceptable personal data collection
+
+Trust and Privacy
+
+Platform Understanding
+
+Service Trust
+
+Privacy and Trust
+
+Platform clarity
+
+Peer support understanding
+
+Service differentiation
+
+Role clarity
+
+Professional credibility awareness
+
+Matching Transparency
+
+Marching System
+
+Matching transparency
+
+Matching justification
+
+Compatibility indicator
+
+User control in matching
+
+Interface Simplicity
+
+UI Design
+
+Information Overload
+
+Simple Navigation
+
+Emotional Design
+
+Minimal interface design
+
+Calm visual design
+
+Navigation clarity
+
+Excessive scrolling
+
+Unnecessary “About Us” sections
+
+Overloaded page layouts
+
+Too many options
+
+Negative emotional colors
+
+Dropdown Navigation
+
+Booking Flow
+
+Booking Clarity
+
+Pricing Transparency
+
+Clear scheduling information
+
+Simple booking flow
+
+No ambiguity
+
+Free trial preferred
+
+Paywall reduces trust
+
+Affinity Diagram
+
+This affinity diagram is created to organize interview findings into meaningful clusters. Similar observations were grouped together to identify key themes in user needs and expectations. The analysis revealed seven main themes: onboarding experience, platform understanding, matching transparency, privacy and trust, feature value, hand on booking, and interface design. These themes helped inform the design requirements for the platform.
+
+Interface Design                  - Simple interface                             - Calm colors- Jagon-free language                                 - Clear navigation
+
+Interface Design                  - Simple interface                             - Calm colors
+
+- Jagon-free language
+
+- Clear navigation
+
+Platform Understanding              - What is peer support                        - Peer support vs therapy                     - Peer counselor vs licensed therapist
+
+Platform Understanding              - What is peer support                        - Peer support vs therapy                     - Peer counselor vs licensed therapist
+
+Presentation trust- Polished and professional design- Counsellor’s profile transparency- Ethical design concern
+
+Presentation trust
+
+- Polished and professional design
+
+- Counsellor’s profile transparency
+
+- Ethical design concern
+
+Privacy & Trust                   - High privacy expectation               - Safe space for discussion                    - Security protection for the private spaceHand on booking- Clear information - Simple booking flow- Pricing transparencyInterview Findings
+
+Privacy & Trust
+
+- High privacy expectation
+
+- Safe space for discussion
+
+- Security protection for the private space
+
+Hand on booking
+
+- Clear information
+
+- Simple booking flow
+
+- Pricing transparency
+
+Interview Findings
+
+Matching Transparency              - How matching works                         - Why users are matched                        - Compatibility score                         - Ability to choose match                     Onboarding- Step-by-step process                        - Minimal questions                         - 6–10 total questions
+
+Matching Transparency              - How matching works
+
+- Why users are matched                        - Compatibility score
+
+- Ability to choose match
+
+Onboarding
+
+- Step-by-step process                        - Minimal questions
+
+- 6–10 total questions
+
+Key Insights
+
+Insight 1: The system need to provide a clear introduction to Peer Support
+
+Many participants were unfamiliar with peer support platforms and needed clear explanations before trusting the system.
+
+Insight 2: It’s important to have guided Onboarding
+
+Participants preferred a step-by-step onboarding process with 6–10 questions total to avoid feeling overwhelmed.
+
+Insight 3: Transparency in matching is mandatory
+
+Users want to know how the system matches them with peer supporters and prefer having some control over the selection. The qualitative explanation of why a match should be the highest priority.
+
+Insight 4: Privacy is a major concern
+
+Users expect strong privacy protections when sharing personal mental health information. Security UX should also be taken into consideration.
+
+Insight 5: Trust plays a crucial role in Mental health platforms
+
+Users spot the credibility of the platform within seconds. Professional presentation with clear language and credible source of contents helps build trust in the platform.
+
+Insight 6: Visual design contributes to emotional impact
+
+Because the users have already been feeling stressed or anxious, so the design should be the combination of clean and simple interface with calming colors to avoid increasing anxiety
+
+Insight 7: The profile of the counsellor is the selling point
+
+Users want to receive services from professional therapy, the information of the counsellor plays a crucial role on matching selection decision based on those factors: response time, experience information, and review valuable
+
+Insight 8: The ethical design concern
+
+The focus group interview shows that photos contribute to trust-building, even there’re concerns about raising racial bias but overall, the benefits of including counsellor photographs outweigh the drawbacks.
+
+Insight 9: Minimal Interface is the key
+
+The results from the interviews highlighted that a vast majority of the users would prefer to have the minimal interface that provides clean layout, clear and simple navigation, reduced noises from using too many UI elements and too many fonts.
+
+Design Implications
+
+These insights informed the design requirements for the platform.
+
+Insight
+
+Design Decision
+
+It’s important to have guided Onboarding
+
+Step-by-step onboarding flow with minimal number of questions
+
+The system need to provide a clear introduction to Peer Support
+
+Add educational introduction screens
+
+Matching transparency needed
+
+Show compatibility score and written explanation how and why
+
+Privacy concerns and Security UX
+
+Provide clear privacy settings
+
+Different type of security can be applied (Biometric login, passcode option, native security) – Visual security indicators to be visible (lock icon)
+
+The ethical design concern
+
+Crisis popups should be gentle, do not pause sessions, and void aggressive messaging
+
+The profile of counsellor is the selling point
+
+Counsellor’ profile screen with transparency information: response time, experiences information, reviews. Photos are mandatory.
+
+Credit system and payment
+
+Promote Free trial and premium features later. Credit systems can be a part of premium features.
+
+Dashboard and Navigation
+
+Simple dashboard interface without using too many buttons and fonts. Clear and simple dropdown navigation should be used.
+
+External Links
+
+Data Collection Files

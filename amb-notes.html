@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Luminwell Ambassador — Session Notes</title>
+  <link rel="stylesheet" href="ambassador.css" />
+  <style>
+    .note-list { display: flex; flex-direction: column; gap: 12px; }
+    .note-card {
+      background: var(--surface); border-radius: 14px;
+      border: 1.5px solid var(--border); box-shadow: var(--shadow-sm);
+      overflow: hidden; transition: box-shadow .18s, border-color .18s;
+      cursor: pointer;
+    }
+    .note-card:hover { box-shadow: var(--shadow); border-color: rgba(15,45,69,.2); }
+    .note-card__accent { height: 4px; }
+    .note-card__body { padding: 16px 18px; display: flex; gap: 16px; }
+    .note-card__left { flex: 1; min-width: 0; }
+    .note-card__head { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; flex-wrap: wrap; }
+    .note-card__title { font-size: 14px; font-weight: 800; letter-spacing: -0.02em; }
+    .note-card__meta  { font-size: 11px; color: var(--muted); margin-top: 3px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .note-card__meta svg { width: 11px; height: 11px; }
+    .note-card__summary { font-size: 12px; color: var(--muted); line-height: 1.65; margin-top: 8px; display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .note-card__tags  { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 8px; }
+    .note-card__tag   { padding: 2px 8px; border-radius: var(--rf); background: var(--page-bg); border: 1px solid var(--border); font-size: 10px; font-weight: 600; color: var(--muted); }
+    .note-card__right { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; flex-shrink: 0; }
+
+    /* Editor panel */
+    .editor-panel {
+      background: var(--surface); border-radius: 16px;
+      border: 1.5px solid var(--border); box-shadow: var(--shadow-sm);
+      overflow: hidden;
+    }
+    .editor-panel__head {
+      padding: 16px 20px; border-bottom: 1px solid var(--border-soft);
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      background: linear-gradient(135deg, rgba(15,45,69,.03), rgba(45,150,116,.02));
+    }
+    .editor-panel__meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .editor-panel__body { padding: 20px; display: flex; flex-direction: column; gap: 16px; }
+    .editor-panel__section { display: flex; flex-direction: column; gap: 6px; }
+    .editor-panel__label { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .07em; }
+    .editor-panel__textarea {
+      width: 100%; padding: 11px 14px; border-radius: 10px;
+      border: 1.5px solid var(--border); background: var(--page-bg);
+      font-family: var(--font); font-size: 13px; color: var(--text);
+      resize: vertical; line-height: 1.7; outline: none; min-height: 80px;
+      transition: border-color .15s, box-shadow .15s;
+    }
+    .editor-panel__textarea:focus { border-color: rgba(15,45,69,.3); box-shadow: 0 0 0 3px rgba(15,45,69,.07); background: var(--surface); }
+    .editor-panel__foot { padding: 14px 20px; border-top: 1px solid var(--border-soft); display: flex; align-items: center; gap: 8px; }
+    .ai-badge { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: var(--rf); background: rgba(45,150,116,.1); border: 1px solid var(--teal-mid); color: var(--teal-deep); font-size: 10px; font-weight: 800; }
+    .ai-badge svg { width: 10px; height: 10px; }
+
+    .tag-input { display: flex; flex-wrap: wrap; gap: 6px; padding: 10px 12px; border-radius: 10px; border: 1.5px solid var(--border); background: var(--page-bg); min-height: 44px; }
+    .tag-input .tag { padding: 3px 8px; border-radius: var(--rf); background: rgba(15,45,69,.08); color: var(--sb-bg); font-size: 11px; font-weight: 700; display: flex; align-items: center; gap: 4px; }
+    .tag-input .tag button { background: none; border: none; color: inherit; font-size: 12px; cursor: pointer; line-height: 1; padding: 0 1px; }
+    .tag-input input { border: none; outline: none; font-family: var(--font); font-size: 12px; color: var(--text); background: transparent; flex: 1; min-width: 80px; }
+
+    .mood-select { display: flex; gap: 6px; }
+    .mood-btn { padding: 7px 13px; border-radius: var(--rf); border: 1.5px solid var(--border); background: var(--page-bg); font-size: 12px; font-weight: 700; cursor: pointer; font-family: var(--font); transition: all .14s; }
+    .mood-btn--active-great { background: rgba(52,211,153,.15); border-color: #34d399; color: #065f46; }
+    .mood-btn--active-good  { background: rgba(110,231,183,.15); border-color: #6ee7b7; color: #065f46; }
+    .mood-btn--active-okay  { background: rgba(251,191,36,.15); border-color: #fbbf24; color: #92400e; }
+    .mood-btn--active-low   { background: rgba(248,113,113,.15); border-color: #f87171; color: #b91c1c; }
+  </style>
+</head>
+<body>
+<div class="app">
+  <input type="checkbox" id="sb-toggle" class="state-input" />
+  <aside class="sidebar" aria-label="Ambassador navigation">
+    <div class="sidebar__head">
+      <img class="sidebar__logo-img" src="logo.png" alt="Luminwell" width="28" height="28" decoding="async" />
+      <div class="sidebar__logo-wrap"><span class="sidebar__logo">LUMINWELL</span><span class="sidebar__role-tag">Ambassador</span></div>
+      <label for="sb-toggle" class="sb-collapse-btn" aria-label="Collapse sidebar">
+        <svg class="icon-collapse" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+        <svg class="icon-expand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+      </label>
+    </div>
+    <div class="sidebar__block">
+      <div class="sidebar__label">Main</div>
+      <nav class="sb-nav">
+        <a href="amb-home.html" class="sb-nav__link"><svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5L12 4l9 6.5V20a1 1 0 01-1 1h-5v-7H9v7H4a1 1 0 01-1-1v-9.5z"/></svg>Home</a>
+        <a href="amb-schedule.html" class="sb-nav__link"><svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Schedule<span class="sb-nav__badge sb-nav__badge--teal">3</span></a>
+        <a href="amb-students.html" class="sb-nav__link"><svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>My Clients</a>
+        <a href="amb-notes.html" class="sb-nav__link is-active" aria-current="page"><svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Session Notes<span class="sb-nav__badge sb-nav__badge--amber">2</span></a>
+        <a href="amb-tasks.html" class="sb-nav__link"><svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>Tasks<span class="sb-nav__badge">5</span></a>
+        <a href="amb-messages.html" class="sb-nav__link"><svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>Messages<span class="sb-nav__badge">3</span></a>
+        <a href="amb-profile.html" class="sb-nav__link"><svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>My Profile</a>
+      </nav>
+    </div>
+    <div class="sidebar__block sidebar__block--fill">
+      <div class="sidebar__label">Drafts</div>
+      <div class="sb-alerts">
+        <div class="sb-alert sb-alert--amber"><span class="sb-alert__title">Client E — Fri 28 Mar</span><span class="sb-alert__meta">Draft · Not published yet</span></div>
+        <div class="sb-alert sb-alert--amber"><span class="sb-alert__title">Client B — Mon 23 Mar</span><span class="sb-alert__meta">Draft · Incomplete</span></div>
+      </div>
+    </div>
+    <div class="sidebar__foot">
+      <div class="sidebar__avatar">🌿</div>
+      <div><div class="sidebar__name">Maya Johnson</div><div class="sidebar__stats"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>4.9 · 84 clients</div></div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="topbar__left">
+        <img class="topbar__logo-img" src="logo.png" alt="Luminwell" width="26" height="26" decoding="async" />
+        <span class="topbar__title">Ambassador Dashboard</span>
+        <span class="topbar__divider"></span>
+        <span class="topbar__sub">Session Notes</span>
+      </div>
+      <div class="topbar__right">
+        <span class="topbar__today"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Sunday, 29 Mar 2026</span>
+        <button type="button" class="topbar__crisis">988 Helpline</button>
+        <button type="button" class="topbar__icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg><span class="notif-dot"></span></button>
+      </div>
+    </header>
+
+    <div class="amb-page">
+      <div class="amb-inner">
+        <div class="amb-header">
+          <div class="amb-header__text">
+            <h1 class="amb-header__title">Session Notes</h1>
+            <p class="amb-header__sub">2 drafts pending · AI-assisted note generation · 24 published notes total</p>
+          </div>
+          <div class="amb-header__actions">
+            <button type="button" class="btn-secondary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>Search notes</button>
+            <button type="button" class="btn-primary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><path d="M12 5v14M5 12h14"/></svg>New note</button>
+          </div>
+        </div>
+
+        <div class="two-col">
+          <!-- LEFT: list -->
+          <div class="left-col">
+            <p class="divider-label">Drafts — needs publishing</p>
+            <div class="note-list">
+              <!-- Draft 1 -->
+              <div class="note-card">
+                <div class="note-card__accent" style="background:linear-gradient(90deg,var(--amber),#fbbf24);"></div>
+                <div class="note-card__body">
+                  <div class="note-card__left">
+                    <div class="note-card__head">
+                      <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#059669,#34d399);display:flex;align-items:center;justify-content:center;font-size:14px;">🌍</div>
+                      <div><p class="note-card__title">Client E — Follow-up</p><div class="note-card__meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Fri 28 Mar · 50 min · Video</div></div>
+                      <span class="badge badge--warn" style="margin-left:auto;">Draft</span>
+                    </div>
+                    <p class="note-card__summary">Client discussed progress on housing situation — feels more settled after speaking with university welfare team. Anxiety around exams remains the primary concern going into April. Explored breathing techniques and journalling prompts.</p>
+                    <div class="note-card__tags"><span class="note-card__tag">Housing</span><span class="note-card__tag">Anxiety</span><span class="note-card__tag">Coping tools</span></div>
+                  </div>
+                  <div class="note-card__right"><button type="button" class="btn-primary" style="font-size:11px;padding:7px 12px;">Publish</button><button type="button" class="btn-ghost" style="font-size:11px;padding:4px 8px;">Edit</button></div>
+                </div>
+              </div>
+              <!-- Draft 2 -->
+              <div class="note-card">
+                <div class="note-card__accent" style="background:linear-gradient(90deg,var(--amber),#fbbf24);"></div>
+                <div class="note-card__body">
+                  <div class="note-card__left">
+                    <div class="note-card__head">
+                      <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#c084fc);display:flex;align-items:center;justify-content:center;font-size:14px;">🌸</div>
+                      <div><p class="note-card__title">Client B — Initial session</p><div class="note-card__meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Mon 23 Mar · 50 min · Video</div></div>
+                      <span class="badge badge--warn" style="margin-left:auto;">Draft</span>
+                    </div>
+                    <p class="note-card__summary">First session with Client B. Explored academic pressures around upcoming dissertation submission. Client appears motivated but experiencing low-grade anxiety and poor sleep. Agreed to weekly check-ins through April.</p>
+                    <div class="note-card__tags"><span class="note-card__tag">Academic stress</span><span class="note-card__tag">Sleep</span><span class="note-card__tag">Initial session</span></div>
+                  </div>
+                  <div class="note-card__right"><button type="button" class="btn-primary" style="font-size:11px;padding:7px 12px;">Publish</button><button type="button" class="btn-ghost" style="font-size:11px;padding:4px 8px;">Edit</button></div>
+                </div>
+              </div>
+            </div>
+
+            <p class="divider-label" style="margin-top:8px;">Published notes</p>
+            <div class="note-list">
+              <div class="note-card">
+                <div class="note-card__accent" style="background:linear-gradient(90deg,var(--teal),#34d399);"></div>
+                <div class="note-card__body">
+                  <div class="note-card__left">
+                    <div class="note-card__head">
+                      <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#0ea5e9,#38bdf8);display:flex;align-items:center;justify-content:center;font-size:14px;">🧘</div>
+                      <div><p class="note-card__title">Client D — Session 6</p><div class="note-card__meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Tue 18 Mar · 50 min</div></div>
+                      <span class="badge badge--new" style="margin-left:auto;">Published</span>
+                    </div>
+                    <p class="note-card__summary">Good session — client showed meaningful progress with self-acceptance work. Discussed coming out to family and the ongoing emotional complexity. Set homework: journalling 3× this week around identity affirmations.</p>
+                    <div class="note-card__tags"><span class="note-card__tag">Identity</span><span class="note-card__tag">Self-acceptance</span><span class="note-card__tag">Homework set</span></div>
+                  </div>
+                  <div class="note-card__right"><button type="button" class="btn-ghost" style="font-size:11px;padding:4px 8px;">View</button></div>
+                </div>
+              </div>
+              <div class="note-card">
+                <div class="note-card__accent" style="background:linear-gradient(90deg,var(--sb-bg),#1a7ab8);"></div>
+                <div class="note-card__body">
+                  <div class="note-card__left">
+                    <div class="note-card__head">
+                      <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#c084fc);display:flex;align-items:center;justify-content:center;font-size:14px;">🌸</div>
+                      <div><p class="note-card__title">Client A — Session 8</p><div class="note-card__meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Thu 20 Mar · 50 min</div></div>
+                      <span class="badge badge--new" style="margin-left:auto;">Published</span>
+                    </div>
+                    <p class="note-card__summary">Client A reported persistent low mood this week and difficulty sleeping. Explored root causes — academic pressure and social isolation. Used grounding exercise in session. Flagged for welfare monitoring.</p>
+                    <div class="note-card__tags"><span class="note-card__tag">Low mood</span><span class="note-card__tag">Welfare flag</span><span class="note-card__tag">Grounding</span></div>
+                  </div>
+                  <div class="note-card__right"><button type="button" class="btn-ghost" style="font-size:11px;padding:4px 8px;">View</button></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT: active editor -->
+          <div class="right-col">
+            <div class="editor-panel">
+              <div class="editor-panel__head">
+                <div>
+                  <p style="font-size:14px;font-weight:800;letter-spacing:-0.02em;">Write new note</p>
+                  <div class="editor-panel__meta" style="margin-top:6px;">
+                    <span class="ai-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>AI-assisted</span>
+                    <span class="badge badge--warn">Unsaved draft</span>
+                  </div>
+                </div>
+              </div>
+              <div class="editor-panel__body">
+                <div class="editor-panel__section">
+                  <label class="editor-panel__label">Client &amp; session</label>
+                  <select class="form-select" style="width:100%;">
+                    <option>Client E — Today, 2:00 PM</option>
+                    <option>Client B — Today, 1:30 PM</option>
+                    <option>Client H — Today, 4:30 PM</option>
+                  </select>
+                </div>
+                <div class="editor-panel__section">
+                  <label class="editor-panel__label">Client mood at start</label>
+                  <div class="mood-select">
+                    <button type="button" class="mood-btn">😄 Great</button>
+                    <button type="button" class="mood-btn mood-btn--active-okay">😐 Okay</button>
+                    <button type="button" class="mood-btn">😞 Low</button>
+                  </div>
+                </div>
+                <div class="editor-panel__section">
+                  <label class="editor-panel__label">Session summary</label>
+                  <textarea class="editor-panel__textarea" rows="4" placeholder="What was discussed in this session?">Client E reported feeling more settled regarding housing. Main anxiety focus shifted to upcoming exams in April. Explored time management strategies and CBT-based worry journalling.</textarea>
+                </div>
+                <div class="editor-panel__section">
+                  <label class="editor-panel__label">Key themes</label>
+                  <textarea class="editor-panel__textarea" rows="2" placeholder="Main themes that emerged…">Exam anxiety, time management, journalling as a coping tool</textarea>
+                </div>
+                <div class="editor-panel__section">
+                  <label class="editor-panel__label">Homework set for client</label>
+                  <textarea class="editor-panel__textarea" rows="2" placeholder="Tasks or exercises for the client…">Journal for 10 min each evening this week. Use worry-time technique before sleep.</textarea>
+                </div>
+                <div class="editor-panel__section">
+                  <label class="editor-panel__label">Follow-up needed?</label>
+                  <textarea class="editor-panel__textarea" rows="2" placeholder="Any follow-up actions for you…">Monitor mood check-ins this week. If still low by Wed, send proactive message.</textarea>
+                </div>
+                <div class="editor-panel__section">
+                  <label class="editor-panel__label">Tags</label>
+                  <div class="tag-input">
+                    <span class="tag">Anxiety<button type="button">×</button></span>
+                    <span class="tag">Exams<button type="button">×</button></span>
+                    <span class="tag">Journalling<button type="button">×</button></span>
+                    <input type="text" placeholder="Add tag…" />
+                  </div>
+                </div>
+              </div>
+              <div class="editor-panel__foot">
+                <button type="button" class="btn-primary" style="flex:1;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px;"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>
+                  Publish note
+                </button>
+                <button type="button" class="btn-secondary">Save draft</button>
+              </div>
+            </div>
+            <div class="privacy-strip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Notes are visible only to you. Clients can see their own published summaries. Private sections remain ambassador-only.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+</body>
+</html>

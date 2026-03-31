@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Luminwell Ambassador — Tasks</title>
+  <link rel="stylesheet" href="ambassador.css" />
+  <style>
+    .task-group { display: flex; flex-direction: column; gap: 8px; }
+    .task-group-label { font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--soft); padding: 4px 0; display: flex; align-items: center; gap: 8px; }
+    .task-group-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+    .task-card {
+      background: var(--surface); border-radius: 12px;
+      border: 1.5px solid var(--border); padding: 13px 16px;
+      display: flex; align-items: flex-start; gap: 12px;
+      box-shadow: var(--shadow-sm); transition: box-shadow .15s, border-color .15s;
+    }
+    .task-card:hover { box-shadow: var(--shadow); border-color: rgba(15,45,69,.18); }
+    .task-card--overdue { border-left: 3px solid var(--red); background: rgba(225,29,72,.02); }
+    .task-card--done    { opacity: .6; }
+    .task-check {
+      width: 20px; height: 20px; border-radius: 6px;
+      border: 2px solid var(--border); background: transparent;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; flex-shrink: 0; margin-top: 1px; transition: all .14s;
+    }
+    .task-check--done { background: var(--teal); border-color: var(--teal); }
+    .task-check--done svg { width: 11px; height: 11px; stroke: #fff; stroke-width: 2.5; }
+    .task-body { flex: 1; }
+    .task-title { font-size: 13px; font-weight: 700; color: var(--text); line-height: 1.35; }
+    .task-title--done { text-decoration: line-through; color: var(--soft); }
+    .task-meta  { display: flex; align-items: center; gap: 8px; margin-top: 4px; flex-wrap: wrap; }
+    .task-meta__item { display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--muted); }
+    .task-meta__item svg { width: 11px; height: 11px; }
+    .task-meta__item--red { color: var(--red); font-weight: 700; }
+    .task-right { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; flex-shrink: 0; }
+
+    .add-task-row { display: flex; gap: 8px; align-items: center; padding: 12px 16px; background: var(--surface); border-radius: 12px; border: 1.5px dashed var(--border); cursor: pointer; transition: border-color .14s; }
+    .add-task-row:hover { border-color: var(--sb-bg); }
+    .add-task-row svg { width: 16px; height: 16px; color: var(--soft); }
+    .add-task-row span { font-size: 13px; color: var(--soft); font-weight: 600; }
+  </style>
+</head>
+<body>
+<div class="app">
+  <input type="checkbox" id="sb-toggle" class="state-input" />
+  <aside class="sidebar" aria-label="Ambassador navigation">
+    <div class="sidebar__head">
+      <img class="sidebar__logo-img" src="logo.png" alt="Luminwell" width="28" height="28" decoding="async" />
+      <div class="sidebar__logo-wrap"><span class="sidebar__logo">LUMINWELL</span><span class="sidebar__role-tag">Ambassador</span></div>
+      <label for="sb-toggle" class="sb-collapse-btn" aria-label="Collapse sidebar">
+        <svg class="icon-collapse" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+        <svg class="icon-expand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+      </label>
+    </div>
+    <div class="sidebar__block">
+      <div class="sidebar__label">Main</div>
+      <nav class="sb-nav">
+        <a href="amb-home.html" class="sb-nav__link"><svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5L12 4l9 6.5V20a1 1 0 01-1 1h-5v-7H9v7H4a1 1 0 01-1-1v-9.5z"/></svg>Home</a>
+        <a href="amb-schedule.html" class="sb-nav__link"><svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Schedule<span class="sb-nav__badge sb-nav__badge--teal">3</span></a>
+        <a href="amb-students.html" class="sb-nav__link"><svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>My Clients</a>
+        <a href="amb-notes.html" class="sb-nav__link"><svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Session Notes<span class="sb-nav__badge sb-nav__badge--amber">2</span></a>
+        <a href="amb-tasks.html" class="sb-nav__link is-active" aria-current="page"><svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>Tasks<span class="sb-nav__badge">5</span></a>
+        <a href="amb-messages.html" class="sb-nav__link"><svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>Messages<span class="sb-nav__badge">3</span></a>
+        <a href="amb-profile.html" class="sb-nav__link"><svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>My Profile</a>
+      </nav>
+    </div>
+    <div class="sidebar__block sidebar__block--fill">
+      <div class="sidebar__label">Progress today</div>
+      <div style="padding:10px;display:flex;flex-direction:column;gap:10px;">
+        <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:700;color:var(--sb-muted);">
+          <span>1 of 4 done</span><span>25%</span>
+        </div>
+        <div style="height:6px;border-radius:var(--rf);background:rgba(255,255,255,.1);overflow:hidden;">
+          <div style="width:25%;height:100%;border-radius:var(--rf);background:var(--teal);"></div>
+        </div>
+        <p style="font-size:11px;color:var(--sb-muted);">2 overdue · 3 this week</p>
+      </div>
+    </div>
+    <div class="sidebar__foot">
+      <div class="sidebar__avatar">🌿</div>
+      <div><div class="sidebar__name">Maya Johnson</div><div class="sidebar__stats"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>4.9 · 84 clients</div></div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="topbar__left">
+        <img class="topbar__logo-img" src="logo.png" alt="Luminwell" width="26" height="26" decoding="async" />
+        <span class="topbar__title">Ambassador Dashboard</span>
+        <span class="topbar__divider"></span><span class="topbar__sub">Tasks</span>
+      </div>
+      <div class="topbar__right">
+        <span class="topbar__today"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Sunday, 29 Mar 2026</span>
+        <button type="button" class="topbar__crisis">988 Helpline</button>
+        <button type="button" class="topbar__icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg><span class="notif-dot"></span></button>
+      </div>
+    </header>
+
+    <div class="amb-page">
+      <div class="amb-inner">
+        <div class="amb-header">
+          <div class="amb-header__text">
+            <h1 class="amb-header__title">Tasks &amp; Reminders</h1>
+            <p class="amb-header__sub">2 overdue · 3 due today · 5 total open</p>
+          </div>
+          <div class="amb-header__actions">
+            <button type="button" class="btn-primary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><path d="M12 5v14M5 12h14"/></svg>Add task</button>
+          </div>
+        </div>
+
+        <div class="stats-row">
+          <div class="stat-card"><div class="stat-card__icon stat-card__icon--red"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div><div><div class="stat-card__val">2</div><div class="stat-card__label">Overdue</div></div></div>
+          <div class="stat-card"><div class="stat-card__icon stat-card__icon--amber"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></div><div><div class="stat-card__val">3</div><div class="stat-card__label">Due today</div></div></div>
+          <div class="stat-card"><div class="stat-card__icon stat-card__icon--navy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div><div><div class="stat-card__val">5</div><div class="stat-card__label">Open tasks</div></div></div>
+          <div class="stat-card"><div class="stat-card__icon stat-card__icon--teal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg></div><div><div class="stat-card__val">8</div><div class="stat-card__label">Completed this week</div></div></div>
+        </div>
+
+        <div class="two-col">
+          <div class="left-col">
+            <!-- Overdue -->
+            <div class="section-card">
+              <div class="section-card__head"><span class="section-card__title"><span class="section-card__title-icon section-card__title-icon--red"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>Overdue</span><span class="badge badge--alert">2 overdue</span></div>
+              <div class="section-card__body">
+                <div class="task-card task-card--overdue">
+                  <span class="priority-dot priority-dot--high"></span>
+                  <div class="task-check"></div>
+                  <div class="task-body">
+                    <p class="task-title">Write and publish notes for Client E — Fri 28 Mar session</p>
+                    <div class="task-meta">
+                      <span class="task-meta__item task-meta__item--red"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Overdue since yesterday</span>
+                      <span class="task-meta__item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Client E</span>
+                    </div>
+                  </div>
+                  <div class="task-right"><a href="amb-notes.html" class="btn-teal" style="font-size:11px;padding:7px 12px;">Write now</a></div>
+                </div>
+                <div class="task-card task-card--overdue">
+                  <span class="priority-dot priority-dot--high"></span>
+                  <div class="task-check"></div>
+                  <div class="task-body">
+                    <p class="task-title">Publish notes for Client B — Mon 23 Mar session</p>
+                    <div class="task-meta">
+                      <span class="task-meta__item task-meta__item--red"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>6 days overdue</span>
+                      <span class="task-meta__item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Client B</span>
+                    </div>
+                  </div>
+                  <div class="task-right"><a href="amb-notes.html" class="btn-teal" style="font-size:11px;padding:7px 12px;">Write now</a></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Today -->
+            <div class="section-card">
+              <div class="section-card__head"><span class="section-card__title"><span class="section-card__title-icon section-card__title-icon--amber"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></span>Due Today</span><span class="badge badge--warn">3 tasks</span></div>
+              <div class="section-card__body">
+                <div class="task-card">
+                  <span class="priority-dot priority-dot--high"></span>
+                  <div class="task-check"></div>
+                  <div class="task-body">
+                    <p class="task-title">Review Client A welfare — consider proactive contact before Thu</p>
+                    <div class="task-meta"><span class="task-meta__item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>Welfare</span><span class="task-meta__item">Due today</span></div>
+                  </div>
+                  <div class="task-right"><a href="amb-messages.html" class="btn-ghost" style="font-size:11px;padding:5px 10px;">Message</a></div>
+                </div>
+                <div class="task-card">
+                  <span class="priority-dot priority-dot--medium"></span>
+                  <div class="task-check"></div>
+                  <div class="task-body">
+                    <p class="task-title">Prepare session agenda for Client E — 2:00 PM today</p>
+                    <div class="task-meta"><span class="task-meta__item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Session at 2:00 PM</span></div>
+                  </div>
+                </div>
+                <div class="task-card task-card--done">
+                  <span class="priority-dot priority-dot--medium"></span>
+                  <div class="task-check task-check--done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+                  <div class="task-body">
+                    <p class="task-title task-title--done">Respond to Client B's message about today's session</p>
+                    <div class="task-meta"><span class="task-meta__item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Done · 9:15 AM</span></div>
+                  </div>
+                </div>
+                <div class="add-task-row">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+                  <span>Add a task for today…</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- This week -->
+            <div class="section-card">
+              <div class="section-card__head"><span class="section-card__title"><span class="section-card__title-icon section-card__title-icon--navy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></span>This Week</span></div>
+              <div class="section-card__body">
+                <div class="task-card">
+                  <span class="priority-dot priority-dot--low"></span>
+                  <div class="task-check"></div>
+                  <div class="task-body"><p class="task-title">Update April availability slots</p><div class="task-meta"><span class="task-meta__item">Due Fri 3 Apr</span></div></div>
+                  <div class="task-right"><a href="amb-schedule.html" class="btn-ghost" style="font-size:11px;padding:5px 10px;">Go</a></div>
+                </div>
+                <div class="task-card">
+                  <span class="priority-dot priority-dot--medium"></span>
+                  <div class="task-check"></div>
+                  <div class="task-body"><p class="task-title">Check in with Client F — no journal in 5 days</p><div class="task-meta"><span class="task-meta__item">Due Wed 1 Apr</span></div></div>
+                </div>
+                <div class="task-card">
+                  <span class="priority-dot priority-dot--low"></span>
+                  <div class="task-check"></div>
+                  <div class="task-body"><p class="task-title">Complete monthly ambassadorship report</p><div class="task-meta"><span class="task-meta__item">Due Fri 3 Apr</span></div></div>
+                </div>
+                <div class="add-task-row">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+                  <span>Add a task for this week…</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="right-col">
+            <div class="section-card">
+              <div class="section-card__head"><span class="section-card__title">Completed today</span><span class="badge badge--new">1 done</span></div>
+              <div class="section-card__body">
+                <div class="task-card task-card--done"><span class="priority-dot priority-dot--medium"></span><div class="task-check task-check--done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="task-body"><p class="task-title task-title--done">Respond to Client B's message</p><div class="task-meta"><span class="task-meta__item">Done · 9:15 AM</span></div></div></div>
+              </div>
+            </div>
+            <div class="section-card">
+              <div class="section-card__head"><span class="section-card__title">Weekly summary</span></div>
+              <div class="section-card__body">
+                <div style="display:flex;flex-direction:column;gap:10px;">
+                  <div style="display:flex;justify-content:space-between;align-items:center;"><span style="font-size:12px;color:var(--muted);">Tasks completed</span><span style="font-size:14px;font-weight:800;">8</span></div>
+                  <div style="display:flex;justify-content:space-between;align-items:center;"><span style="font-size:12px;color:var(--muted);">Overdue cleared</span><span style="font-size:14px;font-weight:800;">3</span></div>
+                  <div style="display:flex;justify-content:space-between;align-items:center;"><span style="font-size:12px;color:var(--muted);">Notes published</span><span style="font-size:14px;font-weight:800;">5</span></div>
+                  <div style="display:flex;justify-content:space-between;align-items:center;"><span style="font-size:12px;color:var(--muted);">Client messages sent</span><span style="font-size:14px;font-weight:800;">7</span></div>
+                  <div style="height:1px;background:var(--border-soft);"></div>
+                  <div style="background:var(--teal-pale);border-radius:10px;padding:12px;border:1px solid var(--teal-mid);">
+                    <p style="font-size:12px;font-weight:800;color:var(--teal-deep);margin-bottom:4px;">Great week, Maya 🌿</p>
+                    <p style="font-size:11px;color:var(--muted);line-height:1.6;">You've supported 8 clients and maintained consistent communication. Clear your 2 overdue notes to round off the week perfectly.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+</body>
+</html>

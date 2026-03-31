@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Luminwell — Session Notes · April 25</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="sessions.css" />
+  <style>
+    /* ── Session view extras ─────────────────────── */
+    .sv-page {
+      flex: 1; overflow-y: auto;
+      background: var(--page-bg); padding: 0;
+    }
+    .sv-inner {
+      padding: 28px 28px 60px;
+      display: flex; flex-direction: column; gap: 22px;
+      max-width: 860px;
+    }
+
+    /* Breadcrumb */
+    .sv-breadcrumb {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 13px; color: var(--muted);
+    }
+    .sv-breadcrumb a { color: var(--muted); text-decoration: none; transition: color .14s; }
+    .sv-breadcrumb a:hover { color: var(--text); }
+    .sv-breadcrumb__sep { color: var(--soft); font-size: 10px; }
+    .sv-breadcrumb__current { color: var(--text); font-weight: 600; }
+
+    /* Hero banner */
+    .sv-hero {
+      background: linear-gradient(135deg, var(--sb-bg) 0%, #1e7ab8 100%);
+      border-radius: 18px; padding: 28px 30px;
+      color: #fff;
+      box-shadow: 0 4px 20px rgba(23,93,146,.3);
+    }
+    .sv-hero__eyebrow {
+      font-size: 11px; font-weight: 700; letter-spacing: .1em;
+      text-transform: uppercase; opacity: .65; margin-bottom: 8px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .sv-hero__eyebrow svg { width: 12px; height: 12px; }
+    .sv-hero__title {
+      font-size: 24px; font-weight: 800; letter-spacing: -0.04em; line-height: 1.15;
+      margin-bottom: 16px;
+    }
+    .sv-hero__meta {
+      display: flex; gap: 20px; flex-wrap: wrap;
+    }
+    .sv-hero__meta-item {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 13px; opacity: .8; font-weight: 500;
+    }
+    .sv-hero__meta-item svg { width: 14px; height: 14px; }
+
+    /* Mood outcome pill */
+    .sv-mood-pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 5px 14px; border-radius: var(--rf);
+      font-size: 12px; font-weight: 700;
+      border: 1.5px solid rgba(255,255,255,.3);
+      background: rgba(255,255,255,.15);
+      margin-top: 14px;
+    }
+    .sv-mood-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+    /* Content grid */
+    .sv-grid {
+      display: grid; grid-template-columns: 1fr 300px; gap: 20px; align-items: start;
+    }
+    .sv-main { display: flex; flex-direction: column; gap: 18px; }
+    .sv-sidebar-col { display: flex; flex-direction: column; gap: 18px; }
+
+    /* Content sections */
+    .sv-section {
+      background: var(--surface); border-radius: 16px;
+      border: 1px solid var(--border); box-shadow: var(--shadow-sm);
+      overflow: hidden;
+    }
+    .sv-section__head {
+      display: flex; align-items: center; gap: 10px;
+      padding: 16px 20px 14px;
+      border-bottom: 1px solid var(--border-soft);
+    }
+    .sv-section__icon {
+      width: 32px; height: 32px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .sv-section__icon svg { width: 15px; height: 15px; }
+    .sv-section__icon--blue  { background: rgba(23,93,146,.1);  color: var(--sb-bg); }
+    .sv-section__icon--teal  { background: rgba(45,150,118,.1); color: var(--teal); }
+    .sv-section__icon--amber { background: rgba(217,119,6,.1);  color: #d97706; }
+    .sv-section__icon--green { background: rgba(5,150,105,.1);  color: #059669; }
+    .sv-section__title { font-size: 14px; font-weight: 800; letter-spacing: -0.01em; }
+    .sv-section__body { padding: 18px 20px; }
+
+    .sv-prose {
+      font-size: 14px; color: var(--muted); line-height: 1.75;
+    }
+
+    .sv-points { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px; }
+    .sv-points li {
+      display: flex; align-items: flex-start; gap: 10px;
+      font-size: 14px; color: var(--muted); line-height: 1.6;
+    }
+    .sv-point-dot {
+      flex-shrink: 0; width: 20px; height: 20px; border-radius: 50%;
+      background: var(--teal-pale); border: 1.5px solid var(--teal-mid);
+      display: flex; align-items: center; justify-content: center;
+      margin-top: 1px;
+    }
+    .sv-point-dot::after {
+      content: '';
+      display: block; width: 6px; height: 6px;
+      border-radius: 50%; background: var(--teal);
+    }
+
+    /* Homework box */
+    .sv-homework {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 16px 18px; border-radius: 12px;
+      background: var(--teal-pale); border: 1.5px solid var(--teal-mid);
+    }
+    .sv-homework__icon { font-size: 20px; flex-shrink: 0; }
+    .sv-homework__label {
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .07em; color: var(--teal-deep); margin-bottom: 5px;
+    }
+    .sv-homework__text { font-size: 14px; color: var(--teal-deep); line-height: 1.65; }
+
+    /* Techniques used */
+    .sv-techniques { display: flex; gap: 7px; flex-wrap: wrap; }
+    .sv-technique-tag {
+      display: inline-flex; align-items: center;
+      padding: 5px 12px; border-radius: var(--rf);
+      background: rgba(23,93,146,.07); border: 1px solid rgba(23,93,146,.15);
+      font-size: 12px; font-weight: 600; color: var(--sb-bg);
+    }
+
+    /* Sidebar cards */
+    .sv-info-card {
+      background: var(--surface); border-radius: 14px;
+      border: 1px solid var(--border); box-shadow: var(--shadow-sm);
+      overflow: hidden;
+    }
+    .sv-info-card__head {
+      padding: 13px 16px 11px;
+      border-bottom: 1px solid var(--border-soft);
+      font-size: 12px; font-weight: 700; letter-spacing: .04em;
+      text-transform: uppercase; color: var(--soft);
+    }
+    .sv-info-card__body { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+    .sv-info-row {
+      display: flex; align-items: flex-start; gap: 8px;
+      font-size: 13px; color: var(--muted);
+    }
+    .sv-info-row svg { width: 14px; height: 14px; flex-shrink: 0; color: var(--soft); margin-top: 1px; }
+    .sv-info-row__label { font-weight: 700; color: var(--text); margin-right: 4px; }
+
+    /* Ambassador mini card */
+    .sv-ambassador {
+      background: var(--surface); border-radius: 14px;
+      border: 1px solid var(--border); box-shadow: var(--shadow-sm);
+      padding: 16px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .sv-ambassador__avatar {
+      width: 44px; height: 44px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--sb-bg), #2d9676);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; flex-shrink: 0;
+    }
+    .sv-ambassador__name { font-size: 14px; font-weight: 800; }
+    .sv-ambassador__role { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .sv-ambassador__link {
+      display: inline-flex; align-items: center; gap: 4px;
+      margin-top: 6px; font-size: 12px; font-weight: 700;
+      color: var(--sb-bg); text-decoration: none;
+    }
+    .sv-ambassador__link svg { width: 11px; height: 11px; }
+
+    /* Action row */
+    .sv-actions {
+      display: flex; gap: 10px; flex-wrap: wrap;
+    }
+    .btn-sv-back {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 10px 18px; border-radius: 10px;
+      border: 1.5px solid var(--border); background: var(--surface);
+      color: var(--muted); font-size: 13px; font-weight: 600;
+      font-family: var(--font); cursor: pointer; text-decoration: none;
+      transition: all .14s;
+    }
+    .btn-sv-back:hover { border-color: var(--text); color: var(--text); }
+    .btn-sv-back svg { width: 14px; height: 14px; }
+    .btn-sv-export {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 10px 18px; border-radius: 10px;
+      background: var(--sb-bg); color: #fff;
+      font-size: 13px; font-weight: 700; font-family: var(--font);
+      border: none; cursor: pointer; text-decoration: none;
+      box-shadow: 0 2px 8px rgba(23,93,146,.28);
+      transition: background .14s;
+    }
+    .btn-sv-export:hover { background: var(--sb-deep); }
+    .btn-sv-export svg { width: 14px; height: 14px; }
+
+    @media (max-width: 900px) {
+      .sv-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 600px) {
+      .sv-inner { padding: 16px 16px 48px; }
+      .sv-hero { padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ══ Sidebar ══════════════════════════════════════ -->
+  <aside class="sidebar" aria-label="Navigation">
+    <div class="sidebar__head">
+      <img class="sidebar__logo-img" src="logo.png" alt="Luminwell" width="30" height="30" decoding="async" />
+      <span class="sidebar__logo">LUMINWELL</span>
+    </div>
+    <div class="sidebar__block">
+      <a href="index.html" class="sidebar__new">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+        New chat
+      </a>
+    </div>
+    <div class="sidebar__block">
+      <div class="sidebar__label">Menu</div>
+      <nav class="sb-nav" aria-label="Sections">
+        <a href="index.html" class="sb-nav__link">
+          <svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5L12 4l9 6.5V20a1 1 0 01-1 1h-5v-7H9v7H4a1 1 0 01-1-1v-9.5z"/></svg>
+          Home
+        </a>
+        <a href="#" class="sb-nav__link">
+          <svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 11h16"/></svg>
+          Book
+        </a>
+        <a href="sessions.html" class="sb-nav__link is-active" aria-current="page">
+          <svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          Sessions
+        </a>
+        <a href="journal-pin.html" class="sb-nav__link">
+          <svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5c0-1 1-2 2.2-1.7C8.3 3.8 10 5.2 12 5.2S15.7 3.8 17.8 3.3C19 3 20 4 20 5v13c0 1-1 1.7-2.2 1.4-2-.4-3.8-1.6-5.8-1.6S8.2 19.4 6.2 19.8 4 19 4 18V5z"/><path d="M12 5.2v14.5"/></svg>
+          Journal
+        </a>
+        <a href="calendar.html" class="sb-nav__link">
+          <svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+          Calendar
+        </a>
+      </nav>
+    </div>
+    <div class="sidebar__block sidebar__block--fill">
+      <div class="sidebar__label">Upcoming</div>
+      <div class="sb-recent">
+        <button type="button" class="sb-recent__btn">
+          <div class="sb-recent__title">Check-in with Maya</div>
+          <div class="sb-recent__meta">May 2 · 3:00 pm</div>
+        </button>
+        <button type="button" class="sb-recent__btn">
+          <div class="sb-recent__title">Goal-setting session</div>
+          <div class="sb-recent__meta">May 9 · 4:00 pm</div>
+        </button>
+      </div>
+    </div>
+    <div class="sidebar__foot">
+      <div class="sidebar__avatar" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="3.5"/><path d="M6 19c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke-linecap="round"/></svg>
+      </div>
+      <div>
+        <div class="sidebar__name">Umer</div>
+        <div class="sidebar__credits">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><ellipse cx="12" cy="6" rx="6" ry="2"/><path d="M6 6v4c0 1.1 2.7 2 6 2s6-.9 6-2V6"/><path d="M6 10v4c0 1.1 2.7 2 6 2s6-.9 6-2v-4"/></svg>
+          500
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ══ Main ══════════════════════════════════════════ -->
+  <main class="main">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <div class="topbar__left">
+        <img class="topbar__logo-img" src="logo.png" alt="Luminwell" width="28" height="28" decoding="async" />
+        <span class="topbar__title">Session Notes</span>
+      </div>
+      <div class="topbar__right">
+        <button type="button" class="topbar__crisis" aria-label="988 Crisis and Suicide Lifeline">988 Helpline</button>
+        <a href="journal-pin.html" class="btn-lock-sess" aria-label="Lock and return to PIN screen">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg>
+          Lock
+        </a>
+        <button type="button" class="topbar__icon-btn" aria-label="Notifications">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+        </button>
+        <button type="button" class="topbar__icon-btn" aria-label="Settings">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Session view content -->
+    <div class="sv-page">
+      <div class="sv-inner">
+
+        <!-- Breadcrumb -->
+        <nav class="sv-breadcrumb" aria-label="Breadcrumb">
+          <a href="sessions.html">Sessions</a>
+          <span class="sv-breadcrumb__sep" aria-hidden="true">›</span>
+          <a href="sessions.html">Session Notes</a>
+          <span class="sv-breadcrumb__sep" aria-hidden="true">›</span>
+          <span class="sv-breadcrumb__current">April 25, 2026</span>
+        </nav>
+
+        <!-- Hero -->
+        <div class="sv-hero" role="banner" aria-label="Session overview">
+          <p class="sv-hero__eyebrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5c0-1 1-2 2.2-1.7C8.3 3.8 10 5.2 12 5.2S15.7 3.8 17.8 3.3C19 3 20 4 20 5v13c0 1-1 1.7-2.2 1.4-2-.4-3.8-1.6-5.8-1.6S8.2 19.4 6.2 19.8 4 19 4 18V5z"/><path d="M12 5.2v14.5"/></svg>
+            Session Note · April 25, 2026
+          </p>
+          <h1 class="sv-hero__title">Managing pre-deadline anxiety</h1>
+          <div class="sv-hero__meta">
+            <span class="sv-hero__meta-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+              3:00 pm – 3:30 pm (30 min)
+            </span>
+            <span class="sv-hero__meta-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+              Video call
+            </span>
+            <span class="sv-hero__meta-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              With Maya Johnson
+            </span>
+          </div>
+          <div class="sv-mood-pill" aria-label="Post-session mood: Positive">
+            <span class="sv-mood-dot" style="background:#4ade80;" aria-hidden="true"></span>
+            Felt better after this session
+          </div>
+        </div>
+
+        <!-- Action row -->
+        <div class="sv-actions">
+          <a href="sessions.html" class="btn-sv-back">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+            Back to sessions
+          </a>
+          <button type="button" class="btn-sv-export">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Export as PDF
+          </button>
+        </div>
+
+        <!-- Main content grid -->
+        <div class="sv-grid">
+
+          <!-- Left: main note content -->
+          <div class="sv-main">
+
+            <!-- Summary -->
+            <div class="sv-section">
+              <div class="sv-section__head">
+                <div class="sv-section__icon sv-section__icon--blue" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                </div>
+                <p class="sv-section__title">Session Summary</p>
+              </div>
+              <div class="sv-section__body">
+                <p class="sv-prose">
+                  This session focused on managing pre-deadline anxiety. Umer discussed feeling overwhelmed by upcoming coursework and experiencing significant difficulties with concentration and motivation. Maya introduced the "done is better than perfect" cognitive reframing technique and explored practical strategies for reducing the cognitive load of large tasks.
+                </p>
+                <p class="sv-prose" style="margin-top: 12px;">
+                  Progress was noted in Umer's increased self-awareness around perfectionist thinking patterns. The session ended on a positive note with a clear homework task and a shared sense of momentum going into the deadline period.
+                </p>
+              </div>
+            </div>
+
+            <!-- Key discussion points -->
+            <div class="sv-section">
+              <div class="sv-section__head">
+                <div class="sv-section__icon sv-section__icon--teal" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+                </div>
+                <p class="sv-section__title">Key Discussion Points</p>
+              </div>
+              <div class="sv-section__body">
+                <ul class="sv-points">
+                  <li>
+                    <span class="sv-point-dot" aria-hidden="true"></span>
+                    Identified perfectionism as a key driver of procrastination and anxiety — noted that waiting for the "perfect moment" was preventing Umer from starting tasks at all.
+                  </li>
+                  <li>
+                    <span class="sv-point-dot" aria-hidden="true"></span>
+                    Explored time-blocking as a strategy for tackling large assignments: breaking work into 25-minute focused intervals with short breaks (Pomodoro technique introduced).
+                  </li>
+                  <li>
+                    <span class="sv-point-dot" aria-hidden="true"></span>
+                    Discussed the strong link between sleep quality and cognitive performance during high-pressure academic periods. Umer committed to a consistent wind-down routine.
+                  </li>
+                  <li>
+                    <span class="sv-point-dot" aria-hidden="true"></span>
+                    Reflected on progress since the last session — Umer demonstrated noticeably greater self-awareness around their own thinking patterns. This was highlighted as meaningful growth.
+                  </li>
+                  <li>
+                    <span class="sv-point-dot" aria-hidden="true"></span>
+                    Discussed strategies for managing the inner critic voice — separating the "evaluator" from the "creator" when writing and studying.
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Homework -->
+            <div class="sv-section">
+              <div class="sv-section__head">
+                <div class="sv-section__icon sv-section__icon--amber" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                </div>
+                <p class="sv-section__title">Homework &amp; Action Items</p>
+              </div>
+              <div class="sv-section__body" style="display:flex;flex-direction:column;gap:12px;">
+                <div class="sv-homework">
+                  <span class="sv-homework__icon">📋</span>
+                  <div>
+                    <p class="sv-homework__label">This week's practice</p>
+                    <p class="sv-homework__text">Practice thought records once daily this week. When you notice a perfectionist thought (e.g. "this isn't good enough to submit"), write it down and apply the reframing question: "What would I tell a friend in this situation?"</p>
+                  </div>
+                </div>
+                <div class="sv-homework">
+                  <span class="sv-homework__icon">😴</span>
+                  <div>
+                    <p class="sv-homework__label">Sleep routine</p>
+                    <p class="sv-homework__text">Set a consistent wind-down time of 10:30 pm this week. No screens 30 minutes before bed. Note any changes in focus or mood the following morning in your journal.</p>
+                  </div>
+                </div>
+                <div class="sv-homework" style="background:rgba(23,93,146,.07);border-color:rgba(23,93,146,.2);">
+                  <span class="sv-homework__icon">📌</span>
+                  <div>
+                    <p class="sv-homework__label" style="color:var(--sb-bg);">Bring to next session</p>
+                    <p class="sv-homework__text" style="color:var(--sb-bg);">Share observations from thought records and sleep log. Discuss how the deadline period went overall.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Techniques used -->
+            <div class="sv-section">
+              <div class="sv-section__head">
+                <div class="sv-section__icon sv-section__icon--green" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>
+                </div>
+                <p class="sv-section__title">Techniques Used in This Session</p>
+              </div>
+              <div class="sv-section__body">
+                <div class="sv-techniques">
+                  <span class="sv-technique-tag">Cognitive reframing</span>
+                  <span class="sv-technique-tag">Thought records</span>
+                  <span class="sv-technique-tag">Time-blocking</span>
+                  <span class="sv-technique-tag">Pomodoro technique</span>
+                  <span class="sv-technique-tag">Sleep hygiene</span>
+                  <span class="sv-technique-tag">Self-compassion</span>
+                  <span class="sv-technique-tag">Inner critic work</span>
+                </div>
+              </div>
+            </div>
+
+          </div><!-- /sv-main -->
+
+          <!-- Right: sidebar info -->
+          <div class="sv-sidebar-col">
+
+            <!-- Ambassador -->
+            <div class="sv-ambassador" role="region" aria-label="Ambassador">
+              <div class="sv-ambassador__avatar" aria-hidden="true">🌿</div>
+              <div>
+                <p class="sv-ambassador__name">Maya Johnson</p>
+                <p class="sv-ambassador__role">Wellbeing Ambassador</p>
+                <a href="sessions.html" class="sv-ambassador__link">
+                  View all sessions
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+                </a>
+              </div>
+            </div>
+
+            <!-- Session details -->
+            <div class="sv-info-card">
+              <div class="sv-info-card__head">Session Details</div>
+              <div class="sv-info-card__body">
+                <div class="sv-info-row">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                  <span><span class="sv-info-row__label">Date</span> April 25, 2026</span>
+                </div>
+                <div class="sv-info-row">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                  <span><span class="sv-info-row__label">Time</span> 3:00 – 3:30 pm</span>
+                </div>
+                <div class="sv-info-row">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+                  <span><span class="sv-info-row__label">Format</span> Video call</span>
+                </div>
+                <div class="sv-info-row">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>
+                  <span><span class="sv-info-row__label">Status</span> Completed</span>
+                </div>
+                <div class="sv-info-row">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
+                  <span><span class="sv-info-row__label">Session #</span> 11 of 12</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Mood before/after -->
+            <div class="sv-info-card">
+              <div class="sv-info-card__head">Mood Check</div>
+              <div class="sv-info-card__body">
+                <div class="sv-info-row">
+                  <span style="font-size:16px; flex-shrink:0;">😐</span>
+                  <span><span class="sv-info-row__label">Before</span> Neutral — anxious going in</span>
+                </div>
+                <div class="sv-info-row">
+                  <span style="font-size:16px; flex-shrink:0;">😊</span>
+                  <span><span class="sv-info-row__label">After</span> Good — clearer and calmer</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Privacy -->
+            <div class="sv-info-card">
+              <div class="sv-info-card__head">Privacy</div>
+              <div class="sv-info-card__body">
+                <p style="font-size:12px;color:var(--muted);line-height:1.65;">These notes are encrypted end-to-end and visible only to you and Maya. Luminwell staff cannot access this content.</p>
+              </div>
+            </div>
+
+          </div><!-- /sv-sidebar-col -->
+        </div><!-- /sv-grid -->
+
+      </div><!-- /sv-inner -->
+    </div><!-- /sv-page -->
+  </main>
+
+</div><!-- /app -->
+
+</body>
+</html>

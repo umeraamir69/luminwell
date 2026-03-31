@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Luminwell — My Ambassador</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="sessions.css" />
+  <style>
+    .am-page  { flex: 1; overflow-y: auto; background: var(--page-bg); }
+    .am-inner { padding: 28px 28px 60px; display: flex; flex-direction: column; gap: 26px; }
+
+    /* Breadcrumb */
+    .am-breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); }
+    .am-breadcrumb a { color: var(--muted); transition: color .14s; }
+    .am-breadcrumb a:hover { color: var(--text); }
+    .am-breadcrumb__sep { color: var(--soft); font-size: 10px; }
+    .am-breadcrumb__cur { color: var(--text); font-weight: 600; }
+
+    /* Section label util */
+    .am-section-label {
+      font-size: 11px; font-weight: 700; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--soft); margin-bottom: 14px;
+    }
+
+    /* ── Current ambassador hero ──────────────────── */
+    .current-amb {
+      background: linear-gradient(135deg, var(--sb-bg) 0%, #1e7ab8 100%);
+      border-radius: 20px; padding: 28px 30px;
+      color: #fff; display: flex; gap: 22px; align-items: flex-start;
+      box-shadow: 0 4px 20px rgba(23,93,146,.3);
+    }
+    .current-amb__avatar {
+      width: 80px; height: 80px; border-radius: 50%;
+      background: rgba(255,255,255,.2); border: 3px solid rgba(255,255,255,.35);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 32px; flex-shrink: 0;
+    }
+    .current-amb__info { flex: 1; }
+    .current-amb__badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 4px 10px; border-radius: var(--rf);
+      background: rgba(255,255,255,.18); border: 1px solid rgba(255,255,255,.25);
+      font-size: 11px; font-weight: 700; letter-spacing: .06em;
+      text-transform: uppercase; margin-bottom: 8px;
+    }
+    .current-amb__name { font-size: 24px; font-weight: 800; letter-spacing: -.04em; margin-bottom: 5px; }
+    .current-amb__title { font-size: 14px; opacity: .75; margin-bottom: 12px; }
+    .current-amb__tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+    .current-amb__tag {
+      padding: 4px 10px; border-radius: var(--rf);
+      background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.2);
+      font-size: 11px; font-weight: 600;
+    }
+    .current-amb__bio { font-size: 13px; opacity: .8; line-height: 1.65; max-width: 520px; }
+    .current-amb__actions { display: flex; gap: 9px; margin-top: 18px; flex-wrap: wrap; }
+    .btn-msg-amb {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 9px 18px; border-radius: 9px;
+      background: rgba(255,255,255,.18); border: 1px solid rgba(255,255,255,.3);
+      color: #fff; font-size: 13px; font-weight: 700; font-family: var(--font);
+      cursor: pointer; transition: background .14s; text-decoration: none;
+    }
+    .btn-msg-amb:hover { background: rgba(255,255,255,.28); }
+    .btn-msg-amb svg { width: 13px; height: 13px; }
+    .btn-book-amb {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 9px 18px; border-radius: 9px;
+      background: #fff; color: var(--sb-bg);
+      font-size: 13px; font-weight: 800; font-family: var(--font);
+      border: none; cursor: pointer; transition: opacity .14s; text-decoration: none;
+    }
+    .btn-book-amb:hover { opacity: .9; }
+    .btn-book-amb svg { width: 13px; height: 13px; }
+
+    /* Stats row on hero */
+    .current-amb__stats { display: flex; gap: 28px; margin-top: 18px; flex-wrap: wrap; }
+    .amb-stat-val   { font-size: 22px; font-weight: 800; letter-spacing: -.04em; line-height: 1; }
+    .amb-stat-label { font-size: 11px; opacity: .65; margin-top: 2px; }
+
+    /* Availability block */
+    .avail-card {
+      background: var(--surface); border-radius: 16px;
+      border: 1px solid var(--border); box-shadow: var(--shadow-sm);
+      overflow: hidden;
+    }
+    .avail-card__head {
+      display: flex; align-items: center; gap: 10px;
+      padding: 15px 20px 13px; border-bottom: 1px solid var(--border-soft);
+    }
+    .avail-card__icon {
+      width: 30px; height: 30px; border-radius: 8px; flex-shrink: 0;
+      background: rgba(23,93,146,.1); color: var(--sb-bg);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .avail-card__icon svg { width: 14px; height: 14px; }
+    .avail-card__title { font-size: 14px; font-weight: 800; }
+    .avail-card__body  { padding: 18px 20px; display: flex; flex-direction: column; gap: 10px; }
+    .avail-row {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 14px; border-radius: 10px;
+      background: var(--page-bg); border: 1px solid var(--border-soft);
+    }
+    .avail-row__day   { font-size: 13px; font-weight: 700; width: 80px; flex-shrink: 0; }
+    .avail-row__slots { display: flex; gap: 6px; flex-wrap: wrap; }
+    .avail-slot {
+      padding: 4px 10px; border-radius: var(--rf);
+      font-size: 11px; font-weight: 600;
+    }
+    .avail-slot--open   { background: var(--teal-pale); color: var(--teal-deep); border: 1px solid var(--teal-mid); }
+    .avail-slot--booked { background: var(--page-bg); color: var(--soft); border: 1px solid var(--border); text-decoration: line-through; }
+
+    /* ── Change ambassador section ─────────────────── */
+    .change-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+    }
+
+    /* Card shell */
+    .amb-card {
+      background: var(--surface); border-radius: 16px;
+      border: 2px solid var(--border); box-shadow: var(--shadow-sm);
+      display: flex; flex-direction: column;
+      cursor: pointer; transition: box-shadow .2s, border-color .2s, transform .2s;
+      position: relative; overflow: hidden;
+    }
+    .amb-card:hover { border-color: rgba(23,93,146,.25); box-shadow: var(--shadow); transform: translateY(-2px); }
+    .amb-card--current { border-color: var(--sb-bg); }
+
+    /* Match bar — full-width coloured strip at top */
+    .amb-card__match-bar {
+      height: 5px; width: 100%; flex-shrink: 0;
+    }
+    .amb-card__match-bar--high { background: linear-gradient(90deg, #059669, #34d399); }
+    .amb-card__match-bar--mid  { background: linear-gradient(90deg, #d97706, #fbbf24); }
+    .amb-card__match-bar--cur  { background: linear-gradient(90deg, var(--sb-bg), var(--teal)); }
+
+    /* Card inner padding */
+    .amb-card__inner { padding: 18px 18px 16px; display: flex; flex-direction: column; gap: 13px; flex: 1; }
+
+    /* Current tag */
+    .amb-card__current-tag {
+      position: absolute; top: 12px; right: 12px;
+      padding: 3px 9px; border-radius: var(--rf);
+      background: var(--sb-bg); color: #fff;
+      font-size: 10px; font-weight: 800; letter-spacing: .05em;
+      text-transform: uppercase; z-index: 1;
+    }
+
+    /* Match label row */
+    .amb-card__match-row {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 12px; font-weight: 800;
+    }
+    .amb-card__match-dot {
+      width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+    }
+    .amb-card__match-dot--high { background: #059669; }
+    .amb-card__match-dot--mid  { background: #d97706; }
+
+    /* Header row: avatar + name/title */
+    .amb-card__header {
+      display: flex; align-items: center; gap: 12px;
+    }
+    .amb-card__avatar {
+      width: 52px; height: 52px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; flex-shrink: 0;
+      border: 2px solid rgba(255,255,255,.6);
+    }
+    .amb-card__name-block { flex: 1; min-width: 0; }
+    .amb-card__name   { font-size: 15px; font-weight: 800; letter-spacing: -.02em; color: var(--text); line-height: 1.2; }
+    .amb-card__title  { font-size: 11px; color: var(--muted); margin-top: 3px; font-weight: 500; }
+
+    /* Specialisms tags */
+    .amb-card__tags   { display: flex; gap: 5px; flex-wrap: wrap; }
+    .amb-card__tag {
+      padding: 3px 9px; border-radius: var(--rf);
+      background: var(--page-bg); border: 1px solid var(--border);
+      font-size: 11px; font-weight: 600; color: var(--muted);
+    }
+
+    /* Bio */
+    .amb-card__bio { font-size: 12px; color: var(--muted); line-height: 1.65; }
+
+    /* Divider */
+    .amb-card__divider { height: 1px; background: var(--border-soft); margin: 0; }
+
+    /* Stats row with icons */
+    .amb-card__stats { display: flex; gap: 0; }
+    .amb-card__stat {
+      flex: 1; display: flex; flex-direction: column; align-items: center;
+      gap: 4px; padding: 8px 4px;
+      border-right: 1px solid var(--border-soft);
+    }
+    .amb-card__stat:last-child { border-right: none; }
+    .amb-card__stat-icon {
+      width: 22px; height: 22px; border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .amb-card__stat-icon svg { width: 12px; height: 12px; }
+    .amb-card__stat-icon--star  { background: rgba(251,191,36,.15); color: #d97706; }
+    .amb-card__stat-icon--users { background: rgba(23,93,146,.1);   color: var(--sb-bg); }
+    .amb-card__stat-icon--clock { background: rgba(45,150,118,.1);  color: var(--teal); }
+    .amb-card__stat-val   { font-size: 14px; font-weight: 800; color: var(--text); line-height: 1; }
+    .amb-card__stat-label { font-size: 9px; color: var(--soft); font-weight: 600; text-transform: uppercase; letter-spacing: .05em; text-align: center; }
+
+    /* Availability pill */
+    .amb-card__avail {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 11px; font-weight: 700; color: var(--teal-deep);
+      padding: 5px 11px; border-radius: var(--rf);
+      background: var(--teal-pale); border: 1px solid var(--teal-mid);
+      width: fit-content;
+    }
+    .amb-card__avail svg { width: 11px; height: 11px; }
+    .amb-card__avail--low {
+      background: rgba(217,119,6,.08); border-color: rgba(217,119,6,.25); color: #92400e;
+    }
+    .amb-card__avail--none {
+      background: var(--page-bg); border-color: var(--border); color: var(--soft);
+    }
+
+    /* CTA button */
+    .btn-select-amb {
+      width: 100%; padding: 11px; border-radius: 9px;
+      font-size: 13px; font-weight: 700; font-family: var(--font);
+      border: 1.5px solid var(--border); background: var(--page-bg);
+      color: var(--muted); cursor: pointer; transition: all .14s;
+      text-decoration: none; display: flex; align-items: center;
+      justify-content: center; gap: 6px; margin-top: auto;
+    }
+    .btn-select-amb svg { width: 13px; height: 13px; }
+    .btn-select-amb:hover { border-color: var(--sb-bg); color: var(--sb-bg); background: rgba(23,93,146,.04); }
+    .btn-select-amb--current {
+      background: var(--sb-bg); color: #fff; border-color: var(--sb-bg);
+      box-shadow: 0 2px 8px rgba(23,93,146,.25);
+    }
+    .btn-select-amb--current:hover { background: var(--sb-deep); color: #fff; }
+
+    /* Not-yet-available badge */
+    .amb-card__not-avail {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 4px 10px; border-radius: var(--rf);
+      background: var(--page-bg); border: 1px solid var(--border);
+      font-size: 11px; font-weight: 600; color: var(--soft);
+    }
+
+    /* Change request note */
+    .change-note {
+      background: var(--surface); border-radius: 14px;
+      border: 1px solid var(--border); box-shadow: var(--shadow-sm);
+      padding: 18px 20px; display: flex; gap: 14px; align-items: flex-start;
+    }
+    .change-note__icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+    .change-note__title { font-size: 14px; font-weight: 800; margin-bottom: 5px; }
+    .change-note__text  { font-size: 13px; color: var(--muted); line-height: 1.65; }
+    .btn-request-change {
+      display: inline-flex; align-items: center; gap: 6px;
+      margin-top: 12px; padding: 9px 18px; border-radius: 9px;
+      background: var(--sb-bg); color: #fff;
+      font-size: 13px; font-weight: 700; font-family: var(--font);
+      border: none; cursor: pointer; text-decoration: none;
+      box-shadow: 0 2px 8px rgba(23,93,146,.25); transition: background .14s;
+    }
+    .btn-request-change:hover { background: var(--sb-deep); }
+    .btn-request-change svg { width: 13px; height: 13px; }
+
+    @media (max-width: 1100px) { .change-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 700px)  { .change-grid { grid-template-columns: 1fr; } .current-amb { flex-direction: column; } }
+  </style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ══ Sidebar ══════════════════════════════════════ -->
+  <aside class="sidebar" aria-label="Navigation">
+    <div class="sidebar__head">
+      <img class="sidebar__logo-img" src="logo.png" alt="Luminwell" width="30" height="30" decoding="async" />
+      <span class="sidebar__logo">LUMINWELL</span>
+    </div>
+    <div class="sidebar__block">
+      <a href="index.html" class="sidebar__new">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+        New chat
+      </a>
+    </div>
+    <div class="sidebar__block">
+      <div class="sidebar__label">Menu</div>
+      <nav class="sb-nav" aria-label="Sections">
+        <a href="index.html" class="sb-nav__link">
+          <svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5L12 4l9 6.5V20a1 1 0 01-1 1h-5v-7H9v7H4a1 1 0 01-1-1v-9.5z"/></svg>
+          Home
+        </a>
+        <a href="#" class="sb-nav__link">
+          <svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 11h16"/></svg>
+          Book
+        </a>
+        <a href="sessions.html" class="sb-nav__link is-active" aria-current="page">
+          <svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          Sessions
+        </a>
+        <a href="journal-pin.html" class="sb-nav__link">
+          <svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5c0-1 1-2 2.2-1.7C8.3 3.8 10 5.2 12 5.2S15.7 3.8 17.8 3.3C19 3 20 4 20 5v13c0 1-1 1.7-2.2 1.4-2-.4-3.8-1.6-5.8-1.6S8.2 19.4 6.2 19.8 4 19 4 18V5z"/><path d="M12 5.2v14.5"/></svg>
+          Journal
+        </a>
+        <a href="calendar.html" class="sb-nav__link">
+          <svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+          Calendar
+        </a>
+      </nav>
+    </div>
+    <div class="sidebar__block sidebar__block--fill">
+      <div class="sidebar__label">Upcoming</div>
+      <div class="sb-recent">
+        <button type="button" class="sb-recent__btn">
+          <div class="sb-recent__title">Check-in with Maya</div>
+          <div class="sb-recent__meta">May 2 · 3:00 pm</div>
+        </button>
+        <button type="button" class="sb-recent__btn">
+          <div class="sb-recent__title">Goal-setting session</div>
+          <div class="sb-recent__meta">May 9 · 4:00 pm</div>
+        </button>
+      </div>
+    </div>
+    <div class="sidebar__foot">
+      <div class="sidebar__avatar" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="3.5"/><path d="M6 19c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke-linecap="round"/></svg>
+      </div>
+      <div>
+        <div class="sidebar__name">Umer</div>
+        <div class="sidebar__credits">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><ellipse cx="12" cy="6" rx="6" ry="2"/><path d="M6 6v4c0 1.1 2.7 2 6 2s6-.9 6-2V6"/><path d="M6 10v4c0 1.1 2.7 2 6 2s6-.9 6-2v-4"/></svg>
+          500
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="topbar__left">
+        <img class="topbar__logo-img" src="logo.png" alt="Luminwell" width="28" height="28" decoding="async" />
+        <span class="topbar__title">My Ambassador</span>
+      </div>
+      <div class="topbar__right">
+        <button type="button" class="topbar__crisis">988 Helpline</button>
+        <a href="journal-pin.html" class="btn-lock-sess" aria-label="Lock and return to PIN screen">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg>
+          Lock
+        </a>
+        <button type="button" class="topbar__icon-btn" aria-label="Notifications">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <div class="am-page">
+      <div class="am-inner">
+
+        <!-- Breadcrumb -->
+        <nav class="am-breadcrumb" aria-label="Breadcrumb">
+          <a href="sessions.html">Sessions</a>
+          <span class="am-breadcrumb__sep">›</span>
+          <span class="am-breadcrumb__cur">My Ambassador</span>
+        </nav>
+
+        <!-- ── Current ambassador ──────────────────── -->
+        <div class="current-amb" role="region" aria-label="Current ambassador">
+          <div class="current-amb__avatar" aria-hidden="true">🌿</div>
+          <div class="current-amb__info">
+            <div class="current-amb__badge">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11" aria-hidden="true"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>
+              Your current ambassador
+            </div>
+            <p class="current-amb__name">Maya Johnson</p>
+            <p class="current-amb__title">Peer Support Specialist · University of Manchester</p>
+            <div class="current-amb__tags">
+              <span class="current-amb__tag">Academic stress</span>
+              <span class="current-amb__tag">Anxiety &amp; worry</span>
+              <span class="current-amb__tag">CBT techniques</span>
+              <span class="current-amb__tag">Goal setting</span>
+              <span class="current-amb__tag">Sleep</span>
+              <span class="current-amb__tag">Perfectionism</span>
+            </div>
+            <p class="current-amb__bio">Maya is a third-year Psychology student and trained peer support ambassador. She creates a calm, non-judgmental space to talk through what's on your mind — whether that's deadlines, relationships, or simply feeling overwhelmed.</p>
+            <div class="current-amb__stats">
+              <div>
+                <div class="amb-stat-val">12</div>
+                <div class="amb-stat-label">Sessions together</div>
+              </div>
+              <div>
+                <div class="amb-stat-val">4 mo</div>
+                <div class="amb-stat-label">Working together</div>
+              </div>
+              <div>
+                <div class="amb-stat-val">4.9 ★</div>
+                <div class="amb-stat-label">Your rating</div>
+              </div>
+            </div>
+            <div class="current-amb__actions">
+              <a href="#" class="btn-msg-amb">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+                Message Maya
+              </a>
+              <a href="session-book.html" class="btn-book-amb">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                Book a session
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── Maya's availability ─────────────────── -->
+        <div class="avail-card">
+          <div class="avail-card__head">
+            <div class="avail-card__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+            </div>
+            <p class="avail-card__title">Maya's upcoming availability — May 2026</p>
+          </div>
+          <div class="avail-card__body">
+            <div class="avail-row">
+              <p class="avail-row__day">Monday</p>
+              <div class="avail-row__slots">
+                <span class="avail-slot avail-slot--booked">9:00 am</span>
+                <span class="avail-slot avail-slot--open">11:00 am</span>
+                <span class="avail-slot avail-slot--open">2:00 pm</span>
+                <span class="avail-slot avail-slot--booked">4:00 pm</span>
+              </div>
+            </div>
+            <div class="avail-row">
+              <p class="avail-row__day">Wednesday</p>
+              <div class="avail-row__slots">
+                <span class="avail-slot avail-slot--open">10:00 am</span>
+                <span class="avail-slot avail-slot--open">1:00 pm</span>
+                <span class="avail-slot avail-slot--booked">3:00 pm</span>
+              </div>
+            </div>
+            <div class="avail-row">
+              <p class="avail-row__day">Friday</p>
+              <div class="avail-row__slots">
+                <span class="avail-slot avail-slot--open">9:00 am</span>
+                <span class="avail-slot avail-slot--open">10:00 am</span>
+                <span class="avail-slot avail-slot--booked">11:00 am</span>
+                <span class="avail-slot avail-slot--open">2:00 pm</span>
+                <span class="avail-slot avail-slot--open">3:00 pm</span>
+              </div>
+            </div>
+            <div style="margin-top:4px;">
+              <a href="session-book.html" style="display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border-radius:9px;background:var(--teal);color:#fff;font-size:13px;font-weight:700;font-family:var(--font);text-decoration:none;box-shadow:0 2px 8px rgba(45,150,118,.28);">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="13" height="13" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+                Book a slot
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── Change ambassador ───────────────────── -->
+        <div>
+          <p class="am-section-label">Browse all ambassadors</p>
+
+          <div class="change-grid">
+
+            <!-- ── Maya — CURRENT ── -->
+            <div class="amb-card amb-card--current" role="article" aria-label="Maya Johnson — current ambassador">
+              <div class="amb-card__match-bar amb-card__match-bar--cur" aria-hidden="true"></div>
+              <span class="amb-card__current-tag">Current</span>
+              <div class="amb-card__inner">
+                <div class="amb-card__header">
+                  <div class="amb-card__avatar" style="background:linear-gradient(135deg,#175d92,#2d9676);" aria-hidden="true">🌿</div>
+                  <div class="amb-card__name-block">
+                    <p class="amb-card__name">Maya Johnson</p>
+                    <p class="amb-card__title">Peer Support Specialist</p>
+                  </div>
+                </div>
+                <div class="amb-card__tags">
+                  <span class="amb-card__tag">Anxiety</span>
+                  <span class="amb-card__tag">Study stress</span>
+                  <span class="amb-card__tag">CBT</span>
+                  <span class="amb-card__tag">Sleep</span>
+                </div>
+                <p class="amb-card__bio">Third-year Psychology student. Creates a calm, non-judgmental space to talk through what's on your mind.</p>
+                <div class="amb-card__divider"></div>
+                <div class="amb-card__stats">
+                  <div class="amb-card__stat">
+                    <div class="amb-card__stat-icon amb-card__stat-icon--star" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    </div>
+                    <span class="amb-card__stat-val">4.9</span>
+                    <span class="amb-card__stat-label">Rating</span>
+                  </div>
+                  <div class="amb-card__stat">
+                    <div class="amb-card__stat-icon amb-card__stat-icon--users" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+                    </div>
+                    <span class="amb-card__stat-val">84</span>
+                    <span class="amb-card__stat-label">Helped</span>
+                  </div>
+                  <div class="amb-card__stat">
+                    <div class="amb-card__stat-icon amb-card__stat-icon--clock" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                    </div>
+                    <span class="amb-card__stat-val">2 yr</span>
+                    <span class="amb-card__stat-label">Exp.</span>
+                  </div>
+                </div>
+                <div class="amb-card__avail">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                  8 slots available this week
+                </div>
+                <a href="session-book.html" class="btn-select-amb btn-select-amb--current">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                  Book a session
+                </a>
+              </div>
+            </div>
+
+            <!-- ── Priya Singh ── -->
+            <div class="amb-card" role="article" aria-label="Priya Singh — available ambassador">
+              <div class="amb-card__match-bar amb-card__match-bar--high" aria-hidden="true"></div>
+              <div class="amb-card__inner">
+                <div class="amb-card__match-row" style="color:#065f46;">
+                  <span class="amb-card__match-dot amb-card__match-dot--high" aria-hidden="true"></span>
+                  95% match
+                </div>
+                <div class="amb-card__header">
+                  <div class="amb-card__avatar" style="background:linear-gradient(135deg,#7c3aed,#c084fc);" aria-hidden="true">🌸</div>
+                  <div class="amb-card__name-block">
+                    <p class="amb-card__name">Priya Singh</p>
+                    <p class="amb-card__title">Wellbeing Ambassador</p>
+                  </div>
+                </div>
+                <div class="amb-card__tags">
+                  <span class="amb-card__tag">International students</span>
+                  <span class="amb-card__tag">Loneliness</span>
+                  <span class="amb-card__tag">Identity</span>
+                  <span class="amb-card__tag">Mindfulness</span>
+                </div>
+                <p class="amb-card__bio">Final-year Social Science student with a special focus on supporting international students navigating cultural transitions and homesickness.</p>
+                <div class="amb-card__divider"></div>
+                <div class="amb-card__stats">
+                  <div class="amb-card__stat">
+                    <div class="amb-card__stat-icon amb-card__stat-icon--star" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    </div>
+                    <span class="amb-card__stat-val">4.8</span>
+                    <span class="amb-card__stat-label">Rating</span>
+                  </div>
+                  <div class="amb-card__stat">
+                    <div class="amb-card__stat-icon amb-card__stat-icon--users" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+                    </div>
+                    <span class="amb-card__stat-val">61</span>
+                    <span class="amb-card__stat-label">Helped</span>
+                  </div>
+                  <div class="amb-card__stat">
+                    <div class="amb-card__stat-icon amb-card__stat-icon--clock" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                    </div>
+                    <span class="amb-card__stat-val">1.5 yr</span>
+                    <span class="amb-card__stat-label">Exp.</span>
+                  </div>
+                </div>
+                <div class="amb-card__avail">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                  5 slots available this week
+                </div>
+                <a href="#" class="btn-select-amb">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M23 4v6h-6"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>
+                  Switch to Priya
+                </a>
+              </div>
+            </div>
+
+            <!-- ── James Okafor ── -->
+            <div class="amb-card" role="article" aria-label="James Okafor — available ambassador">
+              <div class="amb-card__match-bar amb-card__match-bar--high" aria-hidden="true"></div>
+              <div class="amb-card__inner">
+                <div class="amb-card__match-row" style="color:#065f46;">
+                  <span class="amb-card__match-dot amb-card__match-dot--high" aria-hidden="true"></span>
+                  91% match
+                </div>
+                <div class="amb-card__header">
+                  <div class="amb-card__avatar" style="background:linear-gradient(135deg,#059669,#34d399);" aria-hidden="true">🌍</div>
+                  <div class="amb-card__name-block">
+                    <p class="amb-card__name">James Okafor</p>
+                    <p class="amb-card__title">Peer Support Ambassador</p>
+                  </div>
+                </div>
+                <div class="amb-card__tags">
+                  <span class="amb-card__tag">Finance stress</span>
+                  <span class="amb-card__tag">Housing</span>
+                  <span class="amb-card__tag">Resilience</span>
+                  <span class="amb-card__tag">Career anxiety</span>
+                </div>
+                <p class="amb-card__bio">Postgraduate student in Economics. Specialises in practical support for students facing financial pressure, housing instability, and career uncertainty.</p>
+                <div class="amb-card__divider"></div>
+                <div class="amb-card__stats">
+                  <div class="amb-card__stat">
+                    <div class="amb-card__stat-icon amb-card__stat-icon--star" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    </div>
+                    <span class="amb-card__stat-val">4.7</span>
+                    <span class="amb-card__stat-label">Rating</span>
+                  </div>
+                  <div class="amb-card__stat">
+                    <div class="amb-card__stat-icon amb-card__stat-icon--users" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+                    </div>
+                    <span class="amb-card__stat-val">55</span>
+                    <span class="amb-card__stat-label">Helped</span>
+                  </div>
+                  <div class="amb-card__stat">
+                    <div class="amb-card__stat-icon amb-card__stat-icon--clock" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                    </div>
+                    <span class="amb-card__stat-val">1 yr</span>
+                    <span class="amb-card__stat-label">Exp.</span>
+                  </div>
+                </div>
+                <div class="amb-card__avail">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                  6 slots available this week
+                </div>
+                <a href="#" class="btn-select-amb">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M23 4v6h-6"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>
+                  Switch to James
+                </a>
+              </div>
+            </div>
+
+            <!-- ── Sofia Martínez ── -->
+            <div class="amb-card" role="article" aria-label="Sofia Martínez — available ambassador">
+              <div class="amb-card__match-bar amb-card__match-bar--mid" aria-hidden="true"></div>
+              <div class="amb-card__inner">
+                <div class="amb-card__match-row" style="color:#92400e;">
+                  <span class="amb-card__match-dot amb-card__match-dot--mid" aria-hidden="true"></span>
+                  82% match
+                </div>
+                <div class="amb-card__header">
+                  <div class="amb-card__avatar" style="background:linear-gradient(135deg,#d97706,#fbbf24);" aria-hidden="true">☀️</div>
+                  <div class="amb-card__name-block">
+                    <p class="amb-card__name">Sofia Martínez</p>
+                    <p class="amb-card__title">Wellbeing Ambassador</p>
+                  </div>
+                </div>
+                <div class="amb-card__tags">
+                  <span class="amb-card__tag">Body image</span>
+                  <span class="amb-card__tag">Self-esteem</span>
+                  <span class="amb-card__tag">Relationships</span>
+                  <span class="amb-card__tag">Self-compassion</span>
+                </div>
+                <p class="amb-card__bio">Second-year Nursing student with a warm, grounded approach. Specialises in self-worth, body image, and navigating relationships during university life.</p>
+                <div class="amb-card__divider"></div>
+                <div class="amb-card__stats">
+                  <div class="amb-card__stat">
+                    <div class="amb-card__stat-icon amb-card__stat-icon--star" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    </div>
+                    <span class="amb-card__stat-val">4.8</span>
+                    <span class="amb-card__stat-label">Rating</span>
+                  </div>
+                  <div class="amb-card__stat">
+                    <div class="amb-card__stat-icon amb-card__stat-icon--users" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+                    </div>
+                    <span class="amb-card__stat-val">48</span>
+                    <span class="amb-card__stat-label">Helped</span>
+                  </div>
+                  <div class="amb-card__stat">
+                    <div class="amb-card__stat-icon amb-card__stat-icon--clock" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                    </div>
+                    <span class="amb-card__stat-val">1 yr</span>
+                    <span class="amb-card__stat-label">Exp.</span>
+                  </div>
+                </div>
+                <div class="amb-card__avail">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                  4 slots available this week
+                </div>
+                <a href="#" class="btn-select-amb">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M23 4v6h-6"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>
+                  Switch to Sofia
+                </a>
+              </div>
+            </div>
+
+            <!-- ── Aidan Byrne ── -->
+            <div class="amb-card" role="article" aria-label="Aidan Byrne — available ambassador">
+              <div class="amb-card__match-bar amb-card__match-bar--mid" aria-hidden="true"></div>
+              <div class="amb-card__inner">
+                <div class="amb-card__match-row" style="color:#92400e;">
+                  <span class="amb-card__match-dot amb-card__match-dot--mid" aria-hidden="true"></span>
+                  78% match
+                </div>
+                <div class="amb-card__header">
+                  <div class="amb-card__avatar" style="background:linear-gradient(135deg,#0ea5e9,#38bdf8);" aria-hidden="true">🧘</div>
+                  <div class="amb-card__name-block">
+                    <p class="amb-card__name">Aidan Byrne</p>
+                    <p class="amb-card__title">Peer Support Specialist</p>
+                  </div>
+                </div>
+                <div class="amb-card__tags">
+                  <span class="amb-card__tag">LGBTQ+</span>
+                  <span class="amb-card__tag">Depression</span>
+                  <span class="amb-card__tag">Isolation</span>
+                  <span class="amb-card__tag">Masculinity</span>
+                </div>
+                <p class="amb-card__bio">Masters student in Gender Studies. A safe, affirming space for students exploring identity, dealing with isolation, or navigating mental health challenges.</p>
+                <div class="amb-card__divider"></div>
+                <div class="amb-card__stats">
+                  <div class="amb-card__stat">
+                    <div class="amb-card__stat-icon amb-card__stat-icon--star" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    </div>
+                    <span class="amb-card__stat-val">4.9</span>
+                    <span class="amb-card__stat-label">Rating</span>
+                  </div>
+                  <div class="amb-card__stat">
+                    <div class="amb-card__stat-icon amb-card__stat-icon--users" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+                    </div>
+                    <span class="amb-card__stat-val">39</span>
+                    <span class="amb-card__stat-label">Helped</span>
+                  </div>
+                  <div class="amb-card__stat">
+                    <div class="amb-card__stat-icon amb-card__stat-icon--clock" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                    </div>
+                    <span class="amb-card__stat-val">2 yr</span>
+                    <span class="amb-card__stat-label">Exp.</span>
+                  </div>
+                </div>
+                <div class="amb-card__avail amb-card__avail--low">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                  2 slots left this week
+                </div>
+                <a href="#" class="btn-select-amb">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M23 4v6h-6"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>
+                  Switch to Aidan
+                </a>
+              </div>
+            </div>
+
+            <!-- ── Zara Patel — joining soon ── -->
+            <div class="amb-card" role="article" aria-label="Zara Patel — joining soon" style="opacity:.6;">
+              <div class="amb-card__match-bar" style="background:var(--border);height:5px;" aria-hidden="true"></div>
+              <div class="amb-card__inner">
+                <div class="amb-card__header">
+                  <div class="amb-card__avatar" style="background:linear-gradient(135deg,#94a3b8,#cbd5e1);" aria-hidden="true">🌙</div>
+                  <div class="amb-card__name-block">
+                    <p class="amb-card__name">Zara Patel</p>
+                    <p class="amb-card__title">Ambassador in training</p>
+                  </div>
+                </div>
+                <div class="amb-card__tags">
+                  <span class="amb-card__tag">Eating disorders</span>
+                  <span class="amb-card__tag">Grief</span>
+                  <span class="amb-card__tag">Trauma</span>
+                </div>
+                <p class="amb-card__bio">Postgraduate Counselling student, completing training. Available from June 2026.</p>
+                <div class="amb-card__divider"></div>
+                <div class="amb-card__avail amb-card__avail--none">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                  Joining June 2026
+                </div>
+                <span class="btn-select-amb" style="pointer-events:none;opacity:.45;cursor:default;">Not yet available</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Change request note -->
+        <div class="change-note" role="note">
+          <span class="change-note__icon">💬</span>
+          <div>
+            <p class="change-note__title">Want to switch ambassador?</p>
+            <p class="change-note__text">Ambassador changes are reviewed by the Luminwell team to ensure the best match for your needs. Any sessions you've already booked with Maya will not be affected. Switching is always okay — your wellbeing comes first.</p>
+            <a href="#" class="btn-request-change">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M23 4v6h-6"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>
+              Request an ambassador change
+            </a>
+          </div>
+        </div>
+
+      </div><!-- /am-inner -->
+    </div><!-- /am-page -->
+  </main>
+
+</div><!-- /app -->
+</body>
+</html>

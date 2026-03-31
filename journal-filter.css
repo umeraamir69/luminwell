@@ -1,0 +1,222 @@
+/* ══════════════════════════════════════════════════
+   Luminwell — Journal Filter Popup
+   Depends on CSS variables defined in journal.css
+   Pure CSS · no JavaScript
+══════════════════════════════════════════════════ */
+
+/* ── Backdrop ──────────────────────────────────────── */
+.filter-backdrop {
+  display: none;
+  position: fixed; inset: 0; z-index: 200;
+  background: rgba(12,25,41,.45);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  animation: fd-in .18s ease both;
+}
+@keyframes fd-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+html:has(#filter-open:checked) .filter-backdrop { display: block; }
+
+/* ── Modal panel ───────────────────────────────────── */
+.filter-modal {
+  display: none;
+  position: fixed; top: 50%; left: 50%;
+  transform: translate(-50%, -48%);
+  z-index: 201;
+  width: calc(100% - 40px); max-width: 460px;
+  background: var(--surface);
+  border-radius: 20px;
+  box-shadow:
+    0 8px 40px rgba(12,25,41,.18),
+    0 2px 8px  rgba(12,25,41,.10);
+  overflow: hidden;
+  animation: fm-in .22s cubic-bezier(.34,1.4,.64,1) both;
+}
+@keyframes fm-in {
+  from { opacity: 0; transform: translate(-50%, -44%); }
+  to   { opacity: 1; transform: translate(-50%, -48%); }
+}
+html:has(#filter-open:checked) .filter-modal {
+  display: flex; flex-direction: column;
+}
+
+/* ── Modal header ──────────────────────────────────── */
+.filter-modal__head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 22px 16px;
+  border-bottom: 1px solid var(--border);
+}
+.filter-modal__title {
+  font-size: 16px; font-weight: 800; letter-spacing: -0.02em;
+  color: var(--text);
+  display: flex; align-items: center; gap: 8px;
+}
+.filter-modal__title svg { width: 17px; height: 17px; color: var(--teal); }
+.filter-modal__close {
+  width: 30px; height: 30px; border-radius: 8px; border: none;
+  background: var(--page-bg); color: var(--muted);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: background .14s, color .14s;
+}
+.filter-modal__close:hover { background: rgba(239,68,68,.1); color: #b91c1c; }
+.filter-modal__close svg { width: 14px; height: 14px; }
+
+/* ── Modal body ────────────────────────────────────── */
+.filter-modal__body {
+  padding: 20px 22px;
+  display: flex; flex-direction: column; gap: 22px;
+  overflow-y: auto; max-height: 60vh;
+}
+
+/* Section heading */
+.filter-section__label {
+  font-size: 11px; font-weight: 700; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--soft);
+  margin: 0 0 10px;
+}
+
+/* ── Mood pills ─────────────────────────────────────── */
+.filter-mood-row {
+  display: flex; gap: 8px; flex-wrap: wrap;
+}
+.filter-mood-radio { display: none; }
+.filter-mood-pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 16px; border-radius: var(--rf);
+  border: 1.5px solid var(--border); background: var(--page-bg);
+  font-size: 13px; font-weight: 600; color: var(--muted);
+  cursor: pointer; user-select: none; transition: all .14s;
+}
+.filter-mood-pill:hover {
+  border-color: var(--teal); color: var(--teal); background: var(--teal-pale);
+}
+html:has(#fm-all:checked) label[for="fm-all"] { background: var(--sb-bg); color: #fff; border-color: var(--sb-bg); }
+html:has(#fm-pos:checked) label[for="fm-pos"] { background: rgba(5,150,105,.1);  border-color: #059669; color: #065f46; }
+html:has(#fm-neu:checked) label[for="fm-neu"] { background: rgba(71,85,105,.1);  border-color: #475569; color: #334155; }
+html:has(#fm-cha:checked) label[for="fm-cha"] { background: rgba(217,119,6,.1);  border-color: #d97706; color: #92400e; }
+
+/* ── Tag chips ──────────────────────────────────────── */
+.filter-tags-grid {
+  display: flex; gap: 8px; flex-wrap: wrap;
+}
+.filter-tag-check { display: none; }
+.filter-tag-pill {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 7px 14px; border-radius: var(--rf);
+  border: 1.5px solid var(--border); background: var(--page-bg);
+  font-size: 12px; font-weight: 600; color: var(--muted);
+  cursor: pointer; user-select: none; transition: all .14s;
+}
+.filter-tag-pill:hover {
+  border-color: var(--sb-bg); color: var(--sb-bg); background: rgba(23,93,146,.05);
+}
+#ft-study:checked    + .filter-tag-pill,
+#ft-grat:checked     + .filter-tag-pill,
+#ft-session:checked  + .filter-tag-pill,
+#ft-sleep:checked    + .filter-tag-pill,
+#ft-rest:checked     + .filter-tag-pill,
+#ft-anxiety:checked  + .filter-tag-pill,
+#ft-family:checked   + .filter-tag-pill,
+#ft-burnout:checked  + .filter-tag-pill,
+#ft-recovery:checked + .filter-tag-pill,
+#ft-morning:checked  + .filter-tag-pill {
+  background: rgba(23,93,146,.09);
+  border-color: var(--sb-bg);
+  color: var(--sb-bg);
+}
+
+/* ── Date range pills ───────────────────────────────── */
+.filter-date-row {
+  display: flex; gap: 8px; flex-wrap: wrap;
+}
+.filter-date-radio { display: none; }
+.filter-date-pill {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 7px 14px; border-radius: var(--rf);
+  border: 1.5px solid var(--border); background: var(--page-bg);
+  font-size: 12px; font-weight: 600; color: var(--muted);
+  cursor: pointer; user-select: none; transition: all .14s;
+}
+.filter-date-pill:hover { border-color: var(--teal); color: var(--teal); }
+html:has(#fd-all:checked)    label[for="fd-all"]    { background: var(--text);       color: #fff;           border-color: var(--text); }
+html:has(#fd-week:checked)   label[for="fd-week"]   { background: var(--teal-pale);  border-color: var(--teal); color: var(--teal); }
+html:has(#fd-month:checked)  label[for="fd-month"]  { background: var(--teal-pale);  border-color: var(--teal); color: var(--teal); }
+html:has(#fd-3month:checked) label[for="fd-3month"] { background: var(--teal-pale);  border-color: var(--teal); color: var(--teal); }
+
+/* ── Sort rows ──────────────────────────────────────── */
+.filter-sort-col {
+  display: flex; flex-direction: column; gap: 6px;
+}
+.filter-sort-radio { display: none; }
+.filter-sort-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 11px 14px; border-radius: 10px;
+  border: 1.5px solid var(--border); background: var(--page-bg);
+  cursor: pointer; user-select: none; transition: all .14s;
+}
+.filter-sort-row:hover { border-color: var(--teal); background: var(--teal-pale); }
+.filter-sort-row__dot {
+  width: 16px; height: 16px; border-radius: 50%;
+  border: 2px solid var(--border); flex-shrink: 0;
+  transition: border-color .14s, background .14s;
+}
+.filter-sort-row__text { font-size: 13px; font-weight: 600; color: var(--text); }
+.filter-sort-row__sub  { font-size: 11px; color: var(--soft); margin-left: auto; }
+html:has(#fs-new:checked)   label[for="fs-new"]   { border-color: var(--teal); background: var(--teal-pale); }
+html:has(#fs-old:checked)   label[for="fs-old"]   { border-color: var(--teal); background: var(--teal-pale); }
+html:has(#fs-long:checked)  label[for="fs-long"]  { border-color: var(--teal); background: var(--teal-pale); }
+html:has(#fs-short:checked) label[for="fs-short"] { border-color: var(--teal); background: var(--teal-pale); }
+html:has(#fs-new:checked)   label[for="fs-new"]   .filter-sort-row__dot,
+html:has(#fs-old:checked)   label[for="fs-old"]   .filter-sort-row__dot,
+html:has(#fs-long:checked)  label[for="fs-long"]  .filter-sort-row__dot,
+html:has(#fs-short:checked) label[for="fs-short"] .filter-sort-row__dot {
+  border-color: var(--teal); background: var(--teal);
+}
+
+/* ── Modal footer ───────────────────────────────────── */
+.filter-modal__foot {
+  padding: 14px 22px 18px;
+  border-top: 1px solid var(--border);
+  display: flex; gap: 10px;
+}
+.btn-filter-clear {
+  flex: 1; padding: 11px; border-radius: 10px;
+  border: 1.5px solid var(--border); background: var(--page-bg);
+  color: var(--muted); font-size: 13px; font-weight: 700;
+  font-family: var(--font); cursor: pointer; transition: all .14s;
+  text-align: center; text-decoration: none; display: block;
+}
+.btn-filter-clear:hover { border-color: var(--text); color: var(--text); background: var(--surface); }
+.btn-filter-apply {
+  flex: 2; padding: 11px; border-radius: 10px;
+  background: var(--sb-bg); color: #fff;
+  font-size: 13px; font-weight: 700; font-family: var(--font);
+  border: none; cursor: pointer; transition: background .14s;
+  text-align: center; text-decoration: none; display: block;
+  box-shadow: 0 2px 8px rgba(23,93,146,.28);
+}
+.btn-filter-apply:hover { background: var(--sb-deep); }
+
+/* ── Filter button (in toolbar) ─────────────────────── */
+.btn-filter-open {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 0 14px; height: 40px; border-radius: 10px;
+  border: 1.5px solid var(--border); background: var(--surface);
+  color: var(--muted); font-size: 13px; font-weight: 600;
+  font-family: var(--font); cursor: pointer; white-space: nowrap;
+  user-select: none; flex-shrink: 0;
+  transition: border-color .14s, color .14s, background .14s;
+}
+.btn-filter-open:hover {
+  border-color: var(--teal); color: var(--teal); background: var(--teal-pale);
+}
+.btn-filter-open svg { width: 14px; height: 14px; }
+html:has(#filter-open:checked) .btn-filter-open {
+  background: var(--sb-bg); color: #fff; border-color: var(--sb-bg);
+}
+.btn-filter-open__dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--teal); flex-shrink: 0;
+}

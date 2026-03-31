@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Luminwell — New Journal Entry</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="calendar-add.css" />
+</head>
+<body>
+<div class="app">
+
+  <!-- ══ Sidebar ══════════════════════════════════════ -->
+  <aside class="sidebar" aria-label="Navigation">
+    <div class="sidebar__head">
+      <img class="sidebar__logo-img" src="logo.png" alt="Luminwell" width="30" height="30" decoding="async" />
+      <span class="sidebar__logo">LUMINWELL</span>
+    </div>
+
+    <div class="sidebar__block">
+      <a href="index.html" class="sidebar__new" title="New chat">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+        New chat
+      </a>
+    </div>
+
+    <div class="sidebar__block">
+      <div class="sidebar__label">Menu</div>
+      <nav class="sb-nav" aria-label="Sections">
+        <a href="index.html" class="sb-nav__link" title="Home">
+          <svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5L12 4l9 6.5V20a1 1 0 01-1 1h-5v-7H9v7H4a1 1 0 01-1-1v-9.5z"/></svg>
+          Home
+        </a>
+        <a href="#" class="sb-nav__link" title="Book">
+          <svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 11h16"/></svg>
+          Book
+        </a>
+        <a href="#" class="sb-nav__link" title="Sessions">
+          <svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          Sessions
+        </a>
+        <a href="#" class="sb-nav__link" title="Journal">
+          <svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5c0-1 1-2 2.2-1.7C8.3 3.8 10 5.2 12 5.2S15.7 3.8 17.8 3.3C19 3 20 4 20 5v13c0 1-1 1.7-2.2 1.4-2-.4-3.8-1.6-5.8-1.6S8.2 19.4 6.2 19.8 4 19 4 18V5z"/><path d="M12 5.2v14.5"/></svg>
+          Journal
+        </a>
+        <a href="calendar.html" class="sb-nav__link is-active" title="Calendar" aria-current="page">
+          <svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+          Calendar
+        </a>
+      </nav>
+    </div>
+
+    <div class="sidebar__block sidebar__block--fill">
+      <div class="sidebar__label">Recent</div>
+      <div class="sb-recent">
+        <button type="button" class="sb-recent__btn">
+          <div class="sb-recent__title">Peer matching · housing &amp; anxiety</div>
+          <div class="sb-recent__meta">Today</div>
+        </button>
+        <button type="button" class="sb-recent__btn">
+          <div class="sb-recent__title">Sleep &amp; mood check-in</div>
+          <div class="sb-recent__meta">Yesterday</div>
+        </button>
+        <button type="button" class="sb-recent__btn">
+          <div class="sb-recent__title">Mindfulness &amp; stress tools</div>
+          <div class="sb-recent__meta">Mar 26</div>
+        </button>
+      </div>
+    </div>
+
+    <div class="sidebar__foot">
+      <div class="sidebar__avatar" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="3.5"/><path d="M6 19c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke-linecap="round"/></svg>
+      </div>
+      <div class="sidebar__who">
+        <div class="sidebar__name">Umer</div>
+        <div class="sidebar__credits">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><ellipse cx="12" cy="6" rx="6" ry="2"/><path d="M6 6v4c0 1.1 2.7 2 6 2s6-.9 6-2V6"/><path d="M6 10v4c0 1.1 2.7 2 6 2s6-.9 6-2v-4"/></svg>
+          500
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ══ Main ══════════════════════════════════════════ -->
+  <main class="main">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <div class="topbar__left">
+        <img class="topbar__logo-img" src="logo.png" alt="Luminwell" width="30" height="30" decoding="async" />
+        <span class="topbar__title">Calendar</span>
+      </div>
+      <div class="topbar__right">
+        <a class="topbar__crisis" href="tel:988">988 Crisis Line</a>
+        <button type="button" class="topbar__icon-btn" aria-label="Notifications">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+        </button>
+        <button type="button" class="topbar__icon-btn" aria-label="Settings">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Add entry form -->
+    <div class="add-page">
+
+      <!-- Breadcrumb -->
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="calendar.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+        </a>
+        <a href="calendar.html">Calendar</a>
+        <span class="breadcrumb__sep" aria-hidden="true">›</span>
+        <span>New Entry</span>
+      </nav>
+
+      <!-- Form card -->
+      <div class="add-card">
+
+        <!-- Header -->
+        <div class="add-card__head">
+          <div class="add-card__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5c0-1 1-2 2.2-1.7C8.3 3.8 10 5.2 12 5.2S15.7 3.8 17.8 3.3C19 3 20 4 20 5v13c0 1-1 1.7-2.2 1.4-2-.4-3.8-1.6-5.8-1.6S8.2 19.4 6.2 19.8 4 19 4 18V5z"/><path d="M12 5.2v14.5"/></svg>
+          </div>
+          <div class="add-card__head-text">
+            <h1 class="add-card__title">New Journal Entry</h1>
+            <p class="add-card__subtitle">Your thoughts are private and encrypted</p>
+          </div>
+        </div>
+
+        <!-- Form -->
+        <form class="add-card__body" action="calendar.html" method="get" aria-label="New journal entry">
+
+          <!-- Title -->
+          <div class="form-field">
+            <label class="form-label" for="entry-title">
+              Title <span>(optional)</span>
+            </label>
+            <input
+              type="text"
+              id="entry-title"
+              name="title"
+              class="form-input"
+              placeholder="Give this entry a name…"
+              maxlength="80"
+            />
+          </div>
+
+          <!-- Date (read-only) -->
+          <div class="form-field">
+            <label class="form-label" for="entry-date">Date</label>
+            <input
+              type="text"
+              id="entry-date"
+              class="form-input form-input--date"
+              value="Monday, April 27th, 2026"
+              readonly
+              aria-readonly="true"
+            />
+          </div>
+
+          <!-- Journal text -->
+          <div class="form-field">
+            <label class="form-label" for="entry-text">What's on your mind?</label>
+            <textarea
+              id="entry-text"
+              name="text"
+              class="form-textarea"
+              placeholder="Write freely — there are no right answers here. This space is just for you."
+              rows="7"
+            ></textarea>
+          </div>
+
+          <!-- Mood picker -->
+          <div class="form-field" role="group" aria-labelledby="mood-label">
+            <span class="form-label" id="mood-label">How are you feeling right now?</span>
+            <div class="mood-pills">
+              <input type="radio" name="mood" id="mood-great" value="great" class="mood-radio" />
+              <label for="mood-great" class="mood-pill">😄 Great</label>
+
+              <input type="radio" name="mood" id="mood-good" value="good" class="mood-radio" />
+              <label for="mood-good" class="mood-pill">😊 Good</label>
+
+              <input type="radio" name="mood" id="mood-okay" value="okay" class="mood-radio" />
+              <label for="mood-okay" class="mood-pill">😐 Okay</label>
+
+              <input type="radio" name="mood" id="mood-low" value="low" class="mood-radio" />
+              <label for="mood-low" class="mood-pill">😞 Low</label>
+            </div>
+          </div>
+
+          <!-- Prompt tip -->
+          <div class="prompt-tip" role="note" aria-label="Writing prompt">
+            <svg class="prompt-tip__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+            <p class="prompt-tip__text">
+              <strong>Need a nudge?</strong> Try: <em>"One thing that surprised me today was…"</em> or <em>"Something I want to let go of is…"</em>
+            </p>
+          </div>
+
+        </form>
+
+        <!-- Footer -->
+        <div class="add-card__foot">
+          <span class="privacy-badge" aria-label="Your entry is private and encrypted">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            Private &amp; encrypted
+          </span>
+          <div class="form-actions">
+            <a href="calendar.html" class="btn-cancel">Cancel</a>
+            <a href="calendar.html" class="btn-save" role="button">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>
+              Save Entry
+            </a>
+          </div>
+        </div>
+
+      </div><!-- /add-card -->
+    </div><!-- /add-page -->
+  </main>
+</div>
+</body>
+</html>

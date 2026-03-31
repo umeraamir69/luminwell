@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Luminwell — Search Supporters</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="sessions.css" />
+  <style>
+    .ts-page  { flex: 1; overflow-y: auto; background: var(--page-bg); }
+    .ts-inner { padding: 28px 28px 60px; display: flex; flex-direction: column; gap: 22px; }
+
+    /* ── Search hero ─────────────────────────────────── */
+    .search-hero {
+      background: linear-gradient(135deg, var(--sb-bg) 0%, #1a7ab8 60%, var(--teal) 100%);
+      border-radius: 18px; padding: 28px 30px;
+      color: #fff; box-shadow: 0 4px 20px rgba(23,93,146,.3);
+    }
+    .search-hero__title { font-size: 22px; font-weight: 800; letter-spacing: -0.04em; margin-bottom: 5px; }
+    .search-hero__sub   { font-size: 14px; opacity: .75; margin-bottom: 18px; }
+    .search-hero__input-wrap {
+      display: flex; align-items: center; gap: 10px;
+      background: rgba(255,255,255,.15); border: 1.5px solid rgba(255,255,255,.3);
+      border-radius: 12px; padding: 12px 16px;
+      transition: background .18s, border-color .18s;
+    }
+    .search-hero__input-wrap:focus-within {
+      background: rgba(255,255,255,.22);
+      border-color: rgba(255,255,255,.5);
+    }
+    .search-hero__input-wrap svg { width: 18px; height: 18px; opacity: .7; flex-shrink: 0; }
+    .search-hero__input {
+      flex: 1; border: none; outline: none;
+      font-family: var(--font); font-size: 15px; color: #fff;
+      background: transparent;
+    }
+    .search-hero__input::placeholder { color: rgba(255,255,255,.55); }
+    .search-hero__clear {
+      background: rgba(255,255,255,.2); border: none; color: #fff;
+      border-radius: 7px; width: 28px; height: 28px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; flex-shrink: 0; transition: background .14s;
+    }
+    .search-hero__clear:hover { background: rgba(255,255,255,.3); }
+    .search-hero__clear svg { width: 13px; height: 13px; }
+    .search-hero__quick { display: flex; align-items: center; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+    .search-hero__quick-label { font-size: 11px; opacity: .6; font-weight: 600; letter-spacing: .04em; }
+    .search-hero__chip {
+      padding: 4px 12px; border-radius: var(--rf);
+      background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.22);
+      font-size: 12px; font-weight: 600; cursor: pointer;
+      transition: background .14s;
+    }
+    .search-hero__chip:hover { background: rgba(255,255,255,.25); }
+    .search-hero__chip--active { background: rgba(255,255,255,.3); border-color: rgba(255,255,255,.5); }
+
+    /* ── Active filter chips ─────────────────────────── */
+    .active-filters {
+      display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+    }
+    .active-filters__label { font-size: 11px; font-weight: 700; color: var(--soft); flex-shrink: 0; }
+    .active-chip {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 5px 12px; border-radius: var(--rf);
+      background: rgba(23,93,146,.08); border: 1.5px solid rgba(23,93,146,.2);
+      font-size: 12px; font-weight: 700; color: var(--sb-bg);
+    }
+    .active-chip__remove {
+      width: 16px; height: 16px; border-radius: 50%;
+      background: rgba(23,93,146,.15); border: none; color: var(--sb-bg);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; font-size: 10px; font-family: var(--font);
+      flex-shrink: 0; line-height: 1;
+    }
+    .active-chip__remove svg { width: 8px; height: 8px; }
+    .btn-clear-all {
+      font-size: 12px; font-weight: 700; color: var(--muted);
+      background: none; border: none; cursor: pointer; font-family: var(--font);
+      text-decoration: underline; text-underline-offset: 2px;
+      transition: color .14s;
+    }
+    .btn-clear-all:hover { color: var(--text); }
+
+    /* ── Results bar ─────────────────────────────────── */
+    .results-bar {
+      display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap;
+    }
+    .results-bar__count { font-size: 13px; color: var(--muted); }
+    .results-bar__count strong { color: var(--text); font-weight: 800; }
+    .results-bar__right { display: flex; align-items: center; gap: 8px; }
+    .sort-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 7px 12px; border-radius: 9px;
+      background: var(--surface); border: 1.5px solid var(--border);
+      font-size: 12px; font-weight: 600; color: var(--muted);
+      cursor: pointer; box-shadow: var(--shadow-sm);
+    }
+    .sort-btn svg { width: 13px; height: 13px; }
+    .view-toggle {
+      display: flex; gap: 2px;
+      background: var(--surface); border: 1.5px solid var(--border);
+      border-radius: 9px; padding: 3px; box-shadow: var(--shadow-sm);
+    }
+    .view-btn {
+      width: 28px; height: 28px; border-radius: 6px; border: none;
+      background: transparent; color: var(--soft);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: all .14s;
+    }
+    .view-btn--active { background: var(--sb-bg); color: #fff; }
+    .view-btn svg { width: 13px; height: 13px; }
+
+    /* ── Result layout: two-col for search ──────────── */
+    .search-results { display: flex; flex-direction: column; gap: 12px; }
+
+    /* Horizontal result card */
+    .result-card {
+      background: var(--surface); border-radius: 16px;
+      border: 1.5px solid var(--border); box-shadow: var(--shadow-sm);
+      display: flex; align-items: stretch; overflow: hidden;
+      transition: box-shadow .18s, border-color .18s;
+    }
+    .result-card:hover { box-shadow: var(--shadow); border-color: rgba(23,93,146,.2); }
+
+    /* Left accent bar */
+    .result-card__accent { width: 4px; flex-shrink: 0; }
+
+    /* Avatar column */
+    .result-card__avatar-col {
+      padding: 18px 0 18px 18px; display: flex; flex-direction: column;
+      align-items: center; gap: 8px; flex-shrink: 0;
+    }
+    .result-card__avatar {
+      width: 56px; height: 56px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; border: 2px solid rgba(255,255,255,.7);
+      box-shadow: 0 2px 8px rgba(12,25,41,.12);
+    }
+    .result-card__match {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 3px 8px; border-radius: var(--rf);
+      font-size: 10px; font-weight: 800;
+    }
+    .result-card__match--high { background: rgba(5,150,105,.1); color: #065f46; border: 1px solid rgba(5,150,105,.18); }
+    .result-card__match--mid  { background: rgba(217,119,6,.1);  color: #92400e; border: 1px solid rgba(217,119,6,.18); }
+    .result-card__match-dot   { width: 5px; height: 5px; border-radius: 50%; }
+
+    /* Body column */
+    .result-card__body { flex: 1; padding: 16px 18px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+    .result-card__top  { display: flex; align-items: flex-start; gap: 10px; flex-wrap: wrap; }
+    .result-card__name { font-size: 16px; font-weight: 800; letter-spacing: -0.02em; }
+    .result-card__role { font-size: 12px; color: var(--muted); margin-top: 1px; }
+    .result-card__tags { display: flex; gap: 5px; flex-wrap: wrap; }
+    .result-card__tag  {
+      padding: 3px 9px; border-radius: var(--rf);
+      background: var(--page-bg); border: 1px solid var(--border);
+      font-size: 10px; font-weight: 600; color: var(--muted);
+    }
+    .result-card__bio  { font-size: 12px; color: var(--muted); line-height: 1.65; }
+    .result-card__meta { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+    .result-card__stat {
+      display: flex; align-items: center; gap: 5px;
+      font-size: 12px; color: var(--muted);
+    }
+    .result-card__stat-icon {
+      width: 20px; height: 20px; border-radius: 5px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .result-card__stat-icon svg { width: 10px; height: 10px; }
+    .result-card__stat-icon--star  { background: rgba(251,191,36,.15); color: #d97706; }
+    .result-card__stat-icon--users { background: rgba(23,93,146,.1);   color: var(--sb-bg); }
+    .result-card__stat-icon--clock { background: rgba(45,150,118,.1);  color: var(--teal); }
+    .result-card__stat strong { font-weight: 800; color: var(--text); }
+
+    /* Availability highlight */
+    .result-card__avail {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 4px 10px; border-radius: var(--rf);
+      font-size: 11px; font-weight: 700; margin-left: auto;
+    }
+    .result-card__avail--open { background: var(--teal-pale); color: var(--teal-deep); border: 1px solid var(--teal-mid); }
+    .result-card__avail--low  { background: rgba(217,119,6,.08); color: #92400e; border: 1px solid rgba(217,119,6,.2); }
+    .result-card__avail svg   { width: 11px; height: 11px; }
+
+    /* Action column */
+    .result-card__actions {
+      padding: 16px 18px; display: flex; flex-direction: column;
+      gap: 8px; justify-content: center; flex-shrink: 0; width: 130px;
+      border-left: 1px solid var(--border-soft);
+    }
+    .btn-rc-book {
+      padding: 10px 16px; border-radius: 9px;
+      background: var(--sb-bg); color: #fff;
+      font-size: 12px; font-weight: 700; font-family: var(--font);
+      border: none; cursor: pointer; text-decoration: none;
+      display: flex; align-items: center; justify-content: center; gap: 5px;
+      box-shadow: 0 2px 6px rgba(23,93,146,.25); transition: background .14s;
+    }
+    .btn-rc-book:hover { background: var(--sb-deep); }
+    .btn-rc-book svg { width: 12px; height: 12px; }
+    .btn-rc-view {
+      padding: 9px 16px; border-radius: 9px;
+      border: 1.5px solid var(--border); background: transparent;
+      color: var(--muted); font-size: 12px; font-weight: 700; font-family: var(--font);
+      cursor: pointer; text-decoration: none;
+      display: flex; align-items: center; justify-content: center; gap: 5px;
+      transition: all .14s;
+    }
+    .btn-rc-view:hover { border-color: var(--sb-bg); color: var(--sb-bg); }
+    .btn-rc-view svg { width: 12px; height: 12px; }
+
+    /* ── No results state ────────────────────────────── */
+    .no-results {
+      text-align: center; padding: 60px 24px;
+      display: flex; flex-direction: column; align-items: center; gap: 14px;
+    }
+    .no-results__ring {
+      width: 72px; height: 72px; border-radius: 50%;
+      background: var(--surface); border: 2px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--soft);
+    }
+    .no-results__ring svg { width: 32px; height: 32px; }
+    .no-results__title { font-size: 18px; font-weight: 800; letter-spacing: -0.02em; }
+    .no-results__sub   { font-size: 14px; color: var(--muted); max-width: 340px; line-height: 1.65; }
+
+    /* Privacy strip */
+    .ts-privacy {
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 14px 18px; border-radius: 12px;
+      background: var(--surface); border: 1px solid var(--border);
+      font-size: 12px; color: var(--muted); line-height: 1.6; box-shadow: var(--shadow-sm);
+    }
+    .ts-privacy svg { width: 14px; height: 14px; flex-shrink: 0; margin-top: 2px; color: var(--teal); }
+
+    /* Keyword highlight */
+    mark { background: rgba(23,93,146,.12); color: var(--sb-bg); border-radius: 3px; padding: 0 2px; }
+  </style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ══ Sidebar ══════════════════════════════════════ -->
+  <aside class="sidebar" aria-label="Navigation">
+    <div class="sidebar__head">
+      <img class="sidebar__logo-img" src="logo.png" alt="Luminwell" width="30" height="30" decoding="async" />
+      <span class="sidebar__logo">LUMINWELL</span>
+    </div>
+    <div class="sidebar__block">
+      <a href="index.html" class="sidebar__new">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+        New chat
+      </a>
+    </div>
+    <div class="sidebar__block">
+      <div class="sidebar__label">Menu</div>
+      <nav class="sb-nav" aria-label="Sections">
+        <a href="index.html" class="sb-nav__link">
+          <svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5L12 4l9 6.5V20a1 1 0 01-1 1h-5v-7H9v7H4a1 1 0 01-1-1v-9.5z"/></svg>
+          Home
+        </a>
+        <a href="team-support.html" class="sb-nav__link is-active" aria-current="page">
+          <svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+          Find Support
+        </a>
+        <a href="sessions.html" class="sb-nav__link">
+          <svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          Sessions
+        </a>
+        <a href="journal-pin.html" class="sb-nav__link">
+          <svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5c0-1 1-2 2.2-1.7C8.3 3.8 10 5.2 12 5.2S15.7 3.8 17.8 3.3C19 3 20 4 20 5v13c0 1-1 1.7-2.2 1.4-2-.4-3.8-1.6-5.8-1.6S8.2 19.4 6.2 19.8 4 19 4 18V5z"/><path d="M12 5.2v14.5"/></svg>
+          Journal
+        </a>
+        <a href="calendar.html" class="sb-nav__link">
+          <svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+          Calendar
+        </a>
+      </nav>
+    </div>
+    <div class="sidebar__block sidebar__block--fill">
+      <div class="sidebar__label">Recent Searches</div>
+      <div class="sb-recent">
+        <button type="button" class="sb-recent__btn">
+          <div class="sb-recent__title">housing anxiety</div>
+          <div class="sb-recent__meta">3 results</div>
+        </button>
+        <button type="button" class="sb-recent__btn">
+          <div class="sb-recent__title">sleep support</div>
+          <div class="sb-recent__meta">5 results</div>
+        </button>
+        <button type="button" class="sb-recent__btn">
+          <div class="sb-recent__title">CBT therapist</div>
+          <div class="sb-recent__meta">4 results</div>
+        </button>
+      </div>
+    </div>
+    <div class="sidebar__foot">
+      <div class="sidebar__avatar" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="3.5"/><path d="M6 19c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke-linecap="round"/></svg>
+      </div>
+      <div>
+        <div class="sidebar__name">Umer</div>
+        <div class="sidebar__credits">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><ellipse cx="12" cy="6" rx="6" ry="2"/><path d="M6 6v4c0 1.1 2.7 2 6 2s6-.9 6-2V6"/><path d="M6 10v4c0 1.1 2.7 2 6 2s6-.9 6-2v-4"/></svg>
+          500
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ══ Main ══════════════════════════════════════════ -->
+  <main class="main">
+
+    <header class="topbar">
+      <div class="topbar__left">
+        <a href="team-support.html" class="topbar__icon-btn" aria-label="Back to supporter browse" style="margin-right:4px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+        </a>
+        <img class="topbar__logo-img" src="logo.png" alt="Luminwell" width="28" height="28" decoding="async" />
+        <span class="topbar__title">Search Supporters</span>
+      </div>
+      <div class="topbar__right">
+        <button type="button" class="topbar__crisis" aria-label="988 Crisis and Suicide Lifeline">988 Helpline</button>
+        <button type="button" class="topbar__icon-btn" aria-label="Notifications">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+        </button>
+        <button type="button" class="topbar__icon-btn" aria-label="Settings">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <div class="ts-page">
+      <div class="ts-inner">
+
+        <!-- Search hero with active query -->
+        <div class="search-hero" role="search" aria-label="Supporter search">
+          <p class="search-hero__title">Find the right support for you</p>
+          <p class="search-hero__sub">Search by name, speciality, or describe what you're going through</p>
+          <div class="search-hero__input-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+            <input
+              type="text"
+              value="housing anxiety"
+              placeholder="Search supporters…"
+              aria-label="Search query"
+              style="font-weight:600;"
+            />
+            <button type="button" class="search-hero__clear" aria-label="Clear search">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </div>
+          <div class="search-hero__quick">
+            <span class="search-hero__quick-label">Try:</span>
+            <span class="search-hero__chip search-hero__chip--active">housing anxiety</span>
+            <span class="search-hero__chip">sleep support</span>
+            <span class="search-hero__chip">CBT therapist</span>
+            <span class="search-hero__chip">LGBTQ+ safe</span>
+            <span class="search-hero__chip">evening slots</span>
+          </div>
+        </div>
+
+        <!-- Active filters -->
+        <div class="active-filters" aria-label="Active filters">
+          <span class="active-filters__label">Active</span>
+          <span class="active-chip">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:11px;height:11px;" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+            "housing anxiety"
+            <button type="button" class="active-chip__remove" aria-label="Remove filter">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </span>
+          <span class="active-chip">
+            Housing
+            <button type="button" class="active-chip__remove" aria-label="Remove filter">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </span>
+          <span class="active-chip">
+            Anxiety
+            <button type="button" class="active-chip__remove" aria-label="Remove filter">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </span>
+          <button type="button" class="btn-clear-all">Clear all</button>
+        </div>
+
+        <!-- Results bar -->
+        <div class="results-bar">
+          <p class="results-bar__count"><strong>3</strong> supporters matched &ldquo;housing anxiety&rdquo;</p>
+          <div class="results-bar__right">
+            <span class="sort-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M7 12h10M11 18h2"/></svg>
+              Best match
+            </span>
+            <div class="view-toggle" role="group" aria-label="View layout">
+              <button type="button" class="view-btn" aria-label="Grid view">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+              </button>
+              <button type="button" class="view-btn view-btn--active" aria-label="List view" aria-pressed="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Search results -->
+        <div class="search-results" role="list" aria-label="Search results">
+
+          <!-- Result 1: James Okafor — best match -->
+          <div class="result-card" role="listitem">
+            <div class="result-card__accent" style="background:linear-gradient(180deg,#059669,#34d399);"></div>
+            <div class="result-card__avatar-col">
+              <div class="result-card__avatar" style="background:linear-gradient(135deg,#059669,#34d399);" aria-hidden="true">🌍</div>
+              <span class="result-card__match result-card__match--high">
+                <span class="result-card__match-dot" style="background:#059669;"></span>
+                91%
+              </span>
+            </div>
+            <div class="result-card__body">
+              <div class="result-card__top">
+                <div>
+                  <p class="result-card__name">James Okafor</p>
+                  <p class="result-card__role">Peer Support Ambassador · Postgrad Economics</p>
+                </div>
+                <span class="result-card__avail result-card__avail--open" style="margin-left:auto;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                  6 slots this week
+                </span>
+              </div>
+              <div class="result-card__tags">
+                <span class="result-card__tag" style="background:rgba(23,93,146,.08);border-color:rgba(23,93,146,.2);color:var(--sb-bg);font-weight:700;">Finance stress</span>
+                <span class="result-card__tag" style="background:rgba(23,93,146,.08);border-color:rgba(23,93,146,.2);color:var(--sb-bg);font-weight:700;">Housing</span>
+                <span class="result-card__tag">Resilience</span>
+                <span class="result-card__tag">Career anxiety</span>
+              </div>
+              <p class="result-card__bio">Specialises in practical support for students facing <mark>housing</mark> instability, financial pressure, and <mark>anxiety</mark> around career uncertainty. Collaborative and pragmatic approach.</p>
+              <div class="result-card__meta">
+                <span class="result-card__stat">
+                  <div class="result-card__stat-icon result-card__stat-icon--star" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+                  <strong>4.7</strong> rating
+                </span>
+                <span class="result-card__stat">
+                  <div class="result-card__stat-icon result-card__stat-icon--users" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
+                  <strong>55</strong> helped
+                </span>
+                <span class="result-card__stat">
+                  <div class="result-card__stat-icon result-card__stat-icon--clock" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
+                  <strong>1 yr</strong> experience
+                </span>
+              </div>
+            </div>
+            <div class="result-card__actions">
+              <a href="session-book.html" class="btn-rc-book">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                Book session
+              </a>
+              <a href="#" class="btn-rc-view">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                View profile
+              </a>
+            </div>
+          </div>
+
+          <!-- Result 2: Dr. Sarah Chen -->
+          <div class="result-card" role="listitem">
+            <div class="result-card__accent" style="background:linear-gradient(180deg,#059669,#34d399);"></div>
+            <div class="result-card__avatar-col">
+              <div class="result-card__avatar" style="background:linear-gradient(135deg,#475569,#94a3b8);" aria-hidden="true">👤</div>
+              <span class="result-card__match result-card__match--high">
+                <span class="result-card__match-dot" style="background:#059669;"></span>
+                88%
+              </span>
+            </div>
+            <div class="result-card__body">
+              <div class="result-card__top">
+                <div>
+                  <p class="result-card__name">Dr. Sarah Chen</p>
+                  <p class="result-card__role">Licensed Therapist · Trauma-informed</p>
+                </div>
+                <span class="result-card__avail result-card__avail--open" style="margin-left:auto;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                  7 slots this week
+                </span>
+              </div>
+              <div class="result-card__tags">
+                <span class="result-card__tag" style="background:rgba(23,93,146,.08);border-color:rgba(23,93,146,.2);color:var(--sb-bg);font-weight:700;">Housing</span>
+                <span class="result-card__tag" style="background:rgba(23,93,146,.08);border-color:rgba(23,93,146,.2);color:var(--sb-bg);font-weight:700;">Anxiety</span>
+                <span class="result-card__tag">Trauma</span>
+                <span class="result-card__tag">Sleep</span>
+              </div>
+              <p class="result-card__bio">Licensed therapist specialising in life transitions, financial and <mark>housing</mark>-related stress, and <mark>anxiety</mark>. Video sessions with evening availability for working students.</p>
+              <div class="result-card__meta">
+                <span class="result-card__stat">
+                  <div class="result-card__stat-icon result-card__stat-icon--star" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+                  <strong>4.9</strong> rating
+                </span>
+                <span class="result-card__stat">
+                  <div class="result-card__stat-icon result-card__stat-icon--users" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
+                  <strong>120</strong> helped
+                </span>
+                <span class="result-card__stat">
+                  <div class="result-card__stat-icon result-card__stat-icon--clock" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
+                  <strong>5 yr</strong> experience
+                </span>
+              </div>
+            </div>
+            <div class="result-card__actions">
+              <a href="session-book.html" class="btn-rc-book">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                Book session
+              </a>
+              <a href="#" class="btn-rc-view">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                View profile
+              </a>
+            </div>
+          </div>
+
+          <!-- Result 3: Aisha Okonkwo -->
+          <div class="result-card" role="listitem">
+            <div class="result-card__accent" style="background:linear-gradient(180deg,#d97706,#fbbf24);"></div>
+            <div class="result-card__avatar-col">
+              <div class="result-card__avatar" style="background:linear-gradient(135deg,#7c3aed,#c084fc);" aria-hidden="true">👤</div>
+              <span class="result-card__match result-card__match--mid">
+                <span class="result-card__match-dot" style="background:#d97706;"></span>
+                80%
+              </span>
+            </div>
+            <div class="result-card__body">
+              <div class="result-card__top">
+                <div>
+                  <p class="result-card__name">Aisha Okonkwo</p>
+                  <p class="result-card__role">Peer Supporter · Lived experience</p>
+                </div>
+                <span class="result-card__avail result-card__avail--low" style="margin-left:auto;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                  3 slots left
+                </span>
+              </div>
+              <div class="result-card__tags">
+                <span class="result-card__tag" style="background:rgba(23,93,146,.08);border-color:rgba(23,93,146,.2);color:var(--sb-bg);font-weight:700;">Anxiety</span>
+                <span class="result-card__tag" style="background:rgba(23,93,146,.08);border-color:rgba(23,93,146,.2);color:var(--sb-bg);font-weight:700;">Housing</span>
+                <span class="result-card__tag">Family</span>
+              </div>
+              <p class="result-card__bio">Trained peer supporter with lived experience around <mark>housing</mark> insecurity and family stress. Sliding scale available. Identity-protected journal-style notes. Rated 5.0/5.</p>
+              <div class="result-card__meta">
+                <span class="result-card__stat">
+                  <div class="result-card__stat-icon result-card__stat-icon--star" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+                  <strong>5.0</strong> rating
+                </span>
+                <span class="result-card__stat">
+                  <div class="result-card__stat-icon result-card__stat-icon--users" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
+                  <strong>28</strong> helped
+                </span>
+                <span class="result-card__stat">
+                  <div class="result-card__stat-icon result-card__stat-icon--clock" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
+                  <strong>8 mo</strong> experience
+                </span>
+              </div>
+            </div>
+            <div class="result-card__actions">
+              <a href="session-book.html" class="btn-rc-book">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                Book session
+              </a>
+              <a href="#" class="btn-rc-view">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                View profile
+              </a>
+            </div>
+          </div>
+
+        </div><!-- /search-results -->
+
+        <!-- Privacy strip -->
+        <div class="ts-privacy" role="note">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Your search is private. Match scores are based on your profile and are never shown to supporters. Luminwell does not share your queries with third parties.
+        </div>
+
+      </div>
+    </div>
+  </main>
+</div>
+</body>
+</html>

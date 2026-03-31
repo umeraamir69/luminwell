@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Luminwell — Unlock Journal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="journal-pin.css" />
+</head>
+<body>
+
+<div class="pin-page">
+
+  <!-- ══════════════════════════════════════════════
+       LEFT — Brand panel
+  ══════════════════════════════════════════════ -->
+  <aside class="pin-brand-panel" aria-label="Luminwell brand">
+
+    <!-- Logo -->
+    <div class="pin-brand-panel__logo">
+      <img src="logo.png" alt="Luminwell" width="34" height="34" decoding="async" />
+      <span>LUMINWELL</span>
+    </div>
+
+    <!-- Central brand content -->
+    <div class="pin-brand-panel__centre">
+
+      <div class="pin-brand-panel__icon-wrap">
+        <div class="pin-brand-panel__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 5c0-1 1-2 2.2-1.7C8.3 3.8 10 5.2 12 5.2S15.7 3.8 17.8 3.3C19 3 20 4 20 5v13c0 1-1 1.7-2.2 1.4-2-.4-3.8-1.6-5.8-1.6S8.2 19.4 6.2 19.8 4 19 4 18V5z"/>
+            <path d="M12 5.2v14.5"/>
+          </svg>
+        </div>
+      </div>
+
+      <h1 class="pin-brand-panel__tagline">
+        Your thoughts,<br/>
+        <span>protected.</span>
+      </h1>
+
+      <p class="pin-brand-panel__desc">
+        Your journal is a private space to process emotions, track your wellbeing, and reflect without judgement. Nobody else can access it.
+      </p>
+
+      <div class="pin-features">
+        <div class="pin-feature">
+          <div class="pin-feature__dot" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          End-to-end encrypted on your device
+        </div>
+        <div class="pin-feature">
+          <div class="pin-feature__dot" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+          </div>
+          No one at Luminwell can read your entries
+        </div>
+        <div class="pin-feature">
+          <div class="pin-feature__dot" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>
+          </div>
+          Delete any entry or your account anytime
+        </div>
+      </div>
+
+    </div>
+
+    <p class="pin-brand-panel__foot">© 2026 Luminwell · Privacy Policy · Terms</p>
+
+  </aside>
+
+  <!-- ══════════════════════════════════════════════
+       RIGHT — PIN form panel
+  ══════════════════════════════════════════════ -->
+  <main class="pin-form-panel" aria-label="Journal PIN entry">
+    <div class="pin-form-inner">
+
+      <!-- Animated lock icon -->
+      <div class="pin-lock-wrap" aria-hidden="true">
+        <div class="pin-lock-ring">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="5" y="11" width="14" height="10" rx="2"/>
+            <path d="M8 11V7a4 4 0 018 0v4"/>
+          </svg>
+        </div>
+      </div>
+
+      <h2 class="pin-title">Your journal is private</h2>
+      <p class="pin-sub">Enter your 4-digit PIN to access your entries. Only you can unlock this space.</p>
+
+      <!-- PIN digit inputs -->
+      <div class="pin-inputs" role="group" aria-label="4-digit PIN">
+        <input
+          type="password" class="pin-input"
+          maxlength="1" inputmode="numeric" pattern="[0-9]*"
+          autocomplete="off" placeholder="·"
+          aria-label="PIN digit 1"
+        />
+        <input
+          type="password" class="pin-input"
+          maxlength="1" inputmode="numeric" pattern="[0-9]*"
+          autocomplete="off" placeholder="·"
+          aria-label="PIN digit 2"
+        />
+        <input
+          type="password" class="pin-input"
+          maxlength="1" inputmode="numeric" pattern="[0-9]*"
+          autocomplete="off" placeholder="·"
+          aria-label="PIN digit 3"
+        />
+        <input
+          type="password" class="pin-input"
+          maxlength="1" inputmode="numeric" pattern="[0-9]*"
+          autocomplete="off" placeholder="·"
+          aria-label="PIN digit 4"
+        />
+      </div>
+
+      <p class="pin-hint">Enter your PIN to continue</p>
+
+      <!-- Number pad -->
+      <div class="pin-numpad" role="group" aria-label="Number pad">
+        <div class="pin-key" role="button" tabindex="0" aria-label="1">
+          <span class="pin-key__num">1</span>
+          <span class="pin-key__alpha" aria-hidden="true"></span>
+        </div>
+        <div class="pin-key" role="button" tabindex="0" aria-label="2">
+          <span class="pin-key__num">2</span>
+          <span class="pin-key__alpha" aria-hidden="true">ABC</span>
+        </div>
+        <div class="pin-key" role="button" tabindex="0" aria-label="3">
+          <span class="pin-key__num">3</span>
+          <span class="pin-key__alpha" aria-hidden="true">DEF</span>
+        </div>
+        <div class="pin-key" role="button" tabindex="0" aria-label="4">
+          <span class="pin-key__num">4</span>
+          <span class="pin-key__alpha" aria-hidden="true">GHI</span>
+        </div>
+        <div class="pin-key" role="button" tabindex="0" aria-label="5">
+          <span class="pin-key__num">5</span>
+          <span class="pin-key__alpha" aria-hidden="true">JKL</span>
+        </div>
+        <div class="pin-key" role="button" tabindex="0" aria-label="6">
+          <span class="pin-key__num">6</span>
+          <span class="pin-key__alpha" aria-hidden="true">MNO</span>
+        </div>
+        <div class="pin-key" role="button" tabindex="0" aria-label="7">
+          <span class="pin-key__num">7</span>
+          <span class="pin-key__alpha" aria-hidden="true">PQRS</span>
+        </div>
+        <div class="pin-key" role="button" tabindex="0" aria-label="8">
+          <span class="pin-key__num">8</span>
+          <span class="pin-key__alpha" aria-hidden="true">TUV</span>
+        </div>
+        <div class="pin-key" role="button" tabindex="0" aria-label="9">
+          <span class="pin-key__num">9</span>
+          <span class="pin-key__alpha" aria-hidden="true">WXYZ</span>
+        </div>
+        <!-- Empty cell -->
+        <div class="pin-key pin-key--action" aria-hidden="true"></div>
+        <div class="pin-key" role="button" tabindex="0" aria-label="0">
+          <span class="pin-key__num">0</span>
+          <span class="pin-key__alpha" aria-hidden="true"></span>
+        </div>
+        <!-- Backspace -->
+        <div class="pin-key pin-key--action" role="button" tabindex="0" aria-label="Delete">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 4H8l-7 8 7 8h13a2 2 0 002-2V6a2 2 0 00-2-2z"/><line x1="18" y1="9" x2="12" y2="15"/><line x1="12" y1="9" x2="18" y2="15"/></svg>
+        </div>
+      </div>
+
+      <!-- Unlock — navigates to journal.html -->
+      <a href="journal.html" class="btn-pin-unlock" role="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="5" y="11" width="14" height="10" rx="2"/>
+          <path d="M8 11V7a4 4 0 018 0"/>
+        </svg>
+        Unlock Journal
+      </a>
+
+      <!-- Biometric button -->
+      <button type="button" class="btn-pin-bio" aria-label="Use biometrics to unlock">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2"/>
+          <path d="M8.5 9a3.5 3.5 0 017 0v1.5"/>
+          <path d="M8.5 10.5S8 14 12 14s3.5-3.5 3.5-3.5"/>
+          <path d="M10 17c.5.8 1 1.5 2 1.5s1.5-.7 2-1.5"/>
+          <path d="M6.5 8A6 6 0 0117.5 8"/>
+        </svg>
+        Use Face ID / Fingerprint
+      </button>
+
+      <!-- Footer links -->
+      <div class="pin-links">
+        <a href="#" class="pin-links__item">Forgot PIN?</a>
+        <span class="pin-links__sep" aria-hidden="true">·</span>
+        <a href="index.html" class="pin-links__item">Back to home</a>
+      </div>
+
+      <!-- Privacy note -->
+      <div class="pin-privacy" role="note">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Your PIN never leaves this device. End-to-end encrypted.
+      </div>
+
+    </div>
+  </main>
+
+</div><!-- /pin-page -->
+
+</body>
+</html>

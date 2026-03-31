@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Luminwell — Support preferences</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="onboarding.css" />
+</head>
+<body>
+
+  <div class="ob-card" role="main">
+
+    <!-- Header -->
+    <header class="ob-header">
+      <span class="ob-logo">Luminwell</span>
+      <a class="ob-skip" href="index.html">Skip setup</a>
+    </header>
+
+    <!-- Progress stepper -->
+    <div class="ob-stepper">
+      <p class="ob-step-label"><strong>Step 3</strong> of 5 &mdash; Support Preferences</p>
+      <div class="ob-dots" role="group" aria-label="Onboarding progress, step 3 of 5">
+        <span class="ob-dot ob-dot--done" aria-label="Step 1, completed">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M20 6L9 17l-5-5"/>
+          </svg>
+        </span>
+        <span class="ob-line ob-line--done" aria-hidden="true"></span>
+        <span class="ob-dot ob-dot--done" aria-label="Step 2, completed">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M20 6L9 17l-5-5"/>
+          </svg>
+        </span>
+        <span class="ob-line ob-line--done" aria-hidden="true"></span>
+        <span class="ob-dot ob-dot--current" aria-current="step" aria-label="Step 3, current">3</span>
+        <span class="ob-line" aria-hidden="true"></span>
+        <span class="ob-dot ob-dot--todo" aria-label="Step 4">4</span>
+        <span class="ob-line" aria-hidden="true"></span>
+        <span class="ob-dot ob-dot--todo" aria-label="Step 5">5</span>
+      </div>
+    </div>
+
+    <!-- Illustration -->
+    <div class="ob-art" aria-hidden="true">
+      <img src="ambassador-gender-image%201.png" alt="" width="220" height="165" decoding="async" />
+    </div>
+
+    <!-- Body -->
+    <div class="ob-body">
+      <h1 class="ob-question">Do you have a preference for your ambassador&rsquo;s gender?</h1>
+      <p class="ob-context">
+        Your ambassador is a trained peer supporter &mdash; someone who&rsquo;s been through
+        similar experiences. &ldquo;No preference&rdquo; is a perfectly valid choice.
+      </p>
+
+      <div class="ob-pills" role="radiogroup" aria-label="Ambassador gender preference">
+        <div class="ob-pill">
+          <input type="radio" name="amb_pref" id="a-none" value="no-preference" checked />
+          <label for="a-none">No preference</label>
+        </div>
+        <div class="ob-pill">
+          <input type="radio" name="amb_pref" id="a-male" value="male" />
+          <label for="a-male">Male</label>
+        </div>
+        <div class="ob-pill">
+          <input type="radio" name="amb_pref" id="a-female" value="female" />
+          <label for="a-female">Female</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="ob-footer">
+      <div class="ob-privacy">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </svg>
+        Your preference is used only for matching and stays confidential.
+      </div>
+
+      <div class="ob-actions">
+        <a class="btn btn--ghost" href="onboarding-02-user-gender.html">
+          &larr; Previous
+        </a>
+        <a class="btn btn--primary" href="onboarding-04-checkin.html">
+          Next &rarr;
+        </a>
+      </div>
+
+      <p class="ob-settings-note">You can update this anytime in Settings.</p>
+    </div>
+
+  </div>
+
+  <div class="ob-crisis" aria-label="Crisis support">
+    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
+      <path d="M12 21.593c-5.63-5.539-11-10.297-11-14.402C1 3.604 3.322 2 5.5 2c1.919 0 3.422 1.119 4.5 2.5C11.078 3.119 12.581 2 14.5 2c2.178 0 4.5 1.604 4.5 5.191 0 4.105-5.37 8.863-11 14.402z"/>
+    </svg>
+    Need support right now? &nbsp;<a href="tel:988">Call or text 988</a> — free &amp; confidential.
+  </div>
+
+</body>
+</html>

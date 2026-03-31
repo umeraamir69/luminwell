@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Luminwell Ambassador — My Profile</title>
+  <link rel="stylesheet" href="ambassador.css" />
+  <style>
+    .profile-hero {
+      background: linear-gradient(135deg, var(--sb-bg) 0%, #1a4e70 55%, var(--teal) 100%);
+      border-radius: 20px; padding: 28px 32px;
+      color: #fff; display: flex; align-items: center; gap: 24px;
+      box-shadow: 0 4px 24px rgba(15,45,69,.28);
+    }
+    .profile-hero__avatar {
+      width: 80px; height: 80px; border-radius: 50%; flex-shrink: 0;
+      background: rgba(255,255,255,.2); border: 3px solid rgba(255,255,255,.4);
+      display: flex; align-items: center; justify-content: center; font-size: 32px;
+    }
+    .profile-hero__info { flex: 1; }
+    .profile-hero__role { font-size: 11px; opacity: .65; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 5px; }
+    .profile-hero__name { font-size: 26px; font-weight: 800; letter-spacing: -0.04em; line-height: 1.15; }
+    .profile-hero__uni  { font-size: 13px; opacity: .75; margin-top: 4px; }
+    .profile-hero__tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 12px; }
+    .profile-hero__tag  { padding: 4px 11px; border-radius: var(--rf); background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.22); font-size: 11px; font-weight: 600; }
+    .profile-hero__stats { display: flex; gap: 24px; flex-shrink: 0; }
+    .profile-hero__stat-val   { font-size: 24px; font-weight: 800; letter-spacing: -0.04em; line-height: 1; text-align: center; }
+    .profile-hero__stat-label { font-size: 10px; opacity: .65; margin-top: 3px; font-weight: 600; letter-spacing: .05em; text-align: center; }
+
+    .edit-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 9px 18px; border-radius: 9px;
+      background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.25);
+      color: #fff; font-size: 12px; font-weight: 700; font-family: var(--font);
+      cursor: pointer; text-decoration: none; transition: background .14s;
+    }
+    .edit-btn:hover { background: rgba(255,255,255,.25); }
+    .edit-btn svg { width: 12px; height: 12px; }
+
+    .rating-stars { display: flex; gap: 3px; }
+    .rating-star { width: 16px; height: 16px; }
+    .rating-star--full { color: #fbbf24; }
+    .rating-star--empty { color: var(--border); }
+
+    .review-card { padding: 14px 16px; border-radius: 12px; background: var(--page-bg); border: 1px solid var(--border); display: flex; flex-direction: column; gap: 8px; }
+    .review-card__head { display: flex; align-items: center; gap: 8px; }
+    .review-card__avatar { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; flex-shrink: 0; }
+    .review-card__from  { font-size: 12px; font-weight: 700; }
+    .review-card__date  { font-size: 11px; color: var(--soft); margin-left: auto; }
+    .review-card__text  { font-size: 12px; color: var(--muted); line-height: 1.65; }
+
+    .spec-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 8px; }
+    .spec-item { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-radius: 10px; background: var(--page-bg); border: 1px solid var(--border); }
+    .spec-item__icon { width: 28px; height: 28px; border-radius: 7px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .spec-item__icon svg { width: 13px; height: 13px; }
+    .spec-item__label { font-size: 12px; font-weight: 700; color: var(--text); }
+
+    .cert-row { display: flex; align-items: center; gap: 10px; padding: 11px 14px; border-radius: 10px; background: var(--page-bg); border: 1px solid var(--border); }
+    .cert-icon { width: 34px; height: 34px; border-radius: 8px; background: rgba(45,150,116,.1); color: var(--teal); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .cert-icon svg { width: 16px; height: 16px; }
+    .cert-name  { font-size: 13px; font-weight: 700; }
+    .cert-issuer{ font-size: 11px; color: var(--muted); margin-top: 1px; }
+    .cert-badge { margin-left: auto; }
+  </style>
+</head>
+<body>
+<div class="app">
+  <input type="checkbox" id="sb-toggle" class="state-input" />
+  <aside class="sidebar" aria-label="Ambassador navigation">
+    <div class="sidebar__head">
+      <img class="sidebar__logo-img" src="logo.png" alt="Luminwell" width="28" height="28" decoding="async" />
+      <div class="sidebar__logo-wrap"><span class="sidebar__logo">LUMINWELL</span><span class="sidebar__role-tag">Ambassador</span></div>
+      <label for="sb-toggle" class="sb-collapse-btn" aria-label="Collapse sidebar">
+        <svg class="icon-collapse" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+        <svg class="icon-expand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+      </label>
+    </div>
+    <div class="sidebar__block">
+      <div class="sidebar__label">Main</div>
+      <nav class="sb-nav">
+        <a href="amb-home.html" class="sb-nav__link"><svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5L12 4l9 6.5V20a1 1 0 01-1 1h-5v-7H9v7H4a1 1 0 01-1-1v-9.5z"/></svg>Home</a>
+        <a href="amb-schedule.html" class="sb-nav__link"><svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Schedule<span class="sb-nav__badge sb-nav__badge--teal">3</span></a>
+        <a href="amb-students.html" class="sb-nav__link"><svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>My Clients</a>
+        <a href="amb-notes.html" class="sb-nav__link"><svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Session Notes<span class="sb-nav__badge sb-nav__badge--amber">2</span></a>
+        <a href="amb-tasks.html" class="sb-nav__link"><svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>Tasks<span class="sb-nav__badge">5</span></a>
+        <a href="amb-messages.html" class="sb-nav__link"><svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>Messages<span class="sb-nav__badge">3</span></a>
+        <a href="amb-profile.html" class="sb-nav__link is-active" aria-current="page"><svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>My Profile</a>
+      </nav>
+    </div>
+    <div class="sidebar__foot">
+      <div class="sidebar__avatar">🌿</div>
+      <div><div class="sidebar__name">Maya Johnson</div><div class="sidebar__stats"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>4.9 · 84 clients</div></div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="topbar__left">
+        <img class="topbar__logo-img" src="logo.png" alt="Luminwell" width="26" height="26" decoding="async" />
+        <span class="topbar__title">Ambassador Dashboard</span>
+        <span class="topbar__divider"></span><span class="topbar__sub">My Profile</span>
+      </div>
+      <div class="topbar__right">
+        <span class="topbar__today"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Sunday, 29 Mar 2026</span>
+        <button type="button" class="topbar__crisis">988 Helpline</button>
+        <button type="button" class="topbar__icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg><span class="notif-dot"></span></button>
+      </div>
+    </header>
+
+    <div class="amb-page">
+      <div class="amb-inner">
+        <div class="amb-header">
+          <div class="amb-header__text"><h1 class="amb-header__title">My Profile</h1><p class="amb-header__sub">Manage your public profile, specialisms, availability, and account settings</p></div>
+          <div class="amb-header__actions"><button type="button" class="btn-primary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>Edit profile</button></div>
+        </div>
+
+        <!-- Hero card -->
+        <div class="profile-hero">
+          <div class="profile-hero__avatar">🌿</div>
+          <div class="profile-hero__info">
+            <p class="profile-hero__role">Wellbeing Ambassador · Active</p>
+            <p class="profile-hero__name">Maya Johnson</p>
+            <p class="profile-hero__uni">Peer Support Specialist · University of Manchester</p>
+            <div class="profile-hero__tags">
+              <span class="profile-hero__tag">Academic stress</span>
+              <span class="profile-hero__tag">Anxiety</span>
+              <span class="profile-hero__tag">CBT techniques</span>
+              <span class="profile-hero__tag">Goal setting</span>
+              <span class="profile-hero__tag">Sleep</span>
+              <span class="profile-hero__tag">Housing</span>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:16px;align-items:flex-end;">
+            <div class="profile-hero__stats">
+              <div><p class="profile-hero__stat-val">4.9</p><p class="profile-hero__stat-label">Avg rating</p></div>
+              <div><p class="profile-hero__stat-val">84</p><p class="profile-hero__stat-label">Clients helped</p></div>
+              <div><p class="profile-hero__stat-val">2 yr</p><p class="profile-hero__stat-label">Experience</p></div>
+              <div><p class="profile-hero__stat-val">142</p><p class="profile-hero__stat-label">Sessions total</p></div>
+            </div>
+            <a href="#" class="edit-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>Edit profile</a>
+          </div>
+        </div>
+
+        <div class="two-col">
+          <div class="left-col">
+
+            <!-- Bio & details -->
+            <div class="section-card">
+              <div class="section-card__head"><span class="section-card__title"><span class="section-card__title-icon section-card__title-icon--navy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>About Me</span><button type="button" class="btn-ghost" style="font-size:11px;">Edit</button></div>
+              <div class="section-card__body">
+                <p style="font-size:13px;color:var(--muted);line-height:1.75;">I'm a final-year Psychology student passionate about supporting peers through academic pressure, anxiety, and life transitions. I trained with the Luminwell ambassador programme in 2024 and have supported 84 clients across a wide range of wellbeing challenges. My approach is warm, non-judgmental, and grounded in evidence-based techniques including CBT, mindfulness, and motivational interviewing.</p>
+                <div class="form-row" style="margin-top:8px;">
+                  <div class="form-group"><div class="form-label">University</div><div style="font-size:13px;font-weight:700;">University of Manchester</div></div>
+                  <div class="form-group"><div class="form-label">Course</div><div style="font-size:13px;font-weight:700;">BSc Psychology (Final year)</div></div>
+                  <div class="form-group"><div class="form-label">Ambassador since</div><div style="font-size:13px;font-weight:700;">September 2024</div></div>
+                  <div class="form-group"><div class="form-label">Languages</div><div style="font-size:13px;font-weight:700;">English, Urdu</div></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Specialisms -->
+            <div class="section-card">
+              <div class="section-card__head"><span class="section-card__title"><span class="section-card__title-icon section-card__title-icon--teal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></span>Specialisms &amp; Approaches</span><button type="button" class="btn-ghost" style="font-size:11px;">Edit</button></div>
+              <div class="section-card__body">
+                <div class="spec-grid">
+                  <div class="spec-item"><div class="spec-item__icon spec-item__icon" style="background:rgba(15,45,69,.1);color:var(--sb-bg);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></div><span class="spec-item__label">Academic stress &amp; exams</span></div>
+                  <div class="spec-item"><div class="spec-item__icon" style="background:rgba(217,119,6,.1);color:#d97706;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></div><span class="spec-item__label">Anxiety &amp; worry</span></div>
+                  <div class="spec-item"><div class="spec-item__icon" style="background:rgba(45,150,116,.1);color:var(--teal);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg></div><span class="spec-item__label">CBT techniques</span></div>
+                  <div class="spec-item"><div class="spec-item__icon" style="background:rgba(5,150,105,.1);color:#059669;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg></div><span class="spec-item__label">Goal setting &amp; motivation</span></div>
+                  <div class="spec-item"><div class="spec-item__icon" style="background:rgba(15,45,69,.08);color:var(--sb-bg);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div><span class="spec-item__label">Housing &amp; transitions</span></div>
+                  <div class="spec-item"><div class="spec-item__icon" style="background:rgba(124,58,237,.1);color:#7c3aed;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div><span class="spec-item__label">Sleep &amp; wellbeing</span></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Reviews -->
+            <div class="section-card">
+              <div class="section-card__head"><span class="section-card__title"><span class="section-card__title-icon section-card__title-icon--amber"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></span>Recent Reviews</span><span style="font-size:14px;font-weight:800;color:var(--text);">4.9 <span style="color:var(--soft);font-size:12px;font-weight:500;">/ 5.0</span></span></div>
+              <div class="section-card__body">
+                <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;">
+                  <div class="rating-stars">
+                    <svg class="rating-star rating-star--full" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <svg class="rating-star rating-star--full" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <svg class="rating-star rating-star--full" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <svg class="rating-star rating-star--full" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <svg class="rating-star rating-star--full" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                  </div>
+                  <span style="font-size:12px;color:var(--muted);">Based on 84 sessions</span>
+                </div>
+                <div class="review-card"><div class="review-card__head"><div class="review-card__avatar" style="background:linear-gradient(135deg,#059669,#34d399);">🌍</div><div><p class="review-card__from">Client E</p><div class="rating-stars" style="margin-top:2px;"><svg style="width:11px;height:11px;color:#fbbf24;" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg style="width:11px;height:11px;color:#fbbf24;" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg style="width:11px;height:11px;color:#fbbf24;" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg style="width:11px;height:11px;color:#fbbf24;" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg style="width:11px;height:11px;color:#fbbf24;" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div></div><span class="review-card__date">28 Mar 2026</span></div><p class="review-card__text">Maya is genuinely one of the most helpful people I've spoken to. She doesn't judge, she listens properly, and she always gives me practical things to try. The session notes she writes are so useful to look back on.</p></div>
+                <div class="review-card"><div class="review-card__head"><div class="review-card__avatar" style="background:linear-gradient(135deg,#0ea5e9,#38bdf8);">🧘</div><div><p class="review-card__from">Client D</p><div class="rating-stars" style="margin-top:2px;"><svg style="width:11px;height:11px;color:#fbbf24;" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg style="width:11px;height:11px;color:#fbbf24;" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg style="width:11px;height:11px;color:#fbbf24;" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg style="width:11px;height:11px;color:#fbbf24;" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg style="width:11px;height:11px;color:#fbbf24;" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div></div><span class="review-card__date">18 Mar 2026</span></div><p class="review-card__text">I was really nervous to talk about identity stuff but Maya created a space where I felt completely safe. She's always prepared and remembers everything from previous sessions. Highly recommend her to anyone.</p></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="right-col">
+            <!-- Certifications -->
+            <div class="section-card">
+              <div class="section-card__head"><span class="section-card__title"><span class="section-card__title-icon section-card__title-icon--green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg></span>Certifications</span></div>
+              <div class="section-card__body">
+                <div class="cert-row"><div class="cert-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg></div><div><p class="cert-name">Luminwell Ambassador</p><p class="cert-issuer">Issued Sep 2024 · Active</p></div><span class="badge badge--new cert-badge">Verified</span></div>
+                <div class="cert-row"><div class="cert-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div><p class="cert-name">Mental Health First Aid</p><p class="cert-issuer">MHFA England · Jan 2024</p></div><span class="badge badge--new cert-badge">Verified</span></div>
+                <div class="cert-row"><div class="cert-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg></div><div><p class="cert-name">CBT Foundations</p><p class="cert-issuer">University of Manchester · 2025</p></div><span class="badge badge--new cert-badge">Verified</span></div>
+              </div>
+            </div>
+
+            <!-- Availability settings -->
+            <div class="section-card">
+              <div class="section-card__head"><span class="section-card__title"><span class="section-card__title-icon section-card__title-icon--teal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>Availability</span><a href="amb-schedule.html" class="btn-ghost" style="font-size:11px;">Manage</a></div>
+              <div class="section-card__body">
+                <div style="display:flex;flex-direction:column;gap:8px;">
+                  <div style="display:flex;justify-content:space-between;align-items:center;"><span style="font-size:12px;color:var(--muted);">Mon, Tue, Wed, Fri</span><span class="badge badge--new">Active days</span></div>
+                  <div style="display:flex;justify-content:space-between;align-items:center;"><span style="font-size:12px;color:var(--muted);">9 AM – 5 PM</span><span style="font-size:12px;font-weight:700;">Working hours</span></div>
+                  <div style="display:flex;justify-content:space-between;align-items:center;"><span style="font-size:12px;color:var(--muted);">Open slots this month</span><span style="font-size:13px;font-weight:800;">14</span></div>
+                  <div style="display:flex;justify-content:space-between;align-items:center;"><span style="font-size:12px;color:var(--muted);">Session capacity</span><span style="font-size:13px;font-weight:800;">15 / month</span></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Account settings -->
+            <div class="section-card">
+              <div class="section-card__head"><span class="section-card__title">Account Settings</span></div>
+              <div class="section-card__body">
+                <div style="display:flex;flex-direction:column;gap:10px;">
+                  <div class="form-group"><div class="form-label">Email</div><input class="form-input" type="email" value="maya.johnson@luminwell.co.uk" /></div>
+                  <div class="form-group"><div class="form-label">Notification preferences</div><select class="form-select"><option>All notifications</option><option>Priority only</option><option>None</option></select></div>
+                  <button type="button" class="btn-secondary" style="align-self:flex-start;">Save changes</button>
+                  <div style="height:1px;background:var(--border-soft);"></div>
+                  <button type="button" class="btn-ghost" style="color:var(--red);font-size:12px;align-self:flex-start;">Sign out</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+</body>
+</html>

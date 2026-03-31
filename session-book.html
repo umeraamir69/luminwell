@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Luminwell — Book a Session</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="sessions.css" />
+  <style>
+    /* ── Book page extras ───────────────────────── */
+    .bk-page  { flex: 1; overflow-y: auto; background: var(--page-bg); }
+    .bk-inner { padding: 28px 28px 60px; display: flex; flex-direction: column; gap: 26px; }
+
+    /* Breadcrumb */
+    .bk-breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); }
+    .bk-breadcrumb a { color: var(--muted); transition: color .14s; }
+    .bk-breadcrumb a:hover { color: var(--text); }
+    .bk-breadcrumb__sep { color: var(--soft); font-size: 10px; }
+    .bk-breadcrumb__cur { color: var(--text); font-weight: 600; }
+
+    /* Page heading */
+    .bk-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+    .bk-heading__title { font-size: 26px; font-weight: 800; letter-spacing: -0.04em; line-height: 1.15; }
+    .bk-heading__sub   { font-size: 14px; color: var(--muted); margin-top: 5px; }
+
+    /* Two-col layout */
+    .bk-grid { display: grid; grid-template-columns: 1fr 340px; gap: 22px; align-items: start; }
+    .bk-main  { display: flex; flex-direction: column; gap: 20px; }
+    .bk-aside { display: flex; flex-direction: column; gap: 18px; }
+
+    /* Card shell */
+    .bk-card {
+      background: var(--surface); border-radius: 16px;
+      border: 1px solid var(--border); box-shadow: var(--shadow-sm);
+      overflow: hidden;
+    }
+    .bk-card__head {
+      display: flex; align-items: center; gap: 10px;
+      padding: 16px 20px 14px; border-bottom: 1px solid var(--border-soft);
+    }
+    .bk-card__icon {
+      width: 32px; height: 32px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .bk-card__icon svg { width: 15px; height: 15px; }
+    .bk-card__icon--blue  { background: rgba(23,93,146,.1);  color: var(--sb-bg); }
+    .bk-card__icon--teal  { background: rgba(45,150,118,.1); color: var(--teal); }
+    .bk-card__icon--amber { background: rgba(217,119,6,.1);  color: #d97706; }
+    .bk-card__title { font-size: 14px; font-weight: 800; letter-spacing: -.01em; }
+    .bk-card__step  { margin-left: auto; font-size: 11px; font-weight: 700; color: var(--soft); }
+    .bk-card__body  { padding: 20px; display: flex; flex-direction: column; gap: 16px; }
+
+    /* Session type pills */
+    .type-radio { display: none; }
+    .type-grid  { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .type-pill {
+      display: flex; flex-direction: column; align-items: flex-start; gap: 6px;
+      padding: 14px 16px; border-radius: 12px;
+      border: 1.5px solid var(--border); background: var(--page-bg);
+      cursor: pointer; user-select: none; transition: all .15s;
+    }
+    .type-pill:hover { border-color: var(--sb-bg); background: rgba(23,93,146,.03); }
+    .type-pill__icon { font-size: 22px; }
+    .type-pill__name { font-size: 13px; font-weight: 700; color: var(--text); }
+    .type-pill__desc { font-size: 11px; color: var(--muted); line-height: 1.4; }
+    /* Active state via :has */
+    html:has(#type-checkin:checked)  label[for="type-checkin"]  { border-color: var(--sb-bg); background: rgba(23,93,146,.07); box-shadow: 0 0 0 3px rgba(23,93,146,.12); }
+    html:has(#type-goal:checked)     label[for="type-goal"]     { border-color: var(--sb-bg); background: rgba(23,93,146,.07); box-shadow: 0 0 0 3px rgba(23,93,146,.12); }
+    html:has(#type-review:checked)   label[for="type-review"]   { border-color: var(--sb-bg); background: rgba(23,93,146,.07); box-shadow: 0 0 0 3px rgba(23,93,146,.12); }
+    html:has(#type-crisis:checked)   label[for="type-crisis"]   { border-color: #e11d48; background: rgba(225,29,72,.05); box-shadow: 0 0 0 3px rgba(225,29,72,.1); }
+    html:has(#type-intro:checked)    label[for="type-intro"]    { border-color: var(--teal); background: rgba(45,150,118,.06); box-shadow: 0 0 0 3px rgba(45,150,118,.1); }
+    html:has(#type-extended:checked) label[for="type-extended"] { border-color: #d97706; background: rgba(217,119,6,.05); box-shadow: 0 0 0 3px rgba(217,119,6,.1); }
+
+    /* Duration radio pills */
+    .dur-radio { display: none; }
+    .dur-row   { display: flex; gap: 8px; }
+    .dur-pill  {
+      display: flex; flex-direction: column; align-items: center; gap: 2px;
+      padding: 10px 20px; border-radius: 10px;
+      border: 1.5px solid var(--border); background: var(--page-bg);
+      cursor: pointer; user-select: none; transition: all .15s; flex: 1;
+    }
+    .dur-pill:hover { border-color: var(--sb-bg); }
+    .dur-pill__val  { font-size: 18px; font-weight: 800; letter-spacing: -0.03em; color: var(--text); }
+    .dur-pill__unit { font-size: 11px; color: var(--muted); font-weight: 500; }
+    html:has(#dur-30:checked)  label[for="dur-30"]  { border-color: var(--sb-bg); background: rgba(23,93,146,.07); box-shadow: 0 0 0 3px rgba(23,93,146,.1); }
+    html:has(#dur-45:checked)  label[for="dur-45"]  { border-color: var(--sb-bg); background: rgba(23,93,146,.07); box-shadow: 0 0 0 3px rgba(23,93,146,.1); }
+    html:has(#dur-60:checked)  label[for="dur-60"]  { border-color: var(--sb-bg); background: rgba(23,93,146,.07); box-shadow: 0 0 0 3px rgba(23,93,146,.1); }
+
+    /* Format radio pills */
+    .fmt-radio { display: none; }
+    .fmt-row   { display: flex; gap: 8px; }
+    .fmt-pill  {
+      display: flex; align-items: center; gap: 8px;
+      padding: 11px 18px; border-radius: 10px;
+      border: 1.5px solid var(--border); background: var(--page-bg);
+      cursor: pointer; user-select: none; transition: all .15s; flex: 1;
+      font-size: 13px; font-weight: 600; color: var(--muted);
+    }
+    .fmt-pill:hover { border-color: var(--teal); color: var(--teal); }
+    .fmt-pill svg { width: 16px; height: 16px; flex-shrink: 0; }
+    html:has(#fmt-video:checked) label[for="fmt-video"] { border-color: var(--teal); background: var(--teal-pale); color: var(--teal-deep); }
+    html:has(#fmt-audio:checked) label[for="fmt-audio"] { border-color: var(--teal); background: var(--teal-pale); color: var(--teal-deep); }
+    html:has(#fmt-text:checked)  label[for="fmt-text"]  { border-color: var(--teal); background: var(--teal-pale); color: var(--teal-deep); }
+
+    /* Mini calendar */
+    .mini-cal { display: flex; flex-direction: column; gap: 12px; }
+    .mini-cal__nav {
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .mini-cal__month { font-size: 15px; font-weight: 800; letter-spacing: -.02em; }
+    .mini-cal__arrow {
+      width: 28px; height: 28px; border-radius: 7px; border: 1.5px solid var(--border);
+      background: var(--page-bg); color: var(--muted); cursor: pointer;
+      display: flex; align-items: center; justify-content: center; font-size: 12px;
+    }
+    .mini-cal__days {
+      display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px;
+      text-align: center;
+    }
+    .mini-cal__day-label { font-size: 10px; font-weight: 700; color: var(--soft); padding: 2px 0 6px; }
+    .cal-day {
+      display: flex; align-items: center; justify-content: center;
+      height: 34px; border-radius: 8px;
+      font-size: 13px; font-weight: 600; cursor: pointer;
+      transition: background .14s, color .14s;
+      border: 1.5px solid transparent;
+    }
+    .cal-day:hover    { background: var(--teal-pale); color: var(--teal-deep); }
+    .cal-day--today   { background: var(--page-bg); border-color: var(--teal); color: var(--teal-deep); }
+    .cal-day--sel     { background: var(--sb-bg); color: #fff; border-color: var(--sb-bg); }
+    .cal-day--avail   { color: var(--text); }
+    .cal-day--unavail { color: var(--soft); cursor: default; }
+    .cal-day--unavail:hover { background: transparent; }
+    .cal-day--past    { color: var(--soft); cursor: default; opacity: .5; }
+    .cal-day--past:hover { background: transparent; }
+    .cal-day--dot::after {
+      content: '';
+      display: block; width: 4px; height: 4px; border-radius: 50%;
+      background: var(--teal); position: absolute; bottom: 3px; left: 50%; transform: translateX(-50%);
+    }
+
+    /* Time slots */
+    .time-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .time-radio { display: none; }
+    .time-slot {
+      display: flex; flex-direction: column; align-items: center; gap: 2px;
+      padding: 10px 8px; border-radius: 9px;
+      border: 1.5px solid var(--border); background: var(--page-bg);
+      cursor: pointer; user-select: none; transition: all .15s;
+      font-size: 13px; font-weight: 600; color: var(--text);
+    }
+    .time-slot:hover { border-color: var(--teal); background: var(--teal-pale); color: var(--teal-deep); }
+    .time-slot--full { color: var(--soft); cursor: not-allowed; background: var(--page-bg); opacity: .55; }
+    .time-slot--full:hover { border-color: var(--border); background: var(--page-bg); color: var(--soft); }
+    .time-slot__avail { font-size: 10px; font-weight: 600; color: var(--teal); }
+    .time-slot__full  { font-size: 10px; font-weight: 600; color: var(--soft); }
+    html:has(#time-9:checked)  label[for="time-9"]  { border-color: var(--sb-bg); background: rgba(23,93,146,.08); color: var(--sb-bg); box-shadow: 0 0 0 3px rgba(23,93,146,.1); }
+    html:has(#time-10:checked) label[for="time-10"] { border-color: var(--sb-bg); background: rgba(23,93,146,.08); color: var(--sb-bg); box-shadow: 0 0 0 3px rgba(23,93,146,.1); }
+    html:has(#time-11:checked) label[for="time-11"] { border-color: var(--sb-bg); background: rgba(23,93,146,.08); color: var(--sb-bg); box-shadow: 0 0 0 3px rgba(23,93,146,.1); }
+    html:has(#time-2:checked)  label[for="time-2"]  { border-color: var(--sb-bg); background: rgba(23,93,146,.08); color: var(--sb-bg); box-shadow: 0 0 0 3px rgba(23,93,146,.1); }
+    html:has(#time-3:checked)  label[for="time-3"]  { border-color: var(--sb-bg); background: rgba(23,93,146,.08); color: var(--sb-bg); box-shadow: 0 0 0 3px rgba(23,93,146,.1); }
+    html:has(#time-4:checked)  label[for="time-4"]  { border-color: var(--sb-bg); background: rgba(23,93,146,.08); color: var(--sb-bg); box-shadow: 0 0 0 3px rgba(23,93,146,.1); }
+
+    /* Notes textarea */
+    .bk-textarea {
+      width: 100%; min-height: 90px; padding: 13px 15px;
+      border: 1.5px solid var(--border); border-radius: 11px;
+      background: var(--page-bg); font-family: var(--font);
+      font-size: 13px; color: var(--text); line-height: 1.65;
+      resize: vertical; outline: none;
+      transition: border-color .14s, box-shadow .14s;
+    }
+    .bk-textarea:focus { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(45,150,118,.1); }
+    .bk-textarea::placeholder { color: var(--soft); }
+    .bk-field-label { font-size: 12px; font-weight: 700; color: var(--muted); margin-bottom: 7px; letter-spacing: .03em; }
+
+    /* Summary sidebar card */
+    .summary-card {
+      background: var(--surface); border-radius: 14px;
+      border: 1px solid var(--border); box-shadow: var(--shadow-sm);
+      overflow: hidden; position: sticky; top: 16px;
+    }
+    .summary-card__head {
+      padding: 14px 18px 12px;
+      border-bottom: 1px solid var(--border-soft);
+      font-size: 13px; font-weight: 800; letter-spacing: -.01em;
+    }
+    .summary-card__body { padding: 16px 18px; display: flex; flex-direction: column; gap: 12px; }
+    .summary-row {
+      display: flex; align-items: flex-start; gap: 10px;
+    }
+    .summary-row__icon {
+      width: 28px; height: 28px; border-radius: 7px;
+      background: var(--page-bg); border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+      color: var(--muted);
+    }
+    .summary-row__icon svg { width: 13px; height: 13px; }
+    .summary-row__label { font-size: 11px; font-weight: 600; color: var(--soft); margin-bottom: 2px; }
+    .summary-row__val   { font-size: 13px; font-weight: 700; color: var(--text); }
+    .summary-row__val--placeholder { color: var(--soft); font-weight: 500; }
+    .summary-divider { height: 1px; background: var(--border-soft); margin: 2px 0; }
+
+    /* Ambassador mini strip in aside */
+    .amb-strip {
+      background: var(--surface); border-radius: 14px;
+      border: 1px solid var(--border); box-shadow: var(--shadow-sm);
+      padding: 14px 16px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .amb-strip__avatar {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--sb-bg), #2d9676);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; flex-shrink: 0;
+    }
+    .amb-strip__info { flex: 1; }
+    .amb-strip__name { font-size: 13px; font-weight: 800; }
+    .amb-strip__role { font-size: 11px; color: var(--muted); margin-top: 1px; }
+    .amb-strip__change {
+      font-size: 11px; font-weight: 700; color: var(--sb-bg);
+      text-decoration: none; white-space: nowrap;
+      padding: 5px 10px; border-radius: 7px;
+      border: 1.5px solid rgba(23,93,146,.2);
+      transition: background .14s;
+    }
+    .amb-strip__change:hover { background: rgba(23,93,146,.06); }
+
+    /* Confirm button */
+    .btn-confirm {
+      width: 100%; padding: 14px; border-radius: 11px;
+      background: var(--sb-bg); color: #fff;
+      font-size: 14px; font-weight: 800; font-family: var(--font);
+      border: none; cursor: pointer; text-decoration: none;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      box-shadow: 0 3px 14px rgba(23,93,146,.32);
+      transition: background .14s;
+    }
+    .btn-confirm:hover { background: var(--sb-deep); }
+    .btn-confirm svg { width: 15px; height: 15px; }
+    .btn-cancel-bk {
+      width: 100%; padding: 11px; border-radius: 11px;
+      border: 1.5px solid var(--border); background: var(--page-bg);
+      color: var(--muted); font-size: 13px; font-weight: 600;
+      font-family: var(--font); cursor: pointer; text-decoration: none;
+      display: flex; align-items: center; justify-content: center; gap: 7px;
+      transition: border-color .14s, color .14s;
+    }
+    .btn-cancel-bk:hover { border-color: var(--text); color: var(--text); }
+    .btn-cancel-bk svg { width: 13px; height: 13px; }
+
+    /* Privacy note */
+    .bk-privacy {
+      display: flex; gap: 9px; align-items: flex-start;
+      padding: 12px 16px; border-radius: 10px;
+      background: var(--teal-pale); border: 1px solid rgba(45,150,118,.2);
+      font-size: 12px; color: var(--teal-deep); line-height: 1.6;
+    }
+    .bk-privacy svg { width: 13px; height: 13px; flex-shrink: 0; margin-top: 1px; color: var(--teal); }
+
+    @media (max-width: 900px) {
+      .bk-grid { grid-template-columns: 1fr; }
+      .type-grid { grid-template-columns: repeat(2, 1fr); }
+      .bk-aside { order: -1; }
+      .summary-card { position: static; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══ CSS-only state inputs ════════════════════════ -->
+<input type="radio" name="sess-type" id="type-checkin"  class="state-input" checked />
+<input type="radio" name="sess-type" id="type-goal"     class="state-input" />
+<input type="radio" name="sess-type" id="type-review"   class="state-input" />
+<input type="radio" name="sess-type" id="type-crisis"   class="state-input" />
+<input type="radio" name="sess-type" id="type-intro"    class="state-input" />
+<input type="radio" name="sess-type" id="type-extended" class="state-input" />
+<input type="radio" name="sess-dur"  id="dur-30" class="state-input" checked />
+<input type="radio" name="sess-dur"  id="dur-45" class="state-input" />
+<input type="radio" name="sess-dur"  id="dur-60" class="state-input" />
+<input type="radio" name="sess-fmt"  id="fmt-video" class="state-input" checked />
+<input type="radio" name="sess-fmt"  id="fmt-audio" class="state-input" />
+<input type="radio" name="sess-fmt"  id="fmt-text"  class="state-input" />
+<input type="radio" name="sess-time" id="time-9"  class="state-input" />
+<input type="radio" name="sess-time" id="time-10" class="state-input" />
+<input type="radio" name="sess-time" id="time-11" class="state-input" />
+<input type="radio" name="sess-time" id="time-2"  class="state-input" checked />
+<input type="radio" name="sess-time" id="time-3"  class="state-input" />
+<input type="radio" name="sess-time" id="time-4"  class="state-input" />
+
+<div class="app">
+
+  <!-- ══ Sidebar ══════════════════════════════════════ -->
+  <aside class="sidebar" aria-label="Navigation">
+    <div class="sidebar__head">
+      <img class="sidebar__logo-img" src="logo.png" alt="Luminwell" width="30" height="30" decoding="async" />
+      <span class="sidebar__logo">LUMINWELL</span>
+    </div>
+    <div class="sidebar__block">
+      <a href="index.html" class="sidebar__new">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+        New chat
+      </a>
+    </div>
+    <div class="sidebar__block">
+      <div class="sidebar__label">Menu</div>
+      <nav class="sb-nav" aria-label="Sections">
+        <a href="index.html" class="sb-nav__link">
+          <svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5L12 4l9 6.5V20a1 1 0 01-1 1h-5v-7H9v7H4a1 1 0 01-1-1v-9.5z"/></svg>
+          Home
+        </a>
+        <a href="#" class="sb-nav__link">
+          <svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 11h16"/></svg>
+          Book
+        </a>
+        <a href="sessions.html" class="sb-nav__link is-active" aria-current="page">
+          <svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          Sessions
+        </a>
+        <a href="journal-pin.html" class="sb-nav__link">
+          <svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5c0-1 1-2 2.2-1.7C8.3 3.8 10 5.2 12 5.2S15.7 3.8 17.8 3.3C19 3 20 4 20 5v13c0 1-1 1.7-2.2 1.4-2-.4-3.8-1.6-5.8-1.6S8.2 19.4 6.2 19.8 4 19 4 18V5z"/><path d="M12 5.2v14.5"/></svg>
+          Journal
+        </a>
+        <a href="calendar.html" class="sb-nav__link">
+          <svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+          Calendar
+        </a>
+      </nav>
+    </div>
+    <div class="sidebar__block sidebar__block--fill">
+      <div class="sidebar__label">Upcoming</div>
+      <div class="sb-recent">
+        <button type="button" class="sb-recent__btn">
+          <div class="sb-recent__title">Check-in with Maya</div>
+          <div class="sb-recent__meta">May 2 · 3:00 pm</div>
+        </button>
+        <button type="button" class="sb-recent__btn">
+          <div class="sb-recent__title">Goal-setting session</div>
+          <div class="sb-recent__meta">May 9 · 4:00 pm</div>
+        </button>
+      </div>
+    </div>
+    <div class="sidebar__foot">
+      <div class="sidebar__avatar" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="3.5"/><path d="M6 19c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke-linecap="round"/></svg>
+      </div>
+      <div>
+        <div class="sidebar__name">Umer</div>
+        <div class="sidebar__credits">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><ellipse cx="12" cy="6" rx="6" ry="2"/><path d="M6 6v4c0 1.1 2.7 2 6 2s6-.9 6-2V6"/><path d="M6 10v4c0 1.1 2.7 2 6 2s6-.9 6-2v-4"/></svg>
+          500
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ══ Main ══════════════════════════════════════════ -->
+  <main class="main">
+
+    <header class="topbar">
+      <div class="topbar__left">
+        <img class="topbar__logo-img" src="logo.png" alt="Luminwell" width="28" height="28" decoding="async" />
+        <span class="topbar__title">Book a Session</span>
+      </div>
+      <div class="topbar__right">
+        <button type="button" class="topbar__crisis">988 Helpline</button>
+        <a href="journal-pin.html" class="btn-lock-sess" aria-label="Lock and return to PIN screen">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg>
+          Lock
+        </a>
+        <button type="button" class="topbar__icon-btn" aria-label="Notifications">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <div class="bk-page">
+      <div class="bk-inner">
+
+        <!-- Breadcrumb -->
+        <nav class="bk-breadcrumb" aria-label="Breadcrumb">
+          <a href="sessions.html">Sessions</a>
+          <span class="bk-breadcrumb__sep">›</span>
+          <span class="bk-breadcrumb__cur">Book a session</span>
+        </nav>
+
+        <!-- Heading -->
+        <div class="bk-heading">
+          <div>
+            <h1 class="bk-heading__title">Book a Session</h1>
+            <p class="bk-heading__sub">Choose a session type, pick a date and time that works for you</p>
+          </div>
+        </div>
+
+        <div class="bk-grid">
+          <div class="bk-main">
+
+            <!-- Step 1: Session type -->
+            <div class="bk-card">
+              <div class="bk-card__head">
+                <div class="bk-card__icon bk-card__icon--blue" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+                </div>
+                <p class="bk-card__title">Session Type</p>
+                <span class="bk-card__step">Step 1 of 4</span>
+              </div>
+              <div class="bk-card__body">
+                <div class="type-grid">
+                  <input type="radio" name="sess-type" id="type-checkin"  class="type-radio" checked />
+                  <label for="type-checkin" class="type-pill">
+                    <span class="type-pill__icon">💬</span>
+                    <span class="type-pill__name">Weekly check-in</span>
+                    <span class="type-pill__desc">Regular 30-min catch-up with your ambassador</span>
+                  </label>
+
+                  <input type="radio" name="sess-type" id="type-goal" class="type-radio" />
+                  <label for="type-goal" class="type-pill">
+                    <span class="type-pill__icon">🎯</span>
+                    <span class="type-pill__name">Goal setting</span>
+                    <span class="type-pill__desc">Plan and review your personal wellbeing goals</span>
+                  </label>
+
+                  <input type="radio" name="sess-type" id="type-review" class="type-radio" />
+                  <label for="type-review" class="type-pill">
+                    <span class="type-pill__icon">📊</span>
+                    <span class="type-pill__name">Progress review</span>
+                    <span class="type-pill__desc">Reflect on your journey and celebrate progress</span>
+                  </label>
+
+                  <input type="radio" name="sess-type" id="type-extended" class="type-radio" />
+                  <label for="type-extended" class="type-pill">
+                    <span class="type-pill__icon">🌿</span>
+                    <span class="type-pill__name">Extended session</span>
+                    <span class="type-pill__desc">60-min deep dive for more complex topics</span>
+                  </label>
+
+                  <input type="radio" name="sess-type" id="type-intro" class="type-radio" />
+                  <label for="type-intro" class="type-pill">
+                    <span class="type-pill__icon">👋</span>
+                    <span class="type-pill__name">Introductory</span>
+                    <span class="type-pill__desc">First session to get to know your ambassador</span>
+                  </label>
+
+                  <input type="radio" name="sess-type" id="type-crisis" class="type-radio" />
+                  <label for="type-crisis" class="type-pill">
+                    <span class="type-pill__icon">💙</span>
+                    <span class="type-pill__name">Support session</span>
+                    <span class="type-pill__desc">Urgent or emotionally difficult moments</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Step 2: Duration & format -->
+            <div class="bk-card">
+              <div class="bk-card__head">
+                <div class="bk-card__icon bk-card__icon--teal" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                </div>
+                <p class="bk-card__title">Duration &amp; Format</p>
+                <span class="bk-card__step">Step 2 of 4</span>
+              </div>
+              <div class="bk-card__body">
+                <div>
+                  <p class="bk-field-label">Session duration</p>
+                  <div class="dur-row">
+                    <input type="radio" name="sess-dur" id="dur-30" class="dur-radio" checked />
+                    <label for="dur-30" class="dur-pill">
+                      <span class="dur-pill__val">30</span>
+                      <span class="dur-pill__unit">minutes</span>
+                    </label>
+                    <input type="radio" name="sess-dur" id="dur-45" class="dur-radio" />
+                    <label for="dur-45" class="dur-pill">
+                      <span class="dur-pill__val">45</span>
+                      <span class="dur-pill__unit">minutes</span>
+                    </label>
+                    <input type="radio" name="sess-dur" id="dur-60" class="dur-radio" />
+                    <label for="dur-60" class="dur-pill">
+                      <span class="dur-pill__val">60</span>
+                      <span class="dur-pill__unit">minutes</span>
+                    </label>
+                  </div>
+                </div>
+                <div>
+                  <p class="bk-field-label">How would you like to meet?</p>
+                  <div class="fmt-row">
+                    <input type="radio" name="sess-fmt" id="fmt-video" class="fmt-radio" checked />
+                    <label for="fmt-video" class="fmt-pill">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+                      Video call
+                    </label>
+                    <input type="radio" name="sess-fmt" id="fmt-audio" class="fmt-radio" />
+                    <label for="fmt-audio" class="fmt-pill">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+                      Voice only
+                    </label>
+                    <input type="radio" name="sess-fmt" id="fmt-text" class="fmt-radio" />
+                    <label for="fmt-text" class="fmt-pill">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+                      Chat / text
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Step 3: Date & time -->
+            <div class="bk-card">
+              <div class="bk-card__head">
+                <div class="bk-card__icon bk-card__icon--blue" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                </div>
+                <p class="bk-card__title">Date &amp; Time</p>
+                <span class="bk-card__step">Step 3 of 4</span>
+              </div>
+              <div class="bk-card__body" style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+
+                <!-- Mini calendar -->
+                <div class="mini-cal">
+                  <div class="mini-cal__nav">
+                    <span class="mini-cal__month">May 2026</span>
+                    <div style="display:flex;gap:4px;">
+                      <span class="mini-cal__arrow" aria-label="Previous month">‹</span>
+                      <span class="mini-cal__arrow" aria-label="Next month">›</span>
+                    </div>
+                  </div>
+                  <div class="mini-cal__days" role="grid" aria-label="May 2026">
+                    <div class="mini-cal__day-label">Mo</div>
+                    <div class="mini-cal__day-label">Tu</div>
+                    <div class="mini-cal__day-label">We</div>
+                    <div class="mini-cal__day-label">Th</div>
+                    <div class="mini-cal__day-label">Fr</div>
+                    <div class="mini-cal__day-label">Sa</div>
+                    <div class="mini-cal__day-label">Su</div>
+                    <!-- Week 1 -->
+                    <div class="cal-day cal-day--past">28</div>
+                    <div class="cal-day cal-day--past">29</div>
+                    <div class="cal-day cal-day--past">30</div>
+                    <div class="cal-day cal-day--past">1</div>
+                    <div class="cal-day cal-day--today">2</div>
+                    <div class="cal-day cal-day--unavail">3</div>
+                    <div class="cal-day cal-day--unavail">4</div>
+                    <!-- Week 2 -->
+                    <div class="cal-day cal-day--avail">5</div>
+                    <div class="cal-day cal-day--avail">6</div>
+                    <div class="cal-day cal-day--avail">7</div>
+                    <div class="cal-day cal-day--avail">8</div>
+                    <div class="cal-day cal-day--sel">9</div>
+                    <div class="cal-day cal-day--unavail">10</div>
+                    <div class="cal-day cal-day--unavail">11</div>
+                    <!-- Week 3 -->
+                    <div class="cal-day cal-day--avail">12</div>
+                    <div class="cal-day cal-day--avail">13</div>
+                    <div class="cal-day cal-day--unavail">14</div>
+                    <div class="cal-day cal-day--avail">15</div>
+                    <div class="cal-day cal-day--avail">16</div>
+                    <div class="cal-day cal-day--unavail">17</div>
+                    <div class="cal-day cal-day--unavail">18</div>
+                    <!-- Week 4 -->
+                    <div class="cal-day cal-day--avail">19</div>
+                    <div class="cal-day cal-day--avail">20</div>
+                    <div class="cal-day cal-day--avail">21</div>
+                    <div class="cal-day cal-day--avail">22</div>
+                    <div class="cal-day cal-day--avail">23</div>
+                    <div class="cal-day cal-day--unavail">24</div>
+                    <div class="cal-day cal-day--unavail">25</div>
+                    <!-- Week 5 -->
+                    <div class="cal-day cal-day--avail">26</div>
+                    <div class="cal-day cal-day--avail">27</div>
+                    <div class="cal-day cal-day--avail">28</div>
+                    <div class="cal-day cal-day--avail">29</div>
+                    <div class="cal-day cal-day--avail">30</div>
+                    <div class="cal-day cal-day--unavail">31</div>
+                  </div>
+                  <div style="display:flex;gap:10px;font-size:11px;color:var(--muted);">
+                    <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:3px;background:var(--sb-bg);display:inline-block;"></span>Selected</span>
+                    <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:3px;border:1.5px solid var(--teal);display:inline-block;"></span>Today</span>
+                    <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:3px;background:var(--page-bg);border:1px solid var(--border);display:inline-block;opacity:.5;"></span>Unavail.</span>
+                  </div>
+                </div>
+
+                <!-- Time slots -->
+                <div>
+                  <p class="bk-field-label" style="margin-bottom:10px;">Available times — Friday, May 9</p>
+                  <div class="time-grid">
+                    <input type="radio" name="sess-time" id="time-9" class="time-radio" />
+                    <label for="time-9" class="time-slot">
+                      9:00 am
+                      <span class="time-slot__avail">Available</span>
+                    </label>
+
+                    <input type="radio" name="sess-time" id="time-10" class="time-radio" />
+                    <label for="time-10" class="time-slot">
+                      10:00 am
+                      <span class="time-slot__avail">Available</span>
+                    </label>
+
+                    <label class="time-slot time-slot--full" aria-disabled="true">
+                      11:00 am
+                      <span class="time-slot__full">Full</span>
+                    </label>
+
+                    <label class="time-slot time-slot--full" aria-disabled="true">
+                      1:00 pm
+                      <span class="time-slot__full">Full</span>
+                    </label>
+
+                    <input type="radio" name="sess-time" id="time-2" class="time-radio" checked />
+                    <label for="time-2" class="time-slot">
+                      2:00 pm
+                      <span class="time-slot__avail">Available</span>
+                    </label>
+
+                    <input type="radio" name="sess-time" id="time-3" class="time-radio" />
+                    <label for="time-3" class="time-slot">
+                      3:00 pm
+                      <span class="time-slot__avail">Available</span>
+                    </label>
+
+                    <input type="radio" name="sess-time" id="time-4" class="time-radio" />
+                    <label for="time-4" class="time-slot">
+                      4:00 pm
+                      <span class="time-slot__avail">Available</span>
+                    </label>
+
+                    <label class="time-slot time-slot--full" aria-disabled="true">
+                      5:00 pm
+                      <span class="time-slot__full">Full</span>
+                    </label>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- Step 4: Notes -->
+            <div class="bk-card">
+              <div class="bk-card__head">
+                <div class="bk-card__icon bk-card__icon--amber" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                </div>
+                <p class="bk-card__title">Pre-session notes <span style="font-weight:500;color:var(--soft);font-size:12px;">(optional)</span></p>
+                <span class="bk-card__step">Step 4 of 4</span>
+              </div>
+              <div class="bk-card__body">
+                <div>
+                  <p class="bk-field-label">What would you like to focus on?</p>
+                  <textarea class="bk-textarea" rows="3" placeholder="e.g. I've been feeling anxious about upcoming exams and want to discuss coping strategies…" aria-label="Pre-session notes"></textarea>
+                </div>
+                <div>
+                  <p class="bk-field-label">Is there anything Maya should know beforehand?</p>
+                  <textarea class="bk-textarea" rows="2" placeholder="Anything relevant — no pressure, this is completely optional…" aria-label="Additional context for ambassador"></textarea>
+                </div>
+                <div class="bk-privacy">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                  These notes are private and shared only with Maya. They help her prepare for your session.
+                </div>
+              </div>
+            </div>
+
+          </div><!-- /bk-main -->
+
+          <!-- Aside: summary + confirm -->
+          <div class="bk-aside">
+
+            <!-- Ambassador -->
+            <div class="amb-strip">
+              <div class="amb-strip__avatar" aria-hidden="true">🌿</div>
+              <div class="amb-strip__info">
+                <p class="amb-strip__name">Maya Johnson</p>
+                <p class="amb-strip__role">Your ambassador</p>
+              </div>
+              <a href="session-ambassador.html" class="amb-strip__change">Change</a>
+            </div>
+
+            <!-- Booking summary -->
+            <div class="summary-card" aria-label="Booking summary">
+              <div class="summary-card__head">Booking summary</div>
+              <div class="summary-card__body">
+                <div class="summary-row">
+                  <div class="summary-row__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+                  </div>
+                  <div>
+                    <p class="summary-row__label">Session type</p>
+                    <p class="summary-row__val">Weekly check-in</p>
+                  </div>
+                </div>
+                <div class="summary-row">
+                  <div class="summary-row__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                  </div>
+                  <div>
+                    <p class="summary-row__label">Date</p>
+                    <p class="summary-row__val">Friday, May 9, 2026</p>
+                  </div>
+                </div>
+                <div class="summary-row">
+                  <div class="summary-row__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                  </div>
+                  <div>
+                    <p class="summary-row__label">Time</p>
+                    <p class="summary-row__val">2:00 pm – 2:30 pm</p>
+                  </div>
+                </div>
+                <div class="summary-row">
+                  <div class="summary-row__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+                  </div>
+                  <div>
+                    <p class="summary-row__label">Format</p>
+                    <p class="summary-row__val">Video call</p>
+                  </div>
+                </div>
+                <div class="summary-row">
+                  <div class="summary-row__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                  </div>
+                  <div>
+                    <p class="summary-row__label">Ambassador</p>
+                    <p class="summary-row__val">Maya Johnson</p>
+                  </div>
+                </div>
+                <div class="summary-divider"></div>
+                <div class="summary-row">
+                  <div class="summary-row__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="6" rx="6" ry="2"/><path d="M6 6v4c0 1.1 2.7 2 6 2s6-.9 6-2V6"/><path d="M6 10v4c0 1.1 2.7 2 6 2s6-.9 6-2v-4"/></svg>
+                  </div>
+                  <div>
+                    <p class="summary-row__label">Cost</p>
+                    <p class="summary-row__val" style="color:var(--teal-deep);">Free — included in plan</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Confirm button -->
+            <a href="sessions.html" class="btn-confirm">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>
+              Confirm booking
+            </a>
+            <a href="sessions.html" class="btn-cancel-bk">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              Cancel
+            </a>
+
+          </div><!-- /bk-aside -->
+        </div><!-- /bk-grid -->
+
+      </div><!-- /bk-inner -->
+    </div><!-- /bk-page -->
+  </main>
+
+</div><!-- /app -->
+</body>
+</html>

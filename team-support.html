@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Luminwell — Find a Supporter</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="sessions.css" />
+  <style>
+    /* ── Page shell ──────────────────────────────────── */
+    .ts-page  { flex: 1; overflow-y: auto; background: var(--page-bg); }
+    .ts-inner { padding: 28px 28px 60px; display: flex; flex-direction: column; gap: 24px; }
+
+    /* ── Topbar search ───────────────────────────────── */
+    .ts-search-bar {
+      display: flex; align-items: center; gap: 10px;
+      background: var(--surface); border: 1.5px solid var(--border);
+      border-radius: 12px; padding: 10px 16px;
+      box-shadow: var(--shadow-sm);
+      transition: border-color .18s, box-shadow .18s;
+      cursor: text;
+    }
+    .ts-search-bar:focus-within {
+      border-color: rgba(23,93,146,.3);
+      box-shadow: 0 0 0 3px rgba(23,93,146,.07), var(--shadow-sm);
+    }
+    .ts-search-bar svg { width: 16px; height: 16px; color: var(--soft); flex-shrink: 0; }
+    .ts-search-bar input {
+      flex: 1; border: none; outline: none; font-family: var(--font);
+      font-size: 14px; color: var(--text); background: transparent;
+    }
+    .ts-search-bar input::placeholder { color: var(--soft); }
+    .ts-search-link {
+      display: block; text-decoration: none; color: inherit;
+    }
+    .ts-search-bar__btn {
+      font-size: 12px; font-weight: 700; color: var(--sb-bg);
+      background: none; border: none; cursor: pointer; white-space: nowrap;
+      font-family: var(--font);
+    }
+
+    /* ── Filter chip bar ─────────────────────────────── */
+    .filter-bar {
+      display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+    }
+    .filter-bar__label { font-size: 11px; font-weight: 700; color: var(--soft); letter-spacing: .05em; flex-shrink: 0; }
+    .filter-chip {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 6px 14px; border-radius: var(--rf);
+      background: var(--surface); border: 1.5px solid var(--border);
+      font-size: 12px; font-weight: 600; color: var(--muted);
+      cursor: pointer; transition: all .14s; box-shadow: var(--shadow-sm);
+      text-decoration: none;
+    }
+    .filter-chip:hover { border-color: var(--sb-bg); color: var(--sb-bg); background: rgba(23,93,146,.04); }
+    .filter-chip--active {
+      background: var(--sb-bg); color: #fff;
+      border-color: var(--sb-bg); box-shadow: 0 2px 8px rgba(23,93,146,.22);
+    }
+    .filter-chip--active:hover { background: var(--sb-deep); border-color: var(--sb-deep); color: #fff; }
+    .filter-chip svg { width: 12px; height: 12px; }
+
+    /* ── Sort + count bar ────────────────────────────── */
+    .results-bar {
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    }
+    .results-bar__count { font-size: 13px; color: var(--muted); }
+    .results-bar__count strong { color: var(--text); font-weight: 800; }
+    .sort-select {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 7px 12px; border-radius: 9px;
+      background: var(--surface); border: 1.5px solid var(--border);
+      font-size: 12px; font-weight: 600; color: var(--muted);
+      cursor: pointer; box-shadow: var(--shadow-sm);
+    }
+    .sort-select svg { width: 13px; height: 13px; }
+
+    /* ── Supporter card grid ─────────────────────────── */
+    .supporters-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px;
+    }
+
+    /* ── Supporter card ──────────────────────────────── */
+    .supp-card {
+      background: var(--surface); border-radius: 18px;
+      border: 1.5px solid var(--border); box-shadow: var(--shadow-sm);
+      display: flex; flex-direction: column; overflow: hidden;
+      transition: box-shadow .2s, border-color .2s, transform .18s;
+    }
+    .supp-card:hover { box-shadow: var(--shadow); border-color: rgba(23,93,146,.2); transform: translateY(-2px); }
+
+    /* Top accent bar */
+    .supp-card__bar { height: 4px; width: 100%; }
+
+    /* Match badge overlay */
+    .supp-card__top {
+      padding: 16px 16px 0;
+      display: flex; align-items: flex-start; justify-content: space-between; gap: 8px;
+    }
+    .supp-card__match {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 4px 10px; border-radius: var(--rf);
+      font-size: 11px; font-weight: 800;
+    }
+    .supp-card__match--high { background: rgba(5,150,105,.1); color: #065f46; border: 1px solid rgba(5,150,105,.2); }
+    .supp-card__match--mid  { background: rgba(217,119,6,.1);  color: #92400e; border: 1px solid rgba(217,119,6,.2); }
+    .supp-card__match-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+    .supp-card__avail-badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 4px 9px; border-radius: var(--rf);
+      font-size: 10px; font-weight: 700;
+    }
+    .supp-card__avail-badge--open { background: var(--teal-pale); color: var(--teal-deep); border: 1px solid var(--teal-mid); }
+    .supp-card__avail-badge--low  { background: rgba(217,119,6,.08); color: #92400e; border: 1px solid rgba(217,119,6,.2); }
+    .supp-card__avail-badge svg { width: 10px; height: 10px; }
+
+    /* Profile section */
+    .supp-card__profile {
+      padding: 14px 16px 0;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .supp-card__avatar {
+      width: 52px; height: 52px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; flex-shrink: 0;
+      border: 2px solid rgba(255,255,255,.7);
+      box-shadow: 0 2px 8px rgba(12,25,41,.12);
+    }
+    .supp-card__name  { font-size: 16px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.2; }
+    .supp-card__role  { font-size: 12px; color: var(--muted); margin-top: 2px; font-weight: 500; }
+
+    /* Body */
+    .supp-card__body { padding: 12px 16px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+
+    .supp-card__tags { display: flex; gap: 5px; flex-wrap: wrap; }
+    .supp-card__tag {
+      padding: 3px 9px; border-radius: var(--rf);
+      background: var(--page-bg); border: 1px solid var(--border);
+      font-size: 10px; font-weight: 600; color: var(--muted);
+    }
+
+    .supp-card__bio {
+      font-size: 12px; color: var(--muted); line-height: 1.65;
+      display: -webkit-box; -webkit-line-clamp: 3; line-clamp: 3;
+      -webkit-box-orient: vertical; overflow: hidden;
+    }
+
+    /* Stats row */
+    .supp-card__stats {
+      display: flex; gap: 0;
+      background: var(--page-bg); border-radius: 10px;
+      border: 1px solid var(--border-soft); overflow: hidden;
+    }
+    .supp-card__stat {
+      flex: 1; display: flex; flex-direction: column; align-items: center;
+      gap: 3px; padding: 8px 4px;
+      border-right: 1px solid var(--border-soft);
+    }
+    .supp-card__stat:last-child { border-right: none; }
+    .supp-card__stat-icon {
+      width: 20px; height: 20px; border-radius: 5px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .supp-card__stat-icon svg { width: 11px; height: 11px; }
+    .supp-card__stat-icon--star  { background: rgba(251,191,36,.15); color: #d97706; }
+    .supp-card__stat-icon--users { background: rgba(23,93,146,.1);   color: var(--sb-bg); }
+    .supp-card__stat-icon--clock { background: rgba(45,150,118,.1);  color: var(--teal); }
+    .supp-card__stat-val   { font-size: 13px; font-weight: 800; color: var(--text); line-height: 1; }
+    .supp-card__stat-label { font-size: 9px; color: var(--soft); font-weight: 600; text-transform: uppercase; letter-spacing: .05em; text-align: center; }
+
+    /* Footer actions */
+    .supp-card__foot {
+      padding: 0 16px 16px;
+      display: flex; gap: 8px;
+    }
+    .btn-supp-view {
+      flex: 1; padding: 10px; border-radius: 9px;
+      border: 1.5px solid var(--border); background: var(--page-bg);
+      color: var(--muted); font-size: 12px; font-weight: 700; font-family: var(--font);
+      cursor: pointer; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 5px;
+      transition: all .14s;
+    }
+    .btn-supp-view:hover { border-color: var(--sb-bg); color: var(--sb-bg); background: rgba(23,93,146,.04); }
+    .btn-supp-view svg { width: 12px; height: 12px; }
+    .btn-supp-book {
+      flex: 1; padding: 10px; border-radius: 9px;
+      background: var(--sb-bg); color: #fff;
+      font-size: 12px; font-weight: 700; font-family: var(--font);
+      border: none; cursor: pointer; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 5px;
+      box-shadow: 0 2px 8px rgba(23,93,146,.25); transition: background .14s;
+    }
+    .btn-supp-book:hover { background: var(--sb-deep); }
+    .btn-supp-book svg { width: 12px; height: 12px; }
+
+    /* ── Featured / recommended banner ──────────────── */
+    .featured-banner {
+      background: linear-gradient(135deg, var(--sb-bg) 0%, #1a7ab8 60%, var(--teal) 100%);
+      border-radius: 18px; padding: 22px 26px;
+      color: #fff; display: flex; align-items: center; gap: 20px;
+      box-shadow: 0 4px 20px rgba(23,93,146,.28);
+    }
+    .featured-banner__avatar {
+      width: 60px; height: 60px; border-radius: 50%; flex-shrink: 0;
+      background: rgba(255,255,255,.2); border: 3px solid rgba(255,255,255,.4);
+      display: flex; align-items: center; justify-content: center; font-size: 24px;
+    }
+    .featured-banner__badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 3px 9px; border-radius: var(--rf);
+      background: rgba(255,255,255,.2); border: 1px solid rgba(255,255,255,.3);
+      font-size: 10px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .featured-banner__name { font-size: 20px; font-weight: 800; letter-spacing: -0.03em; }
+    .featured-banner__sub  { font-size: 13px; opacity: .75; margin-top: 3px; }
+    .featured-banner__tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+    .featured-banner__tag {
+      padding: 3px 10px; border-radius: var(--rf);
+      background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.2);
+      font-size: 11px; font-weight: 600;
+    }
+    .featured-banner__actions { display: flex; gap: 8px; margin-top: 14px; }
+    .btn-feat-primary {
+      padding: 9px 20px; border-radius: 9px;
+      background: #fff; color: var(--sb-bg);
+      font-size: 13px; font-weight: 800; font-family: var(--font);
+      border: none; cursor: pointer; text-decoration: none;
+      display: inline-flex; align-items: center; gap: 6px;
+      transition: opacity .14s;
+    }
+    .btn-feat-primary:hover { opacity: .9; }
+    .btn-feat-primary svg { width: 13px; height: 13px; }
+    .btn-feat-sec {
+      padding: 9px 18px; border-radius: 9px;
+      background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.25);
+      color: #fff; font-size: 13px; font-weight: 700; font-family: var(--font);
+      cursor: pointer; text-decoration: none;
+      display: inline-flex; align-items: center; gap: 6px;
+      transition: background .14s;
+    }
+    .btn-feat-sec:hover { background: rgba(255,255,255,.25); }
+    .featured-banner__info { flex: 1; }
+    .featured-banner__stats { display: flex; gap: 22px; margin-top: 10px; }
+    .featured-banner__stat-val   { font-size: 18px; font-weight: 800; letter-spacing: -0.03em; line-height: 1; }
+    .featured-banner__stat-label { font-size: 10px; opacity: .6; margin-top: 2px; font-weight: 600; }
+
+    /* ── Section label ───────────────────────────────── */
+    .section-label {
+      font-size: 11px; font-weight: 700; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--soft);
+      display: flex; align-items: center; gap: 10px;
+    }
+    .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+    /* Privacy strip */
+    .ts-privacy {
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 14px 18px; border-radius: 12px;
+      background: var(--surface); border: 1px solid var(--border);
+      font-size: 12px; color: var(--muted); line-height: 1.6; box-shadow: var(--shadow-sm);
+    }
+    .ts-privacy svg { width: 14px; height: 14px; flex-shrink: 0; margin-top: 2px; color: var(--teal); }
+  </style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ══ Sidebar ══════════════════════════════════════ -->
+  <aside class="sidebar" aria-label="Navigation">
+    <div class="sidebar__head">
+      <img class="sidebar__logo-img" src="logo.png" alt="Luminwell" width="30" height="30" decoding="async" />
+      <span class="sidebar__logo">LUMINWELL</span>
+    </div>
+    <div class="sidebar__block">
+      <a href="index.html" class="sidebar__new">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+        New chat
+      </a>
+    </div>
+    <div class="sidebar__block">
+      <div class="sidebar__label">Menu</div>
+      <nav class="sb-nav" aria-label="Sections">
+        <a href="index.html" class="sb-nav__link">
+          <svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5L12 4l9 6.5V20a1 1 0 01-1 1h-5v-7H9v7H4a1 1 0 01-1-1v-9.5z"/></svg>
+          Home
+        </a>
+        <a href="team-support.html" class="sb-nav__link is-active" aria-current="page">
+          <svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+          Find Support
+        </a>
+        <a href="sessions.html" class="sb-nav__link">
+          <svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          Sessions
+        </a>
+        <a href="journal-pin.html" class="sb-nav__link">
+          <svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5c0-1 1-2 2.2-1.7C8.3 3.8 10 5.2 12 5.2S15.7 3.8 17.8 3.3C19 3 20 4 20 5v13c0 1-1 1.7-2.2 1.4-2-.4-3.8-1.6-5.8-1.6S8.2 19.4 6.2 19.8 4 19 4 18V5z"/><path d="M12 5.2v14.5"/></svg>
+          Journal
+        </a>
+        <a href="calendar.html" class="sb-nav__link">
+          <svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+          Calendar
+        </a>
+      </nav>
+    </div>
+    <div class="sidebar__block sidebar__block--fill">
+      <div class="sidebar__label">Saved Supporters</div>
+      <div class="sb-recent">
+        <button type="button" class="sb-recent__btn">
+          <div class="sb-recent__title">Dr. Sarah Chen</div>
+          <div class="sb-recent__meta">Housing · Anxiety</div>
+        </button>
+        <button type="button" class="sb-recent__btn">
+          <div class="sb-recent__title">Aisha Okonkwo</div>
+          <div class="sb-recent__meta">Anxiety · Family</div>
+        </button>
+      </div>
+    </div>
+    <div class="sidebar__foot">
+      <div class="sidebar__avatar" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="3.5"/><path d="M6 19c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke-linecap="round"/></svg>
+      </div>
+      <div>
+        <div class="sidebar__name">Umer</div>
+        <div class="sidebar__credits">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><ellipse cx="12" cy="6" rx="6" ry="2"/><path d="M6 6v4c0 1.1 2.7 2 6 2s6-.9 6-2V6"/><path d="M6 10v4c0 1.1 2.7 2 6 2s6-.9 6-2v-4"/></svg>
+          500
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ══ Main ══════════════════════════════════════════ -->
+  <main class="main">
+
+    <header class="topbar">
+      <div class="topbar__left">
+        <img class="topbar__logo-img" src="logo.png" alt="Luminwell" width="28" height="28" decoding="async" />
+        <span class="topbar__title">Find a Supporter</span>
+      </div>
+      <div class="topbar__right">
+        <button type="button" class="topbar__crisis" aria-label="988 Crisis and Suicide Lifeline">988 Helpline</button>
+        <a href="team-support-search.html" class="topbar__icon-btn" aria-label="Search supporters">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+        </a>
+        <button type="button" class="topbar__icon-btn" aria-label="Notifications">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+        </button>
+        <button type="button" class="topbar__icon-btn" aria-label="Settings">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <div class="ts-page">
+      <div class="ts-inner">
+
+        <!-- Page header -->
+        <div class="sess-header">
+          <div class="sess-header__text">
+            <h1 class="sess-header__title">Find a Supporter</h1>
+            <p class="sess-header__sub">Browse trained peer supporters and specialists matched to your needs</p>
+          </div>
+          <div class="sess-header__actions">
+            <a href="team-support-search.html" class="btn-book" style="background:var(--surface);color:var(--muted);border:1.5px solid var(--border);box-shadow:var(--shadow-sm);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+              Search
+            </a>
+            <a href="session-book.html" class="btn-book">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+              Book a session
+            </a>
+          </div>
+        </div>
+
+        <!-- Search bar (decorative — links to search page) -->
+        <a href="team-support-search.html" class="ts-search-link">
+          <div class="ts-search-bar" role="search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+            <input type="text" placeholder="Search by name, speciality, or keyword…" readonly tabindex="-1" />
+            <span class="ts-search-bar__btn">Search</span>
+          </div>
+        </a>
+
+        <!-- Filter chips -->
+        <div class="filter-bar" role="group" aria-label="Filter supporters">
+          <span class="filter-bar__label">Filter</span>
+          <span class="filter-chip filter-chip--active">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+            All supporters
+          </span>
+          <span class="filter-chip">Anxiety</span>
+          <span class="filter-chip">Housing &amp; finance</span>
+          <span class="filter-chip">Academic stress</span>
+          <span class="filter-chip">Relationships</span>
+          <span class="filter-chip">LGBTQ+</span>
+          <span class="filter-chip">International students</span>
+          <span class="filter-chip">Grief &amp; loss</span>
+          <span class="filter-chip">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+            More filters
+          </span>
+        </div>
+
+        <!-- Featured / best match -->
+        <div>
+          <p class="section-label">Recommended for you</p>
+          <div style="margin-top:14px;">
+            <div class="featured-banner" role="region" aria-label="Best matched supporter">
+              <div class="featured-banner__avatar" aria-hidden="true">🌿</div>
+              <div class="featured-banner__info">
+                <span class="featured-banner__badge">
+                  <svg viewBox="0 0 24 24" fill="currentColor" style="width:9px;height:9px;" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                  Best match for you
+                </span>
+                <p class="featured-banner__name">Maya Johnson</p>
+                <p class="featured-banner__sub">Peer Support Specialist · University of Manchester</p>
+                <div class="featured-banner__tags">
+                  <span class="featured-banner__tag">Academic stress</span>
+                  <span class="featured-banner__tag">Anxiety</span>
+                  <span class="featured-banner__tag">CBT techniques</span>
+                  <span class="featured-banner__tag">Sleep</span>
+                </div>
+                <div class="featured-banner__actions">
+                  <a href="session-book.html" class="btn-feat-primary">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                    Book a session
+                  </a>
+                  <a href="session-ambassador.html" class="btn-feat-sec">View profile</a>
+                </div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:16px;flex-shrink:0;">
+                <div class="featured-banner__stats">
+                  <div>
+                    <p class="featured-banner__stat-val">4.9 ★</p>
+                    <p class="featured-banner__stat-label">Rating</p>
+                  </div>
+                  <div>
+                    <p class="featured-banner__stat-val">84</p>
+                    <p class="featured-banner__stat-label">Students helped</p>
+                  </div>
+                  <div>
+                    <p class="featured-banner__stat-val">2 yr</p>
+                    <p class="featured-banner__stat-label">Experience</p>
+                  </div>
+                </div>
+                <div style="background:rgba(255,255,255,.15);border-radius:10px;padding:10px 14px;text-align:center;">
+                  <p style="font-size:18px;font-weight:800;letter-spacing:-0.02em;line-height:1;">8 slots</p>
+                  <p style="font-size:10px;opacity:.7;margin-top:2px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;">Available this week</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- All supporters grid -->
+        <div>
+          <div class="results-bar">
+            <p class="section-label" style="flex:1;">All supporters</p>
+            <span class="results-bar__count"><strong>12</strong> supporters available</span>
+            <span class="sort-select">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M7 12h10M11 18h2"/></svg>
+              Best match
+            </span>
+          </div>
+          <div class="supporters-grid" style="margin-top:16px;">
+
+            <!-- Card 1: Priya Singh -->
+            <div class="supp-card" role="article">
+              <div class="supp-card__bar" style="background:linear-gradient(90deg,#059669,#34d399);"></div>
+              <div class="supp-card__top">
+                <span class="supp-card__match supp-card__match--high">
+                  <span class="supp-card__match-dot" style="background:#059669;"></span>
+                  95% match
+                </span>
+                <span class="supp-card__avail-badge supp-card__avail-badge--open">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                  5 slots
+                </span>
+              </div>
+              <div class="supp-card__profile">
+                <div class="supp-card__avatar" style="background:linear-gradient(135deg,#7c3aed,#c084fc);" aria-hidden="true">🌸</div>
+                <div>
+                  <p class="supp-card__name">Priya Singh</p>
+                  <p class="supp-card__role">Wellbeing Ambassador</p>
+                </div>
+              </div>
+              <div class="supp-card__body">
+                <div class="supp-card__tags">
+                  <span class="supp-card__tag">International students</span>
+                  <span class="supp-card__tag">Loneliness</span>
+                  <span class="supp-card__tag">Identity</span>
+                  <span class="supp-card__tag">Mindfulness</span>
+                </div>
+                <p class="supp-card__bio">Final-year Social Science student. Specialises in supporting international students navigating cultural transitions, homesickness, and identity.</p>
+                <div class="supp-card__stats">
+                  <div class="supp-card__stat">
+                    <div class="supp-card__stat-icon supp-card__stat-icon--star" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+                    <span class="supp-card__stat-val">4.8</span>
+                    <span class="supp-card__stat-label">Rating</span>
+                  </div>
+                  <div class="supp-card__stat">
+                    <div class="supp-card__stat-icon supp-card__stat-icon--users" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
+                    <span class="supp-card__stat-val">61</span>
+                    <span class="supp-card__stat-label">Helped</span>
+                  </div>
+                  <div class="supp-card__stat">
+                    <div class="supp-card__stat-icon supp-card__stat-icon--clock" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
+                    <span class="supp-card__stat-val">1.5y</span>
+                    <span class="supp-card__stat-label">Exp.</span>
+                  </div>
+                </div>
+              </div>
+              <div class="supp-card__foot">
+                <a href="#" class="btn-supp-view">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  Profile
+                </a>
+                <a href="session-book.html" class="btn-supp-book">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                  Book
+                </a>
+              </div>
+            </div>
+
+            <!-- Card 2: James Okafor -->
+            <div class="supp-card" role="article">
+              <div class="supp-card__bar" style="background:linear-gradient(90deg,#059669,#34d399);"></div>
+              <div class="supp-card__top">
+                <span class="supp-card__match supp-card__match--high">
+                  <span class="supp-card__match-dot" style="background:#059669;"></span>
+                  91% match
+                </span>
+                <span class="supp-card__avail-badge supp-card__avail-badge--open">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                  6 slots
+                </span>
+              </div>
+              <div class="supp-card__profile">
+                <div class="supp-card__avatar" style="background:linear-gradient(135deg,#059669,#34d399);" aria-hidden="true">🌍</div>
+                <div>
+                  <p class="supp-card__name">James Okafor</p>
+                  <p class="supp-card__role">Peer Support Ambassador</p>
+                </div>
+              </div>
+              <div class="supp-card__body">
+                <div class="supp-card__tags">
+                  <span class="supp-card__tag">Finance stress</span>
+                  <span class="supp-card__tag">Housing</span>
+                  <span class="supp-card__tag">Resilience</span>
+                  <span class="supp-card__tag">Career anxiety</span>
+                </div>
+                <p class="supp-card__bio">Postgraduate student in Economics. Specialises in practical support for students facing financial pressure, housing instability, and career uncertainty.</p>
+                <div class="supp-card__stats">
+                  <div class="supp-card__stat">
+                    <div class="supp-card__stat-icon supp-card__stat-icon--star" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+                    <span class="supp-card__stat-val">4.7</span>
+                    <span class="supp-card__stat-label">Rating</span>
+                  </div>
+                  <div class="supp-card__stat">
+                    <div class="supp-card__stat-icon supp-card__stat-icon--users" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
+                    <span class="supp-card__stat-val">55</span>
+                    <span class="supp-card__stat-label">Helped</span>
+                  </div>
+                  <div class="supp-card__stat">
+                    <div class="supp-card__stat-icon supp-card__stat-icon--clock" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
+                    <span class="supp-card__stat-val">1 yr</span>
+                    <span class="supp-card__stat-label">Exp.</span>
+                  </div>
+                </div>
+              </div>
+              <div class="supp-card__foot">
+                <a href="#" class="btn-supp-view">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  Profile
+                </a>
+                <a href="session-book.html" class="btn-supp-book">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                  Book
+                </a>
+              </div>
+            </div>
+
+            <!-- Card 3: Sofia Martínez -->
+            <div class="supp-card" role="article">
+              <div class="supp-card__bar" style="background:linear-gradient(90deg,#d97706,#fbbf24);"></div>
+              <div class="supp-card__top">
+                <span class="supp-card__match supp-card__match--mid">
+                  <span class="supp-card__match-dot" style="background:#d97706;"></span>
+                  82% match
+                </span>
+                <span class="supp-card__avail-badge supp-card__avail-badge--open">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                  4 slots
+                </span>
+              </div>
+              <div class="supp-card__profile">
+                <div class="supp-card__avatar" style="background:linear-gradient(135deg,#d97706,#fbbf24);" aria-hidden="true">☀️</div>
+                <div>
+                  <p class="supp-card__name">Sofia Martínez</p>
+                  <p class="supp-card__role">Wellbeing Ambassador</p>
+                </div>
+              </div>
+              <div class="supp-card__body">
+                <div class="supp-card__tags">
+                  <span class="supp-card__tag">Body image</span>
+                  <span class="supp-card__tag">Self-esteem</span>
+                  <span class="supp-card__tag">Relationships</span>
+                  <span class="supp-card__tag">Self-compassion</span>
+                </div>
+                <p class="supp-card__bio">Second-year Nursing student. Warm, grounded approach to self-worth, body image, and navigating relationships during university life.</p>
+                <div class="supp-card__stats">
+                  <div class="supp-card__stat">
+                    <div class="supp-card__stat-icon supp-card__stat-icon--star" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+                    <span class="supp-card__stat-val">4.8</span>
+                    <span class="supp-card__stat-label">Rating</span>
+                  </div>
+                  <div class="supp-card__stat">
+                    <div class="supp-card__stat-icon supp-card__stat-icon--users" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
+                    <span class="supp-card__stat-val">48</span>
+                    <span class="supp-card__stat-label">Helped</span>
+                  </div>
+                  <div class="supp-card__stat">
+                    <div class="supp-card__stat-icon supp-card__stat-icon--clock" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
+                    <span class="supp-card__stat-val">1 yr</span>
+                    <span class="supp-card__stat-label">Exp.</span>
+                  </div>
+                </div>
+              </div>
+              <div class="supp-card__foot">
+                <a href="#" class="btn-supp-view">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  Profile
+                </a>
+                <a href="session-book.html" class="btn-supp-book">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                  Book
+                </a>
+              </div>
+            </div>
+
+            <!-- Card 4: Aidan Byrne -->
+            <div class="supp-card" role="article">
+              <div class="supp-card__bar" style="background:linear-gradient(90deg,#d97706,#fbbf24);"></div>
+              <div class="supp-card__top">
+                <span class="supp-card__match supp-card__match--mid">
+                  <span class="supp-card__match-dot" style="background:#d97706;"></span>
+                  78% match
+                </span>
+                <span class="supp-card__avail-badge supp-card__avail-badge--low">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                  2 slots left
+                </span>
+              </div>
+              <div class="supp-card__profile">
+                <div class="supp-card__avatar" style="background:linear-gradient(135deg,#0ea5e9,#38bdf8);" aria-hidden="true">🧘</div>
+                <div>
+                  <p class="supp-card__name">Aidan Byrne</p>
+                  <p class="supp-card__role">Peer Support Specialist</p>
+                </div>
+              </div>
+              <div class="supp-card__body">
+                <div class="supp-card__tags">
+                  <span class="supp-card__tag">LGBTQ+</span>
+                  <span class="supp-card__tag">Depression</span>
+                  <span class="supp-card__tag">Isolation</span>
+                  <span class="supp-card__tag">Masculinity</span>
+                </div>
+                <p class="supp-card__bio">Masters student in Gender Studies. A safe, affirming space for students exploring identity, dealing with isolation, or navigating mental health challenges.</p>
+                <div class="supp-card__stats">
+                  <div class="supp-card__stat">
+                    <div class="supp-card__stat-icon supp-card__stat-icon--star" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+                    <span class="supp-card__stat-val">4.9</span>
+                    <span class="supp-card__stat-label">Rating</span>
+                  </div>
+                  <div class="supp-card__stat">
+                    <div class="supp-card__stat-icon supp-card__stat-icon--users" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
+                    <span class="supp-card__stat-val">39</span>
+                    <span class="supp-card__stat-label">Helped</span>
+                  </div>
+                  <div class="supp-card__stat">
+                    <div class="supp-card__stat-icon supp-card__stat-icon--clock" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
+                    <span class="supp-card__stat-val">2 yr</span>
+                    <span class="supp-card__stat-label">Exp.</span>
+                  </div>
+                </div>
+              </div>
+              <div class="supp-card__foot">
+                <a href="#" class="btn-supp-view">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  Profile
+                </a>
+                <a href="session-book.html" class="btn-supp-book">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                  Book
+                </a>
+              </div>
+            </div>
+
+            <!-- Card 5: Dr. Sarah Chen -->
+            <div class="supp-card" role="article">
+              <div class="supp-card__bar" style="background:linear-gradient(90deg,#059669,#34d399);"></div>
+              <div class="supp-card__top">
+                <span class="supp-card__match supp-card__match--high">
+                  <span class="supp-card__match-dot" style="background:#059669;"></span>
+                  88% match
+                </span>
+                <span class="supp-card__avail-badge supp-card__avail-badge--open">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                  7 slots
+                </span>
+              </div>
+              <div class="supp-card__profile">
+                <div class="supp-card__avatar" style="background:linear-gradient(135deg,#475569,#94a3b8);" aria-hidden="true">👤</div>
+                <div>
+                  <p class="supp-card__name">Dr. Sarah Chen</p>
+                  <p class="supp-card__role">Licensed Therapist</p>
+                </div>
+              </div>
+              <div class="supp-card__body">
+                <div class="supp-card__tags">
+                  <span class="supp-card__tag">Housing</span>
+                  <span class="supp-card__tag">Anxiety</span>
+                  <span class="supp-card__tag">Trauma</span>
+                  <span class="supp-card__tag">Sleep</span>
+                </div>
+                <p class="supp-card__bio">Licensed therapist (trauma-informed). Life transitions, financial and housing-related stress, and sleep. Video sessions; evening hours available.</p>
+                <div class="supp-card__stats">
+                  <div class="supp-card__stat">
+                    <div class="supp-card__stat-icon supp-card__stat-icon--star" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+                    <span class="supp-card__stat-val">4.9</span>
+                    <span class="supp-card__stat-label">Rating</span>
+                  </div>
+                  <div class="supp-card__stat">
+                    <div class="supp-card__stat-icon supp-card__stat-icon--users" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
+                    <span class="supp-card__stat-val">120</span>
+                    <span class="supp-card__stat-label">Helped</span>
+                  </div>
+                  <div class="supp-card__stat">
+                    <div class="supp-card__stat-icon supp-card__stat-icon--clock" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
+                    <span class="supp-card__stat-val">5 yr</span>
+                    <span class="supp-card__stat-label">Exp.</span>
+                  </div>
+                </div>
+              </div>
+              <div class="supp-card__foot">
+                <a href="#" class="btn-supp-view">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  Profile
+                </a>
+                <a href="session-book.html" class="btn-supp-book">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                  Book
+                </a>
+              </div>
+            </div>
+
+            <!-- Card 6: Aisha Okonkwo -->
+            <div class="supp-card" role="article">
+              <div class="supp-card__bar" style="background:linear-gradient(90deg,#d97706,#fbbf24);"></div>
+              <div class="supp-card__top">
+                <span class="supp-card__match supp-card__match--mid">
+                  <span class="supp-card__match-dot" style="background:#d97706;"></span>
+                  80% match
+                </span>
+                <span class="supp-card__avail-badge supp-card__avail-badge--open">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                  3 slots
+                </span>
+              </div>
+              <div class="supp-card__profile">
+                <div class="supp-card__avatar" style="background:linear-gradient(135deg,#7c3aed,#c084fc);" aria-hidden="true">👤</div>
+                <div>
+                  <p class="supp-card__name">Aisha Okonkwo</p>
+                  <p class="supp-card__role">Peer Supporter</p>
+                </div>
+              </div>
+              <div class="supp-card__body">
+                <div class="supp-card__tags">
+                  <span class="supp-card__tag">Anxiety</span>
+                  <span class="supp-card__tag">Family</span>
+                  <span class="supp-card__tag">Housing</span>
+                </div>
+                <p class="supp-card__bio">Trained peer supporter with lived experience around housing insecurity and family stress. Sliding scale. Identity-protected notes available.</p>
+                <div class="supp-card__stats">
+                  <div class="supp-card__stat">
+                    <div class="supp-card__stat-icon supp-card__stat-icon--star" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+                    <span class="supp-card__stat-val">5.0</span>
+                    <span class="supp-card__stat-label">Rating</span>
+                  </div>
+                  <div class="supp-card__stat">
+                    <div class="supp-card__stat-icon supp-card__stat-icon--users" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
+                    <span class="supp-card__stat-val">28</span>
+                    <span class="supp-card__stat-label">Helped</span>
+                  </div>
+                  <div class="supp-card__stat">
+                    <div class="supp-card__stat-icon supp-card__stat-icon--clock" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
+                    <span class="supp-card__stat-val">8 mo</span>
+                    <span class="supp-card__stat-label">Exp.</span>
+                  </div>
+                </div>
+              </div>
+              <div class="supp-card__foot">
+                <a href="#" class="btn-supp-view">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  Profile
+                </a>
+                <a href="session-book.html" class="btn-supp-book">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                  Book
+                </a>
+              </div>
+            </div>
+
+          </div><!-- /supporters-grid -->
+        </div>
+
+        <!-- Privacy strip -->
+        <div class="ts-privacy" role="note">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          All supporter profiles are verified by Luminwell. Your match score is based on what you've shared and is never shown to supporters. You can book anonymously.
+        </div>
+
+      </div>
+    </div>
+  </main>
+</div>
+</body>
+</html>
