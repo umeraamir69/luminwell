@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Luminwell Ambassador — AI Note Generator</title>
+  <link rel="stylesheet" href="ambassador.css" />
+  <style>
+    /* ── Hero ── */
+    .ai-hero {
+      background: linear-gradient(130deg, #0f2d45 0%, #1a4e70 40%, #0d6b52 100%);
+      border-radius: 20px; padding: 28px 32px; margin-bottom: 24px;
+      display: flex; align-items: center; justify-content: space-between; gap: 20px;
+      box-shadow: 0 6px 28px rgba(15,45,69,.26);
+      position: relative; overflow: hidden;
+    }
+    .ai-hero::before {
+      content: '';
+      position: absolute; top: -40px; right: -40px;
+      width: 220px; height: 220px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(45,150,116,.25) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .ai-hero__left { display: flex; gap: 20px; align-items: center; z-index: 1; }
+    .ai-hero__icon {
+      width: 56px; height: 56px; border-radius: 16px; flex-shrink: 0;
+      background: linear-gradient(135deg, rgba(45,150,116,.4), rgba(15,107,82,.6));
+      border: 1px solid rgba(255,255,255,.2);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .ai-hero__icon svg { width: 26px; height: 26px; stroke: #fff; }
+    .ai-hero__badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 4px 12px; border-radius: var(--rf);
+      background: rgba(45,150,116,.25); border: 1px solid rgba(45,150,116,.4);
+      color: #6ee7b7; font-size: 10px; font-weight: 800; letter-spacing: .06em;
+      margin-bottom: 6px;
+    }
+    .ai-hero__badge svg { width: 10px; height: 10px; }
+    .ai-hero__title { font-size: 22px; font-weight: 900; color: #fff; letter-spacing: -0.03em; line-height: 1.15; }
+    .ai-hero__sub   { font-size: 13px; color: rgba(255,255,255,.6); margin-top: 4px; line-height: 1.5; }
+    .ai-hero__actions { display: flex; gap: 10px; z-index: 1; }
+    .btn-ai-primary {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 11px 22px; border-radius: 10px;
+      background: #fff; color: #0f2d45;
+      font-size: 13px; font-weight: 800; font-family: var(--font);
+      border: none; cursor: pointer; text-decoration: none;
+      box-shadow: 0 2px 12px rgba(0,0,0,.2);
+      transition: transform .14s, box-shadow .14s;
+    }
+    .btn-ai-primary:hover { transform: translateY(-1px); box-shadow: 0 5px 18px rgba(0,0,0,.25); }
+    .btn-ai-primary svg { width: 14px; height: 14px; }
+    .btn-ai-ghost {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 11px 18px; border-radius: 10px;
+      background: rgba(255,255,255,.1); color: rgba(255,255,255,.88);
+      font-size: 13px; font-weight: 700; font-family: var(--font);
+      border: 1px solid rgba(255,255,255,.2); cursor: pointer; text-decoration: none;
+      transition: background .14s;
+    }
+    .btn-ai-ghost:hover { background: rgba(255,255,255,.18); }
+
+    /* ── Two-column layout ── */
+    .ai-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; align-items: start; }
+
+    /* ── Input form card ── */
+    .ai-form-card {
+      background: var(--surface); border-radius: 16px;
+      border: 1.5px solid var(--border); box-shadow: var(--shadow-sm);
+    }
+    .ai-form-card__head {
+      padding: 16px 22px 12px; border-bottom: 1px solid var(--border-soft);
+      display: flex; align-items: center; gap: 10px;
+    }
+    .ai-form-card__step {
+      width: 26px; height: 26px; border-radius: 8px; flex-shrink: 0;
+      background: var(--sb-bg); color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 800;
+    }
+    .ai-form-card__title { font-size: 14px; font-weight: 800; letter-spacing: -0.02em; }
+    .ai-form-card__body  { padding: 20px 22px; display: flex; flex-direction: column; gap: 18px; }
+
+    /* ── Fields ── */
+    .field { display: flex; flex-direction: column; gap: 6px; }
+    .field__label { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
+    .field__input, .field__select, .field__textarea {
+      width: 100%; padding: 10px 13px; border-radius: 10px;
+      border: 1.5px solid var(--border); background: var(--page-bg);
+      font-family: var(--font); font-size: 13px; color: var(--text);
+      outline: none; transition: border-color .16s, box-shadow .16s;
+      box-sizing: border-box;
+    }
+    .field__input:focus, .field__select:focus, .field__textarea:focus {
+      border-color: var(--teal); box-shadow: 0 0 0 3px rgba(45,150,116,.12);
+    }
+    .field__textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
+    .field__select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 12px center; background-size: 16px;
+      padding-right: 36px; cursor: pointer;
+    }
+    .two-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+    /* ── Mood picker ── */
+    .mood-row { display: flex; gap: 6px; }
+    .mood-opt { display: none; }
+    .mood-opt + label {
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
+      padding: 10px 12px; border-radius: 10px;
+      border: 1.5px solid var(--border); background: var(--page-bg);
+      cursor: pointer; transition: all .14s; flex: 1;
+    }
+    .mood-opt + label .mood-em { font-size: 20px; line-height: 1; }
+    .mood-opt + label .mood-lbl { font-size: 10px; font-weight: 700; color: var(--muted); }
+    .mood-opt + label:hover { border-color: var(--teal); }
+    .mood-opt:checked + label { border-color: var(--teal); background: var(--teal-pale); }
+    .mood-opt:checked + label .mood-lbl { color: var(--teal-deep); }
+
+    /* ── Theme chips ── */
+    .theme-grid { display: flex; flex-wrap: wrap; gap: 7px; }
+    .theme-opt  { display: none; }
+    .theme-opt + label {
+      padding: 6px 13px; border-radius: var(--rf);
+      border: 1.5px solid var(--border); background: var(--page-bg);
+      font-size: 11px; font-weight: 700; color: var(--muted);
+      cursor: pointer; transition: all .14s;
+    }
+    .theme-opt + label:hover { border-color: var(--teal); color: var(--teal-deep); }
+    .theme-opt:checked + label { border-color: var(--teal); background: var(--teal-pale); color: var(--teal-deep); border-width: 2px; }
+
+    /* ── Generate button ── */
+    .generate-btn {
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      width: 100%; padding: 14px; border-radius: 12px;
+      background: linear-gradient(130deg, var(--sb-bg), #1a6b52);
+      color: #fff; font-size: 14px; font-weight: 800; font-family: var(--font);
+      border: none; cursor: pointer; text-decoration: none;
+      box-shadow: 0 3px 14px rgba(15,45,69,.25);
+      transition: transform .14s, box-shadow .14s; letter-spacing: -0.01em;
+    }
+    .generate-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(15,45,69,.3); }
+    .generate-btn svg { width: 16px; height: 16px; }
+    .generate-btn__sparkle { font-size: 17px; }
+
+    /* ── AI Output card ── */
+    .ai-output-card {
+      background: var(--surface); border-radius: 16px;
+      border: 1.5px solid var(--border); box-shadow: var(--shadow-sm);
+      position: sticky; top: 26px;
+    }
+    .ai-output-card__head {
+      padding: 16px 22px 12px; border-bottom: 1px solid var(--border-soft);
+      display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    }
+    .ai-output-card__head-left { display: flex; align-items: center; gap: 10px; }
+    .ai-badge-sm {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 3px 9px; border-radius: var(--rf);
+      background: rgba(45,150,116,.1); border: 1px solid var(--teal-mid);
+      color: var(--teal-deep); font-size: 10px; font-weight: 800;
+    }
+    .ai-badge-sm svg { width: 10px; height: 10px; }
+    .ai-output-card__actions { display: flex; gap: 7px; }
+    .ai-output-card__body { padding: 20px 22px; display: flex; flex-direction: column; gap: 16px; }
+
+    /* ── Generated content sections ── */
+    .gen-section { display: flex; flex-direction: column; gap: 8px; }
+    .gen-section__label {
+      font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--muted);
+      display: flex; align-items: center; gap: 6px;
+    }
+    .gen-section__label::after { content: ''; flex: 1; height: 1px; background: var(--border-soft); }
+    .gen-section__text {
+      font-size: 13px; color: var(--text); line-height: 1.75;
+      padding: 12px 14px; border-radius: 10px;
+      background: var(--page-bg); border: 1px solid var(--border-soft);
+    }
+    .gen-section__text--highlight {
+      background: var(--teal-pale); border-color: var(--teal-mid);
+    }
+
+    /* ── Theme tags ── */
+    .gen-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .gen-tag {
+      padding: 4px 11px; border-radius: var(--rf);
+      background: var(--teal-pale); border: 1px solid var(--teal-mid);
+      font-size: 11px; font-weight: 700; color: var(--teal-deep);
+    }
+
+    /* ── Mood indicator ── */
+    .mood-change { display: flex; align-items: center; gap: 10px; }
+    .mood-pill {
+      display: flex; align-items: center; gap: 6px; padding: 6px 12px;
+      border-radius: 20px; border: 1px solid var(--border); background: var(--page-bg);
+      font-size: 12px; font-weight: 700;
+    }
+    .mood-arrow { color: var(--soft); font-size: 16px; }
+
+    /* ── Confidence bar ── */
+    .confidence-wrap { padding: 12px 14px; border-radius: 10px; background: var(--page-bg); border: 1px solid var(--border-soft); }
+    .confidence-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+    .confidence-label { font-size: 11px; color: var(--muted); font-weight: 600; }
+    .confidence-val { font-size: 12px; font-weight: 800; color: var(--teal-deep); }
+    .confidence-bar { height: 5px; border-radius: 3px; background: var(--border); overflow: hidden; }
+    .confidence-bar__fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, var(--teal), #34d399); }
+
+    /* ── CTA strip ── */
+    .ai-output-card__foot {
+      padding: 14px 22px; border-top: 1px solid var(--border-soft);
+      display: flex; gap: 8px; align-items: center;
+    }
+
+    /* ── History list ── */
+    .history-card {
+      background: var(--surface); border-radius: 14px;
+      border: 1.5px solid var(--border); box-shadow: var(--shadow-sm);
+      margin-top: 22px;
+    }
+    .history-card__head { padding: 14px 18px 10px; border-bottom: 1px solid var(--border-soft); display: flex; align-items: center; justify-content: space-between; }
+    .history-card__title { font-size: 13px; font-weight: 800; }
+    .history-list { padding: 12px; display: flex; flex-direction: column; gap: 6px; }
+    .history-item {
+      display: flex; align-items: center; gap: 12px; padding: 10px 12px;
+      border-radius: 10px; border: 1.5px solid var(--border);
+      background: var(--page-bg); text-decoration: none;
+      transition: border-color .14s, box-shadow .14s;
+    }
+    .history-item:hover { border-color: var(--teal); box-shadow: var(--shadow-sm); }
+    .history-item__dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; display: block; }
+    .history-item__body { flex: 1; min-width: 0; }
+    .history-item__title { font-size: 12px; font-weight: 700; color: var(--text); }
+    .history-item__meta  { font-size: 11px; color: var(--muted); margin-top: 1px; }
+    .history-item__badge { flex-shrink: 0; }
+  </style>
+</head>
+<body>
+<div class="app">
+  <input type="checkbox" id="sb-toggle" class="state-input" />
+  <aside class="sidebar" aria-label="Ambassador navigation">
+    <div class="sidebar__head">
+      <img class="sidebar__logo-img" src="logo.png" alt="Luminwell" width="28" height="28" decoding="async" />
+      <div class="sidebar__logo-wrap"><span class="sidebar__logo">LUMINWELL</span><span class="sidebar__role-tag">Ambassador</span></div>
+      <label for="sb-toggle" class="sb-collapse-btn" aria-label="Collapse sidebar">
+        <svg class="icon-collapse" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+        <svg class="icon-expand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+      </label>
+    </div>
+    <div class="sidebar__block">
+      <div class="sidebar__label">Main</div>
+      <nav class="sb-nav">
+        <a href="amb-home.html" class="sb-nav__link"><svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5L12 4l9 6.5V20a1 1 0 01-1 1h-5v-7H9v7H4a1 1 0 01-1-1v-9.5z"/></svg>Home</a>
+        <a href="amb-schedule.html" class="sb-nav__link"><svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Schedule<span class="sb-nav__badge sb-nav__badge--teal">3</span></a>
+        <a href="amb-students.html" class="sb-nav__link"><svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>My Clients</a>
+        <a href="amb-notes.html" class="sb-nav__link"><svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Session Notes<span class="sb-nav__badge sb-nav__badge--amber">2</span></a>
+        <a href="amb-tasks.html" class="sb-nav__link"><svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>Tasks<span class="sb-nav__badge">5</span></a>
+        <a href="amb-messages.html" class="sb-nav__link"><svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>Messages<span class="sb-nav__badge">3</span></a>
+        <a href="amb-profile.html" class="sb-nav__link"><svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>My Profile</a>
+      </nav>
+    </div>
+    <div class="sidebar__block">
+      <div class="sidebar__label">AI Tools</div>
+      <nav class="sb-nav">
+        <a href="amb-ai-notes.html" class="sb-nav__link is-active" aria-current="page">
+          <svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 6.5L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l7-0.77L12 2z"/></svg>
+          AI Note Writer
+          <span class="sb-nav__badge sb-nav__badge--teal">New</span>
+        </a>
+      </nav>
+    </div>
+    <div class="sidebar__foot">
+      <div class="sidebar__avatar">🌿</div>
+      <div><div class="sidebar__name">Maya Johnson</div><div class="sidebar__stats"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>4.9 · 84 clients</div></div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="topbar__left">
+        <img class="topbar__logo-img" src="logo.png" alt="Luminwell" width="26" height="26" decoding="async" />
+        <span class="topbar__title">Ambassador Dashboard</span>
+        <span class="topbar__divider"></span>
+        <a href="amb-notes.html" class="topbar__sub" style="text-decoration:none;color:inherit;">Session Notes</a>
+        <span class="topbar__divider"></span>
+        <span class="topbar__sub" style="color:var(--text);font-weight:700;">AI Note Writer</span>
+      </div>
+      <div class="topbar__right">
+        <span class="topbar__today"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Sunday, 29 Mar 2026</span>
+        <button type="button" class="topbar__crisis">988 Helpline</button>
+        <button type="button" class="topbar__icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg><span class="notif-dot"></span></button>
+      </div>
+    </header>
+
+    <div class="amb-page">
+      <div class="amb-inner">
+
+        <!-- Hero -->
+        <div class="ai-hero">
+          <div class="ai-hero__left">
+            <div class="ai-hero__icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            </div>
+            <div>
+              <div class="ai-hero__badge">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                AI-POWERED · LUMINWELL
+              </div>
+              <h1 class="ai-hero__title">AI Note Writer</h1>
+              <p class="ai-hero__sub">Tell the AI about your session — it drafts a full, structured note in seconds. You review and publish.</p>
+            </div>
+          </div>
+          <div class="ai-hero__actions">
+            <a href="amb-notes.html" class="btn-ai-ghost">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              All notes
+            </a>
+            <a href="amb-note-write.html" class="btn-ai-primary">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
+              Write manually
+            </a>
+          </div>
+        </div>
+
+        <!-- Main layout -->
+        <div class="ai-layout">
+
+          <!-- LEFT: Input form -->
+          <div>
+            <div class="ai-form-card">
+              <div class="ai-form-card__head">
+                <div class="ai-form-card__step">1</div>
+                <span class="ai-form-card__title">Session context</span>
+              </div>
+              <div class="ai-form-card__body">
+
+                <!-- Client + session -->
+                <div class="field">
+                  <label class="field__label" for="ai-client">Client</label>
+                  <select id="ai-client" class="field__select">
+                    <option value="">Choose a client…</option>
+                    <option value="a">Client A</option>
+                    <option value="b">Client B</option>
+                    <option value="c">Client C</option>
+                    <option value="d">Client D</option>
+                    <option value="e" selected>Client E</option>
+                    <option value="f">Client F</option>
+                  </select>
+                </div>
+
+                <div class="two-inputs">
+                  <div class="field">
+                    <label class="field__label" for="ai-date">Session date</label>
+                    <input id="ai-date" class="field__input" type="date" value="2026-03-28" />
+                  </div>
+                  <div class="field">
+                    <label class="field__label" for="ai-duration">Duration</label>
+                    <select id="ai-duration" class="field__select">
+                      <option>30 min</option>
+                      <option selected>50 min</option>
+                      <option>60 min</option>
+                      <option>90 min</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="field">
+                  <label class="field__label" for="ai-type">Session format</label>
+                  <select id="ai-type" class="field__select">
+                    <option>Video call</option>
+                    <option selected>In person</option>
+                    <option>Phone call</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="ai-form-card" style="margin-top:14px;">
+              <div class="ai-form-card__head">
+                <div class="ai-form-card__step">2</div>
+                <span class="ai-form-card__title">Session mood &amp; themes</span>
+              </div>
+              <div class="ai-form-card__body">
+
+                <!-- Start mood -->
+                <div class="field">
+                  <span class="field__label">Client mood at start</span>
+                  <div class="mood-row">
+                    <input type="radio" name="mood-start" id="ms-great" class="mood-opt" />
+                    <label for="ms-great"><span class="mood-em">😄</span><span class="mood-lbl">Great</span></label>
+                    <input type="radio" name="mood-start" id="ms-good" class="mood-opt" />
+                    <label for="ms-good"><span class="mood-em">😊</span><span class="mood-lbl">Good</span></label>
+                    <input type="radio" name="mood-start" id="ms-okay" class="mood-opt" />
+                    <label for="ms-okay"><span class="mood-em">😐</span><span class="mood-lbl">Okay</span></label>
+                    <input type="radio" name="mood-start" id="ms-low" class="mood-opt" checked />
+                    <label for="ms-low"><span class="mood-em">😞</span><span class="mood-lbl">Low</span></label>
+                    <input type="radio" name="mood-start" id="ms-crisis" class="mood-opt" />
+                    <label for="ms-crisis"><span class="mood-em">😰</span><span class="mood-lbl">Crisis</span></label>
+                  </div>
+                </div>
+
+                <!-- End mood -->
+                <div class="field">
+                  <span class="field__label">Client mood at end</span>
+                  <div class="mood-row">
+                    <input type="radio" name="mood-end" id="me-great" class="mood-opt" />
+                    <label for="me-great"><span class="mood-em">😄</span><span class="mood-lbl">Great</span></label>
+                    <input type="radio" name="mood-end" id="me-good" class="mood-opt" checked />
+                    <label for="me-good"><span class="mood-em">😊</span><span class="mood-lbl">Good</span></label>
+                    <input type="radio" name="mood-end" id="me-okay" class="mood-opt" />
+                    <label for="me-okay"><span class="mood-em">😐</span><span class="mood-lbl">Okay</span></label>
+                    <input type="radio" name="mood-end" id="me-low" class="mood-opt" />
+                    <label for="me-low"><span class="mood-em">😞</span><span class="mood-lbl">Low</span></label>
+                    <input type="radio" name="mood-end" id="me-crisis" class="mood-opt" />
+                    <label for="me-crisis"><span class="mood-em">😰</span><span class="mood-lbl">Crisis</span></label>
+                  </div>
+                </div>
+
+                <!-- Key themes -->
+                <div class="field">
+                  <span class="field__label">Key themes discussed <span style="color:var(--muted);font-weight:400;font-size:10px;text-transform:none;letter-spacing:0;">(select all that apply)</span></span>
+                  <div class="theme-grid">
+                    <input type="checkbox" id="t-anxiety" class="theme-opt" checked /><label for="t-anxiety">Anxiety</label>
+                    <input type="checkbox" id="t-academic" class="theme-opt" checked /><label for="t-academic">Academic stress</label>
+                    <input type="checkbox" id="t-sleep" class="theme-opt" /><label for="t-sleep">Sleep</label>
+                    <input type="checkbox" id="t-identity" class="theme-opt" /><label for="t-identity">Identity</label>
+                    <input type="checkbox" id="t-goals" class="theme-opt" checked /><label for="t-goals">Goal setting</label>
+                    <input type="checkbox" id="t-cbt" class="theme-opt" /><label for="t-cbt">CBT</label>
+                    <input type="checkbox" id="t-housing" class="theme-opt" /><label for="t-housing">Housing</label>
+                    <input type="checkbox" id="t-relationships" class="theme-opt" /><label for="t-relationships">Relationships</label>
+                    <input type="checkbox" id="t-grief" class="theme-opt" /><label for="t-grief">Grief</label>
+                    <input type="checkbox" id="t-wellbeing" class="theme-opt" /><label for="t-wellbeing">Wellbeing</label>
+                    <input type="checkbox" id="t-journalling" class="theme-opt" checked /><label for="t-journalling">Journalling</label>
+                    <input type="checkbox" id="t-motivation" class="theme-opt" /><label for="t-motivation">Motivation</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="ai-form-card" style="margin-top:14px;">
+              <div class="ai-form-card__head">
+                <div class="ai-form-card__step">3</div>
+                <span class="ai-form-card__title">Quick notes for the AI</span>
+              </div>
+              <div class="ai-form-card__body">
+                <div class="field">
+                  <label class="field__label" for="ai-highlights">Key moments / what you discussed</label>
+                  <textarea id="ai-highlights" class="field__textarea" placeholder="e.g. Client expressed worry about upcoming exams. We worked through a grounding technique and explored journalling as a coping strategy. Set homework to journal 3× this week…">Client E came in feeling anxious about upcoming exams next week. We explored the root cause — fear of failure rather than workload. Practiced a grounding breathing exercise. Discussed journalling as a daily coping tool. Set homework to journal for 5 mins each morning using the gratitude prompt. Client left feeling calmer and more confident.</textarea>
+                </div>
+                <div class="field">
+                  <label class="field__label" for="ai-homework">Homework set <span style="color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0;">(optional)</span></label>
+                  <input id="ai-homework" class="field__input" type="text" value="Journal for 5 mins each morning using gratitude prompt" placeholder="e.g. Journal 3× this week…" />
+                </div>
+                <div class="field">
+                  <label class="field__label" for="ai-followup">Follow-up needed <span style="color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0;">(optional)</span></label>
+                  <input id="ai-followup" class="field__input" type="text" value="Check in before Thursday exam" placeholder="e.g. Check in next session about sleep patterns…" />
+                </div>
+
+                <a href="#" class="generate-btn">
+                  <span class="generate-btn__sparkle">✨</span>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                  Generate note draft
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT: AI-generated output -->
+          <div>
+            <div class="ai-output-card">
+              <div class="ai-output-card__head">
+                <div class="ai-output-card__head-left">
+                  <span class="ai-form-card__title">AI Draft</span>
+                  <div class="ai-badge-sm">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    AI Generated
+                  </div>
+                </div>
+                <div class="ai-output-card__actions">
+                  <button type="button" class="btn-ghost" style="font-size:11px;padding:5px 10px;gap:5px;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.47"/></svg>
+                    Regenerate
+                  </button>
+                </div>
+              </div>
+              <div class="ai-output-card__body">
+
+                <!-- Mood change -->
+                <div class="gen-section">
+                  <span class="gen-section__label">Mood shift</span>
+                  <div class="mood-change">
+                    <div class="mood-pill"><span>😞</span> Low</div>
+                    <span class="mood-arrow">→</span>
+                    <div class="mood-pill" style="border-color:var(--teal);background:var(--teal-pale);"><span>😊</span> Good</div>
+                    <span style="font-size:11px;color:var(--teal-deep);font-weight:700;margin-left:4px;">↑ Positive shift</span>
+                  </div>
+                </div>
+
+                <!-- Session summary -->
+                <div class="gen-section">
+                  <span class="gen-section__label">Session summary</span>
+                  <p class="gen-section__text">Client E attended a 50-minute in-person session presenting with elevated anxiety related to upcoming end-of-year examinations. Exploration of the underlying concern revealed a fear of failure and perceived academic inadequacy rather than a lack of preparation. A diaphragmatic breathing and grounding technique was practiced within the session, demonstrating immediate effectiveness in reducing acute anxiety. The conversation shifted positively toward self-compassion and realistic appraisal of academic performance. Client E left the session appearing noticeably calmer and reported feeling more confident about the week ahead.</p>
+                </div>
+
+                <!-- Key themes -->
+                <div class="gen-section">
+                  <span class="gen-section__label">Key themes</span>
+                  <div class="gen-tags">
+                    <span class="gen-tag">Exam anxiety</span>
+                    <span class="gen-tag">Fear of failure</span>
+                    <span class="gen-tag">Grounding technique</span>
+                    <span class="gen-tag">Academic stress</span>
+                    <span class="gen-tag">Journalling</span>
+                    <span class="gen-tag">Goal setting</span>
+                  </div>
+                </div>
+
+                <!-- Homework -->
+                <div class="gen-section">
+                  <span class="gen-section__label">Homework set</span>
+                  <p class="gen-section__text gen-section__text--highlight">Journal for 5 minutes each morning this week using the provided gratitude prompt. Focus on one academic strength and one personal strength per entry. Aim to complete at least 5 entries before Thursday's exam.</p>
+                </div>
+
+                <!-- Follow-up -->
+                <div class="gen-section">
+                  <span class="gen-section__label">Follow-up needed</span>
+                  <p class="gen-section__text">Check in with Client E before Thursday's exam, ideally via a brief message or call. Review homework completion and mood at the next scheduled session. Monitor for escalation in anxiety levels given the exam period — if welfare concerns arise, follow the welfare escalation protocol.</p>
+                </div>
+
+                <!-- AI confidence -->
+                <div class="confidence-wrap">
+                  <div class="confidence-row">
+                    <span class="confidence-label">AI confidence score</span>
+                    <span class="confidence-val">92%</span>
+                  </div>
+                  <div class="confidence-bar"><div class="confidence-bar__fill" style="width:92%;"></div></div>
+                  <p style="font-size:11px;color:var(--muted);margin-top:6px;line-height:1.5;">Based on 3 key inputs, your session history with this client, and 6 selected themes. Review all sections carefully before publishing.</p>
+                </div>
+
+              </div>
+              <div class="ai-output-card__foot">
+                <a href="amb-note-write.html" class="btn-primary" style="text-decoration:none;gap:7px;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px;"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
+                  Use this draft
+                </a>
+                <button type="button" class="btn-ghost" style="gap:6px;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px;"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                  Save draft
+                </button>
+                <button type="button" class="btn-ghost" style="font-size:11px;padding:5px 10px;margin-left:auto;color:var(--muted);">Discard</button>
+              </div>
+            </div>
+
+            <!-- Previous AI-generated notes -->
+            <div class="history-card">
+              <div class="history-card__head">
+                <span class="history-card__title">Recent AI drafts</span>
+                <a href="amb-notes.html" class="btn-ghost" style="font-size:11px;">View all</a>
+              </div>
+              <div class="history-list">
+                <a href="amb-note-write.html" class="history-item">
+                  <span class="history-item__dot" style="background:var(--amber);"></span>
+                  <div class="history-item__body">
+                    <p class="history-item__title">Client B — Mon 23 Mar</p>
+                    <p class="history-item__meta">50 min · Anxiety, Goals · AI draft</p>
+                  </div>
+                  <span class="badge badge--warn history-item__badge">Draft</span>
+                </a>
+                <a href="amb-note-write.html" class="history-item">
+                  <span class="history-item__dot" style="background:var(--teal);"></span>
+                  <div class="history-item__body">
+                    <p class="history-item__title">Client D — Tue 18 Mar</p>
+                    <p class="history-item__meta">50 min · Identity, CBT · AI draft</p>
+                  </div>
+                  <span class="badge badge--new history-item__badge">Published</span>
+                </a>
+                <a href="amb-note-write.html" class="history-item">
+                  <span class="history-item__dot" style="background:var(--teal);"></span>
+                  <div class="history-item__body">
+                    <p class="history-item__title">Client A — Thu 20 Mar</p>
+                    <p class="history-item__meta">50 min · Low mood, Welfare · AI draft</p>
+                  </div>
+                  <span class="badge badge--new history-item__badge">Published</span>
+                </a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+</body>
+</html>

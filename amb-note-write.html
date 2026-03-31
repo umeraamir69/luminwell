@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Luminwell Ambassador — Write Note</title>
+  <link rel="stylesheet" href="ambassador.css" />
+  <style>
+    /* ── Full-page note editor ─────────────────── */
+    .write-page { flex: 1; overflow-y: auto; background: var(--page-bg); }
+    .write-inner { padding: 28px 32px 60px; display: flex; flex-direction: column; gap: 22px; max-width: 1100px; }
+
+    /* Hero bar */
+    .write-hero {
+      background: linear-gradient(135deg, var(--sb-bg) 0%, #1a4e70 55%, var(--teal) 100%);
+      border-radius: 18px; padding: 22px 28px;
+      display: flex; align-items: center; gap: 18px;
+      box-shadow: 0 4px 22px rgba(15,45,69,.22);
+    }
+    .write-hero__icon {
+      width: 46px; height: 46px; border-radius: 12px; flex-shrink: 0;
+      background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.22);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .write-hero__icon svg { width: 20px; height: 20px; stroke: #fff; }
+    .write-hero__info { flex: 1; }
+    .write-hero__title { font-size: 19px; font-weight: 800; color: #fff; letter-spacing: -0.03em; }
+    .write-hero__sub   { font-size: 12px; color: rgba(255,255,255,.62); margin-top: 3px; }
+    .write-hero__badges { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+    .write-hero__badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 4px 11px; border-radius: var(--rf);
+      background: rgba(255,255,255,.13); border: 1px solid rgba(255,255,255,.2);
+      font-size: 10px; font-weight: 700; color: rgba(255,255,255,.85);
+    }
+    .write-hero__badge svg { width: 10px; height: 10px; }
+    .write-hero__actions { display: flex; gap: 8px; flex-shrink: 0; }
+    .hero-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 9px 16px; border-radius: 9px; font-size: 12px; font-weight: 700;
+      font-family: var(--font); cursor: pointer; transition: all .14s; text-decoration: none;
+    }
+    .hero-btn--white { background: #fff; color: var(--sb-bg); border: none; box-shadow: 0 2px 10px rgba(0,0,0,.15); }
+    .hero-btn--white:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(0,0,0,.2); }
+    .hero-btn--ghost { background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.22); color: #fff; }
+    .hero-btn--ghost:hover { background: rgba(255,255,255,.2); }
+    .hero-btn svg { width: 13px; height: 13px; }
+
+    /* Editor grid */
+    .editor-grid { display: grid; grid-template-columns: 1fr 320px; gap: 22px; align-items: start; }
+
+    /* Left: form card */
+    .form-card {
+      background: var(--surface); border-radius: 16px;
+      border: 1.5px solid var(--border); box-shadow: var(--shadow-sm);
+      overflow: hidden;
+    }
+    .form-card__bar { height: 4px; background: linear-gradient(90deg, var(--sb-bg), var(--teal)); }
+    .form-card__head {
+      padding: 18px 24px; border-bottom: 1px solid var(--border-soft);
+      display: flex; align-items: center; justify-content: space-between;
+      background: linear-gradient(135deg, rgba(15,45,69,.02), rgba(45,150,116,.015));
+    }
+    .form-card__title { font-size: 15px; font-weight: 800; letter-spacing: -0.02em; }
+    .form-card__body  { padding: 24px; display: flex; flex-direction: column; gap: 20px; }
+    .form-card__foot  {
+      padding: 16px 24px; border-top: 1px solid var(--border-soft);
+      display: flex; align-items: center; gap: 10px;
+      background: var(--page-bg);
+    }
+
+    /* Field styles */
+    .field { display: flex; flex-direction: column; gap: 7px; }
+    .field__label {
+      font-size: 11px; font-weight: 800; color: var(--muted);
+      text-transform: uppercase; letter-spacing: .08em;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .field__label-req { color: var(--red); font-size: 13px; line-height: 1; }
+    .field__hint { font-size: 11px; color: var(--soft); margin-top: -4px; }
+    .field__textarea {
+      width: 100%; padding: 13px 16px; border-radius: 11px;
+      border: 1.5px solid var(--border); background: var(--page-bg);
+      font-family: var(--font); font-size: 13px; color: var(--text);
+      resize: vertical; line-height: 1.72; outline: none;
+      transition: border-color .15s, box-shadow .15s, background .15s;
+    }
+    .field__textarea:focus {
+      border-color: rgba(15,45,69,.3); box-shadow: 0 0 0 3px rgba(15,45,69,.07);
+      background: var(--surface);
+    }
+    .field__textarea::placeholder { color: var(--soft); }
+    .field__select {
+      padding: 12px 16px; border-radius: 11px;
+      border: 1.5px solid var(--border); background: var(--surface);
+      font-family: var(--font); font-size: 13px; color: var(--text);
+      outline: none; appearance: none; cursor: pointer; width: 100%;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2394a3b8' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 14px center;
+      padding-right: 36px; transition: border-color .15s;
+    }
+    .field__select:focus { border-color: rgba(15,45,69,.3); outline: none; }
+
+    /* Mood selector */
+    .mood-pick { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; }
+    .mood-opt {
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+      padding: 12px 8px; border-radius: 12px;
+      border: 2px solid var(--border); background: var(--page-bg);
+      cursor: pointer; transition: all .14s; font-family: var(--font);
+    }
+    .mood-opt:hover { border-color: rgba(15,45,69,.2); box-shadow: var(--shadow-sm); }
+    .mood-opt__emoji { font-size: 22px; line-height: 1; }
+    .mood-opt__label { font-size: 11px; font-weight: 700; color: var(--muted); text-align: center; }
+    .mood-opt--great  { border-color: #34d399 !important; background: rgba(52,211,153,.08) !important; }
+    .mood-opt--great .mood-opt__label { color: #065f46; }
+    .mood-opt--good   { border-color: #6ee7b7 !important; background: rgba(110,231,183,.08) !important; }
+    .mood-opt--okay   { border-color: #fbbf24 !important; background: rgba(251,191,36,.08) !important; }
+    .mood-opt--okay .mood-opt__label { color: #92400e; }
+    .mood-opt--low    { border-color: #f87171 !important; background: rgba(248,113,113,.08) !important; }
+    .mood-opt--low .mood-opt__label { color: #b91c1c; }
+
+    /* Tag input */
+    .tag-field { display: flex; flex-wrap: wrap; gap: 6px; padding: 11px 14px; border-radius: 11px; border: 1.5px solid var(--border); background: var(--page-bg); min-height: 48px; transition: border-color .15s; }
+    .tag-field:focus-within { border-color: rgba(15,45,69,.3); }
+    .tag-pill { padding: 4px 10px; border-radius: var(--rf); background: rgba(15,45,69,.09); color: var(--sb-bg); font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 5px; }
+    .tag-pill button { background: none; border: none; color: inherit; font-size: 13px; cursor: pointer; line-height: 1; padding: 0 1px; opacity: .7; }
+    .tag-pill button:hover { opacity: 1; }
+    .tag-field input { border: none; outline: none; font-family: var(--font); font-size: 13px; color: var(--text); background: transparent; flex: 1; min-width: 100px; }
+    .tag-field input::placeholder { color: var(--soft); }
+
+    /* Field group row */
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+    /* Progress steps */
+    .step-dots { display: flex; gap: 6px; align-items: center; }
+    .step-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--border); }
+    .step-dot--done   { background: var(--teal); }
+    .step-dot--active { background: var(--sb-bg); width: 20px; border-radius: var(--rf); }
+
+    /* Right: side panel */
+    .write-side { display: flex; flex-direction: column; gap: 16px; position: sticky; top: 28px; }
+
+    /* Session context card */
+    .context-card {
+      background: var(--surface); border-radius: 14px;
+      border: 1.5px solid var(--border); box-shadow: var(--shadow-sm);
+      overflow: hidden;
+    }
+    .context-card__head { padding: 14px 18px; border-bottom: 1px solid var(--border-soft); display: flex; align-items: center; justify-content: space-between; }
+    .context-card__title { font-size: 13px; font-weight: 800; display: flex; align-items: center; gap: 7px; }
+    .context-card__body  { padding: 14px 18px; display: flex; flex-direction: column; gap: 10px; }
+    .context-row { display: flex; align-items: flex-start; gap: 8px; }
+    .context-row__icon { width: 22px; height: 22px; border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+    .context-row__icon svg { width: 11px; height: 11px; }
+    .context-row__label { font-size: 11px; color: var(--soft); font-weight: 600; margin-bottom: 1px; }
+    .context-row__val   { font-size: 12px; font-weight: 700; color: var(--text); }
+
+    /* Previous note preview */
+    .prev-note { padding: 12px 14px; border-radius: 10px; background: var(--page-bg); border: 1px solid var(--border); cursor: pointer; transition: border-color .14s; }
+    .prev-note:hover { border-color: rgba(15,45,69,.2); }
+    .prev-note__date  { font-size: 10px; font-weight: 700; color: var(--soft); text-transform: uppercase; letter-spacing: .07em; }
+    .prev-note__title { font-size: 12px; font-weight: 800; margin-top: 2px; }
+    .prev-note__text  { font-size: 11px; color: var(--muted); line-height: 1.6; margin-top: 4px; display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .prev-note__tags  { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 6px; }
+    .prev-note__tag   { padding: 1px 7px; border-radius: var(--rf); background: var(--surface); border: 1px solid var(--border); font-size: 10px; font-weight: 600; color: var(--muted); }
+
+    /* AI tips */
+    .ai-tip {
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 12px 14px; border-radius: 10px;
+      background: var(--teal-pale); border: 1px solid var(--teal-mid);
+    }
+    .ai-tip__icon { width: 26px; height: 26px; border-radius: 7px; background: var(--teal); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .ai-tip__icon svg { width: 12px; height: 12px; stroke: #fff; }
+    .ai-tip__text { font-size: 12px; color: var(--teal-deep); line-height: 1.6; }
+    .ai-tip__text strong { font-weight: 800; }
+
+    /* Char counter */
+    .char-count { font-size: 10px; color: var(--soft); margin-top: -12px; text-align: right; }
+
+    /* Welfare toggle */
+    .welfare-toggle {
+      display: flex; align-items: center; gap: 12px; padding: 13px 16px;
+      border-radius: 11px; border: 1.5px solid var(--border); background: var(--surface);
+      cursor: pointer;
+    }
+    .welfare-toggle--on  { border-color: rgba(225,29,72,.25); background: rgba(225,29,72,.03); }
+    .welfare-toggle__icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .welfare-toggle__icon svg { width: 15px; height: 15px; }
+    .welfare-toggle__info { flex: 1; }
+    .welfare-toggle__title { font-size: 13px; font-weight: 700; }
+    .welfare-toggle__sub   { font-size: 11px; color: var(--muted); margin-top: 1px; }
+    .welfare-sw { width: 38px; height: 22px; border-radius: var(--rf); background: var(--border); position: relative; flex-shrink: 0; transition: background .15s; }
+    .welfare-sw--on { background: var(--red); }
+    .welfare-sw::after { content: ''; position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 50%; background: #fff; box-shadow: 0 1px 4px rgba(0,0,0,.2); transition: transform .15s; }
+    .welfare-sw--on::after { transform: translateX(16px); }
+  </style>
+</head>
+<body>
+<div class="app">
+  <input type="checkbox" id="sb-toggle" class="state-input" />
+
+  <!-- ══ SIDEBAR ══════════════════════════════════════ -->
+  <aside class="sidebar" aria-label="Ambassador navigation">
+    <div class="sidebar__head">
+      <img class="sidebar__logo-img" src="logo.png" alt="Luminwell" width="28" height="28" decoding="async" />
+      <div class="sidebar__logo-wrap"><span class="sidebar__logo">LUMINWELL</span><span class="sidebar__role-tag">Ambassador</span></div>
+      <label for="sb-toggle" class="sb-collapse-btn" aria-label="Collapse sidebar">
+        <svg class="icon-collapse" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+        <svg class="icon-expand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+      </label>
+    </div>
+    <div class="sidebar__block">
+      <div class="sidebar__label">Main</div>
+      <nav class="sb-nav">
+        <a href="amb-home.html" class="sb-nav__link"><svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5L12 4l9 6.5V20a1 1 0 01-1 1h-5v-7H9v7H4a1 1 0 01-1-1v-9.5z"/></svg>Home</a>
+        <a href="amb-schedule.html" class="sb-nav__link"><svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Schedule<span class="sb-nav__badge sb-nav__badge--teal">3</span></a>
+        <a href="amb-students.html" class="sb-nav__link"><svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>My Clients</a>
+        <a href="amb-notes.html" class="sb-nav__link is-active" aria-current="page"><svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Session Notes<span class="sb-nav__badge sb-nav__badge--amber">2</span></a>
+        <a href="amb-tasks.html" class="sb-nav__link"><svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>Tasks<span class="sb-nav__badge">5</span></a>
+        <a href="amb-messages.html" class="sb-nav__link"><svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>Messages<span class="sb-nav__badge">3</span></a>
+        <a href="amb-profile.html" class="sb-nav__link"><svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>My Profile</a>
+      </nav>
+    </div>
+    <div class="sidebar__block sidebar__block--fill">
+      <div class="sidebar__label">Drafts</div>
+      <div class="sb-alerts">
+        <div class="sb-alert sb-alert--amber"><span class="sb-alert__title">Client E — Fri 28 Mar</span><span class="sb-alert__meta">Draft · Not published yet</span></div>
+        <div class="sb-alert sb-alert--amber"><span class="sb-alert__title">Client B — Mon 23 Mar</span><span class="sb-alert__meta">Draft · Incomplete</span></div>
+      </div>
+    </div>
+    <div class="sidebar__block">
+      <div class="sidebar__label">AI Tools</div>
+      <nav class="sb-nav">
+        <a href="amb-ai-notes.html" class="sb-nav__link"><svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>AI Note Writer<span class="sb-nav__badge sb-nav__badge--teal">New</span></a>
+      </nav>
+    </div>
+    <div class="sidebar__foot">
+      <div class="sidebar__avatar">🌿</div>
+      <div><div class="sidebar__name">Maya Johnson</div><div class="sidebar__stats"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>4.9 · 84 clients</div></div>
+    </div>
+  </aside>
+
+  <!-- ══ MAIN ══════════════════════════════════════════ -->
+  <main class="main">
+    <header class="topbar">
+      <div class="topbar__left">
+        <img class="topbar__logo-img" src="logo.png" alt="Luminwell" width="26" height="26" decoding="async" />
+        <span class="topbar__title">Ambassador Dashboard</span>
+        <span class="topbar__divider"></span>
+        <a href="amb-notes.html" style="font-size:12px;color:var(--muted);text-decoration:none;display:flex;align-items:center;gap:4px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;"><path d="M15 18l-6-6 6-6"/></svg>
+          Session Notes
+        </a>
+        <span class="topbar__divider"></span>
+        <span class="topbar__sub">Write new note</span>
+      </div>
+      <div class="topbar__right">
+        <span class="topbar__today">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+          Sunday, 29 Mar 2026
+        </span>
+        <button type="button" class="topbar__crisis">988 Helpline</button>
+        <button type="button" class="topbar__icon-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+          <span class="notif-dot"></span>
+        </button>
+      </div>
+    </header>
+
+    <div class="write-page">
+      <div class="write-inner">
+
+        <!-- Hero -->
+        <div class="write-hero">
+          <div class="write-hero__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
+          </div>
+          <div class="write-hero__info">
+            <p class="write-hero__title">Writing note for Client E</p>
+            <p class="write-hero__sub">Follow-up session · Friday 28 March 2026 · 50 min · Video call</p>
+            <div class="write-hero__badges">
+              <span class="write-hero__badge">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                AI-assisted
+              </span>
+              <span class="write-hero__badge" style="background:rgba(251,191,36,.2);border-color:rgba(251,191,36,.35);">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                Unsaved draft
+              </span>
+              <span class="write-hero__badge">Session 10 of 10</span>
+            </div>
+          </div>
+          <div class="write-hero__actions">
+            <button type="button" class="hero-btn hero-btn--ghost">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Save draft
+            </button>
+            <button type="button" class="hero-btn hero-btn--white">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>
+              Publish note
+            </button>
+          </div>
+        </div>
+
+        <!-- Main grid -->
+        <div class="editor-grid">
+
+          <!-- Left: form -->
+          <div class="form-card">
+            <div class="form-card__bar"></div>
+            <div class="form-card__head">
+              <div>
+                <p class="form-card__title">Session details</p>
+                <div style="display:flex;align-items:center;gap:8px;margin-top:6px;">
+                  <div class="step-dots">
+                    <div class="step-dot step-dot--done"></div>
+                    <div class="step-dot step-dot--done"></div>
+                    <div class="step-dot step-dot--active"></div>
+                    <div class="step-dot"></div>
+                    <div class="step-dot"></div>
+                  </div>
+                  <span style="font-size:11px;color:var(--soft);">Step 3 of 5</span>
+                </div>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;">
+                <span style="display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:var(--rf);background:rgba(45,150,116,.1);border:1px solid var(--teal-mid);color:var(--teal-deep);font-size:10px;font-weight:800;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:10px;height:10px;"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                  AI-assisted
+                </span>
+              </div>
+            </div>
+
+            <div class="form-card__body">
+
+              <!-- Session select -->
+              <div class="field-row">
+                <div class="field">
+                  <label class="field__label">Client <span class="field__label-req">*</span></label>
+                  <select class="field__select">
+                    <option selected>Client E — Housing &amp; Anxiety</option>
+                    <option>Client B — Academic stress</option>
+                    <option>Client A — Low mood</option>
+                    <option>Client D — LGBTQ+ Identity</option>
+                    <option>Client H — Goal review</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label class="field__label">Session <span class="field__label-req">*</span></label>
+                  <select class="field__select">
+                    <option selected>Fri 28 Mar · 2:00 PM · Video</option>
+                    <option>Today · 2:00 PM · Video</option>
+                    <option>Mon 23 Mar · 10:00 AM</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Mood at start -->
+              <div class="field">
+                <label class="field__label">Client mood at start of session <span class="field__label-req">*</span></label>
+                <div class="mood-pick">
+                  <button type="button" class="mood-opt">
+                    <span class="mood-opt__emoji">😄</span>
+                    <span class="mood-opt__label">Great</span>
+                  </button>
+                  <button type="button" class="mood-opt">
+                    <span class="mood-opt__emoji">😊</span>
+                    <span class="mood-opt__label">Good</span>
+                  </button>
+                  <button type="button" class="mood-opt mood-opt--okay">
+                    <span class="mood-opt__emoji">😐</span>
+                    <span class="mood-opt__label">Okay</span>
+                  </button>
+                  <button type="button" class="mood-opt">
+                    <span class="mood-opt__emoji">😞</span>
+                    <span class="mood-opt__label">Low</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Mood at end -->
+              <div class="field">
+                <label class="field__label">Client mood at end of session</label>
+                <div class="mood-pick">
+                  <button type="button" class="mood-opt">
+                    <span class="mood-opt__emoji">😄</span>
+                    <span class="mood-opt__label">Great</span>
+                  </button>
+                  <button type="button" class="mood-opt mood-opt--good">
+                    <span class="mood-opt__emoji">😊</span>
+                    <span class="mood-opt__label">Good</span>
+                  </button>
+                  <button type="button" class="mood-opt">
+                    <span class="mood-opt__emoji">😐</span>
+                    <span class="mood-opt__label">Okay</span>
+                  </button>
+                  <button type="button" class="mood-opt">
+                    <span class="mood-opt__emoji">😞</span>
+                    <span class="mood-opt__label">Low</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Session summary -->
+              <div class="field">
+                <label class="field__label">Session summary <span class="field__label-req">*</span></label>
+                <p class="field__hint">What was the main focus? What happened in this session?</p>
+                <textarea class="field__textarea" rows="5" placeholder="Describe what was discussed, any breakthroughs, challenges, or key moments from the session…">Client E reported feeling more settled regarding housing after the welfare team meeting last week. Main anxiety focus has now shifted to upcoming exams in April — client described feeling behind on revision despite having a plan. We explored time management strategies and CBT-based worry journalling as a daily practice.</textarea>
+                <p class="char-count">412 characters</p>
+              </div>
+
+              <!-- Key themes -->
+              <div class="field">
+                <label class="field__label">Key themes</label>
+                <p class="field__hint">Topics, emotions, or patterns that emerged</p>
+                <textarea class="field__textarea" rows="3" placeholder="e.g. Exam anxiety, avoidance, perfectionism, family pressure…">Exam anxiety, time management, journalling as a coping tool, transition from housing worry to academic focus</textarea>
+              </div>
+
+              <!-- Homework -->
+              <div class="field">
+                <label class="field__label">Homework set for client</label>
+                <p class="field__hint">Any tasks, exercises, or practices the client agreed to do</p>
+                <textarea class="field__textarea" rows="3" placeholder="e.g. Journal for 10 min daily, complete a worry-time worksheet…">Journal for 10 minutes each evening this week using the worry-time template. Use the breathing technique before starting any revision session.</textarea>
+              </div>
+
+              <!-- Follow-up -->
+              <div class="field">
+                <label class="field__label">Follow-up needed?</label>
+                <p class="field__hint">Actions you need to take before the next session</p>
+                <textarea class="field__textarea" rows="3" placeholder="e.g. Monitor mood check-ins, send a resource, flag to support team…">Monitor mood check-ins this week. If mood is still "Low" by Wednesday, send a proactive check-in message. Review journalling notes at start of next session.</textarea>
+              </div>
+
+              <!-- Welfare flag -->
+              <div class="field">
+                <label class="field__label">Welfare flag</label>
+                <div class="welfare-toggle">
+                  <div class="welfare-toggle__icon" style="background:rgba(225,29,72,.08);">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                  </div>
+                  <div class="welfare-toggle__info">
+                    <p class="welfare-toggle__title">Flag this client for welfare review</p>
+                    <p class="welfare-toggle__sub">Sends a discreet notification to the Luminwell support team</p>
+                  </div>
+                  <div class="welfare-sw"></div>
+                </div>
+              </div>
+
+              <!-- Tags -->
+              <div class="field">
+                <label class="field__label">Tags</label>
+                <div class="tag-field">
+                  <span class="tag-pill">Anxiety<button type="button">×</button></span>
+                  <span class="tag-pill">Exams<button type="button">×</button></span>
+                  <span class="tag-pill">Journalling<button type="button">×</button></span>
+                  <span class="tag-pill">Time management<button type="button">×</button></span>
+                  <input type="text" placeholder="Add tag and press Enter…" />
+                </div>
+              </div>
+
+            </div>
+
+            <div class="form-card__foot">
+              <button type="button" class="btn-primary" style="flex:1;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>
+                Publish note
+              </button>
+              <button type="button" class="btn-secondary">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Save draft
+              </button>
+              <a href="amb-notes.html" class="btn-ghost">Cancel</a>
+            </div>
+          </div>
+
+          <!-- Right: context + tips -->
+          <div class="write-side">
+
+            <!-- Session context -->
+            <div class="context-card">
+              <div class="context-card__head">
+                <span class="context-card__title">
+                  <span style="width:22px;height:22px;border-radius:6px;background:rgba(15,45,69,.1);display:inline-flex;align-items:center;justify-content:center;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="var(--sb-bg)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:11px;height:11px;"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                  </span>
+                  Client E — Context
+                </span>
+                <a href="amb-student-detail.html" class="btn-ghost" style="font-size:10px;padding:3px 7px;">Full profile</a>
+              </div>
+              <div class="context-card__body">
+                <div class="context-row">
+                  <div class="context-row__icon" style="background:rgba(15,45,69,.08);"><svg viewBox="0 0 24 24" fill="none" stroke="var(--sb-bg)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></div>
+                  <div><p class="context-row__label">Working together since</p><p class="context-row__val">October 2025 · Session 10</p></div>
+                </div>
+                <div class="context-row">
+                  <div class="context-row__icon" style="background:rgba(45,150,116,.1);"><svg viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg></div>
+                  <div><p class="context-row__label">Focus areas</p><p class="context-row__val">Housing · Anxiety · Exam stress</p></div>
+                </div>
+                <div class="context-row">
+                  <div class="context-row__icon" style="background:rgba(52,211,153,.1);"><svg viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg></div>
+                  <div><p class="context-row__label">Last mood check-in</p><p class="context-row__val" style="color:var(--teal-deep);">Great — logged today</p></div>
+                </div>
+                <div style="height:1px;background:var(--border-soft);"></div>
+                <p style="font-size:11px;font-weight:700;color:var(--soft);text-transform:uppercase;letter-spacing:.07em;">Last session homework</p>
+                <p style="font-size:12px;color:var(--muted);line-height:1.6;">Use breathing exercise before sleep · Read university welfare resources</p>
+              </div>
+            </div>
+
+            <!-- Previous note -->
+            <div class="context-card">
+              <div class="context-card__head">
+                <span class="context-card__title">
+                  <span style="width:22px;height:22px;border-radius:6px;background:rgba(15,45,69,.08);display:inline-flex;align-items:center;justify-content:center;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="var(--sb-bg)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:11px;height:11px;"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                  </span>
+                  Previous note
+                </span>
+              </div>
+              <div class="context-card__body">
+                <div class="prev-note">
+                  <p class="prev-note__date">Session 9 · Tue 18 Mar 2026</p>
+                  <p class="prev-note__title">Client E — Progress review</p>
+                  <p class="prev-note__text">Client reported progress on housing — contacted welfare team as agreed. Mood improving week-on-week. Discussed exam stress as the next area of focus heading into April.</p>
+                  <div class="prev-note__tags"><span class="prev-note__tag">Housing</span><span class="prev-note__tag">Progress</span><span class="prev-note__tag">Exams</span></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- AI tip -->
+            <div class="ai-tip">
+              <div class="ai-tip__icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+              </div>
+              <p class="ai-tip__text"><strong>AI tip:</strong> Based on Client E's recent journals and last note, key themes to consider — exam anxiety, sleep quality, breathing techniques, and housing resolution. These have been pre-filled where appropriate.</p>
+            </div>
+
+            <div class="privacy-strip">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              Notes are visible only to you. Clients see a summary view only. Welfare flags are sent privately to the support team.
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+</body>
+</html>

@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Luminwell Ambassador — Edit Profile</title>
+  <link rel="stylesheet" href="ambassador.css" />
+  <style>
+    /* ── Hero ── */
+    .edit-hero {
+      background: linear-gradient(130deg, var(--sb-bg) 0%, #1a4e70 55%, #1a6b5a 100%);
+      border-radius: 18px; padding: 28px 32px; margin-bottom: 24px;
+      display: flex; align-items: center; justify-content: space-between; gap: 20px;
+      box-shadow: 0 6px 28px rgba(15,45,69,.22);
+    }
+    .edit-hero__left { display: flex; gap: 20px; align-items: center; }
+    .edit-hero__avatar-wrap { position: relative; flex-shrink: 0; cursor: pointer; }
+    .edit-hero__avatar {
+      width: 68px; height: 68px; border-radius: 50%;
+      background: rgba(255,255,255,.2); border: 3px solid rgba(255,255,255,.4);
+      display: flex; align-items: center; justify-content: center; font-size: 28px;
+    }
+    .edit-hero__avatar-overlay {
+      position: absolute; inset: 0; border-radius: 50%;
+      background: rgba(0,0,0,.45);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; transition: opacity .18s;
+    }
+    .edit-hero__avatar-overlay svg { width: 18px; height: 18px; stroke: #fff; }
+    .edit-hero__avatar-wrap:hover .edit-hero__avatar-overlay { opacity: 1; }
+    .edit-hero__title { font-size: 20px; font-weight: 900; color: #fff; letter-spacing: -0.03em; }
+    .edit-hero__sub   { font-size: 13px; color: rgba(255,255,255,.65); margin-top: 4px; }
+    .edit-hero__actions { display: flex; gap: 10px; }
+    .btn-hero-save {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 11px 22px; border-radius: 10px;
+      background: #fff; color: var(--sb-bg);
+      font-size: 13px; font-weight: 800; font-family: var(--font);
+      border: none; cursor: pointer; text-decoration: none;
+      box-shadow: 0 2px 12px rgba(0,0,0,.18);
+      transition: transform .14s, box-shadow .14s;
+    }
+    .btn-hero-save:hover { transform: translateY(-1px); box-shadow: 0 5px 18px rgba(0,0,0,.22); }
+    .btn-hero-save svg { width: 14px; height: 14px; }
+    .btn-hero-cancel {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 11px 18px; border-radius: 10px;
+      background: rgba(255,255,255,.12); color: rgba(255,255,255,.88);
+      font-size: 13px; font-weight: 700; font-family: var(--font);
+      border: 1px solid rgba(255,255,255,.22); cursor: pointer; text-decoration: none;
+      transition: background .14s;
+    }
+    .btn-hero-cancel:hover { background: rgba(255,255,255,.2); }
+
+    /* ── Layout ── */
+    .edit-layout { display: grid; grid-template-columns: 1fr 300px; gap: 22px; align-items: start; }
+
+    /* ── Form sections ── */
+    .edit-section {
+      background: var(--surface); border-radius: 16px;
+      border: 1.5px solid var(--border); box-shadow: var(--shadow-sm);
+      overflow: hidden; margin-bottom: 16px;
+    }
+    .edit-section:last-child { margin-bottom: 0; }
+    .edit-section__head {
+      padding: 16px 22px 12px; border-bottom: 1px solid var(--border-soft);
+      display: flex; align-items: center; gap: 10px;
+    }
+    .edit-section__icon {
+      width: 30px; height: 30px; border-radius: 8px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .edit-section__icon svg { width: 14px; height: 14px; }
+    .edit-section__title { font-size: 14px; font-weight: 800; letter-spacing: -0.02em; }
+    .edit-section__body  { padding: 20px 22px; display: flex; flex-direction: column; gap: 16px; }
+
+    /* ── Fields ── */
+    .field { display: flex; flex-direction: column; gap: 6px; }
+    .field__label { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
+    .field__hint  { font-size: 11px; color: var(--soft); }
+    .field__input, .field__select, .field__textarea {
+      width: 100%; padding: 10px 13px; border-radius: 10px;
+      border: 1.5px solid var(--border); background: var(--page-bg);
+      font-family: var(--font); font-size: 13px; color: var(--text);
+      outline: none; transition: border-color .16s, box-shadow .16s;
+      box-sizing: border-box;
+    }
+    .field__input:focus, .field__select:focus, .field__textarea:focus {
+      border-color: var(--teal); box-shadow: 0 0 0 3px rgba(45,150,116,.12);
+    }
+    .field__textarea { resize: vertical; min-height: 100px; line-height: 1.7; }
+    .field__select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 12px center; background-size: 16px;
+      padding-right: 36px; cursor: pointer;
+    }
+    .two-col-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .char-count { font-size: 10px; color: var(--soft); text-align: right; margin-top: 2px; }
+
+    /* ── Specialism tags (checkbox pills) ── */
+    .spec-grid-input { display: flex; flex-wrap: wrap; gap: 7px; }
+    .spec-check { display: none; }
+    .spec-check + label {
+      display: flex; align-items: center; gap: 6px;
+      padding: 7px 14px; border-radius: var(--rf);
+      border: 1.5px solid var(--border); background: var(--page-bg);
+      font-size: 11px; font-weight: 700; color: var(--muted);
+      cursor: pointer; transition: all .14s;
+    }
+    .spec-check + label:hover { border-color: var(--teal); color: var(--teal-deep); }
+    .spec-check:checked + label { border-color: var(--teal); background: var(--teal-pale); color: var(--teal-deep); border-width: 2px; }
+    .spec-check + label .spec-dot { width: 7px; height: 7px; border-radius: 50%; display: block; min-width: 7px; }
+
+    /* ── Availability grid ── */
+    .avail-grid { display: flex; gap: 6px; }
+    .avail-day-check { display: none; }
+    .avail-day-check + label {
+      flex: 1; display: flex; align-items: center; justify-content: center;
+      padding: 9px 4px; border-radius: 9px;
+      border: 1.5px solid var(--border); background: var(--page-bg);
+      font-size: 11px; font-weight: 700; color: var(--muted);
+      cursor: pointer; transition: all .14s;
+    }
+    .avail-day-check:checked + label { border-color: var(--teal); background: var(--teal-pale); color: var(--teal-deep); border-width: 2px; }
+    .avail-day-check + label:hover { border-color: var(--teal); }
+
+    /* ── Toggle ── */
+    .toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; border-radius: 10px; border: 1.5px solid var(--border); background: var(--page-bg); }
+    .toggle-row__text { display: flex; flex-direction: column; gap: 2px; }
+    .toggle-row__label { font-size: 13px; font-weight: 700; color: var(--text); }
+    .toggle-row__hint  { font-size: 11px; color: var(--muted); }
+    .toggle-track { width: 38px; height: 22px; border-radius: 11px; background: var(--border); position: relative; cursor: pointer; flex-shrink: 0; transition: background .18s; }
+    .toggle-track__thumb { position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 50%; background: #fff; box-shadow: 0 1px 4px rgba(0,0,0,.18); transition: transform .18s; }
+    .toggle-check { display: none; }
+    .toggle-check:checked + label .toggle-track { background: var(--teal); }
+    .toggle-check:checked + label .toggle-track__thumb { transform: translateX(16px); }
+
+    /* ── Danger zone ── */
+    .danger-zone {
+      background: rgba(225,29,72,.04); border-radius: 14px;
+      border: 1px solid rgba(225,29,72,.15); padding: 18px 20px;
+    }
+    .danger-zone__title { font-size: 13px; font-weight: 800; color: var(--red); margin-bottom: 8px; }
+    .danger-zone__text  { font-size: 12px; color: var(--muted); line-height: 1.6; margin-bottom: 14px; }
+
+    /* ── Side panel ── */
+    .edit-side { display: flex; flex-direction: column; gap: 16px; position: sticky; top: 26px; }
+    .preview-card {
+      background: var(--surface); border-radius: 14px;
+      border: 1.5px solid var(--border); box-shadow: var(--shadow-sm); overflow: hidden;
+    }
+    .preview-card__head { padding: 12px 16px 10px; border-bottom: 1px solid var(--border-soft); }
+    .preview-card__title { font-size: 12px; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
+    .preview-card__body  { padding: 14px 16px; }
+    .preview-avatar { width: 52px; height: 52px; border-radius: 50%; background: linear-gradient(135deg, var(--sb-bg), var(--teal)); display: flex; align-items: center; justify-content: center; font-size: 22px; margin-bottom: 10px; }
+    .preview-name { font-size: 16px; font-weight: 900; letter-spacing: -0.03em; color: var(--text); }
+    .preview-sub  { font-size: 12px; color: var(--muted); margin-top: 3px; }
+    .preview-tags { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 10px; }
+    .preview-tag  { padding: 3px 9px; border-radius: var(--rf); background: var(--teal-pale); border: 1px solid var(--teal-mid); font-size: 10px; font-weight: 700; color: var(--teal-deep); }
+
+    .tips-panel { background: var(--page-bg); border-radius: 14px; border: 1.5px solid var(--border); padding: 16px; }
+    .tips-panel__title { font-size: 12px; font-weight: 800; color: var(--text); margin-bottom: 10px; }
+    .tips-list { display: flex; flex-direction: column; gap: 9px; }
+    .tips-item { display: flex; gap: 8px; }
+    .tips-item__dot { width: 6px; height: 6px; min-width: 6px; border-radius: 50%; background: var(--teal); margin-top: 5px; display: block; }
+    .tips-item__text { font-size: 12px; color: var(--muted); line-height: 1.55; }
+
+    .progress-card { background: var(--surface); border-radius: 14px; border: 1.5px solid var(--border); padding: 16px; }
+    .progress-card__title { font-size: 12px; font-weight: 800; margin-bottom: 12px; }
+    .progress-list { display: flex; flex-direction: column; gap: 8px; }
+    .progress-item { display: flex; align-items: center; gap: 8px; font-size: 12px; }
+    .progress-item__icon { width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .progress-item__icon svg { width: 10px; height: 10px; }
+    .progress-item--done  .progress-item__icon { background: var(--teal-pale); }
+    .progress-item--done  .progress-item__icon svg { stroke: var(--teal-deep); }
+    .progress-item--done  { color: var(--muted); text-decoration: line-through; }
+    .progress-item--todo  .progress-item__icon { background: var(--border-soft); }
+    .progress-item--todo  .progress-item__icon svg { stroke: var(--soft); }
+  </style>
+</head>
+<body>
+<div class="app">
+  <input type="checkbox" id="sb-toggle" class="state-input" />
+  <aside class="sidebar" aria-label="Ambassador navigation">
+    <div class="sidebar__head">
+      <img class="sidebar__logo-img" src="logo.png" alt="Luminwell" width="28" height="28" decoding="async" />
+      <div class="sidebar__logo-wrap"><span class="sidebar__logo">LUMINWELL</span><span class="sidebar__role-tag">Ambassador</span></div>
+      <label for="sb-toggle" class="sb-collapse-btn" aria-label="Collapse sidebar">
+        <svg class="icon-collapse" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+        <svg class="icon-expand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+      </label>
+    </div>
+    <div class="sidebar__block">
+      <div class="sidebar__label">Main</div>
+      <nav class="sb-nav">
+        <a href="amb-home.html" class="sb-nav__link"><svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5L12 4l9 6.5V20a1 1 0 01-1 1h-5v-7H9v7H4a1 1 0 01-1-1v-9.5z"/></svg>Home</a>
+        <a href="amb-schedule.html" class="sb-nav__link"><svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Schedule<span class="sb-nav__badge sb-nav__badge--teal">3</span></a>
+        <a href="amb-students.html" class="sb-nav__link"><svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>My Clients</a>
+        <a href="amb-notes.html" class="sb-nav__link"><svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Session Notes<span class="sb-nav__badge sb-nav__badge--amber">2</span></a>
+        <a href="amb-tasks.html" class="sb-nav__link"><svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>Tasks<span class="sb-nav__badge">5</span></a>
+        <a href="amb-messages.html" class="sb-nav__link"><svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>Messages<span class="sb-nav__badge">3</span></a>
+        <a href="amb-profile.html" class="sb-nav__link is-active" aria-current="page"><svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>My Profile</a>
+      </nav>
+    </div>
+    <div class="sidebar__block">
+      <div class="sidebar__label">AI Tools</div>
+      <nav class="sb-nav">
+        <a href="amb-ai-notes.html" class="sb-nav__link">
+          <svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          AI Note Writer
+          <span class="sb-nav__badge sb-nav__badge--teal">New</span>
+        </a>
+      </nav>
+    </div>
+    <div class="sidebar__foot">
+      <div class="sidebar__avatar">🌿</div>
+      <div><div class="sidebar__name">Maya Johnson</div><div class="sidebar__stats"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>4.9 · 84 clients</div></div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="topbar__left">
+        <img class="topbar__logo-img" src="logo.png" alt="Luminwell" width="26" height="26" decoding="async" />
+        <span class="topbar__title">Ambassador Dashboard</span>
+        <span class="topbar__divider"></span>
+        <a href="amb-profile.html" class="topbar__sub" style="text-decoration:none;color:inherit;">My Profile</a>
+        <span class="topbar__divider"></span>
+        <span class="topbar__sub" style="color:var(--text);font-weight:700;">Edit profile</span>
+      </div>
+      <div class="topbar__right">
+        <span class="topbar__today"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Sunday, 29 Mar 2026</span>
+        <button type="button" class="topbar__crisis">988 Helpline</button>
+        <button type="button" class="topbar__icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg><span class="notif-dot"></span></button>
+      </div>
+    </header>
+
+    <div class="amb-page">
+      <div class="amb-inner">
+
+        <!-- Hero -->
+        <div class="edit-hero">
+          <div class="edit-hero__left">
+            <div class="edit-hero__avatar-wrap">
+              <div class="edit-hero__avatar">🌿</div>
+              <div class="edit-hero__avatar-overlay">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
+              </div>
+            </div>
+            <div>
+              <h1 class="edit-hero__title">Edit Profile</h1>
+              <p class="edit-hero__sub">Changes are visible to clients browsing for support</p>
+            </div>
+          </div>
+          <div class="edit-hero__actions">
+            <a href="amb-profile.html" class="btn-hero-cancel">Cancel</a>
+            <a href="amb-profile.html" class="btn-hero-save">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+              Save changes
+            </a>
+          </div>
+        </div>
+
+        <div class="edit-layout">
+
+          <!-- LEFT: form -->
+          <div>
+
+            <!-- Personal info -->
+            <div class="edit-section">
+              <div class="edit-section__head">
+                <div class="edit-section__icon" style="background:rgba(15,45,69,.1);color:var(--sb-bg);">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                </div>
+                <span class="edit-section__title">Personal information</span>
+              </div>
+              <div class="edit-section__body">
+                <div class="two-col-fields">
+                  <div class="field">
+                    <label class="field__label" for="ep-first">First name</label>
+                    <input id="ep-first" class="field__input" type="text" value="Maya" />
+                  </div>
+                  <div class="field">
+                    <label class="field__label" for="ep-last">Last name</label>
+                    <input id="ep-last" class="field__input" type="text" value="Johnson" />
+                  </div>
+                </div>
+                <div class="field">
+                  <label class="field__label" for="ep-role">Professional title</label>
+                  <input id="ep-role" class="field__input" type="text" value="Peer Support Specialist" />
+                  <span class="field__hint">Shown below your name on your public profile</span>
+                </div>
+                <div class="two-col-fields">
+                  <div class="field">
+                    <label class="field__label" for="ep-uni">University</label>
+                    <input id="ep-uni" class="field__input" type="text" value="University of Manchester" />
+                  </div>
+                  <div class="field">
+                    <label class="field__label" for="ep-course">Course</label>
+                    <input id="ep-course" class="field__input" type="text" value="BSc Psychology" />
+                  </div>
+                </div>
+                <div class="two-col-fields">
+                  <div class="field">
+                    <label class="field__label" for="ep-year">Year of study</label>
+                    <select id="ep-year" class="field__select">
+                      <option>Year 1</option><option>Year 2</option><option>Year 3</option>
+                      <option selected>Final year</option><option>Postgraduate</option>
+                    </select>
+                  </div>
+                  <div class="field">
+                    <label class="field__label" for="ep-pronoun">Pronouns</label>
+                    <select id="ep-pronoun" class="field__select">
+                      <option selected>She / her</option><option>He / him</option>
+                      <option>They / them</option><option>Prefer not to say</option><option>Other</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="field">
+                  <label class="field__label" for="ep-langs">Languages spoken</label>
+                  <input id="ep-langs" class="field__input" type="text" value="English, Urdu" placeholder="e.g. English, Spanish, Mandarin…" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Bio -->
+            <div class="edit-section">
+              <div class="edit-section__head">
+                <div class="edit-section__icon" style="background:rgba(45,150,116,.1);color:var(--teal);">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+                </div>
+                <span class="edit-section__title">About me / Bio</span>
+              </div>
+              <div class="edit-section__body">
+                <div class="field">
+                  <label class="field__label" for="ep-bio">Bio <span style="color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0;">— visible on your public profile</span></label>
+                  <textarea id="ep-bio" class="field__textarea" style="min-height:120px;">I'm a final-year Psychology student passionate about supporting peers through academic pressure, anxiety, and life transitions. I trained with the Luminwell ambassador programme in 2024 and have supported 84 clients across a wide range of wellbeing challenges. My approach is warm, non-judgmental, and grounded in evidence-based techniques including CBT, mindfulness, and motivational interviewing.</textarea>
+                  <p class="char-count">312 / 500 characters</p>
+                </div>
+                <div class="field">
+                  <label class="field__label" for="ep-approach">My approach in one sentence</label>
+                  <input id="ep-approach" class="field__input" type="text" value="Warm, non-judgmental support grounded in CBT and mindfulness" placeholder="e.g. Evidence-based, student-led support focused on resilience…" />
+                  <span class="field__hint">Appears as a short tagline under your name in search results</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Specialisms -->
+            <div class="edit-section">
+              <div class="edit-section__head">
+                <div class="edit-section__icon" style="background:rgba(15,107,82,.1);color:var(--teal-deep);">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                </div>
+                <span class="edit-section__title">Specialisms &amp; focus areas</span>
+              </div>
+              <div class="edit-section__body">
+                <div class="field">
+                  <span class="field__label">Select all that apply <span style="color:var(--soft);font-weight:400;text-transform:none;letter-spacing:0;">(shown as tags on your profile)</span></span>
+                  <div class="spec-grid-input">
+                    <input type="checkbox" id="sp-academic" class="spec-check" checked /><label for="sp-academic"><span class="spec-dot" style="background:var(--sb-bg);"></span>Academic stress</label>
+                    <input type="checkbox" id="sp-anxiety" class="spec-check" checked /><label for="sp-anxiety"><span class="spec-dot" style="background:#d97706;"></span>Anxiety</label>
+                    <input type="checkbox" id="sp-cbt" class="spec-check" checked /><label for="sp-cbt"><span class="spec-dot" style="background:var(--teal);"></span>CBT techniques</label>
+                    <input type="checkbox" id="sp-goals" class="spec-check" checked /><label for="sp-goals"><span class="spec-dot" style="background:#059669;"></span>Goal setting</label>
+                    <input type="checkbox" id="sp-sleep" class="spec-check" checked /><label for="sp-sleep"><span class="spec-dot" style="background:#7c3aed;"></span>Sleep</label>
+                    <input type="checkbox" id="sp-housing" class="spec-check" checked /><label for="sp-housing"><span class="spec-dot" style="background:var(--sb-bg);"></span>Housing &amp; transitions</label>
+                    <input type="checkbox" id="sp-depression" class="spec-check" /><label for="sp-depression"><span class="spec-dot" style="background:#6366f1;"></span>Low mood / depression</label>
+                    <input type="checkbox" id="sp-grief" class="spec-check" /><label for="sp-grief"><span class="spec-dot" style="background:#0ea5e9;"></span>Grief &amp; loss</label>
+                    <input type="checkbox" id="sp-identity" class="spec-check" /><label for="sp-identity"><span class="spec-dot" style="background:#ec4899;"></span>Identity</label>
+                    <input type="checkbox" id="sp-relationships" class="spec-check" /><label for="sp-relationships"><span class="spec-dot" style="background:#f59e0b;"></span>Relationships</label>
+                    <input type="checkbox" id="sp-motivation" class="spec-check" /><label for="sp-motivation"><span class="spec-dot" style="background:#10b981;"></span>Motivation</label>
+                    <input type="checkbox" id="sp-mindfulness" class="spec-check" /><label for="sp-mindfulness"><span class="spec-dot" style="background:var(--teal);"></span>Mindfulness</label>
+                    <input type="checkbox" id="sp-financial" class="spec-check" /><label for="sp-financial"><span class="spec-dot" style="background:#d97706;"></span>Financial stress</label>
+                    <input type="checkbox" id="sp-eating" class="spec-check" /><label for="sp-eating"><span class="spec-dot" style="background:#e11d48;"></span>Eating &amp; body image</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Availability -->
+            <div class="edit-section">
+              <div class="edit-section__head">
+                <div class="edit-section__icon" style="background:rgba(245,158,11,.1);color:#d97706;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                </div>
+                <span class="edit-section__title">Availability &amp; session settings</span>
+              </div>
+              <div class="edit-section__body">
+                <div class="field">
+                  <span class="field__label">Available days</span>
+                  <div class="avail-grid">
+                    <input type="checkbox" id="av-mon" class="avail-day-check" checked /><label for="av-mon">Mon</label>
+                    <input type="checkbox" id="av-tue" class="avail-day-check" checked /><label for="av-tue">Tue</label>
+                    <input type="checkbox" id="av-wed" class="avail-day-check" checked /><label for="av-wed">Wed</label>
+                    <input type="checkbox" id="av-thu" class="avail-day-check" /><label for="av-thu">Thu</label>
+                    <input type="checkbox" id="av-fri" class="avail-day-check" checked /><label for="av-fri">Fri</label>
+                    <input type="checkbox" id="av-sat" class="avail-day-check" /><label for="av-sat">Sat</label>
+                    <input type="checkbox" id="av-sun" class="avail-day-check" /><label for="av-sun">Sun</label>
+                  </div>
+                </div>
+                <div class="two-col-fields">
+                  <div class="field">
+                    <label class="field__label" for="av-from">Available from</label>
+                    <input id="av-from" class="field__input" type="time" value="09:00" />
+                  </div>
+                  <div class="field">
+                    <label class="field__label" for="av-to">Available until</label>
+                    <input id="av-to" class="field__input" type="time" value="17:00" />
+                  </div>
+                </div>
+                <div class="two-col-fields">
+                  <div class="field">
+                    <label class="field__label" for="av-dur">Default session length</label>
+                    <select id="av-dur" class="field__select">
+                      <option>30 min</option><option selected>50 min</option><option>60 min</option>
+                    </select>
+                  </div>
+                  <div class="field">
+                    <label class="field__label" for="av-cap">Monthly capacity</label>
+                    <select id="av-cap" class="field__select">
+                      <option>5 sessions</option><option>10 sessions</option>
+                      <option selected>15 sessions</option><option>20 sessions</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="field">
+                  <span class="field__label">Session formats offered</span>
+                  <div class="spec-grid-input">
+                    <input type="checkbox" id="fmt-video" class="spec-check" checked /><label for="fmt-video">Video call</label>
+                    <input type="checkbox" id="fmt-phone" class="spec-check" checked /><label for="fmt-phone">Phone</label>
+                    <input type="checkbox" id="fmt-person" class="spec-check" checked /><label for="fmt-person">In person</label>
+                    <input type="checkbox" id="fmt-chat" class="spec-check" /><label for="fmt-chat">Chat / text</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Notifications -->
+            <div class="edit-section">
+              <div class="edit-section__head">
+                <div class="edit-section__icon" style="background:rgba(15,45,69,.08);color:var(--sb-bg);">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+                </div>
+                <span class="edit-section__title">Notification preferences</span>
+              </div>
+              <div class="edit-section__body">
+                <input type="checkbox" id="notif-booking" class="toggle-check state-input" checked />
+                <label for="notif-booking">
+                  <div class="toggle-row">
+                    <div class="toggle-row__text"><span class="toggle-row__label">New session bookings</span><span class="toggle-row__hint">Notify when a client books with you</span></div>
+                    <div class="toggle-track"><div class="toggle-track__thumb"></div></div>
+                  </div>
+                </label>
+                <input type="checkbox" id="notif-msg" class="toggle-check state-input" checked />
+                <label for="notif-msg">
+                  <div class="toggle-row">
+                    <div class="toggle-row__text"><span class="toggle-row__label">New messages</span><span class="toggle-row__hint">Alert when a client sends you a message</span></div>
+                    <div class="toggle-track"><div class="toggle-track__thumb"></div></div>
+                  </div>
+                </label>
+                <input type="checkbox" id="notif-welfare" class="toggle-check state-input" checked />
+                <label for="notif-welfare">
+                  <div class="toggle-row">
+                    <div class="toggle-row__text"><span class="toggle-row__label">Welfare alerts</span><span class="toggle-row__hint">Urgent — always recommended to keep on</span></div>
+                    <div class="toggle-track"><div class="toggle-track__thumb"></div></div>
+                  </div>
+                </label>
+                <input type="checkbox" id="notif-notes" class="toggle-check state-input" />
+                <label for="notif-notes">
+                  <div class="toggle-row">
+                    <div class="toggle-row__text"><span class="toggle-row__label">Note reminders</span><span class="toggle-row__hint">Remind me 24h after a session to write notes</span></div>
+                    <div class="toggle-track"><div class="toggle-track__thumb"></div></div>
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            <!-- Danger zone -->
+            <div class="edit-section">
+              <div class="edit-section__head">
+                <div class="edit-section__icon" style="background:rgba(225,29,72,.1);color:var(--red);">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+                </div>
+                <span class="edit-section__title" style="color:var(--red);">Account actions</span>
+              </div>
+              <div class="edit-section__body">
+                <div class="danger-zone">
+                  <p class="danger-zone__title">Pause availability</p>
+                  <p class="danger-zone__text">Temporarily hide your profile from new client bookings. Existing sessions and relationships remain active.</p>
+                  <button type="button" class="btn-ghost" style="font-size:12px;color:var(--red);border-color:rgba(225,29,72,.3);">Pause my availability</button>
+                </div>
+                <div style="display:flex;gap:10px;margin-top:4px;">
+                  <button type="button" class="btn-ghost" style="font-size:12px;color:var(--muted);">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px;"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                    Sign out
+                  </button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- RIGHT: preview + tips -->
+          <div class="edit-side">
+
+            <!-- Live preview -->
+            <div class="preview-card">
+              <div class="preview-card__head">
+                <p class="preview-card__title">Profile preview</p>
+              </div>
+              <div class="preview-card__body">
+                <div class="preview-avatar">🌿</div>
+                <p class="preview-name">Maya Johnson</p>
+                <p class="preview-sub">Peer Support Specialist · University of Manchester</p>
+                <div class="preview-tags">
+                  <span class="preview-tag">Academic stress</span>
+                  <span class="preview-tag">Anxiety</span>
+                  <span class="preview-tag">CBT</span>
+                  <span class="preview-tag">Goals</span>
+                  <span class="preview-tag">Sleep</span>
+                  <span class="preview-tag">Housing</span>
+                </div>
+                <p style="font-size:11px;color:var(--muted);margin-top:10px;line-height:1.6;">"Warm, non-judgmental support grounded in CBT and mindfulness"</p>
+                <div style="display:flex;gap:14px;margin-top:12px;padding-top:12px;border-top:1px solid var(--border-soft);">
+                  <div style="text-align:center;"><p style="font-size:18px;font-weight:900;letter-spacing:-0.04em;">4.9</p><p style="font-size:10px;color:var(--muted);">Rating</p></div>
+                  <div style="text-align:center;"><p style="font-size:18px;font-weight:900;letter-spacing:-0.04em;">84</p><p style="font-size:10px;color:var(--muted);">Clients</p></div>
+                  <div style="text-align:center;"><p style="font-size:18px;font-weight:900;letter-spacing:-0.04em;">2yr</p><p style="font-size:10px;color:var(--muted);">Experience</p></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Profile completeness -->
+            <div class="progress-card">
+              <p class="progress-card__title">Profile completeness</p>
+              <div style="height:7px;border-radius:5px;background:var(--border);overflow:hidden;margin-bottom:12px;">
+                <div style="width:85%;height:100%;border-radius:5px;background:linear-gradient(90deg,var(--teal),#34d399);"></div>
+              </div>
+              <div class="progress-list">
+                <div class="progress-item progress-item--done">
+                  <div class="progress-item__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+                  Name &amp; personal info
+                </div>
+                <div class="progress-item progress-item--done">
+                  <div class="progress-item__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+                  Bio written
+                </div>
+                <div class="progress-item progress-item--done">
+                  <div class="progress-item__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+                  Specialisms selected
+                </div>
+                <div class="progress-item progress-item--done">
+                  <div class="progress-item__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+                  Availability set
+                </div>
+                <div class="progress-item progress-item--todo">
+                  <div class="progress-item__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/></svg></div>
+                  Profile photo uploaded
+                </div>
+                <div class="progress-item progress-item--todo">
+                  <div class="progress-item__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/></svg></div>
+                  Video intro added
+                </div>
+              </div>
+            </div>
+
+            <!-- Tips -->
+            <div class="tips-panel">
+              <p class="tips-panel__title">Profile tips</p>
+              <div class="tips-list">
+                <div class="tips-item">
+                  <span class="tips-item__dot"></span>
+                  <p class="tips-item__text">Profiles with a bio get <strong>3× more bookings</strong> than those without.</p>
+                </div>
+                <div class="tips-item">
+                  <span class="tips-item__dot"></span>
+                  <p class="tips-item__text">Be specific with specialisms — it helps clients self-select the right support.</p>
+                </div>
+                <div class="tips-item">
+                  <span class="tips-item__dot"></span>
+                  <p class="tips-item__text">Keeping your availability up to date reduces missed booking opportunities.</p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+</div>
+</body>
+</html>
