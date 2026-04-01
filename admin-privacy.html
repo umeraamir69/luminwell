@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Privacy &amp; GDPR — Luminwell Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="admin.css">
+<style>
+  html:has(#pv-requests:checked)  #pv-panel-requests  { display: block; }
+  html:has(#pv-deletions:checked) #pv-panel-deletions { display: block; }
+  html:has(#pv-consents:checked)  #pv-panel-consents  { display: block; }
+  html:has(#pv-audit:checked)     #pv-panel-audit     { display: block; }
+  html:has(#pv-requests:checked)  label[for="pv-requests"],
+  html:has(#pv-deletions:checked) label[for="pv-deletions"],
+  html:has(#pv-consents:checked)  label[for="pv-consents"],
+  html:has(#pv-audit:checked)     label[for="pv-audit"] { color: var(--adm-blue); border-bottom-color: var(--adm-blue); }
+
+  .gdpr-row { display: flex; align-items: center; gap: 12px; padding: 13px 20px; border-bottom: 1px solid var(--adm-border); transition: background .15s; }
+  .gdpr-row:last-child { border-bottom: none; }
+  .gdpr-row:hover { background: var(--adm-bg); }
+  .gdpr-meta { flex: 1; }
+  .gdpr-name { font-size: 13px; font-weight: 700; color: var(--adm-txt-head); margin-bottom: 2px; }
+  .gdpr-detail { font-size: 11px; color: var(--adm-txt-muted); }
+  .priority-tag { font-size: 10px; font-weight: 800; padding: 3px 9px; border-radius: 20px; text-transform: uppercase; letter-spacing: .03em; }
+  .p-urgent { background: var(--adm-red-lt);   color: var(--adm-red); }
+  .p-normal  { background: var(--adm-blue-lt);  color: var(--adm-blue-dk); }
+  .p-done    { background: var(--adm-green-lt); color: var(--adm-green); }
+  .audit-row { display: flex; align-items: flex-start; gap: 12px; padding: 12px 20px; border-bottom: 1px solid var(--adm-border); }
+  .audit-row:last-child { border-bottom: none; }
+  .audit-icon { width: 30px; height: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; }
+  .audit-body { flex: 1; }
+  .audit-title { font-size: 12px; font-weight: 700; color: var(--adm-txt-head); margin-bottom: 2px; }
+  .audit-time  { font-size: 11px; color: var(--adm-txt-faint); }
+</style>
+</head>
+<body>
+<input type="checkbox" id="sidebar-toggle" class="sidebar-toggle-check">
+<input type="radio" name="pv-tabs" id="pv-requests"  class="tab-check" checked>
+<input type="radio" name="pv-tabs" id="pv-deletions" class="tab-check">
+<input type="radio" name="pv-tabs" id="pv-consents"  class="tab-check">
+<input type="radio" name="pv-tabs" id="pv-audit"     class="tab-check">
+
+<div class="admin-shell">
+
+  <aside class="admin-sidebar">
+    <div class="sidebar__logo"><div class="logo-mark"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17 8C8 10 5.9 16.17 3.82 22A13.34 13.34 0 0 0 18 8Z"/><path d="M9 9c-1.5 3.5-2.5 7-3 10C8 18 11 15 13 12" fill="rgba(255,255,255,.35)"/></svg></div><div class="logo-text-wrap"><div class="logo-name">Luminwell</div><span class="logo-badge-pill">ADMIN PANEL</span></div></div>
+    <label for="sidebar-toggle" class="sidebar__collapse-btn" title="Collapse sidebar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg></label>
+    <nav class="sidebar__nav">
+      <div class="nav-section">
+        <p class="nav-label">Main</p>
+        <a href="admin-home.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg><span class="link-text">Overview</span></a>
+        <a href="admin-analytics.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg><span class="link-text">Analytics</span></a>
+      </div>
+      <div class="nav-section">
+        <p class="nav-label">People</p>
+        <a href="admin-users.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg><span class="link-text">Users</span><span class="nav-badge nav-badge--slate">2,841</span></a>
+        <a href="admin-ambassadors.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><span class="link-text">Ambassadors</span><span class="nav-badge nav-badge--amber">3 new</span></a>
+        <a href="admin-matching.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg><span class="link-text">Matching</span></a>
+      </div>
+      <div class="nav-section">
+        <p class="nav-label">Operations</p>
+        <a href="admin-sessions.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><span class="link-text">Sessions</span></a>
+        <a href="admin-welfare.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span class="link-text">Welfare &amp; Safety</span><span class="nav-badge nav-badge--red">5</span></a>
+        <a href="admin-messages.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span class="link-text">Messages</span></a>
+      </div>
+      <div class="nav-section">
+        <p class="nav-label">Platform</p>
+        <a href="admin-content.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg><span class="link-text">Content</span></a>
+        <a href="admin-settings.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06-.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span class="link-text">Settings</span></a>
+        <a href="admin-privacy.html" class="sidebar__link active"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><span class="link-text">Privacy &amp; GDPR</span></a>
+      </div>
+    </nav>
+    <div class="sidebar__foot">
+      <div class="sidebar__foot-user"><div class="admin-ava-sm">A</div><div class="sidebar__foot-info"><p>Admin User</p><small>Super Admin</small></div></div>
+      <button class="sidebar__signout"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px;"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Sign out</button>
+    </div>
+  </aside>
+
+  <div class="admin-main">
+    <header class="admin-topbar">
+      <div class="topbar-left">
+        <label for="sidebar-toggle" class="topbar-menu-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></label>
+        <nav class="breadcrumb"><a href="admin-home.html">Admin</a><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg><span class="bc-active">Privacy &amp; GDPR</span></nav>
+      </div>
+      <div class="topbar-right">
+        <div class="notif-wrap"><input type="checkbox" id="notif-toggle" class="notif-check"><label for="notif-toggle" class="topbar-icon-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><span class="notif-dot"></span></label><div class="notif-drop"><div class="notif-drop-head"><h4>Notifications</h4><a href="#">Mark all read</a></div><div class="notif-item unread"><div class="notif-ico red"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div><div class="notif-body"><p><strong>Critical welfare flag</strong></p><small>2 min ago</small></div></div><div class="notif-drop-foot"><a href="admin-welfare.html">View all →</a></div></div></div>
+        <div class="topbar-user"><div class="topbar-ava">A</div><div class="topbar-user-info"><div class="u-name">Admin</div><div class="u-role">Super Admin</div></div></div>
+      </div>
+    </header>
+
+    <div class="admin-content">
+
+      <div class="page-hero">
+        <div class="page-hero-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+        <div class="page-hero-text">
+          <h1>Privacy &amp; GDPR</h1>
+          <p>Data requests · Deletion queue · Consent log · Full audit trail</p>
+        </div>
+        <div class="page-hero-actions">
+          <button class="btn btn-white"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Export audit log</button>
+          <button class="btn btn-primary" style="background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);">GDPR settings</button>
+        </div>
+      </div>
+
+      <!-- Compliance summary -->
+      <div class="stats-row" style="grid-template-columns:repeat(4,1fr);margin-bottom:24px;">
+        <div class="stat-card teal"><div class="stat-top"><span class="stat-label">GDPR Status</span><div class="stat-icon teal"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div></div><div class="stat-value" style="font-size:22px;">Compliant</div><span class="stat-delta delta-up">All checks passed</span></div>
+        <div class="stat-card amber"><div class="stat-top"><span class="stat-label">Open Requests</span><div class="stat-icon amber"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg></div></div><div class="stat-value">6</div><span class="stat-delta delta-neu">Needs action</span></div>
+        <div class="stat-card blue"><div class="stat-top"><span class="stat-label">Resolved (30d)</span><div class="stat-icon blue"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div></div><div class="stat-value">24</div><span class="stat-delta delta-up">100% on time</span></div>
+        <div class="stat-card blue"><div class="stat-top"><span class="stat-label">Consent Rate</span><div class="stat-icon blue"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg></div></div><div class="stat-value">98.4%</div><span class="stat-delta delta-neu">Of active users</span></div>
+      </div>
+
+      <div class="grid-3-1" style="align-items:start;">
+
+        <div class="card">
+          <div class="tabs-row" style="flex-wrap:wrap;">
+            <label for="pv-requests"  class="tab-lbl">Data Requests <span class="badge badge-amber" style="font-size:10px;padding:1px 7px;">4</span></label>
+            <label for="pv-deletions" class="tab-lbl">Deletion Queue <span class="badge badge-red" style="font-size:10px;padding:1px 7px;">2</span></label>
+            <label for="pv-consents"  class="tab-lbl">Consent Log</label>
+            <label for="pv-audit"     class="tab-lbl">Audit Trail</label>
+          </div>
+
+          <div class="pv-panels">
+
+            <!-- Data export requests -->
+            <div id="pv-panel-requests" class="tab-panel">
+              <div style="padding:12px 20px;background:var(--adm-amber-lt);border-bottom:1px solid var(--adm-border);"><p style="font-size:12px;font-weight:600;color:var(--adm-amber);"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> GDPR Article 20 — respond within 30 days of request date.</p></div>
+              <div class="gdpr-row"><div class="user-cell" style="flex:1;"><div class="user-ava amber">JM</div><div class="gdpr-meta"><div class="gdpr-name">Jordan Mills</div><div class="gdpr-detail">Data export request · Submitted 27 Mar 2026 · Due 26 Apr 2026</div></div></div><span class="priority-tag p-normal">Open</span><button class="btn btn-primary btn-sm">Process</button></div>
+              <div class="gdpr-row"><div class="user-cell" style="flex:1;"><div class="user-ava teal">SR</div><div class="gdpr-meta"><div class="gdpr-name">Sam Rivera</div><div class="gdpr-detail">Data export request · Submitted 20 Mar 2026 · Due 19 Apr 2026</div></div></div><span class="priority-tag p-normal">Open</span><button class="btn btn-primary btn-sm">Process</button></div>
+              <div class="gdpr-row"><div class="user-cell" style="flex:1;"><div class="user-ava blue">NK</div><div class="gdpr-meta"><div class="gdpr-name">Natasha Kwei</div><div class="gdpr-detail">Data export request · Submitted 15 Mar 2026 · Due 14 Apr 2026</div></div></div><span class="priority-tag p-normal">Open</span><button class="btn btn-primary btn-sm">Process</button></div>
+              <div class="gdpr-row"><div class="user-cell" style="flex:1;"><div class="user-ava green">OB</div><div class="gdpr-meta"><div class="gdpr-name">Ollie Barnes</div><div class="gdpr-detail">Data export request · Submitted 5 Mar 2026 · Completed 10 Mar 2026</div></div></div><span class="priority-tag p-done">Completed</span><button class="btn btn-secondary btn-sm">View export</button></div>
+            </div>
+
+            <!-- Deletion queue -->
+            <div id="pv-panel-deletions" class="tab-panel">
+              <div style="padding:12px 20px;background:var(--adm-red-lt);border-bottom:1px solid var(--adm-border);"><p style="font-size:12px;font-weight:600;color:var(--adm-red);"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="flex-shrink:0;vertical-align:middle;margin-right:4px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> GDPR Article 17 — right to erasure. Deletion is irreversible. Review carefully before actioning.</p></div>
+              <div class="gdpr-row"><div class="user-cell" style="flex:1;"><div class="user-ava red">AT</div><div class="gdpr-meta"><div class="gdpr-name">Alex Turner</div><div class="gdpr-detail">Account deletion request · Submitted 28 Mar 2026 · Welfare flag active — requires welfare lead review before deletion</div></div></div><span class="priority-tag p-urgent">Urgent review</span><button class="btn btn-danger btn-sm">Review</button></div>
+              <div class="gdpr-row"><div class="user-cell" style="flex:1;"><div class="user-ava purple">LS</div><div class="gdpr-meta"><div class="gdpr-name">Liam Sutton</div><div class="gdpr-detail">Account deletion request · Submitted 25 Mar 2026 · No welfare flags · Safe to process</div></div></div><span class="priority-tag p-normal">Pending</span><button class="btn btn-danger btn-sm">Delete</button></div>
+            </div>
+
+            <!-- Consent log -->
+            <div id="pv-panel-consents" class="tab-panel">
+              <div class="filter-bar" style="border-top:1px solid var(--adm-border);padding:12px 20px;">
+                <div class="search-wrap"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input class="search-inp" type="text" placeholder="Search user…"></div>
+                <select class="filter-sel"><option>All consent types</option><option>Data processing</option><option>AI disclosure</option><option>Marketing</option></select>
+              </div>
+              <div class="data-table-wrap">
+                <table class="data-table">
+                  <thead><tr><th>User</th><th>Consent type</th><th>Status</th><th>Date given</th><th>IP</th><th></th></tr></thead>
+                  <tbody>
+                    <tr><td><div class="user-cell"><div class="user-ava blue">AO</div><div><div class="user-name">Alex Okonkwo</div><div class="user-sub">manchester.ac.uk</div></div></div></td><td style="font-size:12px;">Data processing</td><td><span class="badge badge-green">Given</span></td><td style="font-size:12px;color:var(--adm-txt-muted);">12 Sep 2025</td><td style="font-size:11px;color:var(--adm-txt-faint);">130.88.x.x</td><td><a href="#" class="row-link">View</a></td></tr>
+                    <tr><td><div class="user-cell"><div class="user-ava amber">JM</div><div><div class="user-name">Jordan Mills</div><div class="user-sub">ucl.ac.uk</div></div></div></td><td style="font-size:12px;">Data processing</td><td><span class="badge badge-green">Given</span></td><td style="font-size:12px;color:var(--adm-txt-muted);">3 Oct 2025</td><td style="font-size:11px;color:var(--adm-txt-faint);">144.82.x.x</td><td><a href="#" class="row-link">View</a></td></tr>
+                    <tr><td><div class="user-cell"><div class="user-ava teal">SR</div><div><div class="user-name">Sam Rivera</div><div class="user-sub">kcl.ac.uk</div></div></div></td><td style="font-size:12px;">AI disclosure</td><td><span class="badge badge-green">Given</span></td><td style="font-size:12px;color:var(--adm-txt-muted);">15 Jan 2026</td><td style="font-size:11px;color:var(--adm-txt-faint);">137.73.x.x</td><td><a href="#" class="row-link">View</a></td></tr>
+                    <tr><td><div class="user-cell"><div class="user-ava purple">PT</div><div><div class="user-name">Priya Thakur</div><div class="user-sub">nhs.uk</div></div></div></td><td style="font-size:12px;">Data processing</td><td><span class="badge badge-amber">Pending renewal</span></td><td style="font-size:12px;color:var(--adm-txt-muted);">5 Jan 2025</td><td style="font-size:11px;color:var(--adm-txt-faint);">195.x.x.x</td><td><a href="#" class="row-link">View</a></td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="pagination"><span class="pagination-info">Showing 1–4 of 2,841 consent records</span><div class="pagination-btns"><button class="page-btn" disabled>‹</button><button class="page-btn active">1</button><button class="page-btn">2</button><button class="page-btn">3</button><span style="padding:0 6px;color:var(--adm-txt-faint);font-size:13px;">…</span><button class="page-btn">711</button><button class="page-btn">›</button></div></div>
+            </div>
+
+            <!-- Audit trail -->
+            <div id="pv-panel-audit" class="tab-panel">
+              <div class="audit-row"><div class="audit-icon" style="background:var(--adm-green-lt);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div><div class="audit-body"><div class="audit-title">Data export completed for Ollie Barnes</div><div class="audit-time">Admin Kumar · 10 Mar 2026 at 14:32</div></div></div>
+              <div class="audit-row"><div class="audit-icon" style="background:var(--adm-blue-lt);color:var(--adm-blue);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg></div><div class="audit-body"><div class="audit-title">Data export request received — Sam Rivera (Article 20)</div><div class="audit-time">System · 20 Mar 2026 at 09:14</div></div></div>
+              <div class="audit-row"><div class="audit-icon" style="background:var(--adm-amber-lt);color:var(--adm-amber);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div><div class="audit-body"><div class="audit-title">Consent record updated — Priya Thakur (renewal reminder sent)</div><div class="audit-time">Admin Kumar · 15 Mar 2026 at 11:05</div></div></div>
+              <div class="audit-row"><div class="audit-icon" style="background:var(--adm-red-lt);color:var(--adm-red);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></div><div class="audit-body"><div class="audit-title">Deletion request received — Alex Turner (welfare flag active, escalated)</div><div class="audit-time">System · 28 Mar 2026 at 08:47</div></div></div>
+              <div class="audit-row"><div class="audit-icon" style="background:var(--adm-blue-lt);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg></div><div class="audit-body"><div class="audit-title">GDPR compliance check passed — all 2,841 users have valid consent records</div><div class="audit-time">System · 1 Mar 2026 at 00:00</div></div></div>
+              <div class="audit-row"><div class="audit-icon" style="background:var(--adm-green-lt);color:var(--adm-green);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div><div class="audit-body"><div class="audit-title">Data retention purge completed — 14 expired accounts anonymised</div><div class="audit-time">System · 28 Feb 2026 at 03:00</div></div></div>
+              <div class="pagination"><span class="pagination-info">Showing 1–6 of 284 audit events</span><div class="pagination-btns"><button class="page-btn" disabled>‹</button><button class="page-btn active">1</button><button class="page-btn">2</button><button class="page-btn">3</button><span style="padding:0 6px;color:var(--adm-txt-faint);font-size:13px;">…</span><button class="page-btn">48</button><button class="page-btn">›</button></div></div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Right: GDPR quick info -->
+        <div style="display:flex;flex-direction:column;gap:16px;">
+          <div class="card">
+            <div class="card-head"><div class="card-title">GDPR Compliance</div></div>
+            <div class="card-body" style="padding:12px 16px;">
+              <div class="info-row"><span class="info-key">Status</span><span class="info-value" style="color:var(--adm-green);">Compliant</span></div>
+              <div class="info-row"><span class="info-key">Data controller</span><span class="info-value">Luminwell Ltd</span></div>
+              <div class="info-row"><span class="info-key">DPO contact</span><span class="info-value">dpo@luminwell.co.uk</span></div>
+              <div class="info-row"><span class="info-key">ICO registered</span><span class="info-value" style="color:var(--adm-green);">Yes</span></div>
+              <div class="info-row"><span class="info-key">Last audit</span><span class="info-value">1 Mar 2026</span></div>
+              <div class="info-row"><span class="info-key">Next audit due</span><span class="info-value">1 Jun 2026</span></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-head"><div class="card-title">Key Deadlines</div></div>
+            <div class="card-body" style="padding:12px 16px;">
+              <div class="info-row" style="align-items:flex-start;"><span class="info-key">Jordan Mills export</span><span class="info-value" style="color:var(--adm-amber);">26 Apr 2026</span></div>
+              <div class="info-row" style="align-items:flex-start;"><span class="info-key">Sam Rivera export</span><span class="info-value" style="color:var(--adm-amber);">19 Apr 2026</span></div>
+              <div class="info-row" style="align-items:flex-start;"><span class="info-key">Natasha Kwei export</span><span class="info-value" style="color:var(--adm-blue);">14 Apr 2026</span></div>
+              <div class="info-row" style="align-items:flex-start;"><span class="info-key">Liam Sutton deletion</span><span class="info-value" style="color:var(--adm-red);">Review now</span></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-head"><div class="card-title">Quick Actions</div></div>
+            <div style="padding:12px 16px;display:flex;flex-direction:column;gap:8px;">
+              <button class="btn btn-secondary btn-sm" style="width:100%;justify-content:flex-start;gap:8px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Download full audit log</button>
+              <button class="btn btn-secondary btn-sm" style="width:100%;justify-content:flex-start;gap:8px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Run GDPR compliance check</button>
+              <button class="btn btn-secondary btn-sm" style="width:100%;justify-content:flex-start;gap:8px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Manage consent templates</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

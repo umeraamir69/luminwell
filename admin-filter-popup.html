@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Filter Popup — Luminwell Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+
+  /* ── Tokens ── */
+  :root {
+    --blue:      #2d9676;
+    --blue-dk:   #1d6e55;
+    --blue-lt:   #f4faf7;
+    --teal:      #0d9488;
+    --teal-lt:   #f0fdfa;
+    --green:     #16a34a;
+    --green-lt:  #f0fdf4;
+    --amber:     #d97706;
+    --amber-lt:  #fffbeb;
+    --red:       #dc2626;
+    --red-lt:    #fef2f2;
+    --purple:    #7c3aed;
+    --purple-lt: #f5f3ff;
+    --slate:     #64748b;
+    --txt-head:  #0f172a;
+    --txt-body:  #334155;
+    --txt-muted: #64748b;
+    --txt-faint: #94a3b8;
+    --border:    #e2e8f0;
+    --surface:   #ffffff;
+    --bg:        #f1f5f9;
+    --shadow:
+      0 8px 32px rgba(0,0,0,.12),
+      0 2px 8px  rgba(0,0,0,.07),
+      0 0 0 1px rgba(0,0,0,.05);
+    --r-lg: 16px;
+    --r-md: 10px;
+    --r-sm: 7px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #dde3ec;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 16px;
+  }
+
+  /* ══════════════════════════════════════
+     FILTER POPUP CARD
+  ══════════════════════════════════════ */
+  .filter-popup {
+    width: 420px;
+    max-width: 100%;
+    background: var(--surface);
+    border-radius: var(--r-lg);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+
+  /* ── Header ── */
+  .fp-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 20px 16px;
+    border-bottom: 1px solid var(--border);
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  }
+  .fp-title {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--txt-head);
+    letter-spacing: -.2px;
+  }
+  .fp-title-icon {
+    width: 32px; height: 32px;
+    border-radius: 9px;
+    background: var(--blue-lt);
+    color: var(--blue);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .fp-reset {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--txt-muted);
+    cursor: pointer;
+    text-decoration: none;
+    padding: 4px 10px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    transition: all .15s;
+  }
+  .fp-reset:hover { color: var(--txt-head); border-color: #cbd5e1; }
+
+  /* ── Body ── */
+  .fp-body {
+    padding: 4px 0 0;
+  }
+
+  /* ── Section ── */
+  .fp-section {
+    padding: 16px 20px;
+    border-bottom: 1px solid #f0f4f8;
+  }
+  .fp-section:last-child { border-bottom: none; }
+
+  .fp-section-label {
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .07em;
+    color: var(--txt-muted);
+    margin-bottom: 10px;
+  }
+
+  /* ── Search input ── */
+  .fp-search {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--r-sm);
+    padding: 8px 12px;
+    background: var(--bg);
+    transition: border-color .15s;
+  }
+  .fp-search:focus-within { border-color: var(--blue); background: var(--surface); }
+  .fp-search svg { color: var(--txt-faint); flex-shrink: 0; }
+  .fp-search input {
+    flex: 1;
+    border: none;
+    background: none;
+    font-family: inherit;
+    font-size: 13px;
+    color: var(--txt-head);
+    outline: none;
+  }
+  .fp-search input::placeholder { color: var(--txt-faint); }
+
+  /* ── Chip group ── */
+  .fp-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+  }
+
+  /* CSS-only chip toggle using hidden checkboxes */
+  .fp-chip-input { display: none; }
+  .fp-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 12px;
+    border-radius: 20px;
+    border: 1.5px solid var(--border);
+    background: var(--surface);
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--txt-muted);
+    cursor: pointer;
+    transition: all .15s;
+    user-select: none;
+  }
+  .fp-chip:hover { border-color: #94a3b8; color: var(--txt-body); }
+
+  /* Active states per colour */
+  .fp-chip-input.c-blue:checked    + .fp-chip { background: var(--blue-lt);   border-color: var(--blue);   color: var(--blue-dk); }
+  .fp-chip-input.c-teal:checked    + .fp-chip { background: var(--teal-lt);   border-color: var(--teal);   color: var(--teal); }
+  .fp-chip-input.c-green:checked   + .fp-chip { background: var(--green-lt);  border-color: var(--green);  color: var(--green); }
+  .fp-chip-input.c-amber:checked   + .fp-chip { background: var(--amber-lt);  border-color: var(--amber);  color: var(--amber); }
+  .fp-chip-input.c-red:checked     + .fp-chip { background: var(--red-lt);    border-color: var(--red);    color: var(--red); }
+  .fp-chip-input.c-purple:checked  + .fp-chip { background: var(--purple-lt); border-color: var(--purple); color: var(--purple); }
+  .fp-chip-input.c-slate:checked   + .fp-chip { background: #f1f5f9;          border-color: var(--slate);  color: var(--slate); }
+
+  .fp-chip-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* ── Select dropdown ── */
+  .fp-select {
+    width: 100%;
+    padding: 9px 12px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--r-sm);
+    background: var(--bg);
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--txt-body);
+    cursor: pointer;
+    outline: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 34px;
+    transition: border-color .15s;
+  }
+  .fp-select:focus { border-color: var(--blue); background-color: var(--surface); }
+
+  /* ── Range row ── */
+  .fp-range-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  /* ── Sort radio row ── */
+  .fp-sort-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .fp-sort-input { display: none; }
+  .fp-sort-lbl {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 8px 12px;
+    border-radius: var(--r-sm);
+    border: 1.5px solid transparent;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--txt-body);
+    transition: all .15s;
+  }
+  .fp-sort-lbl:hover { background: var(--bg); }
+  .fp-sort-lbl .fp-radio-dot {
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    flex-shrink: 0;
+    transition: all .15s;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .fp-sort-input:checked + .fp-sort-lbl {
+    background: var(--blue-lt);
+    border-color: rgba(45,150,118,.3);
+    color: var(--blue-dk);
+  }
+  .fp-sort-input:checked + .fp-sort-lbl .fp-radio-dot {
+    border-color: var(--blue);
+    background: var(--blue);
+    box-shadow: inset 0 0 0 3px #fff;
+  }
+
+  /* ── Footer ── */
+  .fp-footer {
+    display: flex;
+    gap: 10px;
+    padding: 16px 20px 18px;
+    border-top: 1px solid var(--border);
+    background: linear-gradient(0deg, #f8fafc 0%, var(--surface) 100%);
+  }
+  .fp-btn {
+    flex: 1;
+    padding: 10px 16px;
+    border-radius: var(--r-sm);
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all .15s;
+    border: none;
+  }
+  .fp-btn-cancel {
+    background: var(--bg);
+    color: var(--txt-muted);
+    border: 1.5px solid var(--border);
+  }
+  .fp-btn-cancel:hover { background: #e2e8f0; color: var(--txt-body); }
+  .fp-btn-apply {
+    background: linear-gradient(135deg, var(--blue) 0%, var(--blue-dk) 100%);
+    color: #fff;
+    box-shadow: 0 3px 10px rgba(45,150,118,.35);
+  }
+  .fp-btn-apply:hover { box-shadow: 0 4px 14px rgba(45,150,118,.45); transform: translateY(-1px); }
+
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════
+     FILTER POPUP
+═══════════════════════════════════ -->
+<div class="filter-popup">
+
+  <!-- Header -->
+  <div class="fp-header">
+    <div class="fp-title">
+      <span class="fp-title-icon">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+      </span>
+      Filter Users
+    </div>
+    <a class="fp-reset">Reset all</a>
+  </div>
+
+  <div class="fp-body">
+
+    <!-- Search -->
+    <div class="fp-section">
+      <div class="fp-section-label">Search</div>
+      <div class="fp-search">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" placeholder="Name, email, university…">
+      </div>
+    </div>
+
+    <!-- User type -->
+    <div class="fp-section">
+      <div class="fp-section-label">User type</div>
+      <div class="fp-chips">
+        <input type="checkbox" id="type-all"    class="fp-chip-input c-slate">
+        <label for="type-all"    class="fp-chip"><span class="fp-chip-dot" style="background:#94a3b8;"></span>All</label>
+
+        <input type="checkbox" id="type-stu"    class="fp-chip-input c-blue">
+        <label for="type-stu"    class="fp-chip"><span class="fp-chip-dot" style="background:var(--blue);"></span>Student</label>
+
+        <input type="checkbox" id="type-cli"    class="fp-chip-input c-teal">
+        <label for="type-cli"    class="fp-chip"><span class="fp-chip-dot" style="background:var(--teal);"></span>Client</label>
+
+        <input type="checkbox" id="type-pro"    class="fp-chip-input c-purple">
+        <label for="type-pro"    class="fp-chip"><span class="fp-chip-dot" style="background:var(--purple);"></span>Professional</label>
+      </div>
+    </div>
+
+    <!-- Status -->
+    <div class="fp-section">
+      <div class="fp-section-label">Status</div>
+      <div class="fp-chips">
+        <input type="checkbox" id="st-active"   class="fp-chip-input c-green">
+        <label for="st-active"   class="fp-chip"><span class="fp-chip-dot" style="background:var(--green);"></span>Active</label>
+
+        <input type="checkbox" id="st-inactive" class="fp-chip-input c-slate">
+        <label for="st-inactive" class="fp-chip"><span class="fp-chip-dot" style="background:#94a3b8;"></span>Inactive</label>
+
+        <input type="checkbox" id="st-flagged"  class="fp-chip-input c-amber">
+        <label for="st-flagged"  class="fp-chip"><span class="fp-chip-dot" style="background:var(--amber);"></span>Flagged</label>
+
+        <input type="checkbox" id="st-pending"  class="fp-chip-input c-blue">
+        <label for="st-pending"  class="fp-chip"><span class="fp-chip-dot" style="background:var(--blue);"></span>Pending</label>
+
+        <input type="checkbox" id="st-atrisk"   class="fp-chip-input c-red">
+        <label for="st-atrisk"   class="fp-chip"><span class="fp-chip-dot" style="background:var(--red);"></span>At risk</label>
+      </div>
+    </div>
+
+    <!-- Wellbeing -->
+    <div class="fp-section">
+      <div class="fp-section-label">Wellbeing score</div>
+      <div class="fp-chips">
+        <input type="checkbox" id="wb-great"  class="fp-chip-input c-green">
+        <label for="wb-great"  class="fp-chip">😄 Great</label>
+
+        <input type="checkbox" id="wb-good"   class="fp-chip-input c-green">
+        <label for="wb-good"   class="fp-chip">😊 Good</label>
+
+        <input type="checkbox" id="wb-steady" class="fp-chip-input c-blue">
+        <label for="wb-steady" class="fp-chip">😐 Steady</label>
+
+        <input type="checkbox" id="wb-low"    class="fp-chip-input c-amber">
+        <label for="wb-low"    class="fp-chip">😞 Low</label>
+
+        <input type="checkbox" id="wb-risk"   class="fp-chip-input c-red">
+        <label for="wb-risk"   class="fp-chip">⚠️ At risk</label>
+      </div>
+    </div>
+
+    <!-- University -->
+    <div class="fp-section">
+      <div class="fp-section-label">University</div>
+      <select class="fp-select">
+        <option value="">All universities</option>
+        <option>University of Manchester</option>
+        <option>UCL</option>
+        <option>King's College London</option>
+        <option>University of Leeds</option>
+        <option>University of Edinburgh</option>
+        <option>University of Birmingham</option>
+        <option>University of Bristol</option>
+      </select>
+    </div>
+
+    <!-- Last active -->
+    <div class="fp-section">
+      <div class="fp-section-label">Last active</div>
+      <div class="fp-range-row">
+        <select class="fp-select">
+          <option value="">Any time</option>
+          <option>Today</option>
+          <option>Last 3 days</option>
+          <option>Last 7 days</option>
+          <option>Last 30 days</option>
+          <option>Over 30 days</option>
+        </select>
+        <select class="fp-select">
+          <option value="">Min. sessions</option>
+          <option>0 sessions</option>
+          <option>1+ sessions</option>
+          <option>5+ sessions</option>
+          <option>10+ sessions</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Sort by -->
+    <div class="fp-section">
+      <div class="fp-section-label">Sort by</div>
+      <div class="fp-sort-grid">
+
+        <input type="radio" name="sort" id="sort-recent" class="fp-sort-input" checked>
+        <label for="sort-recent" class="fp-sort-lbl">
+          <span class="fp-radio-dot"></span> Most recent
+        </label>
+
+        <input type="radio" name="sort" id="sort-alpha" class="fp-sort-input">
+        <label for="sort-alpha" class="fp-sort-lbl">
+          <span class="fp-radio-dot"></span> Name A – Z
+        </label>
+
+        <input type="radio" name="sort" id="sort-sessions" class="fp-sort-input">
+        <label for="sort-sessions" class="fp-sort-lbl">
+          <span class="fp-radio-dot"></span> Sessions (highest first)
+        </label>
+
+        <input type="radio" name="sort" id="sort-wellbeing" class="fp-sort-input">
+        <label for="sort-wellbeing" class="fp-sort-lbl">
+          <span class="fp-radio-dot"></span> Wellbeing (lowest first)
+        </label>
+
+      </div>
+    </div>
+
+  </div><!-- /fp-body -->
+
+  <!-- Footer actions -->
+  <div class="fp-footer">
+    <button class="fp-btn fp-btn-cancel">Cancel</button>
+    <button class="fp-btn fp-btn-apply">Apply filters</button>
+  </div>
+
+</div>
+
+</body>
+</html>

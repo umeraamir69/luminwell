@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Welfare &amp; Safety — Luminwell Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="admin.css">
+<style>
+  html:has(#wf-all:checked)      .wf-panels #wf-panel-all      { display: block; }
+  html:has(#wf-open:checked)     .wf-panels #wf-panel-open     { display: block; }
+  html:has(#wf-critical:checked) .wf-panels #wf-panel-critical { display: block; }
+  html:has(#wf-resolved:checked) .wf-panels #wf-panel-resolved { display: block; }
+
+  .flag-detail-card {
+    background: var(--adm-surface);
+    border: 1px solid var(--adm-border);
+    border-radius: var(--adm-r-md);
+    padding: 20px;
+    margin-bottom: 14px;
+  }
+  .flag-detail-card.critical { border-left: 5px solid var(--adm-red); }
+  .flag-detail-card.high     { border-left: 5px solid var(--adm-amber); }
+  .flag-detail-card.medium   { border-left: 5px solid var(--adm-blue); }
+  .flag-detail-card.low      { border-left: 5px solid #94a3b8; }
+
+  .flag-header { display:flex; align-items:flex-start; justify-content:space-between; gap:16px; margin-bottom:14px; }
+  .flag-meta   { display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-bottom:8px; }
+  .flag-body p { font-size:13px; color:var(--adm-txt-body); line-height:1.6; }
+  .flag-actions { display:flex; gap:8px; margin-top:14px; flex-wrap:wrap; }
+  .escalation-steps { display:flex; flex-direction:column; gap:8px; margin-top:12px; }
+  .step { display:flex; gap:10px; align-items:flex-start; }
+  .step-dot { width:20px; height:20px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:800; color:#fff; flex-shrink:0; margin-top:1px; }
+  .step-dot.done { background:var(--adm-green); }
+  .step-dot.active { background:var(--adm-blue); }
+  .step-dot.pending { background:#94a3b8; }
+  .step-line { flex:1; }
+  .step-line p { font-size:13px; font-weight:600; color:var(--adm-txt-head); }
+  .step-line small { font-size:11px; color:var(--adm-txt-muted); }
+</style>
+</head>
+<body>
+
+<input type="checkbox" id="sidebar-toggle" class="sidebar-toggle-check">
+<input type="radio" name="wf-tabs" id="wf-all"      class="tab-check" checked>
+<input type="radio" name="wf-tabs" id="wf-open"     class="tab-check">
+<input type="radio" name="wf-tabs" id="wf-critical" class="tab-check">
+<input type="radio" name="wf-tabs" id="wf-resolved" class="tab-check">
+
+<div class="admin-shell">
+
+  <aside class="admin-sidebar">
+    <div class="sidebar__logo"><div class="logo-mark"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17 8C8 10 5.9 16.17 3.82 22A13.34 13.34 0 0 0 18 8Z"/><path d="M9 9c-1.5 3.5-2.5 7-3 10C8 18 11 15 13 12" fill="rgba(255,255,255,.35)"/></svg></div><div class="logo-text-wrap"><div class="logo-name">Luminwell</div><span class="logo-badge-pill">ADMIN</span></div></div>
+    <label for="sidebar-toggle" class="sidebar__collapse-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></label>
+    <nav class="sidebar__nav">
+      <div class="nav-section">
+        <p class="nav-label">MAIN</p>
+        <a href="admin-home.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span class="link-text">Overview</span></a>
+        <a href="admin-analytics.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg><span class="link-text">Analytics</span></a>
+      </div>
+      <div class="nav-section">
+        <p class="nav-label">PEOPLE</p>
+        <a href="admin-users.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span class="link-text">Users</span></a>
+        <a href="admin-ambassadors.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><span class="link-text">Ambassadors</span></a>
+        <a href="admin-matching.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg><span class="link-text">Matching</span></a>
+      </div>
+      <div class="nav-section">
+        <p class="nav-label">OPERATIONS</p>
+        <a href="admin-sessions.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><span class="link-text">Sessions</span></a>
+        <a href="admin-welfare.html" class="sidebar__link active"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span class="link-text">Welfare &amp; Safety</span><span class="nav-badge nav-badge--red">5</span></a>
+        <a href="admin-messages.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span class="link-text">Messages</span></a>
+      </div>
+      <div class="nav-section">
+        <p class="nav-label">PLATFORM</p>
+        <a href="admin-content.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span class="link-text">Content</span></a>
+        <a href="admin-settings.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06-.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span class="link-text">Settings</span></a>
+        <a href="admin-privacy.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><span class="link-text">Privacy &amp; GDPR</span></a>
+      </div>
+    </nav>
+    <div class="sidebar__foot">
+      <div class="sidebar__foot-user"><div class="admin-ava-sm">A</div><div class="sidebar__foot-info"><p>Admin User</p><small>Super Admin</small></div></div>
+      <button class="sidebar__signout">Sign out</button>
+    </div>
+  </aside>
+
+  <div class="admin-main">
+    <header class="admin-topbar">
+      <div class="topbar-left">
+        <label for="sidebar-toggle" class="topbar-menu-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></label>
+        <nav class="breadcrumb">
+          <a href="admin-home.html">Admin</a>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+          <span class="bc-active">Welfare &amp; Safety</span>
+        </nav>
+      </div>
+      <div class="topbar-right">
+        <div class="notif-wrap">
+          <input type="checkbox" id="notif-toggle" class="notif-check">
+          <label for="notif-toggle" class="topbar-icon-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><span class="notif-dot"></span></label>
+          <div class="notif-drop"><div class="notif-drop-head"><h4>Notifications</h4><a href="#">Mark all read</a></div><div class="notif-item unread"><div class="notif-ico red"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div><div class="notif-body"><p><strong>Critical welfare flag</strong> — Alex T.</p><small>2 min ago</small></div></div><div class="notif-drop-foot"><a href="#">View all →</a></div></div>
+        </div>
+        <div class="topbar-user"><div class="topbar-ava">A</div><div class="topbar-user-info"><div class="u-name">Admin</div><div class="u-role">Super Admin</div></div></div>
+      </div>
+    </header>
+
+    <div class="admin-content">
+
+      <div class="page-hero">
+        <div class="page-hero-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+        <div class="page-hero-text">
+          <h1>Welfare &amp; Safety</h1>
+          <p>Safeguarding flags, crisis protocols &amp; escalation workflows</p>
+        </div>
+        <div class="page-hero-actions"><a href="admin-welfare.html" class="btn btn-white">Export audit log</a><button class="btn btn-primary" style="background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Report incident</button></div>
+      </div>
+
+
+      <!-- Critical banner -->
+      <div class="alert alert-red" style="border-radius:var(--adm-r-md);padding:16px 20px;">
+        <span class="alert-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>
+        <div class="alert-body">
+          <strong>CRITICAL — Immediate action required</strong>
+          Alex Turner has been flagged for self-harm risk indicators by Ambassador Maya Johnson during today's session. Escalation protocol has been triggered. <strong>Respond within 1 hour.</strong>
+        </div>
+        <button class="btn btn-danger btn-sm" style="flex-shrink:0;margin-left:auto;">Open case →</button>
+      </div>
+
+      <!-- Stats strip -->
+      <div class="stats-row" style="grid-template-columns:repeat(5,1fr);margin-bottom:20px;">
+        <div class="stat-card red"><div class="stat-top"><span class="stat-label">Critical</span><div class="stat-icon red"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div></div><div class="stat-value">1</div><span class="stat-delta delta-down">Immediate action</span></div>
+        <div class="stat-card amber"><div class="stat-top"><span class="stat-label">High</span><div class="stat-icon amber"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div></div><div class="stat-value">2</div><span class="stat-delta delta-neu">Within 24 h</span></div>
+        <div class="stat-card blue"><div class="stat-top"><span class="stat-label">Medium</span><div class="stat-icon blue"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/></svg></div></div><div class="stat-value">2</div><span class="stat-delta delta-neu">This week</span></div>
+        <div class="stat-card green"><div class="stat-top"><span class="stat-label">Resolved (7d)</span><div class="stat-icon green"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div></div><div class="stat-value">8</div><span class="stat-delta delta-up">▲ 100% response</span></div>
+        <div class="stat-card teal"><div class="stat-top"><span class="stat-label">Total (30d)</span><div class="stat-icon teal"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg></div></div><div class="stat-value">23</div><span class="stat-delta delta-neu">All documented</span></div>
+      </div>
+
+      <div class="grid-3-1">
+
+        <!-- Left: Flags list -->
+        <div>
+          <div class="card">
+            <div class="tabs-row" style="border-radius:0;">
+              <label for="wf-all"      class="tab-lbl">All <span class="badge badge-slate" style="font-size:10px;padding:1px 7px;">5</span></label>
+              <label for="wf-open"     class="tab-lbl">Open <span class="badge badge-amber" style="font-size:10px;padding:1px 7px;">5</span></label>
+              <label for="wf-critical" class="tab-lbl">Critical <span class="badge badge-red" style="font-size:10px;padding:1px 7px;">1</span></label>
+              <label for="wf-resolved" class="tab-lbl">Resolved <span class="badge badge-green" style="font-size:10px;padding:1px 7px;">8</span></label>
+            </div>
+
+            <div class="wf-panels">
+
+              <!-- All panel -->
+              <div id="wf-panel-all" class="tab-panel">
+                <div style="padding:16px;">
+
+                  <div class="flag-detail-card critical">
+                    <div class="flag-header">
+                      <div>
+                        <div class="flag-meta">
+                          <span class="flag-sev critical">Critical</span>
+                          <span style="font-size:11px;color:var(--adm-txt-faint);">Today · 9:47 AM</span>
+                        </div>
+                        <p style="font-size:15px;font-weight:800;color:var(--adm-txt-head);margin-bottom:2px;">Alex Turner</p>
+                        <p style="font-size:12px;color:var(--adm-txt-muted);">Flagged by Ambassador Maya Johnson · Manchester</p>
+                      </div>
+                      <span class="badge badge-red">Open</span>
+                    </div>
+                    <div class="flag-body">
+                      <p><strong>Trigger:</strong> Client disclosed self-harm thoughts during session. Ambassador logged welfare note immediately. Risk indicators present in recent journal entries.</p>
+                    </div>
+                    <div class="flag-actions">
+                      <button class="btn btn-danger btn-sm">Escalate to counselling</button>
+                      <button class="btn btn-primary btn-sm">Message ambassador</button>
+                      <button class="btn btn-secondary btn-sm">View full notes</button>
+                    </div>
+                  </div>
+
+                  <div class="flag-detail-card high">
+                    <div class="flag-header">
+                      <div>
+                        <div class="flag-meta"><span class="flag-sev high">High</span><span style="font-size:11px;color:var(--adm-txt-faint);">Today · 6:30 AM</span></div>
+                        <p style="font-size:15px;font-weight:800;color:var(--adm-txt-head);margin-bottom:2px;">Jordan Mills</p>
+                        <p style="font-size:12px;color:var(--adm-txt-muted);">Auto-flagged by platform · UCL</p>
+                      </div>
+                      <span class="badge badge-amber">Open</span>
+                    </div>
+                    <div class="flag-body">
+                      <p><strong>Trigger:</strong> Missed 3 consecutive sessions. Mood journal scoring persistently below 3/10 for 14 days. No response to ambassador messages in 5 days.</p>
+                    </div>
+                    <div class="flag-actions">
+                      <button class="btn btn-secondary btn-sm">Contact user</button>
+                      <button class="btn btn-secondary btn-sm">Re-assign ambassador</button>
+                    </div>
+                  </div>
+
+                  <div class="flag-detail-card high">
+                    <div class="flag-header">
+                      <div>
+                        <div class="flag-meta"><span class="flag-sev high">High</span><span style="font-size:11px;color:var(--adm-txt-faint);">Yesterday · 2:15 PM</span></div>
+                        <p style="font-size:15px;font-weight:800;color:var(--adm-txt-head);margin-bottom:2px;">Casey Lee</p>
+                        <p style="font-size:12px;color:var(--adm-txt-muted);">Flagged by Ambassador Keiran Roberts · UCL</p>
+                      </div>
+                      <span class="badge badge-amber">Open</span>
+                    </div>
+                    <div class="flag-body">
+                      <p><strong>Trigger:</strong> Client disclosed significant financial hardship during session. Risk of housing instability. Referred for emergency support.</p>
+                    </div>
+                    <div class="flag-actions">
+                      <button class="btn btn-secondary btn-sm">View case notes</button>
+                      <button class="btn btn-secondary btn-sm">Contact student services</button>
+                    </div>
+                  </div>
+
+                  <div class="flag-detail-card medium">
+                    <div class="flag-header">
+                      <div>
+                        <div class="flag-meta"><span class="flag-sev medium">Medium</span><span style="font-size:11px;color:var(--adm-txt-faint);">28 Mar · 4:00 PM</span></div>
+                        <p style="font-size:15px;font-weight:800;color:var(--adm-txt-head);margin-bottom:2px;">Sam Kowalski</p>
+                        <p style="font-size:12px;color:var(--adm-txt-muted);">AI journal analysis · Manchester</p>
+                      </div>
+                      <span class="badge badge-blue">Monitoring</span>
+                    </div>
+                    <div class="flag-body">
+                      <p><strong>Trigger:</strong> AI detected language patterns associated with persistent low mood in 5 consecutive journal entries. No direct crisis language present.</p>
+                    </div>
+                    <div class="flag-actions">
+                      <button class="btn btn-secondary btn-sm">Review journal entries</button>
+                    </div>
+                  </div>
+
+                  <div class="flag-detail-card medium">
+                    <div class="flag-header">
+                      <div>
+                        <div class="flag-meta"><span class="flag-sev medium">Medium</span><span style="font-size:11px;color:var(--adm-txt-faint);">27 Mar · 11:20 AM</span></div>
+                        <p style="font-size:15px;font-weight:800;color:var(--adm-txt-head);margin-bottom:2px;">Riley Ahmed</p>
+                        <p style="font-size:12px;color:var(--adm-txt-muted);">Self-reported via wellbeing check-in · Leeds</p>
+                      </div>
+                      <span class="badge badge-blue">Monitoring</span>
+                    </div>
+                    <div class="flag-body">
+                      <p><strong>Trigger:</strong> User self-reported panic attack during weekly check-in. Has support from ambassador. Monitoring mood trend.</p>
+                    </div>
+                    <div class="flag-actions">
+                      <button class="btn btn-secondary btn-sm">View check-in history</button>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+              <!-- Open panel -->
+              <div id="wf-panel-open" class="tab-panel">
+                <div style="padding:16px;">
+                  <div class="alert alert-amber"><span class="alert-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span><div class="alert-body"><strong>5 open welfare flags</strong> — critical flags require response within 1 hour. High flags within 24 hours.</div></div>
+                  <p style="font-size:13px;color:var(--adm-txt-muted);padding:8px 0;">All open flags shown. See the "All" tab for full detail cards.</p>
+                  <div class="data-table-wrap"><table class="data-table"><thead><tr><th>User</th><th>Severity</th><th>Trigger</th><th>Ambassador</th><th>Time</th><th>Action</th></tr></thead><tbody>
+                  <tr><td><div class="user-cell"><div class="user-ava red">AT</div><div><div class="user-name">Alex Turner</div></div></div></td><td><span class="flag-sev critical">Critical</span></td><td style="font-size:12px;">Self-harm risk</td><td style="font-size:12px;">Maya J.</td><td style="font-size:12px;color:var(--adm-txt-muted);">2 min ago</td><td><button class="btn btn-danger btn-xs">Action now</button></td></tr>
+                  <tr><td><div class="user-cell"><div class="user-ava amber">JM</div><div><div class="user-name">Jordan Mills</div></div></div></td><td><span class="flag-sev high">High</span></td><td style="font-size:12px;">Missed sessions</td><td style="font-size:12px;">Keiran R.</td><td style="font-size:12px;color:var(--adm-txt-muted);">3 h ago</td><td><button class="btn btn-secondary btn-xs">Review</button></td></tr>
+                  <tr><td><div class="user-cell"><div class="user-ava blue">CL</div><div><div class="user-name">Casey Lee</div></div></div></td><td><span class="flag-sev high">High</span></td><td style="font-size:12px;">Financial hardship</td><td style="font-size:12px;">Keiran R.</td><td style="font-size:12px;color:var(--adm-txt-muted);">Yesterday</td><td><button class="btn btn-secondary btn-xs">Review</button></td></tr>
+                  <tr><td><div class="user-cell"><div class="user-ava blue">SK</div><div><div class="user-name">Sam Kowalski</div></div></div></td><td><span class="flag-sev medium">Medium</span></td><td style="font-size:12px;">AI journal detection</td><td style="font-size:12px;">Maya J.</td><td style="font-size:12px;color:var(--adm-txt-muted);">28 Mar</td><td><button class="btn btn-secondary btn-xs">Monitor</button></td></tr>
+                  <tr><td><div class="user-cell"><div class="user-ava teal">RA</div><div><div class="user-name">Riley Ahmed</div></div></div></td><td><span class="flag-sev medium">Medium</span></td><td style="font-size:12px;">Self-reported panic</td><td style="font-size:12px;">Dev N.</td><td style="font-size:12px;color:var(--adm-txt-muted);">27 Mar</td><td><button class="btn btn-secondary btn-xs">Monitor</button></td></tr>
+                  </tbody></table></div>
+                </div>
+              </div>
+
+              <!-- Critical panel -->
+              <div id="wf-panel-critical" class="tab-panel">
+                <div style="padding:16px;">
+                  <div class="flag-detail-card critical">
+                    <div class="flag-header">
+                      <div>
+                        <div class="flag-meta"><span class="flag-sev critical">Critical</span><span style="font-size:11px;color:var(--adm-txt-faint);">Today · 9:47 AM · Open 2 h 13 min</span></div>
+                        <p style="font-size:16px;font-weight:800;color:var(--adm-txt-head);margin-bottom:2px;">Alex Turner</p>
+                        <p style="font-size:12px;color:var(--adm-txt-muted);">Univ. of Manchester · Law Year 1 · Ambassador: Maya Johnson</p>
+                      </div>
+                      <span class="badge badge-red">UNRESOLVED</span>
+                    </div>
+                    <div class="flag-body">
+                      <p><strong>Session context:</strong> Client disclosed self-harm thoughts during scheduled session. Ambassador recognised verbal cues aligned with elevated risk. Welfare note logged immediately post-session.</p>
+                      <br>
+                      <p><strong>Contributing factors identified:</strong> Academic pressure (exam season), social isolation, 3 consecutive low-mood journal days, reduced sleep reported.</p>
+                    </div>
+                    <div style="margin-top:16px;">
+                      <p style="font-size:11px;font-weight:700;color:var(--adm-txt-muted);letter-spacing:.5px;margin-bottom:10px;">ESCALATION PROTOCOL</p>
+                      <div class="escalation-steps">
+                        <div class="step"><div class="step-dot done"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="step-line"><p>Ambassador welfare note logged</p><small>Today · 9:47 AM · Maya Johnson</small></div></div>
+                        <div class="step"><div class="step-dot done"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="step-line"><p>Admin notification sent</p><small>Today · 9:47 AM · Automated</small></div></div>
+                        <div class="step"><div class="step-dot active">→</div><div class="step-line"><p>Admin review &amp; response — <strong>pending</strong></p><small>Required within 1 hour of flag</small></div></div>
+                        <div class="step"><div class="step-dot pending">4</div><div class="step-line"><p>Referral to university counselling</p><small>If risk confirmed</small></div></div>
+                        <div class="step"><div class="step-dot pending">5</div><div class="step-line"><p>Follow-up welfare check (24 h)</p><small>Automated reminder</small></div></div>
+                      </div>
+                    </div>
+                    <div class="flag-actions">
+                      <button class="btn btn-danger btn-sm">Escalate to counselling service</button>
+                      <button class="btn btn-primary btn-sm">Contact Alex directly</button>
+                      <button class="btn btn-secondary btn-sm">Message ambassador</button>
+                      <button class="btn btn-secondary btn-sm">View all notes</button>
+                      <button class="btn btn-secondary btn-sm">Mark resolved</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Resolved panel -->
+              <div id="wf-panel-resolved" class="tab-panel">
+                <div style="padding:16px;">
+                  <div class="alert alert-blue" style="margin-bottom:14px;"><span class="alert-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></span><div class="alert-body">8 welfare flags resolved in the last 7 days · <strong>100% response rate</strong> · Avg resolution time 47 min</div></div>
+                  <div style="overflow-x:visible;">
+                    <table style="width:100%;border-collapse:collapse;table-layout:fixed;">
+                      <colgroup><col style="width:22%"><col style="width:11%"><col style="width:18%"><col style="width:16%"><col style="width:14%"><col style="width:19%"></colgroup>
+                      <thead>
+                        <tr style="border-bottom:1px solid var(--adm-border);">
+                          <th style="padding:9px 16px;font-size:10px;font-weight:800;color:var(--adm-txt-muted);letter-spacing:.6px;text-transform:uppercase;text-align:left;">USER</th>
+                          <th style="padding:9px 8px;font-size:10px;font-weight:800;color:var(--adm-txt-muted);letter-spacing:.6px;text-transform:uppercase;text-align:left;">SEVERITY</th>
+                          <th style="padding:9px 8px;font-size:10px;font-weight:800;color:var(--adm-txt-muted);letter-spacing:.6px;text-transform:uppercase;text-align:left;">TRIGGER</th>
+                          <th style="padding:9px 8px;font-size:10px;font-weight:800;color:var(--adm-txt-muted);letter-spacing:.6px;text-transform:uppercase;text-align:left;">RESOLVED BY</th>
+                          <th style="padding:9px 8px;font-size:10px;font-weight:800;color:var(--adm-txt-muted);letter-spacing:.6px;text-transform:uppercase;text-align:left;">DATE</th>
+                          <th style="padding:9px 8px;font-size:10px;font-weight:800;color:var(--adm-txt-muted);letter-spacing:.6px;text-transform:uppercase;text-align:left;">OUTCOME</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr style="border-bottom:1px solid var(--adm-border-lt);">
+                          <td style="padding:9px 16px;"><div style="display:flex;align-items:center;gap:8px;"><div class="user-ava green" style="width:28px;height:28px;font-size:10px;flex-shrink:0;">MB</div><span style="font-size:12px;font-weight:700;color:var(--adm-txt-head);">Maria Bell</span></div></td>
+                          <td style="padding:9px 8px;"><span class="flag-sev high">High</span></td>
+                          <td style="padding:9px 8px;font-size:12px;color:var(--adm-txt-body);">Low mood · 10 days</td>
+                          <td style="padding:9px 8px;font-size:12px;color:var(--adm-txt-body);">Admin · Layla N.</td>
+                          <td style="padding:9px 8px;font-size:12px;color:var(--adm-txt-muted);">25 Mar 2026</td>
+                          <td style="padding:9px 8px;"><span class="badge badge-green" style="font-size:10px;">Referred to counselling</span></td>
+                        </tr>
+                        <tr style="border-bottom:1px solid var(--adm-border-lt);">
+                          <td style="padding:9px 16px;"><div style="display:flex;align-items:center;gap:8px;"><div class="user-ava blue" style="width:28px;height:28px;font-size:10px;flex-shrink:0;">TR</div><span style="font-size:12px;font-weight:700;color:var(--adm-txt-head);">Tom Reed</span></div></td>
+                          <td style="padding:9px 8px;"><span class="flag-sev medium">Medium</span></td>
+                          <td style="padding:9px 8px;font-size:12px;color:var(--adm-txt-body);">Missed 2 sessions</td>
+                          <td style="padding:9px 8px;font-size:12px;color:var(--adm-txt-body);">Ambassador Dev N.</td>
+                          <td style="padding:9px 8px;font-size:12px;color:var(--adm-txt-muted);">24 Mar 2026</td>
+                          <td style="padding:9px 8px;"><span class="badge badge-green" style="font-size:10px;">Re-engaged · monitoring</span></td>
+                        </tr>
+                        <tr style="border-bottom:1px solid var(--adm-border-lt);">
+                          <td style="padding:9px 16px;"><div style="display:flex;align-items:center;gap:8px;"><div class="user-ava amber" style="width:28px;height:28px;font-size:10px;flex-shrink:0;">SK</div><span style="font-size:12px;font-weight:700;color:var(--adm-txt-head);">Sasha Kim</span></div></td>
+                          <td style="padding:9px 8px;"><span class="flag-sev medium">Medium</span></td>
+                          <td style="padding:9px 8px;font-size:12px;color:var(--adm-txt-body);">Financial hardship</td>
+                          <td style="padding:9px 8px;font-size:12px;color:var(--adm-txt-body);">Admin</td>
+                          <td style="padding:9px 8px;font-size:12px;color:var(--adm-txt-muted);">22 Mar 2026</td>
+                          <td style="padding:9px 8px;"><span class="badge badge-green" style="font-size:10px;">Support arranged</span></td>
+                        </tr>
+                        <tr style="border-bottom:1px solid var(--adm-border-lt);">
+                          <td style="padding:9px 16px;"><div style="display:flex;align-items:center;gap:8px;"><div class="user-ava purple" style="width:28px;height:28px;font-size:10px;flex-shrink:0;">NP</div><span style="font-size:12px;font-weight:700;color:var(--adm-txt-head);">Nina Patel</span></div></td>
+                          <td style="padding:9px 8px;"><span class="flag-sev high">High</span></td>
+                          <td style="padding:9px 8px;font-size:12px;color:var(--adm-txt-body);">Social withdrawal</td>
+                          <td style="padding:9px 8px;font-size:12px;color:var(--adm-txt-body);">Ambassador Maya J.</td>
+                          <td style="padding:9px 8px;font-size:12px;color:var(--adm-txt-muted);">21 Mar 2026</td>
+                          <td style="padding:9px 8px;"><span class="badge badge-green" style="font-size:10px;">Reconnected · stable</span></td>
+                        </tr>
+                        <tr style="border-bottom:1px solid var(--adm-border-lt);">
+                          <td style="padding:9px 16px;"><div style="display:flex;align-items:center;gap:8px;"><div class="user-ava teal" style="width:28px;height:28px;font-size:10px;flex-shrink:0;">JC</div><span style="font-size:12px;font-weight:700;color:var(--adm-txt-head);">James Cho</span></div></td>
+                          <td style="padding:9px 8px;"><span class="flag-sev medium">Medium</span></td>
+                          <td style="padding:9px 8px;font-size:12px;color:var(--adm-txt-body);">AI mood detection</td>
+                          <td style="padding:9px 8px;font-size:12px;color:var(--adm-txt-body);">Auto-resolved</td>
+                          <td style="padding:9px 8px;font-size:12px;color:var(--adm-txt-muted);">20 Mar 2026</td>
+                          <td style="padding:9px 8px;"><span class="badge badge-blue" style="font-size:10px;">Monitoring</span></td>
+                        </tr>
+                        <tr style="border-bottom:1px solid var(--adm-border-lt);">
+                          <td style="padding:9px 16px;"><div style="display:flex;align-items:center;gap:8px;"><div class="user-ava" style="width:28px;height:28px;font-size:10px;flex-shrink:0;background:linear-gradient(135deg,#b45309,#d97706);">AO</div><span style="font-size:12px;font-weight:700;color:var(--adm-txt-head);">Amara Osei</span></div></td>
+                          <td style="padding:9px 8px;"><span class="flag-sev medium">Medium</span></td>
+                          <td style="padding:9px 8px;font-size:12px;color:var(--adm-txt-body);">Panic attack · self-report</td>
+                          <td style="padding:9px 8px;font-size:12px;color:var(--adm-txt-body);">Ambassador Layla N.</td>
+                          <td style="padding:9px 8px;font-size:12px;color:var(--adm-txt-muted);">18 Mar 2026</td>
+                          <td style="padding:9px 8px;"><span class="badge badge-green" style="font-size:10px;">Coping plan in place</span></td>
+                        </tr>
+                        <tr style="border-bottom:1px solid var(--adm-border-lt);">
+                          <td style="padding:9px 16px;"><div style="display:flex;align-items:center;gap:8px;"><div class="user-ava green" style="width:28px;height:28px;font-size:10px;flex-shrink:0;">LB</div><span style="font-size:12px;font-weight:700;color:var(--adm-txt-head);">Liam Barnes</span></div></td>
+                          <td style="padding:9px 8px;"><span class="flag-sev high">High</span></td>
+                          <td style="padding:9px 8px;font-size:12px;color:var(--adm-txt-body);">Isolation · 2 weeks no contact</td>
+                          <td style="padding:9px 8px;font-size:12px;color:var(--adm-txt-body);">Admin</td>
+                          <td style="padding:9px 8px;font-size:12px;color:var(--adm-txt-muted);">16 Mar 2026</td>
+                          <td style="padding:9px 8px;"><span class="badge badge-green" style="font-size:10px;">Re-engaged via phone</span></td>
+                        </tr>
+                        <tr>
+                          <td style="padding:9px 16px;"><div style="display:flex;align-items:center;gap:8px;"><div class="user-ava blue" style="width:28px;height:28px;font-size:10px;flex-shrink:0;">PM</div><span style="font-size:12px;font-weight:700;color:var(--adm-txt-head);">Priya Mehta</span></div></td>
+                          <td style="padding:9px 8px;"><span class="flag-sev medium">Medium</span></td>
+                          <td style="padding:9px 8px;font-size:12px;color:var(--adm-txt-body);">Eating habit concerns</td>
+                          <td style="padding:9px 8px;font-size:12px;color:var(--adm-txt-body);">Ambassador Zara A.</td>
+                          <td style="padding:9px 8px;font-size:12px;color:var(--adm-txt-muted);">14 Mar 2026</td>
+                          <td style="padding:9px 8px;"><span class="badge badge-green" style="font-size:10px;">Dietitian referral</span></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div style="padding:10px 0 2px;display:flex;align-items:center;justify-content:space-between;margin-top:4px;">
+                    <span style="font-size:12px;color:var(--adm-txt-muted);">Showing 8 resolved flags this week</span>
+                    <a href="#" style="font-size:12px;color:var(--adm-blue);font-weight:700;">View full audit log →</a>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- Right panel: Contacts + Stats -->
+        <div style="display:flex;flex-direction:column;gap:20px;">
+
+          <!-- Crisis contacts -->
+          <div class="card">
+            <div class="card-head"><div class="card-title">Crisis Contacts</div></div>
+            <div class="card-body" style="padding:12px 16px;">
+              <div style="display:flex;flex-direction:column;gap:10px;">
+                <div style="padding:10px;background:var(--adm-red-lt);border-radius:var(--adm-r-sm);border:1px solid rgba(239,68,68,.2);">
+                  <p style="font-size:11px;font-weight:700;color:var(--adm-red);margin-bottom:2px;">SAMARITANS</p>
+                  <p style="font-size:14px;font-weight:800;color:var(--adm-txt-head);">116 123</p>
+                  <p style="font-size:11px;color:var(--adm-txt-muted);">24/7 emotional support</p>
+                </div>
+                <div style="padding:10px;background:var(--adm-blue-lt);border-radius:var(--adm-r-sm);border:1px solid rgba(45,150,118,.2);">
+                  <p style="font-size:11px;font-weight:700;color:var(--adm-blue-dk);margin-bottom:2px;">CRISIS TEXT LINE</p>
+                  <p style="font-size:14px;font-weight:800;color:var(--adm-txt-head);">Text SHOUT to 85258</p>
+                  <p style="font-size:11px;color:var(--adm-txt-muted);">Free 24/7 text support</p>
+                </div>
+                <div style="padding:10px;background:var(--adm-green-lt);border-radius:var(--adm-r-sm);border:1px solid rgba(16,185,129,.2);">
+                  <p style="font-size:11px;font-weight:700;color:#059669;margin-bottom:2px;">CAMPUS COUNSELLING</p>
+                  <p style="font-size:14px;font-weight:800;color:var(--adm-txt-head);">ext. 4422</p>
+                  <p style="font-size:11px;color:var(--adm-txt-muted);">Mon–Fri · 9am–5pm</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- This week stats -->
+          <div class="card">
+            <div class="card-head"><div class="card-title">This Week</div></div>
+            <div class="card-body" style="padding:12px 16px;">
+              <div class="info-row"><span class="info-key">Flags raised</span><span class="info-value">5</span></div>
+              <div class="info-row"><span class="info-key">Resolved</span><span class="info-value" style="color:var(--adm-green);">8</span></div>
+              <div class="info-row"><span class="info-key">Avg response time</span><span class="info-value">47 min</span></div>
+              <div class="info-row"><span class="info-key">Referrals made</span><span class="info-value">3</span></div>
+              <div class="info-row"><span class="info-key">AI-triggered flags</span><span class="info-value">2</span></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

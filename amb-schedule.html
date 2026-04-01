@@ -54,73 +54,48 @@
     .cal-event--amber { background: rgba(217,119,6,.12); color: #92400e; }
     .cal-event--more  { font-size: 9px; color: var(--soft); padding: 1px 4px; }
 
-    /* ── Weekly Availability (redesigned) ───────────── */
-    .avail-section { display: flex; flex-direction: column; gap: 7px; }
+    /* ══════════════════════════════════════════════════
+       WEEKLY AVAILABILITY  —  two-line card design
+       Line 1: day name + capacity + toggle (full width)
+       Line 2: time chips flowing left → right
+    ══════════════════════════════════════════════════ */
+    .avail-section { display: flex; flex-direction: column; gap: 8px; }
 
     .avail-day {
-      border: 1.5px solid var(--border); border-radius: 13px;
-      background: var(--surface); overflow: hidden;
+      border: 1.5px solid var(--border);
+      border-radius: 14px;
+      background: var(--surface);
+      overflow: hidden;
       transition: box-shadow .15s, border-color .15s;
     }
-    .avail-day:hover { border-color: rgba(15,45,69,.2); box-shadow: var(--shadow-sm); }
+    .avail-day:hover { border-color: rgba(15,45,69,.22); box-shadow: var(--shadow-sm); }
     .avail-day--off  { background: var(--page-bg); }
 
-    .avail-day__inner {
-      display: grid;
-      grid-template-columns: 120px 1fr auto;
-      align-items: stretch; min-height: 60px;
-    }
-
-    /* Left: day name + capacity */
-    .avail-day__label {
-      padding: 12px 16px;
-      border-right: 1px solid var(--border-soft);
-      display: flex; flex-direction: column; justify-content: center; gap: 4px;
-    }
-    .avail-day__name  { font-size: 13px; font-weight: 800; color: var(--text); }
-    .avail-day__cap   { font-size: 10px; font-weight: 600; color: var(--muted); }
-
-    /* Middle: slots */
-    .avail-day__slots {
+    /* ── Row 1: header bar ── */
+    .avail-day__head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
       padding: 10px 14px;
-      display: flex; flex-wrap: wrap; gap: 7px; align-items: center;
+      border-bottom: 1px solid var(--border-soft);
     }
+    .avail-day--off .avail-day__head { border-bottom: none; }
 
-    /* Slot cards */
-    .avail-slot {
-      display: flex; flex-direction: column; align-items: center; gap: 2px;
-      padding: 6px 11px; border-radius: 9px; min-width: 58px;
-      border: 1.5px solid transparent; cursor: pointer;
-      transition: transform .12s, box-shadow .12s;
+    .avail-day__name {
+      font-size: 12px; font-weight: 800;
+      color: var(--text); text-transform: uppercase; letter-spacing: .06em;
     }
-    .avail-slot:hover { transform: translateY(-1px); box-shadow: 0 2px 8px rgba(0,0,0,.1); }
-    .avail-slot__time   { font-size: 11px; font-weight: 800; line-height: 1.2; }
-    .avail-slot__label  { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; opacity: .75; }
-
-    .avail-slot--open   { background: var(--teal-pale); border-color: var(--teal-mid); color: var(--teal-deep); }
-    .avail-slot--booked {
-      background: rgba(15,45,69,.07); border-color: rgba(15,45,69,.18);
-      color: var(--sb-bg);
+    .avail-day__cap {
+      font-size: 10.5px; font-weight: 600; color: var(--muted);
+      margin-left: 2px;
     }
-    .avail-slot--unavail { background: var(--page-bg); border-color: var(--border-soft); color: var(--soft); }
+    .avail-day__spacer { flex: 1; }
 
-    /* Capacity bar inside each slot */
-    .avail-slot--open   .avail-slot__label { color: var(--teal-deep); }
-    .avail-slot--booked .avail-slot__label { color: var(--sb-bg); }
-
-    /* Right: toggle */
-    .avail-day__toggle-col {
-      padding: 12px 16px;
-      border-left: 1px solid var(--border-soft);
-      display: flex; align-items: center; gap: 8px;
-      font-size: 11px; font-weight: 700; color: var(--muted);
-      flex-shrink: 0; min-width: 70px; justify-content: center;
-    }
-    .avail-day--off .avail-day__toggle-col { color: var(--soft); }
-
+    /* Toggle */
     .toggle-sw {
-      width: 34px; height: 20px; border-radius: var(--rf);
-      background: var(--border); position: relative; cursor: pointer; transition: background .15s; flex-shrink: 0;
+      width: 36px; height: 20px; border-radius: var(--rf);
+      background: var(--border); position: relative;
+      cursor: pointer; transition: background .15s; flex-shrink: 0;
     }
     .toggle-sw--on { background: var(--teal); }
     .toggle-sw::after {
@@ -129,12 +104,82 @@
       background: #fff; box-shadow: 0 1px 4px rgba(0,0,0,.2);
       transition: transform .15s;
     }
-    .toggle-sw--on::after { transform: translateX(14px); }
+    .toggle-sw--on::after { transform: translateX(16px); }
+    .avail-day__toggle-label {
+      font-size: 11px; font-weight: 700;
+      color: var(--muted); min-width: 20px; text-align: right;
+    }
+    .avail-day--off .avail-day__toggle-label { color: var(--soft); }
+
+    /* ── Row 2: chips row — always horizontal ── */
+    .avail-day__slots {
+      display: flex;
+      flex-direction: row;          /* force horizontal */
+      flex-wrap: wrap;              /* wrap gracefully if very narrow */
+      gap: 7px;
+      align-items: center;
+      padding: 10px 14px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .avail-day__slots::-webkit-scrollbar { display: none; }
+
+    /* Individual time chip */
+    .avail-slot {
+      display: inline-flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 0;
+      padding: 0;
+      border-radius: 10px;
+      border: 1.5px solid transparent;
+      cursor: pointer;
+      white-space: nowrap;
+      flex-shrink: 0;
+      overflow: hidden;
+      transition: transform .12s, box-shadow .12s;
+    }
+    .avail-slot:hover { transform: translateY(-1px); box-shadow: 0 3px 10px rgba(0,0,0,.12); }
+
+    /* Time part */
+    .avail-slot__time {
+      padding: 5px 9px 5px 10px;
+      font-size: 12px; font-weight: 800; line-height: 1;
+    }
+    /* Status badge part */
+    .avail-slot__label {
+      padding: 5px 9px 5px 0;
+      font-size: 10px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .04em; line-height: 1;
+      opacity: .7;
+    }
+
+    /* Open: teal */
+    .avail-slot--open {
+      background: var(--teal-pale);
+      border-color: var(--teal-mid);
+      color: var(--teal-deep);
+    }
+    /* Booked: navy */
+    .avail-slot--booked {
+      background: rgba(15,45,69,.07);
+      border-color: rgba(15,45,69,.18);
+      color: var(--sb-bg);
+    }
+    /* Day off */
+    .avail-slot--unavail {
+      background: transparent;
+      border: none;
+      color: var(--soft);
+      font-size: 12px; font-weight: 600; padding: 6px 0;
+    }
+    .avail-slot--unavail .avail-slot__time { padding: 0; font-size: 12px; font-weight: 600; }
+    .avail-slot--unavail .avail-slot__label { display: none; }
 
     /* Legend */
-    .avail-legend { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 4px; }
+    .avail-legend { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 6px; }
     .avail-legend__item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--muted); font-weight: 600; }
-    .avail-legend__dot  { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+    .avail-legend__dot  { width: 10px; height: 10px; border-radius: 4px; flex-shrink: 0; }
 
     /* ── Upcoming list ───────────────────────────────── */
     .upcoming-row {
@@ -488,155 +533,127 @@
 
                   <!-- Monday -->
                   <div class="avail-day">
-                    <div class="avail-day__inner">
-                      <div class="avail-day__label">
-                        <span class="avail-day__name">Monday</span>
-                        <span class="avail-day__cap">2 open · 3 booked</span>
+                    <div class="avail-day__head">
+                      <span class="avail-day__name">Monday</span>
+                      <span class="avail-day__cap">2 open · 3 booked</span>
+                      <div class="avail-day__spacer"></div>
+                      <div class="toggle-sw toggle-sw--on"></div>
+                      <span class="avail-day__toggle-label">On</span>
+                    </div>
+                    <div class="avail-day__slots">
+                      <div class="avail-slot avail-slot--booked">
+                        <span class="avail-slot__time">9 AM</span>
+                        <span class="avail-slot__label">Booked</span>
                       </div>
-                      <div class="avail-day__slots">
-                        <div class="avail-slot avail-slot--booked">
-                          <span class="avail-slot__time">9 AM</span>
-                          <span class="avail-slot__label">Booked</span>
-                        </div>
-                        <div class="avail-slot avail-slot--open">
-                          <span class="avail-slot__time">10 AM</span>
-                          <span class="avail-slot__label">Open</span>
-                        </div>
-                        <div class="avail-slot avail-slot--booked">
-                          <span class="avail-slot__time">11 AM</span>
-                          <span class="avail-slot__label">Booked</span>
-                        </div>
-                        <div class="avail-slot avail-slot--open">
-                          <span class="avail-slot__time">2 PM</span>
-                          <span class="avail-slot__label">Open</span>
-                        </div>
-                        <div class="avail-slot avail-slot--booked">
-                          <span class="avail-slot__time">3 PM</span>
-                          <span class="avail-slot__label">Booked</span>
-                        </div>
+                      <div class="avail-slot avail-slot--open">
+                        <span class="avail-slot__time">10 AM</span>
+                        <span class="avail-slot__label">Open</span>
                       </div>
-                      <div class="avail-day__toggle-col">
-                        <div class="toggle-sw toggle-sw--on"></div>
-                        <span>On</span>
+                      <div class="avail-slot avail-slot--booked">
+                        <span class="avail-slot__time">11 AM</span>
+                        <span class="avail-slot__label">Booked</span>
+                      </div>
+                      <div class="avail-slot avail-slot--open">
+                        <span class="avail-slot__time">2 PM</span>
+                        <span class="avail-slot__label">Open</span>
+                      </div>
+                      <div class="avail-slot avail-slot--booked">
+                        <span class="avail-slot__time">3 PM</span>
+                        <span class="avail-slot__label">Booked</span>
                       </div>
                     </div>
                   </div>
 
                   <!-- Tuesday -->
                   <div class="avail-day">
-                    <div class="avail-day__inner">
-                      <div class="avail-day__label">
-                        <span class="avail-day__name">Tuesday</span>
-                        <span class="avail-day__cap">2 open · 1 booked</span>
+                    <div class="avail-day__head">
+                      <span class="avail-day__name">Tuesday</span>
+                      <span class="avail-day__cap">2 open · 1 booked</span>
+                      <div class="avail-day__spacer"></div>
+                      <div class="toggle-sw toggle-sw--on"></div>
+                      <span class="avail-day__toggle-label">On</span>
+                    </div>
+                    <div class="avail-day__slots">
+                      <div class="avail-slot avail-slot--open">
+                        <span class="avail-slot__time">10 AM</span>
+                        <span class="avail-slot__label">Open</span>
                       </div>
-                      <div class="avail-day__slots">
-                        <div class="avail-slot avail-slot--open">
-                          <span class="avail-slot__time">10 AM</span>
-                          <span class="avail-slot__label">Open</span>
-                        </div>
-                        <div class="avail-slot avail-slot--booked">
-                          <span class="avail-slot__time">2:30 PM</span>
-                          <span class="avail-slot__label">Booked</span>
-                        </div>
-                        <div class="avail-slot avail-slot--open">
-                          <span class="avail-slot__time">4 PM</span>
-                          <span class="avail-slot__label">Open</span>
-                        </div>
+                      <div class="avail-slot avail-slot--booked">
+                        <span class="avail-slot__time">2:30 PM</span>
+                        <span class="avail-slot__label">Booked</span>
                       </div>
-                      <div class="avail-day__toggle-col">
-                        <div class="toggle-sw toggle-sw--on"></div>
-                        <span>On</span>
+                      <div class="avail-slot avail-slot--open">
+                        <span class="avail-slot__time">4 PM</span>
+                        <span class="avail-slot__label">Open</span>
                       </div>
                     </div>
                   </div>
 
                   <!-- Wednesday -->
                   <div class="avail-day">
-                    <div class="avail-day__inner">
-                      <div class="avail-day__label">
-                        <span class="avail-day__name">Wednesday</span>
-                        <span class="avail-day__cap">1 open · 1 booked</span>
+                    <div class="avail-day__head">
+                      <span class="avail-day__name">Wednesday</span>
+                      <span class="avail-day__cap">1 open · 1 booked</span>
+                      <div class="avail-day__spacer"></div>
+                      <div class="toggle-sw toggle-sw--on"></div>
+                      <span class="avail-day__toggle-label">On</span>
+                    </div>
+                    <div class="avail-day__slots">
+                      <div class="avail-slot avail-slot--booked">
+                        <span class="avail-slot__time">11 AM</span>
+                        <span class="avail-slot__label">Booked</span>
                       </div>
-                      <div class="avail-day__slots">
-                        <div class="avail-slot avail-slot--booked">
-                          <span class="avail-slot__time">11 AM</span>
-                          <span class="avail-slot__label">Booked</span>
-                        </div>
-                        <div class="avail-slot avail-slot--open">
-                          <span class="avail-slot__time">2 PM</span>
-                          <span class="avail-slot__label">Open</span>
-                        </div>
-                      </div>
-                      <div class="avail-day__toggle-col">
-                        <div class="toggle-sw toggle-sw--on"></div>
-                        <span>On</span>
+                      <div class="avail-slot avail-slot--open">
+                        <span class="avail-slot__time">2 PM</span>
+                        <span class="avail-slot__label">Open</span>
                       </div>
                     </div>
                   </div>
 
                   <!-- Thursday -->
                   <div class="avail-day avail-day--off">
-                    <div class="avail-day__inner">
-                      <div class="avail-day__label">
-                        <span class="avail-day__name">Thursday</span>
-                        <span class="avail-day__cap" style="color:var(--soft);">Not available</span>
-                      </div>
-                      <div class="avail-day__slots">
-                        <div class="avail-slot avail-slot--unavail" style="padding:8px 16px;">
-                          <span class="avail-slot__time" style="font-size:12px;">Day off</span>
-                        </div>
-                      </div>
-                      <div class="avail-day__toggle-col">
-                        <div class="toggle-sw"></div>
-                        <span>Off</span>
-                      </div>
+                    <div class="avail-day__head">
+                      <span class="avail-day__name">Thursday</span>
+                      <span class="avail-day__cap" style="color:var(--soft);">Not available</span>
+                      <div class="avail-day__spacer"></div>
+                      <div class="toggle-sw"></div>
+                      <span class="avail-day__toggle-label">Off</span>
                     </div>
                   </div>
 
                   <!-- Friday -->
                   <div class="avail-day">
-                    <div class="avail-day__inner">
-                      <div class="avail-day__label">
-                        <span class="avail-day__name">Friday</span>
-                        <span class="avail-day__cap">2 open · 1 booked</span>
+                    <div class="avail-day__head">
+                      <span class="avail-day__name">Friday</span>
+                      <span class="avail-day__cap">2 open · 1 booked</span>
+                      <div class="avail-day__spacer"></div>
+                      <div class="toggle-sw toggle-sw--on"></div>
+                      <span class="avail-day__toggle-label">On</span>
+                    </div>
+                    <div class="avail-day__slots">
+                      <div class="avail-slot avail-slot--open">
+                        <span class="avail-slot__time">10 AM</span>
+                        <span class="avail-slot__label">Open</span>
                       </div>
-                      <div class="avail-day__slots">
-                        <div class="avail-slot avail-slot--open">
-                          <span class="avail-slot__time">10 AM</span>
-                          <span class="avail-slot__label">Open</span>
-                        </div>
-                        <div class="avail-slot avail-slot--open">
-                          <span class="avail-slot__time">11 AM</span>
-                          <span class="avail-slot__label">Open</span>
-                        </div>
-                        <div class="avail-slot avail-slot--booked">
-                          <span class="avail-slot__time">3 PM</span>
-                          <span class="avail-slot__label">Booked</span>
-                        </div>
+                      <div class="avail-slot avail-slot--open">
+                        <span class="avail-slot__time">11 AM</span>
+                        <span class="avail-slot__label">Open</span>
                       </div>
-                      <div class="avail-day__toggle-col">
-                        <div class="toggle-sw toggle-sw--on"></div>
-                        <span>On</span>
+                      <div class="avail-slot avail-slot--booked">
+                        <span class="avail-slot__time">3 PM</span>
+                        <span class="avail-slot__label">Booked</span>
                       </div>
                     </div>
                   </div>
 
                   <!-- Weekend -->
                   <div class="avail-day avail-day--off">
-                    <div class="avail-day__inner">
-                      <div class="avail-day__label">
-                        <span class="avail-day__name">Weekend</span>
-                        <span class="avail-day__cap" style="color:var(--soft);">Not available</span>
-                      </div>
-                      <div class="avail-day__slots">
-                        <div class="avail-slot avail-slot--unavail" style="padding:8px 16px;">
-                          <span class="avail-slot__time" style="font-size:12px;">Day off</span>
-                        </div>
-                      </div>
-                      <div class="avail-day__toggle-col">
-                        <div class="toggle-sw"></div>
-                        <span>Off</span>
-                      </div>
+                    <div class="avail-day__head">
+                      <span class="avail-day__name">Weekend</span>
+                      <span class="avail-day__cap" style="color:var(--soft);">Not available</span>
+                      <div class="avail-day__spacer"></div>
+                      <div class="toggle-sw"></div>
+                      <span class="avail-day__toggle-label">Off</span>
                     </div>
                   </div>
 

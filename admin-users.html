@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Users — Luminwell Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="admin.css">
+<style>
+  /* Tab panel visibility — :has() works regardless of DOM depth */
+  html:has(#tab-all:checked)      #panel-all      { display: block; }
+  html:has(#tab-students:checked) #panel-students  { display: block; }
+  html:has(#tab-clients:checked)  #panel-clients   { display: block; }
+  html:has(#tab-pros:checked)     #panel-pros      { display: block; }
+
+  /* Active tab label highlight */
+  html:has(#tab-all:checked)      label[for="tab-all"],
+  html:has(#tab-students:checked) label[for="tab-students"],
+  html:has(#tab-clients:checked)  label[for="tab-clients"],
+  html:has(#tab-pros:checked)     label[for="tab-pros"] {
+    color: var(--adm-blue);
+    border-bottom-color: var(--adm-blue);
+  }
+
+  .user-type-tag {
+    font-size: 10px; font-weight: 800; letter-spacing: .5px;
+    padding: 2px 8px; border-radius: 20px; text-transform: uppercase;
+  }
+  .type-student      { background: var(--adm-blue-lt);   color: var(--adm-blue-dk); }
+  .type-client       { background: var(--adm-teal-lt);   color: var(--adm-teal); }
+  .type-professional { background: var(--adm-purple-lt); color: var(--adm-purple); }
+
+  .risk-bar { display: flex; align-items: center; gap: 8px; }
+  .risk-bar-track { width: 60px; height: 5px; background: var(--adm-border); border-radius: 3px; overflow: hidden; }
+  .risk-bar-fill  { height: 100%; border-radius: 3px; }
+
+  /* ── Styled dropdown selects ── */
+  .adm-select-wrap {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+  }
+  .adm-select-wrap svg {
+    position: absolute;
+    right: 10px;
+    pointer-events: none;
+    color: var(--adm-txt-muted);
+    flex-shrink: 0;
+  }
+  .adm-select {
+    appearance: none;
+    -webkit-appearance: none;
+    height: 36px;
+    padding: 0 32px 0 12px;
+    border: 1.5px solid var(--adm-border);
+    border-radius: 10px;
+    background: var(--adm-surface);
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--adm-txt-body);
+    cursor: pointer;
+    outline: none;
+    transition: border-color .15s, box-shadow .15s;
+    white-space: nowrap;
+  }
+  .adm-select:hover  { border-color: #94a3b8; }
+  .adm-select:focus  { border-color: var(--adm-blue); box-shadow: 0 0 0 3px rgba(45,150,118,.12); }
+
+  /* Filter bar layout override */
+  .filter-bar { gap: 8px; }
+</style>
+</head>
+<body>
+
+<input type="checkbox" id="sidebar-toggle" class="sidebar-toggle-check">
+
+<!-- CSS-only tab state -->
+<input type="radio" name="user-tabs" id="tab-all"      class="tab-check" checked>
+<input type="radio" name="user-tabs" id="tab-students" class="tab-check">
+<input type="radio" name="user-tabs" id="tab-clients"  class="tab-check">
+<input type="radio" name="user-tabs" id="tab-pros"     class="tab-check">
+
+<div class="admin-shell">
+
+  <!-- ── Sidebar ───────────────────────────────────────────── -->
+  <aside class="admin-sidebar">
+    <div class="sidebar__logo">
+      <div class="logo-mark"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17 8C8 10 5.9 16.17 3.82 22A13.34 13.34 0 0 0 18 8Z"/><path d="M9 9c-1.5 3.5-2.5 7-3 10C8 18 11 15 13 12" fill="rgba(255,255,255,.35)"/></svg></div>
+      <div class="logo-text-wrap">
+        <div class="logo-name">Luminwell</div>
+        <span class="logo-badge-pill">ADMIN</span>
+      </div>
+    </div>
+    <label for="sidebar-toggle" class="sidebar__collapse-btn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+    </label>
+    <nav class="sidebar__nav">
+      <div class="nav-section">
+        <p class="nav-label">MAIN</p>
+        <a href="admin-home.html" class="sidebar__link">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+          <span class="link-text">Overview</span>
+        </a>
+        <a href="admin-analytics.html" class="sidebar__link">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          <span class="link-text">Analytics</span>
+        </a>
+      </div>
+      <div class="nav-section">
+        <p class="nav-label">PEOPLE</p>
+        <a href="admin-users.html" class="sidebar__link active">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          <span class="link-text">Users</span>
+          <span class="nav-badge nav-badge--slate">2,841</span>
+        </a>
+        <a href="admin-ambassadors.html" class="sidebar__link">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <span class="link-text">Ambassadors</span>
+          <span class="nav-badge nav-badge--amber">3 new</span>
+        </a>
+        <a href="admin-matching.html" class="sidebar__link">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+          <span class="link-text">Matching</span>
+        </a>
+      </div>
+      <div class="nav-section">
+        <p class="nav-label">OPERATIONS</p>
+        <a href="admin-sessions.html" class="sidebar__link">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <span class="link-text">Sessions</span>
+        </a>
+        <a href="admin-welfare.html" class="sidebar__link">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <span class="link-text">Welfare &amp; Safety</span>
+          <span class="nav-badge nav-badge--red">5</span>
+        </a>
+        <a href="admin-messages.html" class="sidebar__link">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          <span class="link-text">Messages</span>
+        </a>
+      </div>
+      <div class="nav-section">
+        <p class="nav-label">PLATFORM</p>
+        <a href="admin-content.html" class="sidebar__link">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          <span class="link-text">Content</span>
+        </a>
+        <a href="admin-settings.html" class="sidebar__link">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06-.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          <span class="link-text">Settings</span>
+        </a>
+        <a href="admin-privacy.html" class="sidebar__link">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <span class="link-text">Privacy &amp; GDPR</span>
+        </a>
+      </div>
+    </nav>
+    <div class="sidebar__foot">
+      <div class="sidebar__foot-user">
+        <div class="admin-ava-sm">A</div>
+        <div class="sidebar__foot-info">
+          <p>Admin User</p>
+          <small>Super Admin</small>
+        </div>
+      </div>
+      <button class="sidebar__signout">Sign out</button>
+    </div>
+  </aside>
+
+  <!-- ── Main ──────────────────────────────────────────────── -->
+  <div class="admin-main">
+
+    <header class="admin-topbar">
+      <div class="topbar-left">
+        <label for="sidebar-toggle" class="topbar-menu-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </label>
+        <nav class="breadcrumb">
+          <a href="admin-home.html">Admin</a>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+          <span class="bc-active">Users</span>
+        </nav>
+      </div>
+      <div class="topbar-right">
+        <div class="notif-wrap">
+          <input type="checkbox" id="notif-toggle" class="notif-check">
+          <label for="notif-toggle" class="topbar-icon-btn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            <span class="notif-dot"></span>
+          </label>
+          <div class="notif-drop">
+            <div class="notif-drop-head"><h4>Notifications</h4><a href="#">Mark all read</a></div>
+            <div class="notif-item unread">
+              <div class="notif-ico red"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+              <div class="notif-body"><p><strong>Critical welfare flag</strong> — Alex T.</p><small>2 min ago</small></div>
+            </div>
+            <div class="notif-item unread">
+              <div class="notif-ico amber"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"/><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/></svg></div>
+              <div class="notif-body"><p><strong>3 ambassador applications</strong> pending.</p><small>1 h ago</small></div>
+            </div>
+            <div class="notif-drop-foot"><a href="admin-welfare.html">View all alerts →</a></div>
+          </div>
+        </div>
+        <div class="topbar-user">
+          <div class="topbar-ava">A</div>
+          <div class="topbar-user-info"><div class="u-name">Admin</div><div class="u-role">Super Admin</div></div>
+        </div>
+      </div>
+    </header>
+
+    <div class="admin-content">
+
+      <!-- Page header -->
+      <div class="page-hero">
+        <div class="page-hero-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+        <div class="page-hero-text">
+          <h1>Users</h1>
+          <p>All registered platform users — students, clients &amp; professionals</p>
+        </div>
+        <div class="page-hero-actions"><a href="#" class="btn btn-white"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Export CSV</a><button class="btn btn-primary" style="background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);">+ Add user</button></div>
+      </div>
+
+      <div class="page-header" style="display:none">
+        <div class="page-header-text">
+          <h1>Users</h1>
+          <p>All registered platform users — students, clients &amp; professionals</p>
+        </div>
+        <div class="page-header-actions">
+          <button class="btn btn-secondary btn-sm">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Export CSV
+          </button>
+          <button class="btn btn-primary btn-sm">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add user
+          </button>
+        </div>
+      </div>
+
+      <!-- Summary strip -->
+      <div class="stats-row" style="grid-template-columns:repeat(4,1fr);margin-bottom:20px;">
+        <div class="stat-card blue">
+          <div class="stat-top"><span class="stat-label">All Users</span><div class="stat-icon blue"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div></div>
+          <div class="stat-value">2,841</div>
+          <span class="stat-delta delta-up">▲ +47 this week</span>
+        </div>
+        <div class="stat-card blue">
+          <div class="stat-top"><span class="stat-label">Students</span><div class="stat-icon blue"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></div></div>
+          <div class="stat-value">1,984</div>
+          <span class="stat-delta delta-neu">69.8% of all</span>
+        </div>
+        <div class="stat-card teal">
+          <div class="stat-top"><span class="stat-label">Clients</span><div class="stat-icon teal"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.42 4.58a5.4 5.4 0 0 0-7.65 0l-.77.78-.77-.78a5.4 5.4 0 0 0-7.65 0C1.46 6.7 1.33 10.28 4 13l8 8 8-8c2.67-2.72 2.54-6.3.42-8.42z"/></svg></div></div>
+          <div class="stat-value">647</div>
+          <span class="stat-delta delta-neu">22.8% of all</span>
+        </div>
+        <div class="stat-card purple">
+          <div class="stat-top"><span class="stat-label">Professionals</span><div class="stat-icon purple"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></div></div>
+          <div class="stat-value">210</div>
+          <span class="stat-delta delta-neu">7.4% of all</span>
+        </div>
+      </div>
+
+      <!-- Tabs + Table card -->
+      <div class="card">
+
+        <!-- Tabs row — lives outside tab-panels so radios can control panel visibility via sibling selector -->
+        <div class="tabs-row">
+          <label for="tab-all"      class="tab-lbl">All Users <span class="badge badge-slate" style="font-size:10px;padding:1px 7px;">2,841</span></label>
+          <label for="tab-students" class="tab-lbl">Students  <span class="badge badge-blue"  style="font-size:10px;padding:1px 7px;">1,984</span></label>
+          <label for="tab-clients"  class="tab-lbl">Clients   <span class="badge badge-teal"  style="font-size:10px;padding:1px 7px;">647</span></label>
+          <label for="tab-pros"     class="tab-lbl">Professionals <span class="badge badge-purple" style="font-size:10px;padding:1px 7px;">210</span></label>
+        </div>
+
+        <!-- Filter bar -->
+        <div class="filter-bar">
+          <div class="search-wrap" style="flex:1;min-width:180px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input class="search-inp" type="text" placeholder="Search by name, email, university…">
+          </div>
+
+          <div class="adm-select-wrap">
+            <select class="adm-select">
+              <option>All universities</option>
+              <option>Univ. of Manchester</option>
+              <option>UCL</option>
+              <option>King's College London</option>
+              <option>Leeds</option>
+              <option>Edinburgh</option>
+              <option>Birmingham</option>
+            </select>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+
+          <div class="adm-select-wrap">
+            <select class="adm-select">
+              <option>All statuses</option>
+              <option>Active</option>
+              <option>Inactive</option>
+              <option>Flagged</option>
+              <option>Pending</option>
+              <option>At risk</option>
+            </select>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+
+          <div class="adm-select-wrap">
+            <select class="adm-select">
+              <option>Sort: Most recent</option>
+              <option>Sort: Name A–Z</option>
+              <option>Sort: Sessions ↓</option>
+              <option>Sort: Last active</option>
+              <option>Sort: Wellbeing ↑</option>
+            </select>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+
+          <a href="admin-filter-popup.html" class="btn btn-secondary btn-sm" style="text-decoration:none;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+            Filters
+          </a>
+        </div>
+
+        <!-- Tab panels -->
+        <div class="tab-panels">
+
+          <!-- ALL USERS panel -->
+          <div id="panel-all" class="tab-panel">
+            <div class="data-table-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>User</th>
+                    <th>Type</th>
+                    <th>University</th>
+                    <th>Ambassador</th>
+                    <th>Sessions</th>
+                    <th>Wellbeing</th>
+                    <th>Last active</th>
+                    <th>Status</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <div class="user-cell">
+                        <div class="user-ava blue">AO</div>
+                        <div><div class="user-name">Alex Okonkwo</div><div class="user-sub">alex.o@manchester.ac.uk</div></div>
+                      </div>
+                    </td>
+                    <td><span class="user-type-tag type-student">Student</span></td>
+                    <td style="font-size:12px;">Manchester</td>
+                    <td><div class="user-cell" style="gap:6px;"><div class="user-ava green" style="width:24px;height:24px;font-size:10px;">MJ</div><span style="font-size:12px;">Maya J.</span></div></td>
+                    <td style="font-weight:700;color:var(--adm-txt-head);">12</td>
+                    <td>
+                      <div class="risk-bar">
+                        <div class="risk-bar-track"><div class="risk-bar-fill" style="width:75%;background:var(--adm-green);"></div></div>
+                        <span style="font-size:11px;color:var(--adm-green);font-weight:700;">Good</span>
+                      </div>
+                    </td>
+                    <td style="font-size:12px;color:var(--adm-txt-muted);">Today</td>
+                    <td><span class="badge badge-green">Active</span></td>
+                    <td><a href="#" class="row-link">View</a></td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="user-cell">
+                        <div class="user-ava amber">JM</div>
+                        <div><div class="user-name">Jordan Mills</div><div class="user-sub">j.mills@ucl.ac.uk</div></div>
+                      </div>
+                    </td>
+                    <td><span class="user-type-tag type-client">Client</span></td>
+                    <td style="font-size:12px;">UCL</td>
+                    <td><div class="user-cell" style="gap:6px;"><div class="user-ava blue" style="width:24px;height:24px;font-size:10px;">KR</div><span style="font-size:12px;">Keiran R.</span></div></td>
+                    <td style="font-weight:700;color:var(--adm-txt-head);">5</td>
+                    <td>
+                      <div class="risk-bar">
+                        <div class="risk-bar-track"><div class="risk-bar-fill" style="width:30%;background:var(--adm-amber);"></div></div>
+                        <span style="font-size:11px;color:var(--adm-amber);font-weight:700;">Low</span>
+                      </div>
+                    </td>
+                    <td style="font-size:12px;color:var(--adm-txt-muted);">3 days ago</td>
+                    <td><span class="badge badge-amber">Flagged</span></td>
+                    <td><a href="#" class="row-link">View</a></td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="user-cell">
+                        <div class="user-ava teal">SR</div>
+                        <div><div class="user-name">Sam Rivera</div><div class="user-sub">s.rivera@kcl.ac.uk</div></div>
+                      </div>
+                    </td>
+                    <td><span class="user-type-tag type-student">Student</span></td>
+                    <td style="font-size:12px;">King's College</td>
+                    <td><div class="user-cell" style="gap:6px;"><div class="user-ava amber" style="width:24px;height:24px;font-size:10px;">LN</div><span style="font-size:12px;">Layla N.</span></div></td>
+                    <td style="font-weight:700;color:var(--adm-txt-head);">9</td>
+                    <td>
+                      <div class="risk-bar">
+                        <div class="risk-bar-track"><div class="risk-bar-fill" style="width:60%;background:var(--adm-blue);"></div></div>
+                        <span style="font-size:11px;color:var(--adm-blue);font-weight:700;">Steady</span>
+                      </div>
+                    </td>
+                    <td style="font-size:12px;color:var(--adm-txt-muted);">Yesterday</td>
+                    <td><span class="badge badge-green">Active</span></td>
+                    <td><a href="#" class="row-link">View</a></td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="user-cell">
+                        <div class="user-ava purple">PT</div>
+                        <div><div class="user-name">Priya Thakur</div><div class="user-sub">p.thakur@leeds.ac.uk</div></div>
+                      </div>
+                    </td>
+                    <td><span class="user-type-tag type-professional">Professional</span></td>
+                    <td style="font-size:12px;">Leeds</td>
+                    <td><span style="font-size:12px;color:var(--adm-txt-faint);">Self-refer</span></td>
+                    <td style="font-weight:700;color:var(--adm-txt-head);">3</td>
+                    <td>
+                      <div class="risk-bar">
+                        <div class="risk-bar-track"><div class="risk-bar-fill" style="width:85%;background:var(--adm-green);"></div></div>
+                        <span style="font-size:11px;color:var(--adm-green);font-weight:700;">Good</span>
+                      </div>
+                    </td>
+                    <td style="font-size:12px;color:var(--adm-txt-muted);">Today</td>
+                    <td><span class="badge badge-green">Active</span></td>
+                    <td><a href="#" class="row-link">View</a></td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="user-cell">
+                        <div class="user-ava red">AT</div>
+                        <div><div class="user-name">Alex Turner</div><div class="user-sub">a.turner@manchester.ac.uk</div></div>
+                      </div>
+                    </td>
+                    <td><span class="user-type-tag type-student">Student</span></td>
+                    <td style="font-size:12px;">Manchester</td>
+                    <td><div class="user-cell" style="gap:6px;"><div class="user-ava green" style="width:24px;height:24px;font-size:10px;">MJ</div><span style="font-size:12px;">Maya J.</span></div></td>
+                    <td style="font-weight:700;color:var(--adm-txt-head);">7</td>
+                    <td>
+                      <div class="risk-bar">
+                        <div class="risk-bar-track"><div class="risk-bar-fill" style="width:15%;background:var(--adm-red);"></div></div>
+                        <span style="font-size:11px;color:var(--adm-red);font-weight:700;">At risk</span>
+                      </div>
+                    </td>
+                    <td style="font-size:12px;color:var(--adm-txt-muted);">Today</td>
+                    <td><span class="badge badge-red">Flagged</span></td>
+                    <td><a href="admin-welfare.html" class="row-link" style="color:var(--adm-red);">Urgent</a></td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="user-cell">
+                        <div class="user-ava blue">NK</div>
+                        <div><div class="user-name">Natasha Kwei</div><div class="user-sub">n.kwei@ucl.ac.uk</div></div>
+                      </div>
+                    </td>
+                    <td><span class="user-type-tag type-client">Client</span></td>
+                    <td style="font-size:12px;">UCL</td>
+                    <td><span style="font-size:12px;color:var(--adm-amber);font-weight:600;">Unmatched</span></td>
+                    <td style="font-weight:700;color:var(--adm-txt-head);">0</td>
+                    <td>
+                      <div class="risk-bar">
+                        <div class="risk-bar-track"><div class="risk-bar-fill" style="width:50%;background:var(--adm-blue);"></div></div>
+                        <span style="font-size:11px;color:var(--adm-blue);font-weight:700;">Okay</span>
+                      </div>
+                    </td>
+                    <td style="font-size:12px;color:var(--adm-txt-muted);">2 days ago</td>
+                    <td><span class="badge badge-amber">Pending</span></td>
+                    <td><a href="admin-matching.html" class="row-link">Match →</a></td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="user-cell">
+                        <div class="user-ava green">OB</div>
+                        <div><div class="user-name">Ollie Barnes</div><div class="user-sub">o.barnes@leeds.ac.uk</div></div>
+                      </div>
+                    </td>
+                    <td><span class="user-type-tag type-student">Student</span></td>
+                    <td style="font-size:12px;">Leeds</td>
+                    <td><div class="user-cell" style="gap:6px;"><div class="user-ava purple" style="width:24px;height:24px;font-size:10px;">DN</div><span style="font-size:12px;">Dev N.</span></div></td>
+                    <td style="font-weight:700;color:var(--adm-txt-head);">15</td>
+                    <td>
+                      <div class="risk-bar">
+                        <div class="risk-bar-track"><div class="risk-bar-fill" style="width:90%;background:var(--adm-green);"></div></div>
+                        <span style="font-size:11px;color:var(--adm-green);font-weight:700;">Great</span>
+                      </div>
+                    </td>
+                    <td style="font-size:12px;color:var(--adm-txt-muted);">Today</td>
+                    <td><span class="badge badge-green">Active</span></td>
+                    <td><a href="#" class="row-link">View</a></td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="user-cell">
+                        <div class="user-ava teal">FC</div>
+                        <div><div class="user-name">Fatima Choudhry</div><div class="user-sub">f.choudhry@kcl.ac.uk</div></div>
+                      </div>
+                    </td>
+                    <td><span class="user-type-tag type-student">Student</span></td>
+                    <td style="font-size:12px;">King's College</td>
+                    <td><div class="user-cell" style="gap:6px;"><div class="user-ava amber" style="width:24px;height:24px;font-size:10px;">LN</div><span style="font-size:12px;">Layla N.</span></div></td>
+                    <td style="font-weight:700;color:var(--adm-txt-head);">6</td>
+                    <td>
+                      <div class="risk-bar">
+                        <div class="risk-bar-track"><div class="risk-bar-fill" style="width:65%;background:var(--adm-blue);"></div></div>
+                        <span style="font-size:11px;color:var(--adm-blue);font-weight:700;">Steady</span>
+                      </div>
+                    </td>
+                    <td style="font-size:12px;color:var(--adm-txt-muted);">Today</td>
+                    <td><span class="badge badge-green">Active</span></td>
+                    <td><a href="#" class="row-link">View</a></td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="user-cell">
+                        <div class="user-ava purple">LS</div>
+                        <div><div class="user-name">Liam Sutton</div><div class="user-sub">l.sutton@manchester.ac.uk</div></div>
+                      </div>
+                    </td>
+                    <td><span class="user-type-tag type-client">Client</span></td>
+                    <td style="font-size:12px;">Manchester</td>
+                    <td><div class="user-cell" style="gap:6px;"><div class="user-ava green" style="width:24px;height:24px;font-size:10px;">MJ</div><span style="font-size:12px;">Maya J.</span></div></td>
+                    <td style="font-weight:700;color:var(--adm-txt-head);">4</td>
+                    <td>
+                      <div class="risk-bar">
+                        <div class="risk-bar-track"><div class="risk-bar-fill" style="width:45%;background:var(--adm-amber);"></div></div>
+                        <span style="font-size:11px;color:var(--adm-amber);font-weight:700;">Low</span>
+                      </div>
+                    </td>
+                    <td style="font-size:12px;color:var(--adm-txt-muted);">4 days ago</td>
+                    <td><span class="badge badge-amber">Inactive</span></td>
+                    <td><a href="#" class="row-link">View</a></td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="user-cell">
+                        <div class="user-ava amber">ZH</div>
+                        <div><div class="user-name">Zara Hassan</div><div class="user-sub">z.hassan@ucl.ac.uk</div></div>
+                      </div>
+                    </td>
+                    <td><span class="user-type-tag type-student">Student</span></td>
+                    <td style="font-size:12px;">UCL</td>
+                    <td><div class="user-cell" style="gap:6px;"><div class="user-ava blue" style="width:24px;height:24px;font-size:10px;">KR</div><span style="font-size:12px;">Keiran R.</span></div></td>
+                    <td style="font-weight:700;color:var(--adm-txt-head);">11</td>
+                    <td>
+                      <div class="risk-bar">
+                        <div class="risk-bar-track"><div class="risk-bar-fill" style="width:80%;background:var(--adm-green);"></div></div>
+                        <span style="font-size:11px;color:var(--adm-green);font-weight:700;">Good</span>
+                      </div>
+                    </td>
+                    <td style="font-size:12px;color:var(--adm-txt-muted);">Yesterday</td>
+                    <td><span class="badge badge-green">Active</span></td>
+                    <td><a href="#" class="row-link">View</a></td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="user-cell">
+                        <div class="user-ava blue">RP</div>
+                        <div><div class="user-name">Ravi Patel</div><div class="user-sub">r.patel@birmingham.ac.uk</div></div>
+                      </div>
+                    </td>
+                    <td><span class="user-type-tag type-professional">Professional</span></td>
+                    <td style="font-size:12px;">Birmingham</td>
+                    <td><span style="font-size:12px;color:var(--adm-txt-faint);">Self-refer</span></td>
+                    <td style="font-weight:700;color:var(--adm-txt-head);">2</td>
+                    <td>
+                      <div class="risk-bar">
+                        <div class="risk-bar-track"><div class="risk-bar-fill" style="width:70%;background:var(--adm-blue);"></div></div>
+                        <span style="font-size:11px;color:var(--adm-blue);font-weight:700;">Steady</span>
+                      </div>
+                    </td>
+                    <td style="font-size:12px;color:var(--adm-txt-muted);">2 days ago</td>
+                    <td><span class="badge badge-green">Active</span></td>
+                    <td><a href="#" class="row-link">View</a></td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="user-cell">
+                        <div class="user-ava red">CM</div>
+                        <div><div class="user-name">Chloe Marsh</div><div class="user-sub">c.marsh@leeds.ac.uk</div></div>
+                      </div>
+                    </td>
+                    <td><span class="user-type-tag type-client">Client</span></td>
+                    <td style="font-size:12px;">Leeds</td>
+                    <td><div class="user-cell" style="gap:6px;"><div class="user-ava purple" style="width:24px;height:24px;font-size:10px;">DN</div><span style="font-size:12px;">Dev N.</span></div></td>
+                    <td style="font-weight:700;color:var(--adm-txt-head);">1</td>
+                    <td>
+                      <div class="risk-bar">
+                        <div class="risk-bar-track"><div class="risk-bar-fill" style="width:20%;background:var(--adm-red);"></div></div>
+                        <span style="font-size:11px;color:var(--adm-red);font-weight:700;">At risk</span>
+                      </div>
+                    </td>
+                    <td style="font-size:12px;color:var(--adm-txt-muted);">Today</td>
+                    <td><span class="badge badge-red">Flagged</span></td>
+                    <td><a href="admin-welfare.html" class="row-link" style="color:var(--adm-red);">Urgent</a></td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="user-cell">
+                        <div class="user-ava green">TN</div>
+                        <div><div class="user-name">Tobi Nwosu</div><div class="user-sub">t.nwosu@manchester.ac.uk</div></div>
+                      </div>
+                    </td>
+                    <td><span class="user-type-tag type-student">Student</span></td>
+                    <td style="font-size:12px;">Manchester</td>
+                    <td><div class="user-cell" style="gap:6px;"><div class="user-ava green" style="width:24px;height:24px;font-size:10px;">MJ</div><span style="font-size:12px;">Maya J.</span></div></td>
+                    <td style="font-weight:700;color:var(--adm-txt-head);">8</td>
+                    <td>
+                      <div class="risk-bar">
+                        <div class="risk-bar-track"><div class="risk-bar-fill" style="width:82%;background:var(--adm-green);"></div></div>
+                        <span style="font-size:11px;color:var(--adm-green);font-weight:700;">Good</span>
+                      </div>
+                    </td>
+                    <td style="font-size:12px;color:var(--adm-txt-muted);">Today</td>
+                    <td><span class="badge badge-green">Active</span></td>
+                    <td><a href="#" class="row-link">View</a></td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="user-cell">
+                        <div class="user-ava amber">EW</div>
+                        <div><div class="user-name">Eva Williams</div><div class="user-sub">e.williams@kcl.ac.uk</div></div>
+                      </div>
+                    </td>
+                    <td><span class="user-type-tag type-client">Client</span></td>
+                    <td style="font-size:12px;">King's College</td>
+                    <td><div class="user-cell" style="gap:6px;"><div class="user-ava amber" style="width:24px;height:24px;font-size:10px;">LN</div><span style="font-size:12px;">Layla N.</span></div></td>
+                    <td style="font-weight:700;color:var(--adm-txt-head);">9</td>
+                    <td>
+                      <div class="risk-bar">
+                        <div class="risk-bar-track"><div class="risk-bar-fill" style="width:55%;background:var(--adm-blue);"></div></div>
+                        <span style="font-size:11px;color:var(--adm-blue);font-weight:700;">Okay</span>
+                      </div>
+                    </td>
+                    <td style="font-size:12px;color:var(--adm-txt-muted);">3 days ago</td>
+                    <td><span class="badge badge-green">Active</span></td>
+                    <td><a href="#" class="row-link">View</a></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="pagination">
+              <span class="pagination-info">Showing 1–15 of 2,841 users</span>
+              <div class="pagination-btns">
+                <button class="page-btn" disabled>‹</button>
+                <button class="page-btn active">1</button>
+                <button class="page-btn">2</button>
+                <button class="page-btn">3</button>
+                <button class="page-btn">4</button>
+                <button class="page-btn">5</button>
+                <span style="padding:0 6px;color:var(--adm-txt-faint);font-size:13px;">…</span>
+                <button class="page-btn">190</button>
+                <button class="page-btn">›</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- STUDENTS panel -->
+          <div id="panel-students" class="tab-panel">
+            <div class="filter-bar" style="border-top:1px solid var(--adm-border);padding:12px 20px;">
+              <span style="font-size:13px;font-weight:600;color:var(--adm-txt-head);">1,984 students registered</span>
+              <span class="badge badge-green" style="margin-left:auto;">1,812 active</span>
+              <span class="badge badge-amber">108 inactive</span>
+              <span class="badge badge-red">64 flagged</span>
+            </div>
+            <div class="data-table-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Student</th>
+                    <th>University</th>
+                    <th>Course / Year</th>
+                    <th>Ambassador</th>
+                    <th>Sessions</th>
+                    <th>Journal entries</th>
+                    <th>Wellbeing</th>
+                    <th>Status</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><div class="user-cell"><div class="user-ava blue">AO</div><div><div class="user-name">Alex Okonkwo</div><div class="user-sub">alex.o@manchester.ac.uk</div></div></div></td>
+                    <td style="font-size:12px;">Manchester</td>
+                    <td style="font-size:12px;color:var(--adm-txt-muted);">Psychology · Yr 2</td>
+                    <td><div class="user-cell" style="gap:6px;"><div class="user-ava green" style="width:24px;height:24px;font-size:10px;">MJ</div><span style="font-size:12px;">Maya J.</span></div></td>
+                    <td style="font-weight:700;color:var(--adm-txt-head);">12</td>
+                    <td style="font-size:12px;font-weight:600;color:var(--adm-txt-head);">28</td>
+                    <td><div class="risk-bar"><div class="risk-bar-track"><div class="risk-bar-fill" style="width:75%;background:var(--adm-green);"></div></div><span style="font-size:11px;color:var(--adm-green);font-weight:700;">Good</span></div></td>
+                    <td><span class="badge badge-green">Active</span></td>
+                    <td><a href="#" class="row-link">View</a></td>
+                  </tr>
+                  <tr>
+                    <td><div class="user-cell"><div class="user-ava teal">SR</div><div><div class="user-name">Sam Rivera</div><div class="user-sub">s.rivera@kcl.ac.uk</div></div></div></td>
+                    <td style="font-size:12px;">King's College</td>
+                    <td style="font-size:12px;color:var(--adm-txt-muted);">Medicine · Yr 3</td>
+                    <td><div class="user-cell" style="gap:6px;"><div class="user-ava amber" style="width:24px;height:24px;font-size:10px;">LN</div><span style="font-size:12px;">Layla N.</span></div></td>
+                    <td style="font-weight:700;color:var(--adm-txt-head);">9</td>
+                    <td style="font-size:12px;font-weight:600;color:var(--adm-txt-head);">14</td>
+                    <td><div class="risk-bar"><div class="risk-bar-track"><div class="risk-bar-fill" style="width:60%;background:var(--adm-blue);"></div></div><span style="font-size:11px;color:var(--adm-blue);font-weight:700;">Steady</span></div></td>
+                    <td><span class="badge badge-green">Active</span></td>
+                    <td><a href="#" class="row-link">View</a></td>
+                  </tr>
+                  <tr>
+                    <td><div class="user-cell"><div class="user-ava red">AT</div><div><div class="user-name">Alex Turner</div><div class="user-sub">a.turner@manchester.ac.uk</div></div></div></td>
+                    <td style="font-size:12px;">Manchester</td>
+                    <td style="font-size:12px;color:var(--adm-txt-muted);">Law · Yr 1</td>
+                    <td><div class="user-cell" style="gap:6px;"><div class="user-ava green" style="width:24px;height:24px;font-size:10px;">MJ</div><span style="font-size:12px;">Maya J.</span></div></td>
+                    <td style="font-weight:700;color:var(--adm-txt-head);">7</td>
+                    <td style="font-size:12px;font-weight:600;color:var(--adm-txt-head);">3</td>
+                    <td><div class="risk-bar"><div class="risk-bar-track"><div class="risk-bar-fill" style="width:15%;background:var(--adm-red);"></div></div><span style="font-size:11px;color:var(--adm-red);font-weight:700;">At risk</span></div></td>
+                    <td><span class="badge badge-red">Flagged</span></td>
+                    <td><a href="admin-welfare.html" class="row-link" style="color:var(--adm-red);">Urgent</a></td>
+                  </tr>
+                  <tr>
+                    <td><div class="user-cell"><div class="user-ava green">OB</div><div><div class="user-name">Ollie Barnes</div><div class="user-sub">o.barnes@leeds.ac.uk</div></div></div></td>
+                    <td style="font-size:12px;">Leeds</td>
+                    <td style="font-size:12px;color:var(--adm-txt-muted);">Engineering · Yr 4</td>
+                    <td><div class="user-cell" style="gap:6px;"><div class="user-ava purple" style="width:24px;height:24px;font-size:10px;">DN</div><span style="font-size:12px;">Dev N.</span></div></td>
+                    <td style="font-weight:700;color:var(--adm-txt-head);">15</td>
+                    <td style="font-size:12px;font-weight:600;color:var(--adm-txt-head);">41</td>
+                    <td><div class="risk-bar"><div class="risk-bar-track"><div class="risk-bar-fill" style="width:90%;background:var(--adm-green);"></div></div><span style="font-size:11px;color:var(--adm-green);font-weight:700;">Great</span></div></td>
+                    <td><span class="badge badge-green">Active</span></td>
+                    <td><a href="#" class="row-link">View</a></td>
+                  </tr>
+                  <tr>
+                    <td><div class="user-cell"><div class="user-ava teal">FC</div><div><div class="user-name">Fatima Choudhry</div><div class="user-sub">f.choudhry@kcl.ac.uk</div></div></div></td>
+                    <td style="font-size:12px;">King's College</td>
+                    <td style="font-size:12px;color:var(--adm-txt-muted);">Neuroscience · Yr 2</td>
+                    <td><div class="user-cell" style="gap:6px;"><div class="user-ava amber" style="width:24px;height:24px;font-size:10px;">LN</div><span style="font-size:12px;">Layla N.</span></div></td>
+                    <td style="font-weight:700;color:var(--adm-txt-head);">6</td>
+                    <td style="font-size:12px;font-weight:600;color:var(--adm-txt-head);">18</td>
+                    <td><div class="risk-bar"><div class="risk-bar-track"><div class="risk-bar-fill" style="width:65%;background:var(--adm-blue);"></div></div><span style="font-size:11px;color:var(--adm-blue);font-weight:700;">Steady</span></div></td>
+                    <td><span class="badge badge-green">Active</span></td>
+                    <td><a href="#" class="row-link">View</a></td>
+                  </tr>
+                  <tr>
+                    <td><div class="user-cell"><div class="user-ava amber">ZH</div><div><div class="user-name">Zara Hassan</div><div class="user-sub">z.hassan@ucl.ac.uk</div></div></div></td>
+                    <td style="font-size:12px;">UCL</td>
+                    <td style="font-size:12px;color:var(--adm-txt-muted);">Economics · Yr 3</td>
+                    <td><div class="user-cell" style="gap:6px;"><div class="user-ava blue" style="width:24px;height:24px;font-size:10px;">KR</div><span style="font-size:12px;">Keiran R.</span></div></td>
+                    <td style="font-weight:700;color:var(--adm-txt-head);">11</td>
+                    <td style="font-size:12px;font-weight:600;color:var(--adm-txt-head);">32</td>
+                    <td><div class="risk-bar"><div class="risk-bar-track"><div class="risk-bar-fill" style="width:80%;background:var(--adm-green);"></div></div><span style="font-size:11px;color:var(--adm-green);font-weight:700;">Good</span></div></td>
+                    <td><span class="badge badge-green">Active</span></td>
+                    <td><a href="#" class="row-link">View</a></td>
+                  </tr>
+                  <tr>
+                    <td><div class="user-cell"><div class="user-ava green">TN</div><div><div class="user-name">Tobi Nwosu</div><div class="user-sub">t.nwosu@manchester.ac.uk</div></div></div></td>
+                    <td style="font-size:12px;">Manchester</td>
+                    <td style="font-size:12px;color:var(--adm-txt-muted);">Computer Science · Yr 1</td>
+                    <td><div class="user-cell" style="gap:6px;"><div class="user-ava green" style="width:24px;height:24px;font-size:10px;">MJ</div><span style="font-size:12px;">Maya J.</span></div></td>
+                    <td style="font-weight:700;color:var(--adm-txt-head);">8</td>
+                    <td style="font-size:12px;font-weight:600;color:var(--adm-txt-head);">22</td>
+                    <td><div class="risk-bar"><div class="risk-bar-track"><div class="risk-bar-fill" style="width:82%;background:var(--adm-green);"></div></div><span style="font-size:11px;color:var(--adm-green);font-weight:700;">Good</span></div></td>
+                    <td><span class="badge badge-green">Active</span></td>
+                    <td><a href="#" class="row-link">View</a></td>
+                  </tr>
+                  <tr>
+                    <td><div class="user-cell"><div class="user-ava purple">IK</div><div><div class="user-name">Isla Kim</div><div class="user-sub">i.kim@edinburgh.ac.uk</div></div></div></td>
+                    <td style="font-size:12px;">Edinburgh</td>
+                    <td style="font-size:12px;color:var(--adm-txt-muted);">Philosophy · Yr 2</td>
+                    <td><span style="font-size:12px;color:var(--adm-amber);font-weight:600;">Unmatched</span></td>
+                    <td style="font-weight:700;color:var(--adm-txt-head);">0</td>
+                    <td style="font-size:12px;font-weight:600;color:var(--adm-txt-head);">5</td>
+                    <td><div class="risk-bar"><div class="risk-bar-track"><div class="risk-bar-fill" style="width:40%;background:var(--adm-amber);"></div></div><span style="font-size:11px;color:var(--adm-amber);font-weight:700;">Low</span></div></td>
+                    <td><span class="badge badge-amber">Pending</span></td>
+                    <td><a href="admin-matching.html" class="row-link">Match →</a></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="pagination">
+              <span class="pagination-info">Showing 1–9 of 1,984 students</span>
+              <div class="pagination-btns">
+                <button class="page-btn" disabled>‹</button>
+                <button class="page-btn active">1</button>
+                <button class="page-btn">2</button>
+                <button class="page-btn">3</button>
+                <button class="page-btn">4</button>
+                <span style="padding:0 6px;color:var(--adm-txt-faint);font-size:13px;">…</span>
+                <button class="page-btn">133</button>
+                <button class="page-btn">›</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- CLIENTS panel -->
+          <div id="panel-clients" class="tab-panel">
+            <div class="filter-bar" style="border-top:1px solid var(--adm-border);padding:12px 20px;">
+              <span style="font-size:13px;font-weight:600;color:var(--adm-txt-head);">647 clients registered</span>
+              <span class="badge badge-green" style="margin-left:auto;">580 active</span>
+              <span class="badge badge-amber">42 inactive</span>
+              <span class="badge badge-blue">25 pending match</span>
+            </div>
+            <div class="data-table-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Client</th>
+                    <th>Referral source</th>
+                    <th>Ambassador</th>
+                    <th>Sessions</th>
+                    <th>Goals set</th>
+                    <th>Wellbeing</th>
+                    <th>Last active</th>
+                    <th>Status</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><div class="user-cell"><div class="user-ava amber">JM</div><div><div class="user-name">Jordan Mills</div><div class="user-sub">j.mills@ucl.ac.uk</div></div></div></td>
+                    <td style="font-size:12px;color:var(--adm-txt-muted);">GP referral</td>
+                    <td><div class="user-cell" style="gap:6px;"><div class="user-ava blue" style="width:24px;height:24px;font-size:10px;">KR</div><span style="font-size:12px;">Keiran R.</span></div></td>
+                    <td style="font-weight:700;color:var(--adm-txt-head);">5</td>
+                    <td style="font-size:12px;font-weight:600;color:var(--adm-txt-head);">3 / 5</td>
+                    <td><div class="risk-bar"><div class="risk-bar-track"><div class="risk-bar-fill" style="width:30%;background:var(--adm-amber);"></div></div><span style="font-size:11px;color:var(--adm-amber);font-weight:700;">Low</span></div></td>
+                    <td style="font-size:12px;color:var(--adm-txt-muted);">3 days ago</td>
+                    <td><span class="badge badge-amber">Flagged</span></td>
+                    <td><a href="#" class="row-link">View</a></td>
+                  </tr>
+                  <tr>
+                    <td><div class="user-cell"><div class="user-ava blue">NK</div><div><div class="user-name">Natasha Kwei</div><div class="user-sub">n.kwei@ucl.ac.uk</div></div></div></td>
+                    <td style="font-size:12px;color:var(--adm-txt-muted);">Self-referral</td>
+                    <td><span style="font-size:12px;color:var(--adm-amber);font-weight:600;">Unmatched</span></td>
+                    <td style="font-weight:700;color:var(--adm-txt-head);">0</td>
+                    <td style="font-size:12px;font-weight:600;color:var(--adm-txt-head);">0</td>
+                    <td><div class="risk-bar"><div class="risk-bar-track"><div class="risk-bar-fill" style="width:50%;background:var(--adm-blue);"></div></div><span style="font-size:11px;color:var(--adm-blue);font-weight:700;">Okay</span></div></td>
+                    <td style="font-size:12px;color:var(--adm-txt-muted);">2 days ago</td>
+                    <td><span class="badge badge-amber">Pending</span></td>
+                    <td><a href="admin-matching.html" class="row-link">Match →</a></td>
+                  </tr>
+                  <tr>
+                    <td><div class="user-cell"><div class="user-ava purple">LS</div><div><div class="user-name">Liam Sutton</div><div class="user-sub">l.sutton@manchester.ac.uk</div></div></div></td>
+                    <td style="font-size:12px;color:var(--adm-txt-muted);">University referral</td>
+                    <td><div class="user-cell" style="gap:6px;"><div class="user-ava green" style="width:24px;height:24px;font-size:10px;">MJ</div><span style="font-size:12px;">Maya J.</span></div></td>
+                    <td style="font-weight:700;color:var(--adm-txt-head);">4</td>
+                    <td style="font-size:12px;font-weight:600;color:var(--adm-txt-head);">2 / 4</td>
+                    <td><div class="risk-bar"><div class="risk-bar-track"><div class="risk-bar-fill" style="width:45%;background:var(--adm-amber);"></div></div><span style="font-size:11px;color:var(--adm-amber);font-weight:700;">Low</span></div></td>
+                    <td style="font-size:12px;color:var(--adm-txt-muted);">4 days ago</td>
+                    <td><span class="badge badge-amber">Inactive</span></td>
+                    <td><a href="#" class="row-link">View</a></td>
+                  </tr>
+                  <tr>
+                    <td><div class="user-cell"><div class="user-ava red">CM</div><div><div class="user-name">Chloe Marsh</div><div class="user-sub">c.marsh@leeds.ac.uk</div></div></div></td>
+                    <td style="font-size:12px;color:var(--adm-txt-muted);">GP referral</td>
+                    <td><div class="user-cell" style="gap:6px;"><div class="user-ava purple" style="width:24px;height:24px;font-size:10px;">DN</div><span style="font-size:12px;">Dev N.</span></div></td>
+                    <td style="font-weight:700;color:var(--adm-txt-head);">1</td>
+                    <td style="font-size:12px;font-weight:600;color:var(--adm-txt-head);">0 / 3</td>
+                    <td><div class="risk-bar"><div class="risk-bar-track"><div class="risk-bar-fill" style="width:20%;background:var(--adm-red);"></div></div><span style="font-size:11px;color:var(--adm-red);font-weight:700;">At risk</span></div></td>
+                    <td style="font-size:12px;color:var(--adm-txt-muted);">Today</td>
+                    <td><span class="badge badge-red">Flagged</span></td>
+                    <td><a href="admin-welfare.html" class="row-link" style="color:var(--adm-red);">Urgent</a></td>
+                  </tr>
+                  <tr>
+                    <td><div class="user-cell"><div class="user-ava amber">EW</div><div><div class="user-name">Eva Williams</div><div class="user-sub">e.williams@kcl.ac.uk</div></div></div></td>
+                    <td style="font-size:12px;color:var(--adm-txt-muted);">Self-referral</td>
+                    <td><div class="user-cell" style="gap:6px;"><div class="user-ava amber" style="width:24px;height:24px;font-size:10px;">LN</div><span style="font-size:12px;">Layla N.</span></div></td>
+                    <td style="font-weight:700;color:var(--adm-txt-head);">9</td>
+                    <td style="font-size:12px;font-weight:600;color:var(--adm-txt-head);">5 / 6</td>
+                    <td><div class="risk-bar"><div class="risk-bar-track"><div class="risk-bar-fill" style="width:55%;background:var(--adm-blue);"></div></div><span style="font-size:11px;color:var(--adm-blue);font-weight:700;">Okay</span></div></td>
+                    <td style="font-size:12px;color:var(--adm-txt-muted);">3 days ago</td>
+                    <td><span class="badge badge-green">Active</span></td>
+                    <td><a href="#" class="row-link">View</a></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="pagination">
+              <span class="pagination-info">Showing 1–5 of 647 clients</span>
+              <div class="pagination-btns">
+                <button class="page-btn" disabled>‹</button>
+                <button class="page-btn active">1</button>
+                <button class="page-btn">2</button>
+                <button class="page-btn">3</button>
+                <span style="padding:0 6px;color:var(--adm-txt-faint);font-size:13px;">…</span>
+                <button class="page-btn">44</button>
+                <button class="page-btn">›</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- PROFESSIONALS panel -->
+          <div id="panel-pros" class="tab-panel">
+            <div class="filter-bar" style="border-top:1px solid var(--adm-border);padding:12px 20px;">
+              <span style="font-size:13px;font-weight:600;color:var(--adm-txt-head);">210 professionals registered</span>
+              <span class="badge badge-green" style="margin-left:auto;">198 active</span>
+              <span class="badge badge-slate">12 inactive</span>
+            </div>
+            <div class="data-table-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Professional</th>
+                    <th>Organisation</th>
+                    <th>Role</th>
+                    <th>Ambassador</th>
+                    <th>Sessions</th>
+                    <th>Wellbeing</th>
+                    <th>Last active</th>
+                    <th>Status</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><div class="user-cell"><div class="user-ava purple">PT</div><div><div class="user-name">Priya Thakur</div><div class="user-sub">p.thakur@nhs.uk</div></div></div></td>
+                    <td style="font-size:12px;color:var(--adm-txt-muted);">NHS Trust Leeds</td>
+                    <td style="font-size:12px;color:var(--adm-txt-muted);">Junior Doctor</td>
+                    <td><span style="font-size:12px;color:var(--adm-txt-muted);">Self-refer</span></td>
+                    <td style="font-weight:700;color:var(--adm-txt-head);">3</td>
+                    <td><div class="risk-bar"><div class="risk-bar-track"><div class="risk-bar-fill" style="width:85%;background:var(--adm-green);"></div></div><span style="font-size:11px;color:var(--adm-green);font-weight:700;">Good</span></div></td>
+                    <td style="font-size:12px;color:var(--adm-txt-muted);">Today</td>
+                    <td><span class="badge badge-green">Active</span></td>
+                    <td><a href="#" class="row-link">View</a></td>
+                  </tr>
+                  <tr>
+                    <td><div class="user-cell"><div class="user-ava teal">MW</div><div><div class="user-name">Marcus Webb</div><div class="user-sub">m.webb@company.com</div></div></div></td>
+                    <td style="font-size:12px;color:var(--adm-txt-muted);">Tech Corp Ltd</td>
+                    <td style="font-size:12px;color:var(--adm-txt-muted);">Software Engineer</td>
+                    <td><div class="user-cell" style="gap:6px;"><div class="user-ava blue" style="width:24px;height:24px;font-size:10px;">KR</div><span style="font-size:12px;">Keiran R.</span></div></td>
+                    <td style="font-weight:700;color:var(--adm-txt-head);">8</td>
+                    <td><div class="risk-bar"><div class="risk-bar-track"><div class="risk-bar-fill" style="width:70%;background:var(--adm-blue);"></div></div><span style="font-size:11px;color:var(--adm-blue);font-weight:700;">Steady</span></div></td>
+                    <td style="font-size:12px;color:var(--adm-txt-muted);">Yesterday</td>
+                    <td><span class="badge badge-green">Active</span></td>
+                    <td><a href="#" class="row-link">View</a></td>
+                  </tr>
+                  <tr>
+                    <td><div class="user-cell"><div class="user-ava blue">RP</div><div><div class="user-name">Ravi Patel</div><div class="user-sub">r.patel@nhs.uk</div></div></div></td>
+                    <td style="font-size:12px;color:var(--adm-txt-muted);">NHS Birmingham</td>
+                    <td style="font-size:12px;color:var(--adm-txt-muted);">Nurse Practitioner</td>
+                    <td><span style="font-size:12px;color:var(--adm-txt-faint);">Self-refer</span></td>
+                    <td style="font-weight:700;color:var(--adm-txt-head);">2</td>
+                    <td><div class="risk-bar"><div class="risk-bar-track"><div class="risk-bar-fill" style="width:70%;background:var(--adm-blue);"></div></div><span style="font-size:11px;color:var(--adm-blue);font-weight:700;">Steady</span></div></td>
+                    <td style="font-size:12px;color:var(--adm-txt-muted);">2 days ago</td>
+                    <td><span class="badge badge-green">Active</span></td>
+                    <td><a href="#" class="row-link">View</a></td>
+                  </tr>
+                  <tr>
+                    <td><div class="user-cell"><div class="user-ava green">AD</div><div><div class="user-name">Amelia Drake</div><div class="user-sub">a.drake@lawfirm.co.uk</div></div></div></td>
+                    <td style="font-size:12px;color:var(--adm-txt-muted);">Drake &amp; Co Solicitors</td>
+                    <td style="font-size:12px;color:var(--adm-txt-muted);">Solicitor</td>
+                    <td><div class="user-cell" style="gap:6px;"><div class="user-ava green" style="width:24px;height:24px;font-size:10px;">MJ</div><span style="font-size:12px;">Maya J.</span></div></td>
+                    <td style="font-weight:700;color:var(--adm-txt-head);">6</td>
+                    <td><div class="risk-bar"><div class="risk-bar-track"><div class="risk-bar-fill" style="width:88%;background:var(--adm-green);"></div></div><span style="font-size:11px;color:var(--adm-green);font-weight:700;">Great</span></div></td>
+                    <td style="font-size:12px;color:var(--adm-txt-muted);">Today</td>
+                    <td><span class="badge badge-green">Active</span></td>
+                    <td><a href="#" class="row-link">View</a></td>
+                  </tr>
+                  <tr>
+                    <td><div class="user-cell"><div class="user-ava amber">JC</div><div><div class="user-name">James Calloway</div><div class="user-sub">j.calloway@startup.io</div></div></div></td>
+                    <td style="font-size:12px;color:var(--adm-txt-muted);">Startup.io</td>
+                    <td style="font-size:12px;color:var(--adm-txt-muted);">Founder / CEO</td>
+                    <td><div class="user-cell" style="gap:6px;"><div class="user-ava blue" style="width:24px;height:24px;font-size:10px;">KR</div><span style="font-size:12px;">Keiran R.</span></div></td>
+                    <td style="font-weight:700;color:var(--adm-txt-head);">11</td>
+                    <td><div class="risk-bar"><div class="risk-bar-track"><div class="risk-bar-fill" style="width:60%;background:var(--adm-blue);"></div></div><span style="font-size:11px;color:var(--adm-blue);font-weight:700;">Steady</span></div></td>
+                    <td style="font-size:12px;color:var(--adm-txt-muted);">Yesterday</td>
+                    <td><span class="badge badge-green">Active</span></td>
+                    <td><a href="#" class="row-link">View</a></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="pagination">
+              <span class="pagination-info">Showing 1–5 of 210 professionals</span>
+              <div class="pagination-btns">
+                <button class="page-btn" disabled>‹</button>
+                <button class="page-btn active">1</button>
+                <button class="page-btn">2</button>
+                <button class="page-btn">3</button>
+                <span style="padding:0 6px;color:var(--adm-txt-faint);font-size:13px;">…</span>
+                <button class="page-btn">14</button>
+                <button class="page-btn">›</button>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /tab-panels -->
+      </div><!-- /card -->
+
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

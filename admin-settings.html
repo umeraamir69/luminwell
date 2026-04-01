@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Settings — Luminwell Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="admin.css">
+<style>
+  html:has(#st-general:checked)  #st-panel-general  { display: block; }
+  html:has(#st-matching:checked) #st-panel-matching { display: block; }
+  html:has(#st-notifs:checked)   #st-panel-notifs   { display: block; }
+  html:has(#st-welfare:checked)  #st-panel-welfare  { display: block; }
+  html:has(#st-privacy:checked)  #st-panel-privacy  { display: block; }
+  html:has(#st-roles:checked)    #st-panel-roles    { display: block; }
+
+  html:has(#st-general:checked)  label[for="st-general"],
+  html:has(#st-matching:checked) label[for="st-matching"],
+  html:has(#st-notifs:checked)   label[for="st-notifs"],
+  html:has(#st-welfare:checked)  label[for="st-welfare"],
+  html:has(#st-privacy:checked)  label[for="st-privacy"],
+  html:has(#st-roles:checked)    label[for="st-roles"] {
+    color: var(--adm-blue); border-bottom-color: var(--adm-blue);
+  }
+
+  .settings-section { margin-bottom: 28px; }
+  .settings-section h3 {
+    font-size: 13px; font-weight: 800; color: var(--adm-txt-head);
+    text-transform: uppercase; letter-spacing: .5px;
+    margin-bottom: 14px; padding-bottom: 8px;
+    border-bottom: 2px solid var(--adm-border);
+  }
+  .settings-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .settings-danger { background: var(--adm-red-lt); border: 1px solid rgba(239,68,68,.2); border-radius: var(--adm-r-md); padding: 20px; margin-top: 28px; }
+  .settings-danger h3 { color: var(--adm-red); border-bottom-color: rgba(239,68,68,.2); }
+  .role-card { border: 1px solid var(--adm-border); border-radius: var(--adm-r-md); padding: 16px; background: var(--adm-surface); }
+  .role-card-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+  .role-card h4 { font-size:14px; font-weight:700; color:var(--adm-txt-head); }
+  .role-card p { font-size:12px; color:var(--adm-txt-muted); margin-bottom:10px; }
+  .perm-list { display: flex; flex-wrap: wrap; gap: 6px; }
+  .perm-tag { font-size:11px; font-weight:600; background:var(--adm-bg); color:var(--adm-txt-muted); padding:3px 9px; border-radius:20px; border:1px solid var(--adm-border); }
+</style>
+</head>
+<body>
+
+<input type="checkbox" id="sidebar-toggle" class="sidebar-toggle-check">
+<input type="radio" name="st-tabs" id="st-general"  class="tab-check" checked>
+<input type="radio" name="st-tabs" id="st-matching" class="tab-check">
+<input type="radio" name="st-tabs" id="st-notifs"   class="tab-check">
+<input type="radio" name="st-tabs" id="st-welfare"  class="tab-check">
+<input type="radio" name="st-tabs" id="st-privacy"  class="tab-check">
+<input type="radio" name="st-tabs" id="st-roles"    class="tab-check">
+
+<div class="admin-shell">
+
+  <aside class="admin-sidebar">
+    <div class="sidebar__logo"><div class="logo-mark"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17 8C8 10 5.9 16.17 3.82 22A13.34 13.34 0 0 0 18 8Z"/><path d="M9 9c-1.5 3.5-2.5 7-3 10C8 18 11 15 13 12" fill="rgba(255,255,255,.35)"/></svg></div><div class="logo-text-wrap"><div class="logo-name">Luminwell</div><span class="logo-badge-pill">ADMIN</span></div></div>
+    <label for="sidebar-toggle" class="sidebar__collapse-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></label>
+    <nav class="sidebar__nav">
+      <div class="nav-section">
+        <p class="nav-label">MAIN</p>
+        <a href="admin-home.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span class="link-text">Overview</span></a>
+        <a href="admin-analytics.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg><span class="link-text">Analytics</span></a>
+      </div>
+      <div class="nav-section">
+        <p class="nav-label">PEOPLE</p>
+        <a href="admin-users.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span class="link-text">Users</span></a>
+        <a href="admin-ambassadors.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><span class="link-text">Ambassadors</span></a>
+        <a href="admin-matching.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg><span class="link-text">Matching</span></a>
+      </div>
+      <div class="nav-section">
+        <p class="nav-label">OPERATIONS</p>
+        <a href="admin-sessions.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><span class="link-text">Sessions</span></a>
+        <a href="admin-welfare.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span class="link-text">Welfare &amp; Safety</span><span class="nav-badge nav-badge--red">5</span></a>
+        <a href="admin-messages.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span class="link-text">Messages</span></a>
+      </div>
+      <div class="nav-section">
+        <p class="nav-label">PLATFORM</p>
+        <a href="admin-content.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span class="link-text">Content</span></a>
+        <a href="admin-settings.html" class="sidebar__link active"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06-.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span class="link-text">Settings</span></a>
+        <a href="admin-privacy.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><span class="link-text">Privacy &amp; GDPR</span></a>
+      </div>
+    </nav>
+    <div class="sidebar__foot">
+      <div class="sidebar__foot-user"><div class="admin-ava-sm">A</div><div class="sidebar__foot-info"><p>Admin User</p><small>Super Admin</small></div></div>
+      <button class="sidebar__signout">Sign out</button>
+    </div>
+  </aside>
+
+  <div class="admin-main">
+    <header class="admin-topbar">
+      <div class="topbar-left">
+        <label for="sidebar-toggle" class="topbar-menu-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></label>
+        <nav class="breadcrumb">
+          <a href="admin-home.html">Admin</a>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+          <span class="bc-active">Settings</span>
+        </nav>
+      </div>
+      <div class="topbar-right">
+        <div class="notif-wrap">
+          <input type="checkbox" id="notif-toggle" class="notif-check">
+          <label for="notif-toggle" class="topbar-icon-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><span class="notif-dot"></span></label>
+          <div class="notif-drop"><div class="notif-drop-head"><h4>Notifications</h4><a href="#">Mark all read</a></div><div class="notif-item unread"><div class="notif-ico red"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div><div class="notif-body"><p><strong>Critical welfare flag</strong></p><small>2 min ago</small></div></div><div class="notif-drop-foot"><a href="admin-welfare.html">View all →</a></div></div>
+        </div>
+        <div class="topbar-user"><div class="topbar-ava">A</div><div class="topbar-user-info"><div class="u-name">Admin</div><div class="u-role">Super Admin</div></div></div>
+      </div>
+    </header>
+
+    <div class="admin-content">
+
+      <div class="page-hero">
+        <div class="page-hero-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div>
+        <div class="page-hero-text">
+          <h1>Platform Settings</h1>
+          <p>Configure matching, sessions, notifications, welfare &amp; access controls</p>
+        </div>
+        <div class="page-hero-actions"><button class="btn btn-white">Discard changes</button><button class="btn btn-primary" style="background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);">Save all changes</button></div>
+      </div>
+
+
+      <div class="grid-3-1">
+
+        <!-- Settings tabs + panels -->
+        <div class="card">
+          <div class="tabs-row" style="flex-wrap:wrap;">
+            <label for="st-general"  class="tab-lbl">General</label>
+            <label for="st-matching" class="tab-lbl">Matching</label>
+            <label for="st-notifs"   class="tab-lbl">Notifications</label>
+            <label for="st-welfare"  class="tab-lbl">Welfare</label>
+            <label for="st-privacy"  class="tab-lbl">Privacy</label>
+            <label for="st-roles"    class="tab-lbl">Roles &amp; Access</label>
+          </div>
+
+          <div class="st-panels">
+
+            <!-- General -->
+            <div id="st-panel-general" class="tab-panel">
+              <div style="padding:24px;">
+
+                <div class="settings-section">
+                  <h3>Platform Identity</h3>
+                  <div class="settings-form-grid">
+                    <div class="form-group"><label class="form-label">Platform name</label><input class="form-input" value="Luminwell" type="text"></div>
+                    <div class="form-group"><label class="form-label">Support email</label><input class="form-input" value="support@luminwell.co.uk" type="email"></div>
+                    <div class="form-group"><label class="form-label">Default language</label><select class="form-select"><option>English (UK)</option><option>English (US)</option></select></div>
+                    <div class="form-group"><label class="form-label">Academic year start</label><input class="form-input" type="date" value="2025-09-15"></div>
+                  </div>
+                </div>
+
+                <div class="settings-section">
+                  <h3>Session Configuration</h3>
+                  <div class="settings-form-grid">
+                    <div class="form-group"><label class="form-label">Default session duration (minutes)</label><input class="form-input" type="number" value="50"></div>
+                    <div class="form-group"><label class="form-label">Max sessions per user per month</label><input class="form-input" type="number" value="8"></div>
+                    <div class="form-group"><label class="form-label">Session types enabled</label>
+                      <div style="display:flex;flex-direction:column;gap:8px;margin-top:4px;">
+                        <label style="display:flex;align-items:center;gap:8px;font-size:13px;"><input type="checkbox" checked> Video sessions</label>
+                        <label style="display:flex;align-items:center;gap:8px;font-size:13px;"><input type="checkbox" checked> Audio-only sessions</label>
+                        <label style="display:flex;align-items:center;gap:8px;font-size:13px;"><input type="checkbox" checked> Text / chat sessions</label>
+                      </div>
+                    </div>
+                    <div class="form-group"><label class="form-label">Session booking lead time (hours)</label><input class="form-input" type="number" value="24"></div>
+                  </div>
+                </div>
+
+                <div class="settings-section">
+                  <h3>Feature Flags</h3>
+                  <div style="display:flex;flex-direction:column;">
+                    <div class="toggle-row"><div class="toggle-info"><p>AI-assisted note generation</p><small>Enables AI tools in ambassador note editor</small></div><div><input type="checkbox" id="feat-ai" class="toggle-check" checked><label for="feat-ai" class="toggle-track"></label></div></div>
+                    <div class="toggle-row"><div class="toggle-info"><p>Mood journalling</p><small>User daily mood check-in and journal</small></div><div><input type="checkbox" id="feat-journal" class="toggle-check" checked><label for="feat-journal" class="toggle-track"></label></div></div>
+                    <div class="toggle-row"><div class="toggle-info"><p>AI journal mood detection</p><small>Automatic welfare flag based on journal language</small></div><div><input type="checkbox" id="feat-aijournal" class="toggle-check" checked><label for="feat-aijournal" class="toggle-track"></label></div></div>
+                    <div class="toggle-row"><div class="toggle-info"><p>Peer matching algorithm</p><small>Automatic matching of users to ambassadors</small></div><div><input type="checkbox" id="feat-match" class="toggle-check" checked><label for="feat-match" class="toggle-track"></label></div></div>
+                    <div class="toggle-row"><div class="toggle-info"><p>Group sessions (beta)</p><small>Allow ambassadors to host group sessions</small></div><div><input type="checkbox" id="feat-group" class="toggle-check"><label for="feat-group" class="toggle-track"></label></div></div>
+                  </div>
+                </div>
+
+                <div class="settings-danger">
+                  <h3>Danger Zone</h3>
+                  <div style="display:flex;flex-direction:column;gap:12px;">
+                    <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px;background:rgba(239,68,68,.05);border-radius:var(--adm-r-sm);">
+                      <div><p style="font-size:13px;font-weight:700;color:var(--adm-txt-head);">Clear all user data (test mode only)</p><p style="font-size:12px;color:var(--adm-txt-muted);">Permanently wipes all test accounts and data. Cannot be undone.</p></div>
+                      <button class="btn btn-danger btn-sm" style="flex-shrink:0;">Clear test data</button>
+                    </div>
+                    <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px;background:rgba(239,68,68,.05);border-radius:var(--adm-r-sm);">
+                      <div><p style="font-size:13px;font-weight:700;color:var(--adm-txt-head);">Put platform into maintenance mode</p><p style="font-size:12px;color:var(--adm-txt-muted);">Users will see a maintenance page. Admin access preserved.</p></div>
+                      <button class="btn btn-danger btn-sm" style="flex-shrink:0;">Enable maintenance</button>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- Matching -->
+            <div id="st-panel-matching" class="tab-panel">
+              <div style="padding:24px;">
+                <div class="settings-section">
+                  <h3>Matching Algorithm</h3>
+                  <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px;">
+                    <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:var(--adm-bg);border-radius:var(--adm-r-sm);"><span style="font-size:13px;font-weight:600;">Specialism alignment</span><div style="display:flex;align-items:center;gap:10px;"><input type="range" min="0" max="100" value="40" style="width:100px;"><span style="font-size:12px;font-weight:700;min-width:30px;">40%</span></div></div>
+                    <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:var(--adm-bg);border-radius:var(--adm-r-sm);"><span style="font-size:13px;font-weight:600;">University proximity</span><div style="display:flex;align-items:center;gap:10px;"><input type="range" min="0" max="100" value="25" style="width:100px;"><span style="font-size:12px;font-weight:700;min-width:30px;">25%</span></div></div>
+                    <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:var(--adm-bg);border-radius:var(--adm-r-sm);"><span style="font-size:13px;font-weight:600;">Availability overlap</span><div style="display:flex;align-items:center;gap:10px;"><input type="range" min="0" max="100" value="25" style="width:100px;"><span style="font-size:12px;font-weight:700;min-width:30px;">25%</span></div></div>
+                    <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:var(--adm-bg);border-radius:var(--adm-r-sm);"><span style="font-size:13px;font-weight:600;">Ambassador load balancing</span><div style="display:flex;align-items:center;gap:10px;"><input type="range" min="0" max="100" value="10" style="width:100px;"><span style="font-size:12px;font-weight:700;min-width:30px;">10%</span></div></div>
+                  </div>
+                  <p style="font-size:12px;color:var(--adm-txt-muted);">Weights must total 100%. Current total: 100%.</p>
+                </div>
+                <div class="settings-section">
+                  <h3>Match Rules</h3>
+                  <div class="settings-form-grid">
+                    <div class="form-group"><label class="form-label">Max clients per ambassador</label><input class="form-input" type="number" value="10"></div>
+                    <div class="form-group"><label class="form-label">Max wait time before manual review (days)</label><input class="form-input" type="number" value="3"></div>
+                  </div>
+                  <div style="display:flex;flex-direction:column;">
+                    <div class="toggle-row"><div class="toggle-info"><p>Allow users to request re-match</p><small>Users can request a new ambassador after 3 sessions</small></div><div><input type="checkbox" id="m-rematch" class="toggle-check" checked><label for="m-rematch" class="toggle-track"></label></div></div>
+                    <div class="toggle-row"><div class="toggle-info"><p>Admin override required for all matches</p><small>All matches need admin approval before activation</small></div><div><input type="checkbox" id="m-override" class="toggle-check"><label for="m-override" class="toggle-track"></label></div></div>
+                  </div>
+                </div>
+                <div style="text-align:right;"><button class="btn btn-primary">Save matching settings</button></div>
+              </div>
+            </div>
+
+            <!-- Notifications -->
+            <div id="st-panel-notifs" class="tab-panel">
+              <div style="padding:24px;">
+                <div class="settings-section">
+                  <h3>Automated Notification Rules</h3>
+                  <div style="display:flex;flex-direction:column;">
+                    <div class="toggle-row"><div class="toggle-info"><p>Notify user when matched to ambassador</p><small>Email + in-app</small></div><div><input type="checkbox" id="n1" class="toggle-check" checked><label for="n1" class="toggle-track"></label></div></div>
+                    <div class="toggle-row"><div class="toggle-info"><p>Session reminder (24h before)</p><small>Email + push</small></div><div><input type="checkbox" id="n2" class="toggle-check" checked><label for="n2" class="toggle-track"></label></div></div>
+                    <div class="toggle-row"><div class="toggle-info"><p>Session reminder (1h before)</p><small>Push notification only</small></div><div><input type="checkbox" id="n3" class="toggle-check" checked><label for="n3" class="toggle-track"></label></div></div>
+                    <div class="toggle-row"><div class="toggle-info"><p>Welfare flag alert to admin</p><small>Email + in-app · immediate</small></div><div><input type="checkbox" id="n4" class="toggle-check" checked><label for="n4" class="toggle-track"></label></div></div>
+                    <div class="toggle-row"><div class="toggle-info"><p>Missed session alert (to ambassador)</p><small>In-app · 15 minutes after no-show</small></div><div><input type="checkbox" id="n5" class="toggle-check" checked><label for="n5" class="toggle-track"></label></div></div>
+                    <div class="toggle-row"><div class="toggle-info"><p>Weekly engagement digest to admin</p><small>Email · every Monday</small></div><div><input type="checkbox" id="n6" class="toggle-check" checked><label for="n6" class="toggle-track"></label></div></div>
+                    <div class="toggle-row"><div class="toggle-info"><p>Ambassador application submitted</p><small>Email to admin · immediate</small></div><div><input type="checkbox" id="n7" class="toggle-check" checked><label for="n7" class="toggle-track"></label></div></div>
+                    <div class="toggle-row"><div class="toggle-info"><p>Journal mood dip detected</p><small>In-app alert to ambassador · next working day</small></div><div><input type="checkbox" id="n8" class="toggle-check" checked><label for="n8" class="toggle-track"></label></div></div>
+                  </div>
+                </div>
+                <div style="text-align:right;"><button class="btn btn-primary">Save notification settings</button></div>
+              </div>
+            </div>
+
+            <!-- Welfare -->
+            <div id="st-panel-welfare" class="tab-panel">
+              <div style="padding:24px;">
+                <div class="settings-section">
+                  <h3>Welfare Escalation Rules</h3>
+                  <div class="settings-form-grid">
+                    <div class="form-group"><label class="form-label">Critical flag response SLA (minutes)</label><input class="form-input" type="number" value="60"></div>
+                    <div class="form-group"><label class="form-label">High flag response SLA (hours)</label><input class="form-input" type="number" value="24"></div>
+                    <div class="form-group"><label class="form-label">Missed sessions before auto-flag</label><input class="form-input" type="number" value="3"></div>
+                    <div class="form-group"><label class="form-label">Journal low-mood streak before flag (days)</label><input class="form-input" type="number" value="5"></div>
+                  </div>
+                </div>
+                <div class="settings-section">
+                  <h3>Welfare Toggles</h3>
+                  <div style="display:flex;flex-direction:column;">
+                    <div class="toggle-row"><div class="toggle-info"><p>AI journal welfare detection</p><small>Auto-flag based on natural language processing</small></div><div><input type="checkbox" id="w1" class="toggle-check" checked><label for="w1" class="toggle-track"></label></div></div>
+                    <div class="toggle-row"><div class="toggle-info"><p>Ambassador welfare reporting</p><small>Ambassadors can log welfare concerns from sessions</small></div><div><input type="checkbox" id="w2" class="toggle-check" checked><label for="w2" class="toggle-track"></label></div></div>
+                    <div class="toggle-row"><div class="toggle-info"><p>Mandatory follow-up after critical flag</p><small>24h follow-up check required before flag can be closed</small></div><div><input type="checkbox" id="w3" class="toggle-check" checked><label for="w3" class="toggle-track"></label></div></div>
+                    <div class="toggle-row"><div class="toggle-info"><p>Auto-suspend session access on critical flag</p><small>Temporarily pauses new session booking for flagged user</small></div><div><input type="checkbox" id="w4" class="toggle-check"><label for="w4" class="toggle-track"></label></div></div>
+                  </div>
+                </div>
+                <div style="text-align:right;"><button class="btn btn-primary">Save welfare settings</button></div>
+              </div>
+            </div>
+
+            <!-- Privacy -->
+            <div id="st-panel-privacy" class="tab-panel">
+              <div style="padding:24px;">
+                <div class="settings-section">
+                  <h3>Data Retention</h3>
+                  <div class="settings-form-grid">
+                    <div class="form-group"><label class="form-label">User data retention (years)</label><input class="form-input" type="number" value="3"></div>
+                    <div class="form-group"><label class="form-label">Session notes retention (years)</label><input class="form-input" type="number" value="7"></div>
+                    <div class="form-group"><label class="form-label">Journal entry retention (years)</label><input class="form-input" type="number" value="3"></div>
+                    <div class="form-group"><label class="form-label">Welfare log retention (years)</label><input class="form-input" type="number" value="7"></div>
+                  </div>
+                </div>
+                <div class="settings-section">
+                  <h3>Consent &amp; GDPR</h3>
+                  <div style="display:flex;flex-direction:column;">
+                    <div class="toggle-row"><div class="toggle-info"><p>Require explicit consent on registration</p><small>GDPR compliant opt-in for data processing</small></div><div><input type="checkbox" id="p1" class="toggle-check" checked><label for="p1" class="toggle-track"></label></div></div>
+                    <div class="toggle-row"><div class="toggle-info"><p>Allow users to export their data</p><small>GDPR Article 20 — right to data portability</small></div><div><input type="checkbox" id="p2" class="toggle-check" checked><label for="p2" class="toggle-track"></label></div></div>
+                    <div class="toggle-row"><div class="toggle-info"><p>Allow users to request account deletion</p><small>GDPR Article 17 — right to erasure</small></div><div><input type="checkbox" id="p3" class="toggle-check" checked><label for="p3" class="toggle-track"></label></div></div>
+                    <div class="toggle-row"><div class="toggle-info"><p>AI data processing disclosure shown to users</p><small>Shown where AI note generation is used</small></div><div><input type="checkbox" id="p4" class="toggle-check" checked><label for="p4" class="toggle-track"></label></div></div>
+                  </div>
+                </div>
+                <div style="text-align:right;"><button class="btn btn-primary">Save privacy settings</button></div>
+              </div>
+            </div>
+
+            <!-- Roles & Access -->
+            <div id="st-panel-roles" class="tab-panel">
+              <div style="padding:24px;">
+                <div class="settings-section">
+                  <h3>Platform Roles</h3>
+                  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+
+                    <div class="role-card">
+                      <div class="role-card-head"><h4>Super Admin</h4><span class="badge badge-red">Full access</span></div>
+                      <p>Complete platform control including settings, data access, and role management.</p>
+                      <div class="perm-list"><span class="perm-tag">All users</span><span class="perm-tag">All data</span><span class="perm-tag">Settings</span><span class="perm-tag">GDPR tools</span><span class="perm-tag">Delete accounts</span></div>
+                    </div>
+
+                    <div class="role-card">
+                      <div class="role-card-head"><h4>Admin</h4><span class="badge badge-blue">Standard</span></div>
+                      <p>Manage users, ambassadors, welfare flags and sessions. Cannot modify settings.</p>
+                      <div class="perm-list"><span class="perm-tag">Users</span><span class="perm-tag">Ambassadors</span><span class="perm-tag">Welfare</span><span class="perm-tag">Sessions</span><span class="perm-tag">Analytics</span></div>
+                    </div>
+
+                    <div class="role-card">
+                      <div class="role-card-head"><h4>Welfare Officer</h4><span class="badge badge-amber">Restricted</span></div>
+                      <p>View and action welfare flags only. No access to unrelated user data.</p>
+                      <div class="perm-list"><span class="perm-tag">Welfare flags</span><span class="perm-tag">Session notes</span><span class="perm-tag">Crisis contacts</span></div>
+                    </div>
+
+                    <div class="role-card">
+                      <div class="role-card-head"><h4>Read-only</h4><span class="badge badge-slate">View only</span></div>
+                      <p>Analytics and reporting access for stakeholders. Cannot action or modify anything.</p>
+                      <div class="perm-list"><span class="perm-tag">Analytics</span><span class="perm-tag">Reports</span><span class="perm-tag">Aggregate data</span></div>
+                    </div>
+
+                  </div>
+                </div>
+                <div style="text-align:right;margin-top:8px;"><button class="btn btn-primary">+ Invite admin user</button></div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Right: Quick info -->
+        <div style="display:flex;flex-direction:column;gap:16px;">
+          <div class="card">
+            <div class="card-head"><div class="card-title">Current Config</div></div>
+            <div class="card-body" style="padding:12px 16px;">
+              <div class="info-row"><span class="info-key">Platform version</span><span class="info-value">v2.4.1</span></div>
+              <div class="info-row"><span class="info-key">Last updated</span><span class="info-value">28 Mar 2026</span></div>
+              <div class="info-row"><span class="info-key">Session types</span><span class="info-value">Video, Audio, Text</span></div>
+              <div class="info-row"><span class="info-key">AI features</span><span class="info-value" style="color:var(--adm-green);">Enabled</span></div>
+              <div class="info-row"><span class="info-key">GDPR mode</span><span class="info-value" style="color:var(--adm-green);">Compliant</span></div>
+              <div class="info-row"><span class="info-key">Maintenance mode</span><span class="info-value" style="color:var(--adm-green);">Off</span></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-head"><div class="card-title">Admin Team</div></div>
+            <div style="padding:12px 16px;display:flex;flex-direction:column;gap:8px;">
+              <div class="user-cell"><div class="user-ava blue">AK</div><div><div class="user-name">Admin Kumar</div><div class="user-sub">Super Admin</div></div></div>
+              <div class="user-cell"><div class="user-ava green">SP</div><div><div class="user-name">Sarah Price</div><div class="user-sub">Admin · Welfare lead</div></div></div>
+              <div class="user-cell"><div class="user-ava amber">MH</div><div><div class="user-name">Marcus Hughes</div><div class="user-sub">Read-only · Stakeholder</div></div></div>
+              <button class="btn btn-secondary btn-sm" style="margin-top:4px;">+ Invite admin</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Analytics — Luminwell Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="admin.css">
+<style>
+  .donut-ring {
+    width: 120px; height: 120px;
+    border-radius: 50%;
+    background: conic-gradient(
+      var(--adm-blue)   0% 70%,
+      var(--adm-teal)   70% 93%,
+      var(--adm-purple) 93% 100%
+    );
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+  }
+  .donut-ring::before {
+    content: ''; position: absolute;
+    width: 72px; height: 72px;
+    background: var(--adm-surface); border-radius: 50%;
+  }
+  .donut-center { position: relative; z-index: 1; text-align: center; }
+  .donut-center strong { display: block; font-size: 20px; font-weight: 800; color: var(--adm-txt-head); }
+  .donut-center span  { font-size: 10px; color: var(--adm-txt-muted); font-weight: 600; }
+
+  .legend-item { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .legend-dot  { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .legend-item p { font-size: 12px; color: var(--adm-txt-body); flex: 1; }
+  .legend-item span { font-size: 12px; font-weight: 700; color: var(--adm-txt-head); }
+</style>
+</head>
+<body>
+
+<input type="checkbox" id="sidebar-toggle" class="sidebar-toggle-check">
+
+<div class="admin-shell">
+
+  <aside class="admin-sidebar">
+    <div class="sidebar__logo"><div class="logo-mark"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17 8C8 10 5.9 16.17 3.82 22A13.34 13.34 0 0 0 18 8Z"/><path d="M9 9c-1.5 3.5-2.5 7-3 10C8 18 11 15 13 12" fill="rgba(255,255,255,.35)"/></svg></div><div class="logo-text-wrap"><div class="logo-name">Luminwell</div><span class="logo-badge-pill">ADMIN</span></div></div>
+    <label for="sidebar-toggle" class="sidebar__collapse-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></label>
+    <nav class="sidebar__nav">
+      <div class="nav-section">
+        <p class="nav-label">MAIN</p>
+        <a href="admin-home.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span class="link-text">Overview</span></a>
+        <a href="admin-analytics.html" class="sidebar__link active"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg><span class="link-text">Analytics</span></a>
+      </div>
+      <div class="nav-section">
+        <p class="nav-label">PEOPLE</p>
+        <a href="admin-users.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span class="link-text">Users</span></a>
+        <a href="admin-ambassadors.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><span class="link-text">Ambassadors</span></a>
+        <a href="admin-matching.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg><span class="link-text">Matching</span></a>
+      </div>
+      <div class="nav-section">
+        <p class="nav-label">OPERATIONS</p>
+        <a href="admin-sessions.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><span class="link-text">Sessions</span></a>
+        <a href="admin-welfare.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span class="link-text">Welfare &amp; Safety</span><span class="nav-badge nav-badge--red">5</span></a>
+        <a href="admin-messages.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span class="link-text">Messages</span></a>
+      </div>
+      <div class="nav-section">
+        <p class="nav-label">PLATFORM</p>
+        <a href="admin-content.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span class="link-text">Content</span></a>
+        <a href="admin-settings.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06-.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span class="link-text">Settings</span></a>
+        <a href="admin-privacy.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><span class="link-text">Privacy &amp; GDPR</span></a>
+      </div>
+    </nav>
+    <div class="sidebar__foot">
+      <div class="sidebar__foot-user"><div class="admin-ava-sm">A</div><div class="sidebar__foot-info"><p>Admin User</p><small>Super Admin</small></div></div>
+      <button class="sidebar__signout">Sign out</button>
+    </div>
+  </aside>
+
+  <div class="admin-main">
+    <header class="admin-topbar">
+      <div class="topbar-left">
+        <label for="sidebar-toggle" class="topbar-menu-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></label>
+        <nav class="breadcrumb">
+          <a href="admin-home.html">Admin</a>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+          <span class="bc-active">Analytics</span>
+        </nav>
+      </div>
+      <div class="topbar-right">
+        <div class="notif-wrap">
+          <input type="checkbox" id="notif-toggle" class="notif-check">
+          <label for="notif-toggle" class="topbar-icon-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><span class="notif-dot"></span></label>
+          <div class="notif-drop"><div class="notif-drop-head"><h4>Notifications</h4><a href="#">Mark all read</a></div><div class="notif-item unread"><div class="notif-ico red"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div><div class="notif-body"><p><strong>Critical welfare flag</strong></p><small>2 min ago</small></div></div><div class="notif-drop-foot"><a href="admin-welfare.html">View all →</a></div></div>
+        </div>
+        <div class="topbar-user"><div class="topbar-ava">A</div><div class="topbar-user-info"><div class="u-name">Admin</div><div class="u-role">Super Admin</div></div></div>
+      </div>
+    </header>
+
+    <div class="admin-content">
+
+      <div class="page-hero">
+        <div class="page-hero-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/></svg></div>
+        <div class="page-hero-text">
+          <h1>Analytics &amp; Reports</h1>
+          <p>Platform-wide metrics, trends &amp; impact data</p>
+        </div>
+        <div class="page-hero-actions"><select class="filter-sel" style="min-width:150px;border-color:rgba(255,255,255,.2);background:rgba(255,255,255,.1);color:#fff;"><option>Last 30 days</option><option>Last 90 days</option><option>Last 12 months</option></select><button class="btn btn-primary" style="background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);">Download PDF</button></div>
+      </div>
+
+
+      <!-- KPI stats -->
+      <div class="stats-row" style="grid-template-columns:repeat(6,1fr);margin-bottom:24px;">
+        <div class="stat-card blue"><div class="stat-top"><span class="stat-label">Total Users</span><div class="stat-icon blue"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div></div><div class="stat-value">2,841</div><span class="stat-delta delta-up">▲ +12% MoM</span></div>
+        <div class="stat-card green"><div class="stat-top"><span class="stat-label">Sessions</span><div class="stat-icon green"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div></div><div class="stat-value">1,847</div><span class="stat-delta delta-up">▲ +18%</span></div>
+        <div class="stat-card teal"><div class="stat-top"><span class="stat-label">Matched Pairs</span><div class="stat-icon teal"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></div></div><div class="stat-value">312</div><span class="stat-delta delta-up">▲ +8</span></div>
+        <div class="stat-card purple"><div class="stat-top"><span class="stat-label">Avg Satisfaction</span><div class="stat-icon purple"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div></div><div class="stat-value">4.8</div><span class="stat-delta delta-up">▲ +0.2</span></div>
+        <div class="stat-card amber"><div class="stat-top"><span class="stat-label">Retention</span><div class="stat-icon amber"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg></div></div><div class="stat-value">78%</div><span class="stat-delta delta-up">▲ +3%</span></div>
+        <div class="stat-card red"><div class="stat-top"><span class="stat-label">Welfare Flags</span><div class="stat-icon red"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div></div><div class="stat-value">23</div><span class="stat-delta delta-neu">All documented</span></div>
+      </div>
+
+      <!-- Row 1: Sessions chart + User breakdown -->
+      <div class="grid-2" style="margin-bottom:20px;">
+
+        <!-- Sessions over time -->
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <div class="card-title">Sessions — Last 8 Weeks</div>
+              <div class="card-subtitle">All session types</div>
+            </div>
+            <a href="admin-sessions.html" class="btn btn-ghost btn-sm">Details →</a>
+          </div>
+          <div class="card-body">
+            <div class="adm-chart" style="height:160px;">
+              <div class="adm-chart-col"><div class="adm-chart-bar blue" style="height:32%;"></div></div>
+              <div class="adm-chart-col"><div class="adm-chart-bar blue" style="height:41%;"></div></div>
+              <div class="adm-chart-col"><div class="adm-chart-bar blue" style="height:48%;"></div></div>
+              <div class="adm-chart-col"><div class="adm-chart-bar blue" style="height:55%;"></div></div>
+              <div class="adm-chart-col"><div class="adm-chart-bar blue" style="height:64%;"></div></div>
+              <div class="adm-chart-col"><div class="adm-chart-bar blue" style="height:73%;"></div></div>
+              <div class="adm-chart-col"><div class="adm-chart-bar blue" style="height:84%;"></div></div>
+              <div class="adm-chart-col"><div class="adm-chart-bar blue" style="height:100%;"></div></div>
+            </div>
+            <div class="adm-chart-axis">
+              <span class="adm-chart-lbl">3 Feb</span>
+              <span class="adm-chart-lbl">10 Feb</span>
+              <span class="adm-chart-lbl">17 Feb</span>
+              <span class="adm-chart-lbl">24 Feb</span>
+              <span class="adm-chart-lbl">3 Mar</span>
+              <span class="adm-chart-lbl">10 Mar</span>
+              <span class="adm-chart-lbl">17 Mar</span>
+              <span class="adm-chart-lbl" style="font-weight:800;color:var(--adm-blue);">This wk</span>
+            </div>
+            <div style="display:flex;gap:16px;margin-top:12px;padding-top:12px;border-top:1px solid var(--adm-border);">
+              <div><p style="font-size:11px;color:var(--adm-txt-muted);font-weight:700;text-transform:uppercase;margin-bottom:2px;">Total (8 wks)</p><p style="font-size:18px;font-weight:800;color:var(--adm-txt-head);">1,847</p></div>
+              <div><p style="font-size:11px;color:var(--adm-txt-muted);font-weight:700;text-transform:uppercase;margin-bottom:2px;">Avg / Week</p><p style="font-size:18px;font-weight:800;color:var(--adm-txt-head);">231</p></div>
+              <div><p style="font-size:11px;color:var(--adm-txt-muted);font-weight:700;text-transform:uppercase;margin-bottom:2px;">Completion %</p><p style="font-size:18px;font-weight:800;color:var(--adm-green);">94%</p></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- User growth chart -->
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <div class="card-title">User Growth — Last 8 Weeks</div>
+              <div class="card-subtitle">New registrations per week</div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="adm-chart" style="height:160px;">
+              <div class="adm-chart-col"><div class="adm-chart-bar green" style="height:28%;"></div></div>
+              <div class="adm-chart-col"><div class="adm-chart-bar green" style="height:35%;"></div></div>
+              <div class="adm-chart-col"><div class="adm-chart-bar green" style="height:50%;"></div></div>
+              <div class="adm-chart-col"><div class="adm-chart-bar green" style="height:45%;"></div></div>
+              <div class="adm-chart-col"><div class="adm-chart-bar green" style="height:65%;"></div></div>
+              <div class="adm-chart-col"><div class="adm-chart-bar green" style="height:70%;"></div></div>
+              <div class="adm-chart-col"><div class="adm-chart-bar green" style="height:88%;"></div></div>
+              <div class="adm-chart-col"><div class="adm-chart-bar green" style="height:100%;"></div></div>
+            </div>
+            <div class="adm-chart-axis">
+              <span class="adm-chart-lbl">3 Feb</span>
+              <span class="adm-chart-lbl">10 Feb</span>
+              <span class="adm-chart-lbl">17 Feb</span>
+              <span class="adm-chart-lbl">24 Feb</span>
+              <span class="adm-chart-lbl">3 Mar</span>
+              <span class="adm-chart-lbl">10 Mar</span>
+              <span class="adm-chart-lbl">17 Mar</span>
+              <span class="adm-chart-lbl" style="font-weight:800;color:var(--adm-blue);">This wk</span>
+            </div>
+            <div style="display:flex;gap:16px;margin-top:12px;padding-top:12px;border-top:1px solid var(--adm-border);">
+              <div><p style="font-size:11px;color:var(--adm-txt-muted);font-weight:700;text-transform:uppercase;margin-bottom:2px;">New (8 wks)</p><p style="font-size:18px;font-weight:800;color:var(--adm-txt-head);">+384</p></div>
+              <div><p style="font-size:11px;color:var(--adm-txt-muted);font-weight:700;text-transform:uppercase;margin-bottom:2px;">This week</p><p style="font-size:18px;font-weight:800;color:var(--adm-txt-head);">+47</p></div>
+              <div><p style="font-size:11px;color:var(--adm-txt-muted);font-weight:700;text-transform:uppercase;margin-bottom:2px;">Growth rate</p><p style="font-size:18px;font-weight:800;color:var(--adm-green);">+12%</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Row 2: User breakdown + Satisfaction + Session types -->
+      <div class="grid-3" style="margin-bottom:20px;">
+
+        <!-- User type breakdown (donut) -->
+        <div class="card">
+          <div class="card-head"><div class="card-title">User Type Breakdown</div></div>
+          <div class="card-body" style="display:flex;gap:20px;align-items:center;flex-wrap:wrap;">
+            <div class="donut-ring">
+              <div class="donut-center"><strong>2,841</strong><span>Users</span></div>
+            </div>
+            <div style="flex:1;min-width:120px;">
+              <div class="legend-item"><div class="legend-dot" style="background:var(--adm-blue);"></div><p>Students</p><span>1,984</span></div>
+              <div class="legend-item"><div class="legend-dot" style="background:var(--adm-teal);"></div><p>Clients</p><span>647</span></div>
+              <div class="legend-item"><div class="legend-dot" style="background:var(--adm-purple);"></div><p>Professionals</p><span>210</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Satisfaction distribution -->
+        <div class="card">
+          <div class="card-head"><div class="card-title">Satisfaction Scores</div></div>
+          <div class="card-body">
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <div><div style="display:flex;justify-content:space-between;margin-bottom:3px;"><span style="font-size:12px;font-weight:600;">★★★★★  5.0</span><span style="font-size:12px;color:var(--adm-txt-muted);">38%</span></div><div style="height:7px;background:var(--adm-border);border-radius:4px;overflow:hidden;"><div style="height:100%;width:38%;background:var(--adm-green);border-radius:4px;"></div></div></div>
+              <div><div style="display:flex;justify-content:space-between;margin-bottom:3px;"><span style="font-size:12px;font-weight:600;">★★★★☆  4.0–4.9</span><span style="font-size:12px;color:var(--adm-txt-muted);">45%</span></div><div style="height:7px;background:var(--adm-border);border-radius:4px;overflow:hidden;"><div style="height:100%;width:45%;background:var(--adm-blue);border-radius:4px;"></div></div></div>
+              <div><div style="display:flex;justify-content:space-between;margin-bottom:3px;"><span style="font-size:12px;font-weight:600;">★★★☆☆  3.0–3.9</span><span style="font-size:12px;color:var(--adm-txt-muted);">12%</span></div><div style="height:7px;background:var(--adm-border);border-radius:4px;overflow:hidden;"><div style="height:100%;width:12%;background:var(--adm-amber);border-radius:4px;"></div></div></div>
+              <div><div style="display:flex;justify-content:space-between;margin-bottom:3px;"><span style="font-size:12px;font-weight:600;">★★☆☆☆  Below 3</span><span style="font-size:12px;color:var(--adm-txt-muted);">5%</span></div><div style="height:7px;background:var(--adm-border);border-radius:4px;overflow:hidden;"><div style="height:100%;width:5%;background:var(--adm-red);border-radius:4px;"></div></div></div>
+            </div>
+            <div style="margin-top:16px;padding-top:12px;border-top:1px solid var(--adm-border);display:flex;justify-content:center;gap:20px;">
+              <div style="text-align:center;"><p style="font-size:22px;font-weight:800;color:var(--adm-txt-head);">4.8</p><p style="font-size:11px;color:var(--adm-txt-muted);">Average</p></div>
+              <div style="text-align:center;"><p style="font-size:22px;font-weight:800;color:var(--adm-txt-head);">1,847</p><p style="font-size:11px;color:var(--adm-txt-muted);">Rated sessions</p></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Top universities -->
+        <div class="card">
+          <div class="card-head"><div class="card-title">Top Universities</div></div>
+          <div class="card-body" style="padding:12px 16px;">
+            <div style="display:flex;flex-direction:column;gap:10px;">
+              <div><div style="display:flex;justify-content:space-between;margin-bottom:4px;"><span style="font-size:13px;font-weight:600;color:var(--adm-txt-head);">University of Manchester</span><span style="font-size:12px;font-weight:700;color:var(--adm-txt-head);">847</span></div><div style="height:6px;background:var(--adm-border);border-radius:3px;overflow:hidden;"><div style="height:100%;width:100%;background:var(--adm-blue);border-radius:3px;"></div></div></div>
+              <div><div style="display:flex;justify-content:space-between;margin-bottom:4px;"><span style="font-size:13px;font-weight:600;color:var(--adm-txt-head);">UCL</span><span style="font-size:12px;font-weight:700;color:var(--adm-txt-head);">612</span></div><div style="height:6px;background:var(--adm-border);border-radius:3px;overflow:hidden;"><div style="height:100%;width:72%;background:var(--adm-teal);border-radius:3px;"></div></div></div>
+              <div><div style="display:flex;justify-content:space-between;margin-bottom:4px;"><span style="font-size:13px;font-weight:600;color:var(--adm-txt-head);">King's College London</span><span style="font-size:12px;font-weight:700;color:var(--adm-txt-head);">489</span></div><div style="height:6px;background:var(--adm-border);border-radius:3px;overflow:hidden;"><div style="height:100%;width:58%;background:var(--adm-purple);border-radius:3px;"></div></div></div>
+              <div><div style="display:flex;justify-content:space-between;margin-bottom:4px;"><span style="font-size:13px;font-weight:600;color:var(--adm-txt-head);">University of Leeds</span><span style="font-size:12px;font-weight:700;color:var(--adm-txt-head);">421</span></div><div style="height:6px;background:var(--adm-border);border-radius:3px;overflow:hidden;"><div style="height:100%;width:50%;background:var(--adm-amber);border-radius:3px;"></div></div></div>
+              <div><div style="display:flex;justify-content:space-between;margin-bottom:4px;"><span style="font-size:13px;font-weight:600;color:var(--adm-txt-head);">Others</span><span style="font-size:12px;font-weight:700;color:var(--adm-txt-head);">472</span></div><div style="height:6px;background:var(--adm-border);border-radius:3px;overflow:hidden;"><div style="height:100%;width:56%;background:#94a3b8;border-radius:3px;"></div></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Row 3: Wellbeing outcomes + Ambassador performance -->
+      <div class="grid-2">
+
+        <!-- Wellbeing themes -->
+        <div class="card">
+          <div class="card-head"><div class="card-title">Top Wellbeing Themes</div><div class="card-subtitle">From session notes &amp; journal AI · last 30 days</div></div>
+          <div class="card-body">
+            <div class="data-table-wrap">
+              <table class="data-table">
+                <thead><tr><th>#</th><th>Theme</th><th>Sessions</th><th>% of total</th><th>Trend</th></tr></thead>
+                <tbody>
+                  <tr><td style="font-weight:800;color:var(--adm-blue);">1</td><td style="font-weight:600;">Academic stress</td><td style="font-weight:700;">612</td><td><div style="height:6px;background:var(--adm-border);border-radius:3px;overflow:hidden;width:80px;"><div style="height:100%;width:33%;background:var(--adm-blue);border-radius:3px;"></div></div></td><td style="color:var(--adm-green);font-weight:700;">▲ +5%</td></tr>
+                  <tr><td style="font-weight:800;color:var(--adm-blue);">2</td><td style="font-weight:600;">Anxiety</td><td style="font-weight:700;">489</td><td><div style="height:6px;background:var(--adm-border);border-radius:3px;overflow:hidden;width:80px;"><div style="height:100%;width:26%;background:var(--adm-teal);border-radius:3px;"></div></div></td><td style="color:var(--adm-green);font-weight:700;">▲ +2%</td></tr>
+                  <tr><td style="font-weight:800;color:var(--adm-blue);">3</td><td style="font-weight:600;">Loneliness / Isolation</td><td style="font-weight:700;">334</td><td><div style="height:6px;background:var(--adm-border);border-radius:3px;overflow:hidden;width:80px;"><div style="height:100%;width:18%;background:var(--adm-purple);border-radius:3px;"></div></div></td><td style="color:var(--adm-red);font-weight:700;">▼ -1%</td></tr>
+                  <tr><td style="font-weight:800;color:var(--adm-blue);">4</td><td style="font-weight:600;">Financial hardship</td><td style="font-weight:700;">201</td><td><div style="height:6px;background:var(--adm-border);border-radius:3px;overflow:hidden;width:80px;"><div style="height:100%;width:11%;background:var(--adm-amber);border-radius:3px;"></div></div></td><td style="color:var(--adm-green);font-weight:700;">▲ +8%</td></tr>
+                  <tr><td style="font-weight:800;color:var(--adm-blue);">5</td><td style="font-weight:600;">Low mood / Depression</td><td style="font-weight:700;">189</td><td><div style="height:6px;background:var(--adm-border);border-radius:3px;overflow:hidden;width:80px;"><div style="height:100%;width:10%;background:var(--adm-blue);border-radius:3px;"></div></div></td><td style="color:var(--adm-neu);font-weight:700;">→ 0%</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ambassador performance -->
+        <div class="card">
+          <div class="card-head"><div class="card-title">Ambassador Performance</div><a href="admin-ambassadors.html" class="btn btn-ghost btn-sm">All →</a></div>
+          <div style="overflow-x:visible;">
+            <table style="width:100%;border-collapse:collapse;table-layout:fixed;">
+              <colgroup>
+                <col style="width:28%">
+                <col style="width:12%">
+                <col style="width:12%">
+                <col style="width:14%">
+                <col style="width:18%">
+                <col style="width:16%">
+              </colgroup>
+              <thead>
+                <tr style="border-bottom:1px solid var(--adm-border);">
+                  <th style="padding:10px 20px;font-size:10px;font-weight:800;color:var(--adm-txt-muted);letter-spacing:.6px;text-transform:uppercase;text-align:left;">AMBASSADOR</th>
+                  <th style="padding:10px 8px;font-size:10px;font-weight:800;color:var(--adm-txt-muted);letter-spacing:.6px;text-transform:uppercase;text-align:left;">SESSIONS</th>
+                  <th style="padding:10px 8px;font-size:10px;font-weight:800;color:var(--adm-txt-muted);letter-spacing:.6px;text-transform:uppercase;text-align:left;">CLIENTS</th>
+                  <th style="padding:10px 8px;font-size:10px;font-weight:800;color:var(--adm-txt-muted);letter-spacing:.6px;text-transform:uppercase;text-align:left;">AVG RATING</th>
+                  <th style="padding:10px 8px;font-size:10px;font-weight:800;color:var(--adm-txt-muted);letter-spacing:.6px;text-transform:uppercase;text-align:left;">NOTES FILED</th>
+                  <th style="padding:10px 8px;font-size:10px;font-weight:800;color:var(--adm-txt-muted);letter-spacing:.6px;text-transform:uppercase;text-align:left;">WELFARE FLAGS</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="border-bottom:1px solid var(--adm-border-lt);background:var(--adm-blue-xlt);">
+                  <td style="padding:10px 20px;"><div style="display:flex;align-items:center;gap:8px;"><div class="user-ava green" style="width:28px;height:28px;font-size:10px;flex-shrink:0;">MJ</div><span style="font-size:13px;font-weight:700;color:var(--adm-txt-head);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Maya Johnson</span></div></td>
+                  <td style="padding:10px 8px;font-weight:700;font-size:13px;color:var(--adm-txt-head);">143</td>
+                  <td style="padding:10px 8px;font-weight:700;font-size:13px;color:var(--adm-txt-head);">8</td>
+                  <td style="padding:10px 8px;color:var(--adm-amber);font-weight:700;font-size:13px;">★ 4.9</td>
+                  <td style="padding:10px 8px;font-size:12px;">141 / 143 <span style="color:var(--adm-green);font-size:10px;font-weight:700;">99%</span></td>
+                  <td style="padding:10px 8px;color:var(--adm-red);font-weight:700;font-size:13px;">2</td>
+                </tr>
+                <tr style="border-bottom:1px solid var(--adm-border-lt);">
+                  <td style="padding:10px 20px;"><div style="display:flex;align-items:center;gap:8px;"><div class="user-ava blue" style="width:28px;height:28px;font-size:10px;flex-shrink:0;">KR</div><span style="font-size:13px;font-weight:700;color:var(--adm-txt-head);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Keiran Roberts</span></div></td>
+                  <td style="padding:10px 8px;font-weight:700;font-size:13px;color:var(--adm-txt-head);">89</td>
+                  <td style="padding:10px 8px;font-weight:700;font-size:13px;color:var(--adm-txt-head);">5</td>
+                  <td style="padding:10px 8px;color:var(--adm-amber);font-weight:700;font-size:13px;">★ 4.8</td>
+                  <td style="padding:10px 8px;font-size:12px;">89 / 89 <span style="color:var(--adm-green);font-size:10px;font-weight:700;">100%</span></td>
+                  <td style="padding:10px 8px;color:var(--adm-amber);font-weight:700;font-size:13px;">1</td>
+                </tr>
+                <tr style="border-bottom:1px solid var(--adm-border-lt);">
+                  <td style="padding:10px 20px;"><div style="display:flex;align-items:center;gap:8px;"><div class="user-ava amber" style="width:28px;height:28px;font-size:10px;flex-shrink:0;">LN</div><span style="font-size:13px;font-weight:700;color:var(--adm-txt-head);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Layla Nguyen</span></div></td>
+                  <td style="padding:10px 8px;font-weight:700;font-size:13px;color:var(--adm-txt-head);">112</td>
+                  <td style="padding:10px 8px;font-weight:700;font-size:13px;color:var(--adm-txt-head);">7</td>
+                  <td style="padding:10px 8px;color:var(--adm-amber);font-weight:700;font-size:13px;">★ 4.6</td>
+                  <td style="padding:10px 8px;font-size:12px;">108 / 112 <span style="color:var(--adm-amber);font-size:10px;font-weight:700;">96%</span></td>
+                  <td style="padding:10px 8px;color:var(--adm-txt-muted);font-weight:700;font-size:13px;">0</td>
+                </tr>
+                <tr style="border-bottom:1px solid var(--adm-border-lt);">
+                  <td style="padding:10px 20px;"><div style="display:flex;align-items:center;gap:8px;"><div class="user-ava purple" style="width:28px;height:28px;font-size:10px;flex-shrink:0;">DN</div><span style="font-size:13px;font-weight:700;color:var(--adm-txt-head);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Dev Nair</span></div></td>
+                  <td style="padding:10px 8px;font-weight:700;font-size:13px;color:var(--adm-txt-head);">67</td>
+                  <td style="padding:10px 8px;font-weight:700;font-size:13px;color:var(--adm-txt-head);">4</td>
+                  <td style="padding:10px 8px;color:var(--adm-amber);font-weight:700;font-size:13px;">★ 5.0</td>
+                  <td style="padding:10px 8px;font-size:12px;">67 / 67 <span style="color:var(--adm-green);font-size:10px;font-weight:700;">100%</span></td>
+                  <td style="padding:10px 8px;color:var(--adm-txt-muted);font-weight:700;font-size:13px;">0</td>
+                </tr>
+                <tr style="border-bottom:1px solid var(--adm-border-lt);">
+                  <td style="padding:10px 20px;"><div style="display:flex;align-items:center;gap:8px;"><div class="user-ava" style="width:28px;height:28px;font-size:10px;flex-shrink:0;background:linear-gradient(135deg,#7c3aed,#a78bfa);">AP</div><span style="font-size:13px;font-weight:700;color:var(--adm-txt-head);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Aisha Patel</span></div></td>
+                  <td style="padding:10px 8px;font-weight:700;font-size:13px;color:var(--adm-txt-head);">94</td>
+                  <td style="padding:10px 8px;font-weight:700;font-size:13px;color:var(--adm-txt-head);">6</td>
+                  <td style="padding:10px 8px;color:var(--adm-amber);font-weight:700;font-size:13px;">★ 4.7</td>
+                  <td style="padding:10px 8px;font-size:12px;">91 / 94 <span style="color:var(--adm-green);font-size:10px;font-weight:700;">97%</span></td>
+                  <td style="padding:10px 8px;color:var(--adm-txt-muted);font-weight:700;font-size:13px;">0</td>
+                </tr>
+                <tr style="border-bottom:1px solid var(--adm-border-lt);">
+                  <td style="padding:10px 20px;"><div style="display:flex;align-items:center;gap:8px;"><div class="user-ava" style="width:28px;height:28px;font-size:10px;flex-shrink:0;background:linear-gradient(135deg,#db2777,#f472b6);">SW</div><span style="font-size:13px;font-weight:700;color:var(--adm-txt-head);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Sophie Williams</span></div></td>
+                  <td style="padding:10px 8px;font-weight:700;font-size:13px;color:var(--adm-txt-head);">128</td>
+                  <td style="padding:10px 8px;font-weight:700;font-size:13px;color:var(--adm-txt-head);">9</td>
+                  <td style="padding:10px 8px;color:var(--adm-amber);font-weight:700;font-size:13px;">★ 4.9</td>
+                  <td style="padding:10px 8px;font-size:12px;">125 / 128 <span style="color:var(--adm-green);font-size:10px;font-weight:700;">98%</span></td>
+                  <td style="padding:10px 8px;color:var(--adm-txt-muted);font-weight:700;font-size:13px;">0</td>
+                </tr>
+                <tr style="border-bottom:1px solid var(--adm-border-lt);">
+                  <td style="padding:10px 20px;"><div style="display:flex;align-items:center;gap:8px;"><div class="user-ava" style="width:28px;height:28px;font-size:10px;flex-shrink:0;background:linear-gradient(135deg,#b45309,#d97706);">OH</div><span style="font-size:13px;font-weight:700;color:var(--adm-txt-head);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Omar Hassan</span></div></td>
+                  <td style="padding:10px 8px;font-weight:700;font-size:13px;color:var(--adm-txt-head);">87</td>
+                  <td style="padding:10px 8px;font-weight:700;font-size:13px;color:var(--adm-txt-head);">7</td>
+                  <td style="padding:10px 8px;color:var(--adm-amber);font-weight:700;font-size:13px;">★ 4.8</td>
+                  <td style="padding:10px 8px;font-size:12px;">85 / 87 <span style="color:var(--adm-green);font-size:10px;font-weight:700;">98%</span></td>
+                  <td style="padding:10px 8px;color:var(--adm-txt-muted);font-weight:700;font-size:13px;">0</td>
+                </tr>
+                <tr>
+                  <td style="padding:10px 20px;"><div style="display:flex;align-items:center;gap:8px;"><div class="user-ava" style="width:28px;height:28px;font-size:10px;flex-shrink:0;background:linear-gradient(135deg,#047857,#10b981);">ZA</div><span style="font-size:13px;font-weight:700;color:var(--adm-txt-head);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Zara Ahmed</span></div></td>
+                  <td style="padding:10px 8px;font-weight:700;font-size:13px;color:var(--adm-txt-head);">62</td>
+                  <td style="padding:10px 8px;font-weight:700;font-size:13px;color:var(--adm-txt-head);">5</td>
+                  <td style="padding:10px 8px;color:var(--adm-amber);font-weight:700;font-size:13px;">★ 4.6</td>
+                  <td style="padding:10px 8px;font-size:12px;">58 / 62 <span style="color:var(--adm-amber);font-size:10px;font-weight:700;">94%</span></td>
+                  <td style="padding:10px 8px;color:var(--adm-txt-muted);font-weight:700;font-size:13px;">0</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div style="padding:10px 20px;border-top:1px solid var(--adm-border);display:flex;align-items:center;justify-content:space-between;">
+            <span style="font-size:12px;color:var(--adm-txt-muted);">Showing 8 of 47 ambassadors · sorted by sessions</span>
+            <a href="admin-ambassadors.html" style="font-size:12px;color:var(--adm-blue);font-weight:700;">View all ambassadors →</a>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+</body>
+</html>

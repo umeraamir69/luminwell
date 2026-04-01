@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Overview — Luminwell Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;0,9..40,900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="admin.css">
+<style>
+  /* ── Home-specific ── */
+  .approval-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 20px; border-bottom: 1px solid var(--adm-border-lt);
+    transition: background .15s;
+  }
+  .approval-item:last-child { border-bottom: none; }
+  .approval-item:hover { background: var(--adm-blue-xlt); }
+  .approval-actions { display: flex; gap: 6px; margin-left: auto; }
+
+  .health-row { margin-bottom: 12px; }
+  .health-row:last-child { margin-bottom: 0; }
+
+  /* Mini live indicator */
+  .live-dot {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 11px; font-weight: 700; color: var(--adm-green);
+    background: var(--adm-green-lt); padding: 3px 9px; border-radius: 20px;
+  }
+  .live-dot::before {
+    content: ''; width: 6px; height: 6px; border-radius: 50%;
+    background: var(--adm-green);
+    animation: pulse-green 1.5s ease-in-out infinite;
+  }
+  @keyframes pulse-green {
+    0%,100% { opacity: 1; transform: scale(1); }
+    50%      { opacity: .5; transform: scale(1.3); }
+  }
+
+  /* Welfare mini card */
+  .wf-mini {
+    border-radius: var(--adm-r-sm); padding: 12px 14px;
+    display: flex; gap: 10px; align-items: flex-start;
+    margin-bottom: 10px; transition: box-shadow .15s;
+  }
+  .wf-mini:last-child { margin-bottom: 0; }
+  .wf-mini:hover { box-shadow: var(--adm-shadow-md); }
+  .wf-mini.critical { background: linear-gradient(90deg, #fff1f2, #fff8f8); border: 1px solid rgba(239,68,68,.2); border-left: 4px solid var(--adm-red); }
+  .wf-mini.high     { background: linear-gradient(90deg, #fffbeb, #fffdf5); border: 1px solid rgba(245,158,11,.2); border-left: 4px solid var(--adm-amber); }
+  .wf-mini.medium   { background: linear-gradient(90deg, #eaf5f1, #f4faf7); border: 1px solid rgba(45,150,118,.2); border-left: 4px solid var(--adm-blue); }
+
+  /* Quick action buttons */
+  .quick-action {
+    display: flex; align-items: center; gap: 10px;
+    padding: 11px 14px; border-radius: var(--adm-r-sm);
+    border: 1px solid var(--adm-border); background: var(--adm-surface);
+    font-size: 13px; font-weight: 600; color: var(--adm-txt-body);
+    transition: all .2s; margin-bottom: 8px; cursor: pointer;
+  }
+  .quick-action:last-child { margin-bottom: 0; }
+  .quick-action:hover { border-color: var(--adm-blue); color: var(--adm-blue); background: var(--adm-blue-xlt); transform: translateX(2px); }
+  .quick-action .qa-icon {
+    width: 32px; height: 32px; border-radius: var(--adm-r-xs);
+    display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0;
+  }
+  .quick-action .qa-arrow { margin-left: auto; color: var(--adm-txt-faint); font-size: 16px; }
+  .quick-action:hover .qa-arrow { color: var(--adm-blue); }
+</style>
+</head>
+<body>
+
+<input type="checkbox" id="sidebar-toggle" class="sidebar-toggle-check">
+
+<div class="admin-shell">
+
+  <!-- ╔══════════════════════════════════════╗
+       ║  SIDEBAR                             ║
+       ╚══════════════════════════════════════╝ -->
+  <aside class="admin-sidebar">
+
+    <div class="sidebar__logo">
+      <div class="logo-mark"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17 8C8 10 5.9 16.17 3.82 22A13.34 13.34 0 0 0 18 8Z"/><path d="M9 9c-1.5 3.5-2.5 7-3 10C8 18 11 15 13 12" fill="rgba(255,255,255,.35)"/></svg></div>
+      <div class="logo-text-wrap">
+        <div class="logo-name">Luminwell</div>
+        <span class="logo-badge-pill">ADMIN PANEL</span>
+      </div>
+    </div>
+
+    <label for="sidebar-toggle" class="sidebar__collapse-btn" title="Collapse sidebar">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+    </label>
+
+    <nav class="sidebar__nav">
+      <div class="nav-section">
+        <p class="nav-label">Main</p>
+        <a href="admin-home.html" class="sidebar__link active">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+          <span class="link-text">Overview</span>
+        </a>
+        <a href="admin-analytics.html" class="sidebar__link">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          <span class="link-text">Analytics</span>
+        </a>
+      </div>
+
+      <div class="nav-section">
+        <p class="nav-label">People</p>
+        <a href="admin-users.html" class="sidebar__link">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          <span class="link-text">Users</span>
+          <span class="nav-badge nav-badge--slate">2,841</span>
+        </a>
+        <a href="admin-ambassadors.html" class="sidebar__link">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <span class="link-text">Ambassadors</span>
+          <span class="nav-badge nav-badge--amber">3 new</span>
+        </a>
+        <a href="admin-matching.html" class="sidebar__link">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+          <span class="link-text">Matching</span>
+        </a>
+      </div>
+
+      <div class="nav-section">
+        <p class="nav-label">Operations</p>
+        <a href="admin-sessions.html" class="sidebar__link">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <span class="link-text">Sessions</span>
+        </a>
+        <a href="admin-welfare.html" class="sidebar__link">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <span class="link-text">Welfare &amp; Safety</span>
+          <span class="nav-badge nav-badge--red">5</span>
+        </a>
+        <a href="admin-messages.html" class="sidebar__link">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          <span class="link-text">Messages</span>
+        </a>
+      </div>
+
+      <div class="nav-section">
+        <p class="nav-label">Platform</p>
+        <a href="admin-content.html" class="sidebar__link">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          <span class="link-text">Content</span>
+        </a>
+        <a href="admin-settings.html" class="sidebar__link">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06-.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          <span class="link-text">Settings</span>
+        </a>
+        <a href="admin-privacy.html" class="sidebar__link">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <span class="link-text">Privacy &amp; GDPR</span>
+        </a>
+      </div>
+    </nav>
+
+    <div class="sidebar__foot">
+      <div class="sidebar__foot-user">
+        <div class="admin-ava-sm">A</div>
+        <div class="sidebar__foot-info">
+          <p>Admin User</p>
+          <small>Super Admin</small>
+        </div>
+      </div>
+      <button class="sidebar__signout">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px;"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Sign out
+      </button>
+    </div>
+  </aside>
+
+  <!-- ╔══════════════════════════════════════╗
+       ║  MAIN                                ║
+       ╚══════════════════════════════════════╝ -->
+  <div class="admin-main">
+
+    <!-- ── Topbar ── -->
+    <header class="admin-topbar">
+      <div class="topbar-left">
+        <label for="sidebar-toggle" class="topbar-menu-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </label>
+        <nav class="breadcrumb">
+          <span>Admin</span>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+          <span class="bc-active">Overview</span>
+        </nav>
+        <span class="live-dot">LIVE</span>
+      </div>
+
+      <div class="topbar-right">
+        <!-- Notifications -->
+        <div class="notif-wrap">
+          <input type="checkbox" id="notif-toggle" class="notif-check">
+          <label for="notif-toggle" class="topbar-icon-btn" title="Notifications">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            <span class="notif-dot"></span>
+          </label>
+          <div class="notif-drop">
+            <div class="notif-drop-head">
+              <h4>Notifications</h4>
+              <a href="#">Mark all read</a>
+            </div>
+            <div class="notif-item unread">
+              <div class="notif-ico red"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+              <div class="notif-body">
+                <p><strong>Critical welfare flag</strong> — Alex T. requires immediate review.</p>
+                <small>2 min ago</small>
+              </div>
+            </div>
+            <div class="notif-item unread">
+              <div class="notif-ico amber"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"/><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/></svg></div>
+              <div class="notif-body">
+                <p><strong>3 ambassador applications</strong> pending approval.</p>
+                <small>1 h ago</small>
+              </div>
+            </div>
+            <div class="notif-item">
+              <div class="notif-ico blue"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+              <div class="notif-body">
+                <p>Platform passed <strong>2,841 registered users</strong> milestone.</p>
+                <small>Today · 8:00 AM</small>
+              </div>
+            </div>
+            <div class="notif-drop-foot"><a href="admin-welfare.html">View all alerts →</a></div>
+          </div>
+        </div>
+
+        <a href="admin-settings.html" class="topbar-icon-btn" title="Settings">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06-.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        </a>
+
+        <div class="topbar-user">
+          <div class="topbar-ava">A</div>
+          <div class="topbar-user-info">
+            <div class="u-name">Admin Kumar</div>
+            <div class="u-role">Super Admin</div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- ── Page content ── -->
+    <div class="admin-content">
+
+      <!-- ── Hero banner ── -->
+      <div class="page-hero">
+        <div class="page-hero-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></div>
+        <div class="page-hero-text">
+          <h1>Good morning, Admin</h1>
+          <p>Platform is running smoothly · Sunday 29 March 2026 · <strong style="color:rgba(255,255,255,.85);">1 critical alert</strong> needs your attention</p>
+        </div>
+        <div class="page-hero-actions">
+          <a href="admin-welfare.html" class="btn btn-white">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            View welfare flags
+          </a>
+          <button class="btn btn-primary" style="background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Export report
+          </button>
+        </div>
+      </div>
+
+      <!-- ── Critical alert ── -->
+      <div class="alert alert-red">
+        <span class="alert-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>
+        <div class="alert-body">
+          <strong>Critical welfare flag — immediate action required</strong>
+          Alex Turner has been flagged for self-harm risk indicators by Ambassador Maya Johnson. Escalation protocol triggered. Respond within 1 hour.
+          <a href="admin-welfare.html" style="font-weight:800;text-decoration:underline;margin-left:8px;">Open case →</a>
+        </div>
+      </div>
+
+      <!-- ── Stats row ── -->
+      <div class="stats-row">
+        <div class="stat-card blue">
+          <div class="stat-top">
+            <span class="stat-label">Total Users</span>
+            <div class="stat-icon blue">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+          </div>
+          <div class="stat-value">2,841</div>
+          <span class="stat-delta delta-up">▲ +47 this week</span>
+        </div>
+
+        <div class="stat-card green">
+          <div class="stat-top">
+            <span class="stat-label">Active Ambassadors</span>
+            <div class="stat-icon green">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            </div>
+          </div>
+          <div class="stat-value">47</div>
+          <span class="stat-delta delta-up">▲ +3 this month</span>
+        </div>
+
+        <div class="stat-card amber">
+          <div class="stat-top">
+            <span class="stat-label">Sessions Today</span>
+            <div class="stat-icon amber">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            </div>
+          </div>
+          <div class="stat-value">23</div>
+          <span class="stat-delta delta-neu">18 done · 5 upcoming</span>
+        </div>
+
+        <div class="stat-card red">
+          <div class="stat-top">
+            <span class="stat-label">Open Welfare Flags</span>
+            <div class="stat-icon red">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+          </div>
+          <div class="stat-value">5</div>
+          <span class="stat-delta delta-down">▼ 1 critical · 2 high</span>
+        </div>
+
+        <div class="stat-card purple">
+          <div class="stat-top">
+            <span class="stat-label">Avg Satisfaction</span>
+            <div class="stat-icon purple">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+            </div>
+          </div>
+          <div class="stat-value">4.8</div>
+          <span class="stat-delta delta-up">▲ +0.2 vs last month</span>
+        </div>
+
+        <div class="stat-card teal">
+          <div class="stat-top">
+            <span class="stat-label">Matched Pairs</span>
+            <div class="stat-icon teal">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+            </div>
+          </div>
+          <div class="stat-value">312</div>
+          <span class="stat-delta delta-neu">8 awaiting match</span>
+        </div>
+      </div>
+
+      <!-- ── Row 1: Chart + Quick Actions ── -->
+      <div class="grid-3-1" style="align-items:start;margin-bottom:20px;">
+
+        <!-- Sessions chart -->
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <div class="card-title">Sessions — Last 8 Weeks</div>
+              <div class="card-subtitle">All session types combined</div>
+            </div>
+            <a href="admin-sessions.html" class="btn btn-ghost btn-sm" style="font-size:12px;">View all →</a>
+          </div>
+          <div class="card-body" style="padding:16px 20px;">
+            <div style="display:flex;gap:20px;align-items:flex-end;">
+              <div style="flex:1;">
+                <div class="adm-chart" style="height:150px;">
+                  <div class="adm-chart-col"><div class="adm-chart-bar blue" style="height:25%;"></div></div>
+                  <div class="adm-chart-col"><div class="adm-chart-bar blue" style="height:34%;"></div></div>
+                  <div class="adm-chart-col"><div class="adm-chart-bar blue" style="height:42%;"></div></div>
+                  <div class="adm-chart-col"><div class="adm-chart-bar blue" style="height:53%;"></div></div>
+                  <div class="adm-chart-col"><div class="adm-chart-bar blue" style="height:62%;"></div></div>
+                  <div class="adm-chart-col"><div class="adm-chart-bar blue" style="height:72%;"></div></div>
+                  <div class="adm-chart-col"><div class="adm-chart-bar blue" style="height:85%;"></div></div>
+                  <div class="adm-chart-col"><div class="adm-chart-bar blue" style="height:100%;"></div></div>
+                </div>
+                <div class="adm-chart-axis">
+                  <span class="adm-chart-lbl">3 Feb</span>
+                  <span class="adm-chart-lbl">10 Feb</span>
+                  <span class="adm-chart-lbl">17 Feb</span>
+                  <span class="adm-chart-lbl">24 Feb</span>
+                  <span class="adm-chart-lbl">3 Mar</span>
+                  <span class="adm-chart-lbl">10 Mar</span>
+                  <span class="adm-chart-lbl">17 Mar</span>
+                  <span class="adm-chart-lbl" style="font-weight:800;color:var(--adm-blue);">This wk</span>
+                </div>
+              </div>
+              <!-- Side KPIs -->
+              <div style="min-width:110px;border-left:1px solid var(--adm-border);padding-left:16px;display:flex;flex-direction:column;gap:16px;justify-content:center;">
+                <div>
+                  <p style="font-size:10px;font-weight:800;color:var(--adm-txt-muted);letter-spacing:.5px;text-transform:uppercase;margin-bottom:3px;">THIS WEEK</p>
+                  <p style="font-size:26px;font-weight:900;color:var(--adm-txt-head);letter-spacing:-1px;line-height:1;">143</p>
+                  <p style="font-size:11px;color:var(--adm-green);font-weight:700;">▲ +18%</p>
+                </div>
+                <div>
+                  <p style="font-size:10px;font-weight:800;color:var(--adm-txt-muted);letter-spacing:.5px;text-transform:uppercase;margin-bottom:3px;">COMPLETION</p>
+                  <p style="font-size:20px;font-weight:900;color:var(--adm-txt-head);letter-spacing:-1px;line-height:1;">94%</p>
+                </div>
+                <div>
+                  <p style="font-size:10px;font-weight:800;color:var(--adm-txt-muted);letter-spacing:.5px;text-transform:uppercase;margin-bottom:3px;">THIS MONTH</p>
+                  <p style="font-size:20px;font-weight:900;color:var(--adm-txt-head);letter-spacing:-1px;line-height:1;">489</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick actions -->
+        <div class="card">
+          <div class="card-head"><div class="card-title">Quick Actions</div></div>
+          <div class="card-body" style="padding:14px;">
+            <a href="admin-ambassadors.html" class="quick-action">
+              <div class="qa-icon" style="background:var(--adm-teal-lt);color:var(--adm-teal);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+              <span>Review ambassador applications</span>
+              <span class="qa-arrow">›</span>
+            </a>
+            <a href="admin-welfare.html" class="quick-action" style="border-color:rgba(239,68,68,.2);background:#fff5f5;">
+              <div class="qa-icon" style="background:var(--adm-red-lt);color:var(--adm-red);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+              <span style="color:var(--adm-red);">Handle welfare flags</span>
+              <span class="qa-arrow" style="color:var(--adm-red);">›</span>
+            </a>
+            <a href="admin-users.html" class="quick-action">
+              <div class="qa-icon" style="background:var(--adm-blue-lt);color:var(--adm-blue);"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+              <span>Browse all users</span>
+              <span class="qa-arrow">›</span>
+            </a>
+            <a href="admin-matching.html" class="quick-action">
+              <div class="qa-icon" style="background:var(--adm-teal-lt);color:var(--adm-teal);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></div>
+              <span>Review unmatched (8)</span>
+              <span class="qa-arrow">›</span>
+            </a>
+            <a href="admin-analytics.html" class="quick-action">
+              <div class="qa-icon" style="background:var(--adm-blue-lt);color:var(--adm-blue);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/></svg></div>
+              <span>View full analytics</span>
+              <span class="qa-arrow">›</span>
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ── Row 2: All other cards ── -->
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;align-items:start;">
+
+        <!-- Welfare alerts -->
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <div class="card-title" style="display:flex;align-items:center;gap:7px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Welfare Alerts</div>
+              <div class="card-subtitle">Open · requires action</div>
+            </div>
+            <a href="admin-welfare.html" class="btn btn-ghost btn-sm">All →</a>
+          </div>
+          <div class="card-body" style="padding:14px;">
+            <div class="wf-mini critical">
+              <div>
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+                  <span class="flag-sev critical">Critical</span>
+                  <span style="font-size:10px;color:var(--adm-txt-faint);">2 min ago</span>
+                </div>
+                <p style="font-size:13px;font-weight:800;color:var(--adm-txt-head);">Alex Turner</p>
+                <p style="font-size:11px;color:var(--adm-txt-muted);">Self-harm indicators · Ambassador Maya J.</p>
+                <a href="admin-welfare.html" class="btn btn-danger btn-xs" style="margin-top:8px;display:inline-flex;">Action now →</a>
+              </div>
+            </div>
+            <div class="wf-mini high">
+              <div>
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+                  <span class="flag-sev high">High</span>
+                  <span style="font-size:10px;color:var(--adm-txt-faint);">3 h ago</span>
+                </div>
+                <p style="font-size:13px;font-weight:800;color:var(--adm-txt-head);">Jordan Mills</p>
+                <p style="font-size:11px;color:var(--adm-txt-muted);">Missed 3 sessions · declining engagement</p>
+              </div>
+            </div>
+            <div class="wf-mini medium">
+              <div>
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+                  <span class="flag-sev medium">Medium</span>
+                  <span style="font-size:10px;color:var(--adm-txt-faint);">Yesterday</span>
+                </div>
+                <p style="font-size:13px;font-weight:800;color:var(--adm-txt-head);">Sam Kowalski</p>
+                <p style="font-size:11px;color:var(--adm-txt-muted);">Low mood · AI journal detection</p>
+              </div>
+            </div>
+          </div>
+          <div class="card-foot">
+            <span class="card-foot-txt">+2 more flags</span>
+            <a href="admin-welfare.html" style="font-size:12px;color:var(--adm-blue);font-weight:700;">View all →</a>
+          </div>
+        </div>
+
+        <!-- Ambassador Approvals -->
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <div class="card-title">Ambassador Approvals</div>
+              <div class="card-subtitle">Pending review</div>
+            </div>
+            <span class="badge badge-amber">3 pending</span>
+          </div>
+          <div>
+            <div class="approval-item">
+              <div class="user-ava green" style="width:36px;height:36px;font-size:13px;">JR</div>
+              <div style="flex:1;">
+                <p style="font-size:13px;font-weight:700;color:var(--adm-txt-head);">Jamie Rivera</p>
+                <p style="font-size:11px;color:var(--adm-txt-muted);">Manchester · Applied 28 Mar</p>
+              </div>
+              <div class="approval-actions">
+                <button class="btn btn-primary btn-xs">Approve</button>
+                <button class="btn btn-ghost btn-xs">Review</button>
+              </div>
+            </div>
+            <div class="approval-item">
+              <div class="user-ava blue" style="width:36px;height:36px;font-size:13px;">PL</div>
+              <div style="flex:1;">
+                <p style="font-size:13px;font-weight:700;color:var(--adm-txt-head);">Priya Lal</p>
+                <p style="font-size:11px;color:var(--adm-txt-muted);">UCL · Applied 27 Mar</p>
+              </div>
+              <div class="approval-actions">
+                <button class="btn btn-primary btn-xs">Approve</button>
+                <button class="btn btn-ghost btn-xs">Review</button>
+              </div>
+            </div>
+            <div class="approval-item">
+              <div class="user-ava amber" style="width:36px;height:36px;font-size:13px;">TN</div>
+              <div style="flex:1;">
+                <p style="font-size:13px;font-weight:700;color:var(--adm-txt-head);">Thomas Ngu</p>
+                <p style="font-size:11px;color:var(--adm-txt-muted);">King's College · Applied 26 Mar</p>
+              </div>
+              <div class="approval-actions">
+                <button class="btn btn-primary btn-xs">Approve</button>
+                <button class="btn btn-ghost btn-xs">Review</button>
+              </div>
+            </div>
+          </div>
+          <div class="card-foot">
+            <span class="card-foot-txt">48 h review target</span>
+            <a href="admin-ambassadors.html" style="font-size:12px;color:var(--adm-blue);font-weight:700;">All applications →</a>
+          </div>
+        </div>
+
+        <!-- Right column: Platform Health + Recent Activity -->
+        <div style="display:flex;flex-direction:column;gap:20px;">
+
+          <!-- Platform health -->
+          <div class="card">
+            <div class="card-head">
+              <div class="card-title">Platform Health</div>
+              <span class="badge badge-green" style="font-size:10px;">All systems OK</span>
+            </div>
+            <div class="card-body">
+              <div class="prog-row">
+                <div class="prog-header">
+                  <span class="prog-label">Session completion rate</span>
+                  <span class="prog-value" style="color:var(--adm-green);">94%</span>
+                </div>
+                <div class="prog-track"><div class="prog-fill" style="width:94%;background:linear-gradient(90deg,var(--adm-green),#059669);"></div></div>
+              </div>
+              <div class="prog-row">
+                <div class="prog-header">
+                  <span class="prog-label">User 30-day retention</span>
+                  <span class="prog-value" style="color:var(--adm-blue);">78%</span>
+                </div>
+                <div class="prog-track"><div class="prog-fill" style="width:78%;background:linear-gradient(90deg,#2d9676,#175d92);"></div></div>
+              </div>
+              <div class="prog-row">
+                <div class="prog-header">
+                  <span class="prog-label">Ambassador utilisation</span>
+                  <span class="prog-value" style="color:var(--adm-amber);">63%</span>
+                </div>
+                <div class="prog-track"><div class="prog-fill" style="width:63%;background:linear-gradient(90deg,var(--adm-amber),#d97706);"></div></div>
+              </div>
+              <div class="prog-row">
+                <div class="prog-header">
+                  <span class="prog-label">Welfare response rate</span>
+                  <span class="prog-value" style="color:var(--adm-green);">100%</span>
+                </div>
+                <div class="prog-track"><div class="prog-fill" style="width:100%;background:linear-gradient(90deg,var(--adm-green),#059669);"></div></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent activity -->
+          <div class="card">
+            <div class="card-head">
+              <div class="card-title">Recent Activity</div>
+              <a href="#" class="btn btn-ghost btn-sm">Audit log →</a>
+            </div>
+            <div class="card-body" style="padding:8px 20px;">
+              <div class="activity-item">
+                <div class="act-ico" style="background:var(--adm-green-lt);color:var(--adm-green);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+                <div class="act-body">
+                  <p>Session completed — <strong>Maya J.</strong> &amp; Alex O.</p>
+                  <time>Today · 10:32 AM</time>
+                </div>
+              </div>
+              <div class="activity-item">
+                <div class="act-ico" style="background:var(--adm-red-lt);color:var(--adm-red);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+                <div class="act-body">
+                  <p>Welfare flag raised for <strong>Alex Turner</strong></p>
+                  <time>Today · 9:47 AM</time>
+                </div>
+              </div>
+              <div class="activity-item">
+                <div class="act-ico" style="background:var(--adm-blue-lt);color:var(--adm-blue);"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+                <div class="act-body">
+                  <p>New user registered — <strong>Sam Okonkwo</strong></p>
+                  <time>Today · 8:15 AM</time>
+                </div>
+              </div>
+              <div class="activity-item">
+                <div class="act-ico" style="background:var(--adm-teal-lt);color:var(--adm-teal);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></div>
+                <div class="act-body">
+                  <p>Match created — <strong>Jordan M.</strong> → Amb. Keiran</p>
+                  <time>Yesterday · 4:20 PM</time>
+                </div>
+              </div>
+              <div class="activity-item">
+                <div class="act-ico" style="background:var(--adm-blue-lt);color:var(--adm-blue);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+                <div class="act-body">
+                  <p>Ambassador application — <strong>Priya Lal</strong></p>
+                  <time>Yesterday · 2:05 PM</time>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div><!-- /admin-content -->
+  </div><!-- /admin-main -->
+</div><!-- /admin-shell -->
+
+</body>
+</html>

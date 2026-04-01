@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Notifications Popup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+
+  /* ── Color tokens ── */
+  :root {
+    --teal:        #1a8f76;
+    --teal-pale:   #e8f7f3;
+    --teal-mid:    #7ecbb8;
+    --teal-deep:   #0d6b55;
+    --navy:        #0f2d45;
+    --text:        #0f172a;
+    --muted:       #64748b;
+    --soft:        #94a3b8;
+    --border:      #e2e8f0;
+    --border-soft: #f0f4f8;
+    --surface:     #ffffff;
+    --page-bg:     #f1f5f9;
+    --shadow-sm:   0 2px 8px rgba(0,0,0,.08);
+  }
+
+  /* ── Page shell ── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #eef2f7;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 40px 16px 60px;
+    gap: 0;
+  }
+
+  /* ── Divider between sections ── */
+  .section-divider {
+    width: 440px;
+    max-width: 100%;
+    border: none;
+    border-top: 2px solid #d1dae6;
+    margin: 32px 0;
+  }
+
+  /* ══════════════════════════════════════
+     NOTIFICATION POPUP
+  ══════════════════════════════════════ */
+  .notif-popup {
+    width: 440px;
+    background: #ffffff;
+    border-radius: 20px;
+    box-shadow:
+      0 8px 32px rgba(0, 0, 0, .10),
+      0 2px 8px  rgba(0, 0, 0, .06),
+      0 0 0 1px rgba(0, 0, 0, .04);
+    overflow: hidden;
+  }
+
+  /* ── Header ── */
+  .notif-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 20px 14px;
+    border-bottom: 1px solid #f0f2f5;
+  }
+  .notif-title-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .notif-title {
+    font-size: 17px;
+    font-weight: 800;
+    color: #0f172a;
+    letter-spacing: -.3px;
+  }
+  .notif-count {
+    background: #ef4444;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 800;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+  }
+  .notif-mark-read {
+    font-size: 13px;
+    font-weight: 700;
+    color: #1a6b4a;
+    cursor: pointer;
+    text-decoration: none;
+    transition: opacity .15s;
+  }
+  .notif-mark-read:hover { opacity: .75; }
+
+  /* ── Notification list ── */
+  .notif-list { display: flex; flex-direction: column; }
+
+  /* ── Single item ── */
+  .notif-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 13px;
+    padding: 14px 20px;
+    border-bottom: 1px solid #f0f4f8;
+    position: relative;
+    cursor: pointer;
+    transition: background .15s;
+  }
+  .notif-item:hover { background: #f8fafc; }
+  .notif-item.highlighted {
+    background: #f0faf6;
+  }
+  .notif-item.highlighted:hover { background: #e8f7f1; }
+  .notif-item.read .notif-item-title,
+  .notif-item.read .notif-item-sub { color: #94a3b8; }
+
+  /* Icon */
+  .notif-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .notif-icon.red    { background: #fee2e2; }
+  .notif-icon.gray   { background: #f1f5f9; }
+  .notif-icon.green  { background: #d1fae5; }
+  .notif-icon.amber  { background: #fef3c7; }
+  .notif-icon.slate  { background: #f1f5f9; }
+
+  /* SVG icons color */
+  .notif-icon.red svg    { color: #ef4444; }
+  .notif-icon.gray svg   { color: #64748b; }
+  .notif-icon.green svg  { color: #059669; }
+  .notif-icon.amber svg  { color: #d97706; }
+  .notif-icon.slate svg  { color: #94a3b8; }
+
+  /* Text */
+  .notif-item-body { flex: 1; padding-top: 1px; }
+  .notif-item-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #0f172a;
+    line-height: 1.35;
+    margin-bottom: 3px;
+  }
+  .notif-item.read .notif-item-title { color: #94a3b8; font-weight: 600; }
+  .notif-item-sub {
+    font-size: 12px;
+    color: #64748b;
+    line-height: 1.5;
+    font-weight: 400;
+  }
+  .notif-item.read .notif-item-sub { color: #b0bac6; }
+
+  /* Unread dot */
+  .notif-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: #22c55e;
+    flex-shrink: 0;
+    margin-top: 6px;
+  }
+  .notif-dot.hidden { opacity: 0; }
+
+  /* ── Footer ── */
+  .notif-footer {
+    padding: 14px 20px 16px;
+    text-align: center;
+  }
+  .notif-view-all {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1a6b4a;
+    text-decoration: none;
+    cursor: pointer;
+    transition: opacity .15s;
+  }
+  .notif-view-all:hover { opacity: .75; }
+
+  /* ══════════════════════════════════════
+     WEEKLY AVAILABILITY CARD
+  ══════════════════════════════════════ */
+  .avail-wrapper {
+    width: 440px;
+    max-width: 100%;
+    background: var(--surface);
+    border-radius: 20px;
+    box-shadow:
+      0 8px 32px rgba(0,0,0,.10),
+      0 2px 8px  rgba(0,0,0,.06),
+      0 0 0 1px rgba(0,0,0,.04);
+    overflow: hidden;
+  }
+
+  /* Card header */
+  .avail-card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 20px 14px;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .avail-card-title {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-size: 17px;
+    font-weight: 800;
+    color: var(--text);
+    letter-spacing: -.3px;
+  }
+  .avail-card-title-icon {
+    width: 30px; height: 30px;
+    border-radius: 8px;
+    background: var(--teal-pale);
+    color: var(--teal);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .avail-save-btn {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--teal-deep);
+    background: var(--teal-pale);
+    border: 1.5px solid var(--teal-mid);
+    border-radius: 8px;
+    padding: 6px 14px;
+    cursor: pointer;
+    transition: opacity .15s;
+    text-decoration: none;
+  }
+  .avail-save-btn:hover { opacity: .8; }
+
+  /* Card body */
+  .avail-card-body {
+    padding: 14px 16px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+
+  /* Day rows */
+  .avail-day {
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    background: var(--surface);
+    overflow: hidden;
+    transition: box-shadow .15s, border-color .15s;
+  }
+  .avail-day:hover { border-color: rgba(15,45,69,.22); box-shadow: var(--shadow-sm); }
+  .avail-day--off  { background: var(--page-bg); }
+
+  /* Header row (day name + toggle) */
+  .avail-day__head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .avail-day--off .avail-day__head { border-bottom: none; }
+
+  .avail-day__name {
+    font-size: 12px; font-weight: 800;
+    color: var(--text); text-transform: uppercase; letter-spacing: .06em;
+  }
+  .avail-day__cap {
+    font-size: 10.5px; font-weight: 600; color: var(--muted);
+  }
+  .avail-day__spacer { flex: 1; }
+
+  /* Toggle */
+  .toggle-sw {
+    width: 36px; height: 20px; border-radius: 999px;
+    background: var(--border); position: relative;
+    cursor: pointer; transition: background .15s; flex-shrink: 0;
+  }
+  .toggle-sw--on { background: var(--teal); }
+  .toggle-sw::after {
+    content: ''; position: absolute; top: 2px; left: 2px;
+    width: 16px; height: 16px; border-radius: 50%;
+    background: #fff; box-shadow: 0 1px 4px rgba(0,0,0,.2);
+    transition: transform .15s;
+  }
+  .toggle-sw--on::after { transform: translateX(16px); }
+  .avail-day__toggle-label {
+    font-size: 11px; font-weight: 700;
+    color: var(--muted); min-width: 20px; text-align: right;
+  }
+  .avail-day--off .avail-day__toggle-label { color: var(--soft); }
+
+  /* Chips row */
+  .avail-day__slots {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 7px;
+    align-items: center;
+    padding: 10px 14px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .avail-day__slots::-webkit-scrollbar { display: none; }
+
+  /* Individual chip */
+  .avail-slot {
+    display: inline-flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0;
+    border-radius: 10px;
+    border: 1.5px solid transparent;
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+    overflow: hidden;
+    transition: transform .12s, box-shadow .12s;
+  }
+  .avail-slot:hover { transform: translateY(-1px); box-shadow: 0 3px 10px rgba(0,0,0,.12); }
+
+  .avail-slot__time {
+    padding: 5px 8px 5px 10px;
+    font-size: 12px; font-weight: 800; line-height: 1;
+  }
+  .avail-slot__label {
+    padding: 5px 9px 5px 0;
+    font-size: 10px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .04em; line-height: 1;
+    opacity: .7;
+  }
+
+  .avail-slot--open   { background: var(--teal-pale); border-color: var(--teal-mid); color: var(--teal-deep); }
+  .avail-slot--booked { background: rgba(15,45,69,.07); border-color: rgba(15,45,69,.18); color: var(--navy); }
+
+  /* Legend */
+  .avail-legend {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    padding: 4px 16px 18px;
+  }
+  .avail-legend__item {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 11px; color: var(--muted); font-weight: 600;
+  }
+  .avail-legend__dot {
+    width: 10px; height: 10px; border-radius: 4px; flex-shrink: 0;
+  }
+
+</style>
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════
+       NOTIFICATION POPUP
+  ═══════════════════════════════════ -->
+  <div class="notif-popup">
+
+    <!-- Header -->
+    <div class="notif-header">
+      <div class="notif-title-row">
+        <span class="notif-title">Notifications</span>
+        <span class="notif-count">4</span>
+      </div>
+      <a class="notif-mark-read">Mark all read</a>
+    </div>
+
+    <!-- List -->
+    <div class="notif-list">
+
+      <!-- 1. Welfare flag -->
+      <div class="notif-item">
+        <div class="notif-icon red">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+            <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+          </svg>
+        </div>
+        <div class="notif-item-body">
+          <div class="notif-item-title">Welfare flag — Client A</div>
+          <div class="notif-item-sub">Low mood logged 3 days in a row · Review recommended</div>
+        </div>
+        <div class="notif-dot"></div>
+      </div>
+
+      <!-- 2. Session reminder -->
+      <div class="notif-item">
+        <div class="notif-icon gray">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <polyline points="12 6 12 12 16 14"/>
+          </svg>
+        </div>
+        <div class="notif-item-body">
+          <div class="notif-item-title">Session in 30 mins — Client B</div>
+          <div class="notif-item-sub">Today at 1:30 PM · Video call</div>
+        </div>
+        <div class="notif-dot"></div>
+      </div>
+
+      <!-- 3. New message (highlighted) -->
+      <div class="notif-item highlighted">
+        <div class="notif-icon green">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          </svg>
+        </div>
+        <div class="notif-item-body">
+          <div class="notif-item-title">New message — Client E</div>
+          <div class="notif-item-sub">"Thanks for today, it really helped…" · 12 mins ago</div>
+        </div>
+        <div class="notif-dot"></div>
+      </div>
+
+      <!-- 4. Note reminder -->
+      <div class="notif-item">
+        <div class="notif-icon amber">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>
+            <polyline points="10 9 9 9 8 9"/>
+          </svg>
+        </div>
+        <div class="notif-item-body">
+          <div class="notif-item-title">Note reminder — Client E</div>
+          <div class="notif-item-sub">Session was yesterday · No note written yet</div>
+        </div>
+        <div class="notif-dot"></div>
+      </div>
+
+      <!-- 5. Availability updated (read) -->
+      <div class="notif-item read">
+        <div class="notif-icon slate">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 11 12 14 22 4"/>
+            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+          </svg>
+        </div>
+        <div class="notif-item-body">
+          <div class="notif-item-title">Availability updated</div>
+          <div class="notif-item-sub">April slots confirmed · 2 days ago</div>
+        </div>
+        <div class="notif-dot hidden"></div>
+      </div>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="notif-footer">
+      <a class="notif-view-all">View all notifications</a>
+    </div>
+
+  </div>
+
+  <!-- ═══════════════════════════════════
+       DIVIDER
+  ═══════════════════════════════════ -->
+  <hr class="section-divider">
+
+  <!-- ═══════════════════════════════════
+       WEEKLY AVAILABILITY
+  ═══════════════════════════════════ -->
+  <div class="avail-wrapper">
+
+    <!-- Card header -->
+    <div class="avail-card-head">
+      <div class="avail-card-title">
+        <span class="avail-card-title-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+        </span>
+        Weekly Availability
+      </div>
+      <a class="avail-save-btn">Save changes</a>
+    </div>
+
+    <!-- Day cards -->
+    <div class="avail-card-body">
+
+      <!-- Monday -->
+      <div class="avail-day">
+        <div class="avail-day__head">
+          <span class="avail-day__name">Monday</span>
+          <span class="avail-day__cap">2 open · 3 booked</span>
+          <div class="avail-day__spacer"></div>
+          <div class="toggle-sw toggle-sw--on"></div>
+          <span class="avail-day__toggle-label">On</span>
+        </div>
+        <div class="avail-day__slots">
+          <div class="avail-slot avail-slot--booked"><span class="avail-slot__time">9 AM</span><span class="avail-slot__label">Booked</span></div>
+          <div class="avail-slot avail-slot--open"><span class="avail-slot__time">10 AM</span><span class="avail-slot__label">Open</span></div>
+          <div class="avail-slot avail-slot--booked"><span class="avail-slot__time">11 AM</span><span class="avail-slot__label">Booked</span></div>
+          <div class="avail-slot avail-slot--open"><span class="avail-slot__time">2 PM</span><span class="avail-slot__label">Open</span></div>
+          <div class="avail-slot avail-slot--booked"><span class="avail-slot__time">3 PM</span><span class="avail-slot__label">Booked</span></div>
+        </div>
+      </div>
+
+      <!-- Tuesday -->
+      <div class="avail-day">
+        <div class="avail-day__head">
+          <span class="avail-day__name">Tuesday</span>
+          <span class="avail-day__cap">2 open · 1 booked</span>
+          <div class="avail-day__spacer"></div>
+          <div class="toggle-sw toggle-sw--on"></div>
+          <span class="avail-day__toggle-label">On</span>
+        </div>
+        <div class="avail-day__slots">
+          <div class="avail-slot avail-slot--open"><span class="avail-slot__time">10 AM</span><span class="avail-slot__label">Open</span></div>
+          <div class="avail-slot avail-slot--booked"><span class="avail-slot__time">2:30 PM</span><span class="avail-slot__label">Booked</span></div>
+          <div class="avail-slot avail-slot--open"><span class="avail-slot__time">4 PM</span><span class="avail-slot__label">Open</span></div>
+        </div>
+      </div>
+
+      <!-- Wednesday -->
+      <div class="avail-day">
+        <div class="avail-day__head">
+          <span class="avail-day__name">Wednesday</span>
+          <span class="avail-day__cap">1 open · 1 booked</span>
+          <div class="avail-day__spacer"></div>
+          <div class="toggle-sw toggle-sw--on"></div>
+          <span class="avail-day__toggle-label">On</span>
+        </div>
+        <div class="avail-day__slots">
+          <div class="avail-slot avail-slot--booked"><span class="avail-slot__time">11 AM</span><span class="avail-slot__label">Booked</span></div>
+          <div class="avail-slot avail-slot--open"><span class="avail-slot__time">2 PM</span><span class="avail-slot__label">Open</span></div>
+        </div>
+      </div>
+
+      <!-- Thursday — day off -->
+      <div class="avail-day avail-day--off">
+        <div class="avail-day__head">
+          <span class="avail-day__name">Thursday</span>
+          <span class="avail-day__cap" style="color:var(--soft);">Not available</span>
+          <div class="avail-day__spacer"></div>
+          <div class="toggle-sw"></div>
+          <span class="avail-day__toggle-label">Off</span>
+        </div>
+      </div>
+
+      <!-- Friday -->
+      <div class="avail-day">
+        <div class="avail-day__head">
+          <span class="avail-day__name">Friday</span>
+          <span class="avail-day__cap">2 open · 1 booked</span>
+          <div class="avail-day__spacer"></div>
+          <div class="toggle-sw toggle-sw--on"></div>
+          <span class="avail-day__toggle-label">On</span>
+        </div>
+        <div class="avail-day__slots">
+          <div class="avail-slot avail-slot--open"><span class="avail-slot__time">10 AM</span><span class="avail-slot__label">Open</span></div>
+          <div class="avail-slot avail-slot--open"><span class="avail-slot__time">11 AM</span><span class="avail-slot__label">Open</span></div>
+          <div class="avail-slot avail-slot--booked"><span class="avail-slot__time">3 PM</span><span class="avail-slot__label">Booked</span></div>
+        </div>
+      </div>
+
+      <!-- Weekend — day off -->
+      <div class="avail-day avail-day--off">
+        <div class="avail-day__head">
+          <span class="avail-day__name">Weekend</span>
+          <span class="avail-day__cap" style="color:var(--soft);">Not available</span>
+          <div class="avail-day__spacer"></div>
+          <div class="toggle-sw"></div>
+          <span class="avail-day__toggle-label">Off</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Legend -->
+    <div class="avail-legend">
+      <span class="avail-legend__item">
+        <span class="avail-legend__dot" style="background:var(--teal-pale);border:1px solid var(--teal-mid);"></span>Open
+      </span>
+      <span class="avail-legend__item">
+        <span class="avail-legend__dot" style="background:rgba(15,45,69,.1);border:1px solid rgba(15,45,69,.2);"></span>Booked
+      </span>
+      <span class="avail-legend__item">
+        <span class="avail-legend__dot" style="background:var(--page-bg);border:1px solid var(--border);"></span>Day off
+      </span>
+    </div>
+
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Add Ambassador — Luminwell Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="admin.css">
+<style>
+
+  /* ── Form layout ── */
+  .form-page {
+    max-width: 820px;
+    margin: 0 auto;
+  }
+
+  .form-section {
+    background: var(--adm-surface);
+    border: 1px solid var(--adm-border);
+    border-radius: var(--adm-r-lg);
+    box-shadow: var(--adm-shadow-sm);
+    margin-bottom: 20px;
+    overflow: hidden;
+  }
+
+  .form-section-head {
+    padding: 18px 28px;
+    border-bottom: 1px solid var(--adm-border);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .form-section-icon {
+    width: 36px; height: 36px;
+    border-radius: var(--adm-r-sm);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    background: var(--adm-blue-lt);
+    color: var(--adm-blue-dk);
+  }
+  .form-section-title { font-size: 15px; font-weight: 800; color: var(--adm-txt-head); }
+  .form-section-sub   { font-size: 12px; color: var(--adm-txt-muted); margin-top: 2px; }
+
+  .form-section-body { padding: 24px 28px; }
+
+  /* ── Form grid ── */
+  .form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .form-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px; }
+
+  /* ── Form fields ── */
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field-label {
+    font-size: 12px; font-weight: 700; color: var(--adm-txt-head);
+    display: flex; align-items: center; gap: 5px;
+  }
+  .field-required { color: var(--adm-blue); font-size: 14px; line-height: 1; }
+  .field-hint { font-size: 11px; color: var(--adm-txt-muted); margin-top: 2px; }
+
+  .form-input,
+  .form-select,
+  .form-textarea {
+    width: 100%;
+    border: 1.5px solid var(--adm-border);
+    border-radius: var(--adm-r-sm);
+    padding: 10px 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    color: var(--adm-txt-head);
+    background: var(--adm-surface);
+    outline: none;
+    transition: border-color .15s, box-shadow .15s;
+    -webkit-appearance: none;
+  }
+  .form-input:focus,
+  .form-select:focus,
+  .form-textarea:focus {
+    border-color: var(--adm-blue);
+    box-shadow: 0 0 0 3px rgba(45,150,118,.12);
+  }
+  .form-input::placeholder,
+  .form-textarea::placeholder { color: var(--adm-txt-faint); }
+  .form-textarea { resize: vertical; min-height: 90px; line-height: 1.6; }
+  .form-select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 32px;
+    cursor: pointer;
+  }
+
+  /* ── Checkbox group ── */
+  .check-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .check-group.cols-1 { grid-template-columns: 1fr; }
+
+  .check-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 12px;
+    border: 1.5px solid var(--adm-border);
+    border-radius: var(--adm-r-sm);
+    cursor: pointer;
+    transition: border-color .15s, background .15s;
+  }
+  .check-item:hover { border-color: var(--adm-blue); background: var(--adm-blue-xlt); }
+
+  .check-item input[type="checkbox"] {
+    width: 16px; height: 16px;
+    border: 1.5px solid var(--adm-border);
+    border-radius: 4px;
+    cursor: pointer;
+    flex-shrink: 0;
+    margin-top: 1px;
+    accent-color: var(--adm-blue);
+  }
+
+  .check-item-label { font-size: 13px; color: var(--adm-txt-body); font-weight: 500; line-height: 1.4; }
+  .check-item-sub   { font-size: 11px; color: var(--adm-txt-muted); margin-top: 2px; }
+
+  /* ── Radio pill group ── */
+  .radio-pills {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .radio-pill {
+    display: flex;
+    align-items: center;
+  }
+  .radio-pill input[type="radio"] { display: none; }
+  .radio-pill label {
+    padding: 8px 18px;
+    border: 1.5px solid var(--adm-border);
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--adm-txt-muted);
+    cursor: pointer;
+    transition: all .15s;
+    white-space: nowrap;
+  }
+  .radio-pill input:checked + label {
+    background: var(--adm-blue);
+    border-color: var(--adm-blue);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(45,150,118,.3);
+  }
+  .radio-pill label:hover { border-color: var(--adm-blue); color: var(--adm-blue); }
+
+  /* ── Agreement checkboxes ── */
+  .agree-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 14px;
+    border: 1.5px solid var(--adm-border);
+    border-radius: var(--adm-r-sm);
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: background .15s;
+  }
+  .agree-item:last-child { margin-bottom: 0; }
+  .agree-item:hover { background: var(--adm-blue-xlt); border-color: var(--adm-blue); }
+  .agree-item input[type="checkbox"] { width: 16px; height: 16px; flex-shrink: 0; margin-top: 2px; accent-color: var(--adm-blue); }
+  .agree-item p { font-size: 13px; color: var(--adm-txt-body); line-height: 1.5; }
+
+  /* ── Final agreement ── */
+  .final-agree {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 16px;
+    background: var(--adm-blue-lt);
+    border: 1.5px solid var(--adm-blue);
+    border-radius: var(--adm-r-sm);
+  }
+  .final-agree input[type="checkbox"] { width: 18px; height: 18px; flex-shrink: 0; margin-top: 2px; accent-color: var(--adm-blue); }
+  .final-agree p { font-size: 13px; color: var(--adm-blue-dk); font-weight: 600; line-height: 1.5; }
+
+  /* ── Form actions ── */
+  .form-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 28px;
+    background: var(--adm-bg);
+    border-top: 1px solid var(--adm-border);
+    border-radius: 0 0 var(--adm-r-lg) var(--adm-r-lg);
+    position: sticky;
+    bottom: 0;
+    z-index: 10;
+  }
+  .form-actions-note { font-size: 12px; color: var(--adm-txt-muted); display: flex; align-items: center; gap: 6px; }
+
+  /* ── Divider ── */
+  .form-divider { height: 1px; background: var(--adm-border); margin: 20px 0; }
+
+  /* ── Step indicator ── */
+  .step-indicator {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin-bottom: 24px;
+  }
+  .step {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+  }
+  .step-num {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--adm-blue);
+    color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 800;
+    flex-shrink: 0;
+  }
+  .step-label { font-size: 12px; font-weight: 700; color: var(--adm-txt-head); white-space: nowrap; }
+  .step-line { flex: 1; height: 2px; background: var(--adm-border); margin: 0 8px; }
+
+  /* ── Input with icon ── */
+  .input-icon-wrap { position: relative; }
+  .input-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--adm-txt-faint);
+    pointer-events: none;
+  }
+  .input-icon-wrap .form-input { padding-left: 38px; }
+
+  /* ── Avatar upload placeholder ── */
+  .ava-upload {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+    border: 2px dashed var(--adm-border);
+    border-radius: var(--adm-r-md);
+    cursor: pointer;
+    transition: border-color .15s;
+    margin-bottom: 18px;
+  }
+  .ava-upload:hover { border-color: var(--adm-blue); }
+  .ava-upload-preview {
+    width: 56px; height: 56px; border-radius: 50%;
+    background: var(--adm-blue-lt);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--adm-blue-dk); flex-shrink: 0;
+  }
+  .ava-upload-text { font-size: 13px; color: var(--adm-txt-muted); }
+  .ava-upload-text strong { color: var(--adm-blue); }
+</style>
+</head>
+<body>
+
+<input type="checkbox" id="sidebar-toggle" class="sidebar-toggle-check">
+
+<div class="admin-shell">
+
+  <aside class="admin-sidebar">
+    <div class="sidebar__logo"><div class="logo-mark"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17 8C8 10 5.9 16.17 3.82 22A13.34 13.34 0 0 0 18 8Z"/><path d="M9 9c-1.5 3.5-2.5 7-3 10C8 18 11 15 13 12" fill="rgba(255,255,255,.35)"/></svg></div><div class="logo-text-wrap"><div class="logo-name">Luminwell</div><span class="logo-badge-pill">ADMIN</span></div></div>
+    <label for="sidebar-toggle" class="sidebar__collapse-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></label>
+    <nav class="sidebar__nav">
+      <div class="nav-section">
+        <p class="nav-label">MAIN</p>
+        <a href="admin-home.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span class="link-text">Overview</span></a>
+        <a href="admin-analytics.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg><span class="link-text">Analytics</span></a>
+      </div>
+      <div class="nav-section">
+        <p class="nav-label">PEOPLE</p>
+        <a href="admin-users.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span class="link-text">Users</span></a>
+        <a href="admin-ambassadors.html" class="sidebar__link active"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><span class="link-text">Ambassadors</span></a>
+        <a href="admin-matching.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg><span class="link-text">Matching</span></a>
+      </div>
+      <div class="nav-section">
+        <p class="nav-label">OPERATIONS</p>
+        <a href="admin-sessions.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><span class="link-text">Sessions</span></a>
+        <a href="admin-welfare.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span class="link-text">Welfare &amp; Safety</span></a>
+        <a href="admin-messages.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span class="link-text">Messages</span></a>
+      </div>
+      <div class="nav-section">
+        <p class="nav-label">PLATFORM</p>
+        <a href="admin-content.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span class="link-text">Content</span></a>
+        <a href="admin-settings.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06-.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span class="link-text">Settings</span></a>
+        <a href="admin-privacy.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><span class="link-text">Privacy &amp; GDPR</span></a>
+      </div>
+    </nav>
+    <div class="sidebar__foot">
+      <div class="sidebar__foot-user"><div class="admin-ava-sm">A</div><div class="sidebar__foot-info"><p>Admin User</p><small>Super Admin</small></div></div>
+      <button class="sidebar__signout">Sign out</button>
+    </div>
+  </aside>
+
+  <div class="admin-main">
+    <header class="admin-topbar">
+      <div class="topbar-left">
+        <label for="sidebar-toggle" class="topbar-menu-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></label>
+        <nav class="breadcrumb">
+          <a href="admin-home.html">Admin</a>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+          <a href="admin-ambassadors.html">Ambassadors</a>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+          <span class="bc-active">Add Ambassador</span>
+        </nav>
+      </div>
+      <div class="topbar-right">
+        <div class="topbar-user"><div class="topbar-ava">A</div><div class="topbar-user-info"><div class="u-name">Admin</div><div class="u-role">Super Admin</div></div></div>
+      </div>
+    </header>
+
+    <div class="admin-content">
+      <div class="form-page">
+
+        <!-- Page heading -->
+        <div style="margin-bottom:24px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <div>
+              <h1 style="font-size:22px;font-weight:800;color:var(--adm-txt-head);letter-spacing:-.4px;">Add New Ambassador</h1>
+              <p style="font-size:13px;color:var(--adm-txt-muted);margin-top:3px;">Complete the form to register a new Luminwell peer support ambassador.</p>
+            </div>
+            <a href="admin-ambassadors.html" class="btn btn-ghost" style="font-size:13px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:5px;"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg> Back to list
+            </a>
+          </div>
+        </div>
+
+        <!-- Step indicator -->
+        <div class="step-indicator">
+          <div class="step">
+            <div class="step-num">1</div>
+            <span class="step-label">Basic Info</span>
+          </div>
+          <div class="step-line"></div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <span class="step-label">Skills &amp; Expertise</span>
+          </div>
+          <div class="step-line"></div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <span class="step-label">Style &amp; Availability</span>
+          </div>
+          <div class="step-line"></div>
+          <div class="step">
+            <div class="step-num">4</div>
+            <span class="step-label">Boundaries</span>
+          </div>
+          <div class="step-line"></div>
+          <div class="step">
+            <div class="step-num">5</div>
+            <span class="step-label">Public Profile</span>
+          </div>
+        </div>
+
+        <form>
+
+          <!-- ── SECTION 1: Basic Info ── -->
+          <div class="form-section">
+            <div class="form-section-head">
+              <div class="form-section-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              </div>
+              <div>
+                <div class="form-section-title">Basic Information</div>
+                <div class="form-section-sub">Personal and contact details for the ambassador account</div>
+              </div>
+            </div>
+            <div class="form-section-body">
+
+              <!-- Profile photo -->
+              <div class="ava-upload">
+                <div class="ava-upload-preview">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                </div>
+                <div class="ava-upload-text">
+                  <p><strong>Upload profile photo</strong></p>
+                  <p>JPG or PNG · Max 5 MB · Recommended 200 × 200 px</p>
+                </div>
+                <button type="button" class="btn btn-ghost btn-sm" style="margin-left:auto;">Choose file</button>
+              </div>
+
+              <div class="form-grid-2" style="margin-bottom:18px;">
+                <div class="field">
+                  <label class="field-label">Full Name <span class="field-required">*</span></label>
+                  <input type="text" class="form-input" placeholder="e.g. Maya Johnson">
+                </div>
+                <div class="field">
+                  <label class="field-label">Email Address <span class="field-required">*</span></label>
+                  <div class="input-icon-wrap">
+                    <span class="input-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>
+                    <input type="email" class="form-input" placeholder="university email address">
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-grid-3" style="margin-bottom:18px;">
+                <div class="field">
+                  <label class="field-label">Age Group <span class="field-required">*</span></label>
+                  <select class="form-select">
+                    <option value="">Select age group</option>
+                    <option>18–20</option>
+                    <option>21–25</option>
+                    <option>26–30</option>
+                    <option>31+</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label class="field-label">University <span class="field-required">*</span></label>
+                  <select class="form-select">
+                    <option value="">Select university</option>
+                    <option>University of Manchester</option>
+                    <option>UCL</option>
+                    <option>King's College London</option>
+                    <option>University of Leeds</option>
+                    <option>University of Edinburgh</option>
+                    <option>University of Birmingham</option>
+                    <option>Durham University</option>
+                    <option>University of Sheffield</option>
+                    <option>University of Bristol</option>
+                    <option>University of Nottingham</option>
+                    <option>Other</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label class="field-label">Country <span class="field-required">*</span></label>
+                  <input type="text" class="form-input" placeholder="e.g. United Kingdom">
+                </div>
+              </div>
+
+              <div class="field">
+                <label class="field-label">Languages Spoken <span class="field-required">*</span><span style="font-size:11px;color:var(--adm-txt-faint);font-weight:400;margin-left:4px;">Select all that apply</span></label>
+                <div class="check-group" style="margin-top:4px;">
+                  <label class="check-item"><input type="checkbox" checked> <div class="check-item-label">English</div></label>
+                  <label class="check-item"><input type="checkbox"> <div class="check-item-label">French</div></label>
+                  <label class="check-item"><input type="checkbox"> <div class="check-item-label">Spanish</div></label>
+                  <label class="check-item"><input type="checkbox"> <div class="check-item-label">Arabic</div></label>
+                  <label class="check-item"><input type="checkbox"> <div class="check-item-label">Mandarin</div></label>
+                  <label class="check-item"><input type="checkbox"> <div class="check-item-label">Urdu / Hindi</div></label>
+                  <label class="check-item"><input type="checkbox"> <div class="check-item-label">Portuguese</div></label>
+                  <label class="check-item"><input type="checkbox"> <div class="check-item-label">Other</div></label>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- ── SECTION 2: Skills & Expertise ── -->
+          <div class="form-section">
+            <div class="form-section-head">
+              <div class="form-section-icon" style="background:var(--adm-teal-lt);color:var(--adm-teal);">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              </div>
+              <div>
+                <div class="form-section-title">Skills &amp; Expertise</div>
+                <div class="form-section-sub">Areas of peer support knowledge and background experience</div>
+              </div>
+            </div>
+            <div class="form-section-body">
+
+              <div class="field" style="margin-bottom:18px;">
+                <label class="field-label">What areas can you support users with? <span class="field-required">*</span><span style="font-size:11px;color:var(--adm-txt-faint);font-weight:400;margin-left:4px;">Select all that apply</span></label>
+                <div class="check-group" style="margin-top:6px;">
+                  <label class="check-item"><input type="checkbox"> <div><div class="check-item-label">Mental wellness peer support</div></div></label>
+                  <label class="check-item"><input type="checkbox"> <div><div class="check-item-label">Academic support</div></div></label>
+                  <label class="check-item"><input type="checkbox"> <div><div class="check-item-label">Career / resume / job guidance</div></div></label>
+                  <label class="check-item"><input type="checkbox"> <div><div class="check-item-label">Budgeting &amp; financial literacy</div></div></label>
+                  <label class="check-item"><input type="checkbox"> <div><div class="check-item-label">Immigration / international student support</div></div></label>
+                  <label class="check-item"><input type="checkbox"> <div><div class="check-item-label">Housing &amp; settlement</div></div></label>
+                  <label class="check-item"><input type="checkbox"> <div><div class="check-item-label">Digital safety &amp; online well-being</div></div></label>
+                  <label class="check-item"><input type="checkbox"> <div><div class="check-item-label">Time management &amp; productivity</div></div></label>
+                  <label class="check-item"><input type="checkbox"> <div><div class="check-item-label">Motivation &amp; confidence building</div></div></label>
+                  <label class="check-item"><input type="checkbox"> <div><div class="check-item-label">Grief &amp; loss</div></div></label>
+                  <label class="check-item"><input type="checkbox"> <div><div class="check-item-label">Social anxiety &amp; loneliness</div></div></label>
+                  <label class="check-item"><input type="checkbox"> <div><div class="check-item-label">Relationships &amp; identity</div></div></label>
+                </div>
+              </div>
+
+              <div class="field" style="margin-bottom:18px;">
+                <label class="field-label">Relevant certifications or training <span style="font-size:11px;color:var(--adm-txt-faint);font-weight:400;margin-left:2px;">(Optional)</span></label>
+                <textarea class="form-textarea" placeholder="List any certifications, training programmes, or relevant qualifications (e.g. Mental Health First Aid, CBT-informed training)…"></textarea>
+              </div>
+
+              <div class="field">
+                <label class="field-label">Years of peer support / mentoring / volunteering experience <span class="field-required">*</span></label>
+                <div class="radio-pills" style="margin-top:8px;">
+                  <div class="radio-pill"><input type="radio" name="exp" id="exp-0" value="0-1"><label for="exp-0">0–1 years</label></div>
+                  <div class="radio-pill"><input type="radio" name="exp" id="exp-1" value="1-2"><label for="exp-1">1–2 years</label></div>
+                  <div class="radio-pill"><input type="radio" name="exp" id="exp-2" value="2-3" checked><label for="exp-2">2–3 years</label></div>
+                  <div class="radio-pill"><input type="radio" name="exp" id="exp-3" value="4+"><label for="exp-3">4+ years</label></div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- ── SECTION 3: Style & Availability ── -->
+          <div class="form-section">
+            <div class="form-section-head">
+              <div class="form-section-icon" style="background:var(--adm-amber-lt);color:var(--adm-amber);">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              </div>
+              <div>
+                <div class="form-section-title">Style &amp; Availability</div>
+                <div class="form-section-sub">Working preferences and client capacity</div>
+              </div>
+            </div>
+            <div class="form-section-body">
+
+              <div class="field" style="margin-bottom:20px;">
+                <label class="field-label">Maximum number of clients you can support at one time <span class="field-required">*</span></label>
+                <div class="radio-pills" style="margin-top:8px;">
+                  <div class="radio-pill"><input type="radio" name="cap" id="cap-1" value="1-3"><label for="cap-1">1–3</label></div>
+                  <div class="radio-pill"><input type="radio" name="cap" id="cap-2" value="4-6" checked><label for="cap-2">4–6</label></div>
+                  <div class="radio-pill"><input type="radio" name="cap" id="cap-3" value="7-10"><label for="cap-3">7–10</label></div>
+                  <div class="radio-pill"><input type="radio" name="cap" id="cap-4" value="10+"><label for="cap-4">10+</label></div>
+                </div>
+              </div>
+
+              <div class="field" style="margin-bottom:20px;">
+                <label class="field-label">Preferred session format <span class="field-required">*</span></label>
+                <div class="radio-pills" style="margin-top:8px;">
+                  <div class="radio-pill"><input type="radio" name="fmt" id="fmt-1" value="video"><label for="fmt-1">Video call</label></div>
+                  <div class="radio-pill"><input type="radio" name="fmt" id="fmt-2" value="chat" checked><label for="fmt-2">Chat / messaging</label></div>
+                  <div class="radio-pill"><input type="radio" name="fmt" id="fmt-3" value="both"><label for="fmt-3">Both</label></div>
+                </div>
+              </div>
+
+              <div class="field" style="margin-bottom:20px;">
+                <label class="field-label">Weekly hours available <span class="field-required">*</span></label>
+                <div class="radio-pills" style="margin-top:8px;">
+                  <div class="radio-pill"><input type="radio" name="hrs" id="hrs-1" value="2-4"><label for="hrs-1">2–4 hrs</label></div>
+                  <div class="radio-pill"><input type="radio" name="hrs" id="hrs-2" value="5-8" checked><label for="hrs-2">5–8 hrs</label></div>
+                  <div class="radio-pill"><input type="radio" name="hrs" id="hrs-3" value="9-12"><label for="hrs-3">9–12 hrs</label></div>
+                  <div class="radio-pill"><input type="radio" name="hrs" id="hrs-4" value="12+"><label for="hrs-4">12+ hrs</label></div>
+                </div>
+              </div>
+
+              <div class="field">
+                <label class="field-label" style="margin-bottom:8px;">Weekly availability <span class="field-required">*</span><span style="font-size:11px;color:var(--adm-txt-faint);font-weight:400;margin-left:4px;">Select all available slots</span></label>
+                <div style="display:flex;flex-direction:column;gap:10px;">
+
+                  <div style="display:grid;grid-template-columns:80px repeat(3,1fr);gap:8px;align-items:center;">
+                    <span style="font-size:11px;font-weight:700;color:var(--adm-txt-muted);"></span>
+                    <span style="font-size:11px;font-weight:700;color:var(--adm-txt-muted);text-align:center;">Morning</span>
+                    <span style="font-size:11px;font-weight:700;color:var(--adm-txt-muted);text-align:center;">Afternoon</span>
+                    <span style="font-size:11px;font-weight:700;color:var(--adm-txt-muted);text-align:center;">Evening</span>
+                  </div>
+
+                  <div style="display:grid;grid-template-columns:80px repeat(3,1fr);gap:8px;align-items:center;">
+                    <span style="font-size:12px;font-weight:700;color:var(--adm-txt-head);">Monday</span>
+                    <label class="check-item" style="justify-content:center;padding:8px;"><input type="checkbox" checked><span style="font-size:11px;color:var(--adm-txt-muted);margin-left:4px;">9–12</span></label>
+                    <label class="check-item" style="justify-content:center;padding:8px;"><input type="checkbox"><span style="font-size:11px;color:var(--adm-txt-muted);margin-left:4px;">12–5</span></label>
+                    <label class="check-item" style="justify-content:center;padding:8px;"><input type="checkbox"><span style="font-size:11px;color:var(--adm-txt-muted);margin-left:4px;">5–9</span></label>
+                  </div>
+
+                  <div style="display:grid;grid-template-columns:80px repeat(3,1fr);gap:8px;align-items:center;">
+                    <span style="font-size:12px;font-weight:700;color:var(--adm-txt-head);">Tuesday</span>
+                    <label class="check-item" style="justify-content:center;padding:8px;"><input type="checkbox"><span style="font-size:11px;color:var(--adm-txt-muted);margin-left:4px;">9–12</span></label>
+                    <label class="check-item" style="justify-content:center;padding:8px;"><input type="checkbox" checked><span style="font-size:11px;color:var(--adm-txt-muted);margin-left:4px;">12–5</span></label>
+                    <label class="check-item" style="justify-content:center;padding:8px;"><input type="checkbox"><span style="font-size:11px;color:var(--adm-txt-muted);margin-left:4px;">5–9</span></label>
+                  </div>
+
+                  <div style="display:grid;grid-template-columns:80px repeat(3,1fr);gap:8px;align-items:center;">
+                    <span style="font-size:12px;font-weight:700;color:var(--adm-txt-head);">Wednesday</span>
+                    <label class="check-item" style="justify-content:center;padding:8px;"><input type="checkbox" checked><span style="font-size:11px;color:var(--adm-txt-muted);margin-left:4px;">9–12</span></label>
+                    <label class="check-item" style="justify-content:center;padding:8px;"><input type="checkbox"><span style="font-size:11px;color:var(--adm-txt-muted);margin-left:4px;">12–5</span></label>
+                    <label class="check-item" style="justify-content:center;padding:8px;"><input type="checkbox"><span style="font-size:11px;color:var(--adm-txt-muted);margin-left:4px;">5–9</span></label>
+                  </div>
+
+                  <div style="display:grid;grid-template-columns:80px repeat(3,1fr);gap:8px;align-items:center;">
+                    <span style="font-size:12px;font-weight:700;color:var(--adm-txt-head);">Thursday</span>
+                    <label class="check-item" style="justify-content:center;padding:8px;"><input type="checkbox"><span style="font-size:11px;color:var(--adm-txt-muted);margin-left:4px;">9–12</span></label>
+                    <label class="check-item" style="justify-content:center;padding:8px;"><input type="checkbox"><span style="font-size:11px;color:var(--adm-txt-muted);margin-left:4px;">12–5</span></label>
+                    <label class="check-item" style="justify-content:center;padding:8px;"><input type="checkbox"><span style="font-size:11px;color:var(--adm-txt-muted);margin-left:4px;">5–9</span></label>
+                  </div>
+
+                  <div style="display:grid;grid-template-columns:80px repeat(3,1fr);gap:8px;align-items:center;">
+                    <span style="font-size:12px;font-weight:700;color:var(--adm-txt-head);">Friday</span>
+                    <label class="check-item" style="justify-content:center;padding:8px;"><input type="checkbox" checked><span style="font-size:11px;color:var(--adm-txt-muted);margin-left:4px;">9–12</span></label>
+                    <label class="check-item" style="justify-content:center;padding:8px;"><input type="checkbox"><span style="font-size:11px;color:var(--adm-txt-muted);margin-left:4px;">12–5</span></label>
+                    <label class="check-item" style="justify-content:center;padding:8px;"><input type="checkbox"><span style="font-size:11px;color:var(--adm-txt-muted);margin-left:4px;">5–9</span></label>
+                  </div>
+
+                  <div style="display:grid;grid-template-columns:80px repeat(3,1fr);gap:8px;align-items:center;">
+                    <span style="font-size:12px;font-weight:700;color:var(--adm-txt-head);">Weekend</span>
+                    <label class="check-item" style="justify-content:center;padding:8px;"><input type="checkbox"><span style="font-size:11px;color:var(--adm-txt-muted);margin-left:4px;">9–12</span></label>
+                    <label class="check-item" style="justify-content:center;padding:8px;"><input type="checkbox"><span style="font-size:11px;color:var(--adm-txt-muted);margin-left:4px;">12–5</span></label>
+                    <label class="check-item" style="justify-content:center;padding:8px;"><input type="checkbox"><span style="font-size:11px;color:var(--adm-txt-muted);margin-left:4px;">5–9</span></label>
+                  </div>
+
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- ── SECTION 4: Boundaries & Agreement ── -->
+          <div class="form-section">
+            <div class="form-section-head">
+              <div class="form-section-icon" style="background:var(--adm-red-lt);color:var(--adm-red);">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              </div>
+              <div>
+                <div class="form-section-title">Boundaries &amp; Agreement</div>
+                <div class="form-section-sub">All items must be acknowledged before the account can be created</div>
+              </div>
+            </div>
+            <div class="form-section-body">
+
+              <p style="font-size:12px;color:var(--adm-txt-muted);margin-bottom:14px;">Boundaries &amp; Ethics — All must be checked <span style="color:var(--adm-blue);">*</span></p>
+
+              <label class="agree-item"><input type="checkbox" checked><p>I understand Luminwell is a peer support platform, not clinical therapy.</p></label>
+              <label class="agree-item"><input type="checkbox" checked><p>I will keep user information confidential and not share it outside the platform.</p></label>
+              <label class="agree-item"><input type="checkbox"><p>I will not give medical or legal advice to users at any time.</p></label>
+              <label class="agree-item"><input type="checkbox"><p>I will escalate emergencies to the Luminwell team / appropriate services immediately.</p></label>
+              <label class="agree-item"><input type="checkbox"><p>I agree to follow Luminwell's community guidelines and code of conduct.</p></label>
+              <label class="agree-item"><input type="checkbox"><p>I understand that repeated boundary violations may result in account suspension.</p></label>
+
+              <div class="form-divider"></div>
+
+              <p style="font-size:12px;color:var(--adm-txt-muted);margin-bottom:10px;">Final Agreement <span style="color:var(--adm-blue);">*</span></p>
+              <label class="final-agree">
+                <input type="checkbox" checked>
+                <p>I confirm that all the information provided is accurate and I agree to the Luminwell Ambassador Terms of Service and Privacy Policy.</p>
+              </label>
+
+            </div>
+          </div>
+
+          <!-- ── SECTION 5: Public Profile ── -->
+          <div class="form-section">
+            <div class="form-section-head">
+              <div class="form-section-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M6 20v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/></svg>
+              </div>
+              <div>
+                <div class="form-section-title">Public Profile</div>
+                <div class="form-section-sub">What users will see when browsing ambassadors</div>
+              </div>
+            </div>
+            <div class="form-section-body">
+
+              <div class="field" style="margin-bottom:18px;">
+                <label class="field-label">Short Bio (for users to see) <span class="field-required">*</span></label>
+                <p class="field-hint">Tell users about yourself in 3–4 sentences. This is your chance to build trust.</p>
+                <textarea class="form-textarea" style="min-height:110px;" placeholder="Share your background, what motivates you to help others, and what makes you a great ambassador. Keep it warm, honest, and approachable…"></textarea>
+                <p style="font-size:11px;color:var(--adm-txt-faint);text-align:right;margin-top:3px;">0 / 400 characters</p>
+              </div>
+
+              <div class="field" style="margin-bottom:18px;">
+                <label class="field-label">Motivation to become an ambassador <span class="field-required">*</span></label>
+                <textarea class="form-textarea" placeholder='"I want to support others through the same challenges I faced in my first year…"'></textarea>
+              </div>
+
+              <div class="field">
+                <label class="field-label">Areas you prefer to be matched with <span class="field-required">*</span><span style="font-size:11px;color:var(--adm-txt-faint);font-weight:400;margin-left:4px;">Select all that apply</span></label>
+                <div class="check-group" style="margin-top:8px;">
+                  <label class="check-item"><input type="checkbox" checked> <div class="check-item-label">University students</div></label>
+                  <label class="check-item"><input type="checkbox"> <div class="check-item-label">Teen students</div></label>
+                  <label class="check-item"><input type="checkbox" checked> <div class="check-item-label">New immigrants</div></label>
+                  <label class="check-item"><input type="checkbox"> <div class="check-item-label">Early-career professionals</div></label>
+                  <label class="check-item"><input type="checkbox" checked> <div class="check-item-label">People struggling with stress &amp; anxiety</div></label>
+                  <label class="check-item"><input type="checkbox"> <div class="check-item-label">People who feel lonely / isolated</div></label>
+                  <label class="check-item"><input type="checkbox"> <div class="check-item-label">People in academic crisis</div></label>
+                  <label class="check-item"><input type="checkbox"> <div class="check-item-label">Any — no preference</div></label>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Form actions bar -->
+            <div class="form-actions">
+              <div class="form-actions-note">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                All data is encrypted and handled per GDPR
+              </div>
+              <div style="display:flex;gap:10px;">
+                <a href="admin-ambassadors.html" class="btn btn-ghost">Cancel</a>
+                <button type="button" class="btn btn-ghost">Save draft</button>
+                <button type="submit" class="btn btn-primary">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right:5px;"><polyline points="20 6 9 17 4 12"/></svg>
+                  Create ambassador account
+                </button>
+              </div>
+            </div>
+
+          </div>
+
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

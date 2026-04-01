@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ambassadors — Luminwell Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="admin.css">
+<style>
+  /* ── Tab visibility ── */
+  html:has(#amb-tab-active:checked)   .amb-panels #amb-panel-active   { display: block; }
+  html:has(#amb-tab-pending:checked)  .amb-panels #amb-panel-pending  { display: block; }
+  html:has(#amb-tab-inactive:checked) .amb-panels #amb-panel-inactive { display: block; }
+
+  /* ── Row selection: highlight selected row ── */
+  html:has(#as-1:checked)  tr[data-amb="1"],
+  html:has(#as-2:checked)  tr[data-amb="2"],
+  html:has(#as-3:checked)  tr[data-amb="3"],
+  html:has(#as-4:checked)  tr[data-amb="4"],
+  html:has(#as-5:checked)  tr[data-amb="5"],
+  html:has(#as-6:checked)  tr[data-amb="6"],
+  html:has(#as-7:checked)  tr[data-amb="7"],
+  html:has(#as-8:checked)  tr[data-amb="8"],
+  html:has(#as-9:checked)  tr[data-amb="9"],
+  html:has(#as-10:checked) tr[data-amb="10"] {
+    background: var(--adm-blue-xlt);
+  }
+
+  /* ── Detail panel visibility ── */
+  html:has(#as-1:checked)  .adp[data-amb="1"],
+  html:has(#as-2:checked)  .adp[data-amb="2"],
+  html:has(#as-3:checked)  .adp[data-amb="3"],
+  html:has(#as-4:checked)  .adp[data-amb="4"],
+  html:has(#as-5:checked)  .adp[data-amb="5"],
+  html:has(#as-6:checked)  .adp[data-amb="6"],
+  html:has(#as-7:checked)  .adp[data-amb="7"],
+  html:has(#as-8:checked)  .adp[data-amb="8"],
+  html:has(#as-9:checked)  .adp[data-amb="9"],
+  html:has(#as-10:checked) .adp[data-amb="10"] {
+    display: flex;
+  }
+
+  /* ── Panel slides in when any ambassador selected ── */
+  html:has(.as-radio:checked) .amb-detail-overlay {
+    transform: translateX(0);
+    opacity: 1;
+  }
+
+  /* ── Detail overlay ── */
+  .amb-detail-overlay {
+    position: fixed;
+    top: var(--topbar-h);
+    right: 0;
+    bottom: 0;
+    width: 400px;
+    background: var(--adm-surface);
+    border-left: 1px solid var(--adm-border);
+    box-shadow: -12px 0 40px rgba(12,25,41,.1);
+    transform: translateX(420px);
+    opacity: 0;
+    transition: transform .28s cubic-bezier(.4,0,.2,1), opacity .2s;
+    overflow-y: auto;
+    z-index: 90;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── Individual detail panels (hidden by default) ── */
+  .adp { display: none; flex-direction: column; flex: 1; }
+
+  /* ── Panel header ── */
+  .adp-head {
+    padding: 20px;
+    background: linear-gradient(135deg, #134a75, #175d92 55%, #2d9676);
+    color: #fff;
+    position: relative;
+  }
+  .adp-close {
+    position: absolute; top: 14px; right: 14px;
+    background: rgba(255,255,255,.18); border: none; border-radius: 50%;
+    width: 30px; height: 30px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 18px; line-height: 1; font-weight: 300;
+  }
+  .adp-ava {
+    width: 56px; height: 56px; border-radius: 50%;
+    border: 3px solid rgba(255,255,255,.4);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; font-weight: 800; color: #fff;
+    margin-bottom: 10px;
+  }
+  .adp-name { font-size: 18px; font-weight: 800; letter-spacing: -.3px; }
+  .adp-role { font-size: 12px; opacity: .7; margin-top: 2px; }
+  .adp-badges { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+  .adp-badge {
+    background: rgba(255,255,255,.2); border: 1px solid rgba(255,255,255,.3);
+    border-radius: 20px; padding: 2px 10px; font-size: 11px; font-weight: 600; color: #fff;
+  }
+
+  /* ── Panel body ── */
+  .adp-body { padding: 0; flex: 1; }
+  .adp-section { padding: 16px 20px; border-bottom: 1px solid var(--adm-border); }
+  .adp-section-title {
+    font-size: 10px; font-weight: 800; letter-spacing: .6px; text-transform: uppercase;
+    color: var(--adm-txt-muted); margin-bottom: 12px;
+  }
+
+  /* ── Stat grid in panel ── */
+  .adp-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .adp-stat {
+    background: var(--adm-bg); border-radius: var(--adm-r-sm);
+    padding: 10px 12px;
+  }
+  .adp-stat-val { font-size: 20px; font-weight: 800; color: var(--adm-txt-head); line-height: 1; }
+  .adp-stat-lbl { font-size: 10px; color: var(--adm-txt-muted); font-weight: 600; margin-top: 3px; text-transform: uppercase; letter-spacing: .4px; }
+
+  /* ── Availability chips ── */
+  .adp-avail { display: flex; gap: 6px; flex-wrap: wrap; }
+  .adp-avail-chip {
+    background: var(--adm-blue-lt); color: var(--adm-blue-dk); border-radius: 20px;
+    padding: 3px 10px; font-size: 11px; font-weight: 600;
+  }
+
+  /* ── Session list in panel ── */
+  .adp-session-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--adm-border-lt);
+    font-size: 12px;
+  }
+  .adp-session-row:last-child { border-bottom: none; }
+  .adp-session-name { font-weight: 700; color: var(--adm-txt-head); }
+  .adp-session-date { color: var(--adm-txt-muted); font-size: 11px; margin-top: 1px; }
+
+  /* ── Actions at bottom ── */
+  .adp-actions {
+    padding: 16px 20px; display: flex; flex-direction: column; gap: 8px;
+    border-top: 1px solid var(--adm-border); background: var(--adm-bg);
+  }
+  .adp-actions-row { display: flex; gap: 8px; }
+
+  /* ── Row styles ── */
+  .star-rating { color: #f59e0b; font-size: 12px; letter-spacing: 1px; }
+  .capacity-bar { display:flex; align-items:center; gap:8px; }
+  .cap-track { width:56px; height:5px; background:var(--adm-border); border-radius:3px; overflow:hidden; }
+  .cap-fill  { height:100%; border-radius:3px; }
+  tr.amb-row { cursor: pointer; transition: background .15s; }
+  tr.amb-row:hover { background: var(--adm-blue-xlt); }
+  .row-sel-lbl { cursor: pointer; display: block; }
+
+  /* ── Progress ring ── */
+  .prog-ring { display: flex; align-items: center; gap: 8px; }
+  .prog-ring-track { width: 100%; height: 6px; background: var(--adm-border); border-radius: 4px; overflow: hidden; }
+  .prog-ring-fill { height: 100%; border-radius: 4px; }
+
+  /* ── Rating stars ── */
+  .adp-rating { display: flex; align-items: center; gap: 6px; }
+  .adp-rating-val { font-size: 28px; font-weight: 900; color: var(--adm-txt-head); line-height: 1; }
+  .adp-rating-stars { color: #f59e0b; font-size: 16px; letter-spacing: 2px; }
+  .adp-rating-reviews { font-size: 11px; color: var(--adm-txt-muted); margin-top: 2px; }
+</style>
+</head>
+<body>
+
+<!-- Tab state inputs -->
+<input type="radio" name="amb-tabs" id="amb-tab-active"   class="tab-check" checked>
+<input type="radio" name="amb-tabs" id="amb-tab-pending"  class="tab-check">
+<input type="radio" name="amb-tabs" id="amb-tab-inactive" class="tab-check">
+
+<!-- Ambassador selection radio inputs -->
+<input type="radio" name="amb-sel" id="as-1"  class="state-input as-radio">
+<input type="radio" name="amb-sel" id="as-2"  class="state-input as-radio">
+<input type="radio" name="amb-sel" id="as-3"  class="state-input as-radio">
+<input type="radio" name="amb-sel" id="as-4"  class="state-input as-radio">
+<input type="radio" name="amb-sel" id="as-5"  class="state-input as-radio">
+<input type="radio" name="amb-sel" id="as-6"  class="state-input as-radio">
+<input type="radio" name="amb-sel" id="as-7"  class="state-input as-radio">
+<input type="radio" name="amb-sel" id="as-8"  class="state-input as-radio">
+<input type="radio" name="amb-sel" id="as-9"  class="state-input as-radio">
+<input type="radio" name="amb-sel" id="as-10" class="state-input as-radio">
+
+<input type="checkbox" id="sidebar-toggle" class="sidebar-toggle-check">
+
+<div class="admin-shell">
+
+  <aside class="admin-sidebar">
+    <div class="sidebar__logo"><div class="logo-mark"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17 8C8 10 5.9 16.17 3.82 22A13.34 13.34 0 0 0 18 8Z"/><path d="M9 9c-1.5 3.5-2.5 7-3 10C8 18 11 15 13 12" fill="rgba(255,255,255,.35)"/></svg></div><div class="logo-text-wrap"><div class="logo-name">Luminwell</div><span class="logo-badge-pill">ADMIN</span></div></div>
+    <label for="sidebar-toggle" class="sidebar__collapse-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></label>
+    <nav class="sidebar__nav">
+      <div class="nav-section">
+        <p class="nav-label">MAIN</p>
+        <a href="admin-home.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span class="link-text">Overview</span></a>
+        <a href="admin-analytics.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg><span class="link-text">Analytics</span></a>
+      </div>
+      <div class="nav-section">
+        <p class="nav-label">PEOPLE</p>
+        <a href="admin-users.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span class="link-text">Users</span></a>
+        <a href="admin-ambassadors.html" class="sidebar__link active"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><span class="link-text">Ambassadors</span><span class="nav-badge nav-badge--amber">3 new</span></a>
+        <a href="admin-matching.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg><span class="link-text">Matching</span></a>
+      </div>
+      <div class="nav-section">
+        <p class="nav-label">OPERATIONS</p>
+        <a href="admin-sessions.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><span class="link-text">Sessions</span></a>
+        <a href="admin-welfare.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span class="link-text">Welfare &amp; Safety</span><span class="nav-badge nav-badge--red">5</span></a>
+        <a href="admin-messages.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span class="link-text">Messages</span></a>
+      </div>
+      <div class="nav-section">
+        <p class="nav-label">PLATFORM</p>
+        <a href="admin-content.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span class="link-text">Content</span></a>
+        <a href="admin-settings.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06-.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span class="link-text">Settings</span></a>
+        <a href="admin-privacy.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><span class="link-text">Privacy &amp; GDPR</span></a>
+      </div>
+    </nav>
+    <div class="sidebar__foot">
+      <div class="sidebar__foot-user"><div class="admin-ava-sm">A</div><div class="sidebar__foot-info"><p>Admin User</p><small>Super Admin</small></div></div>
+      <button class="sidebar__signout">Sign out</button>
+    </div>
+  </aside>
+
+  <div class="admin-main">
+    <header class="admin-topbar">
+      <div class="topbar-left">
+        <label for="sidebar-toggle" class="topbar-menu-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></label>
+        <nav class="breadcrumb">
+          <a href="admin-home.html">Admin</a>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+          <span class="bc-active">Ambassadors</span>
+        </nav>
+      </div>
+      <div class="topbar-right">
+        <div class="notif-wrap">
+          <input type="checkbox" id="notif-toggle" class="notif-check">
+          <label for="notif-toggle" class="topbar-icon-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><span class="notif-dot"></span></label>
+          <div class="notif-drop">
+            <div class="notif-drop-head"><h4>Notifications</h4><a href="#">Mark all read</a></div>
+            <div class="notif-item unread"><div class="notif-ico amber"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"/><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/></svg></div><div class="notif-body"><p><strong>3 ambassador applications</strong> pending approval.</p><small>1 h ago</small></div></div>
+            <div class="notif-drop-foot"><a href="admin-welfare.html">View all alerts →</a></div>
+          </div>
+        </div>
+        <div class="topbar-user"><div class="topbar-ava">A</div><div class="topbar-user-info"><div class="u-name">Admin</div><div class="u-role">Super Admin</div></div></div>
+      </div>
+    </header>
+
+    <div class="admin-content">
+
+      <div class="page-hero">
+        <div class="page-hero-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+        <div class="page-hero-text">
+          <h1>Ambassadors</h1>
+          <p>Manage peer supporters — approvals, performance &amp; caseloads</p>
+        </div>
+        <div class="page-hero-actions">
+          <a href="#" class="btn btn-white">Export CSV</a>
+          <a href="admin-amb-onboard.html" class="btn btn-primary" style="background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);color:#fff;text-decoration:none;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right:5px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add Ambassador
+          </a>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-row" style="grid-template-columns:repeat(4,1fr);margin-bottom:20px;">
+        <div class="stat-card green"><div class="stat-top"><span class="stat-label">Active</span><div class="stat-icon green"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div></div><div class="stat-value">47</div><span class="stat-delta delta-up">▲ +3 this month</span></div>
+        <div class="stat-card amber"><div class="stat-top"><span class="stat-label">Pending Review</span><div class="stat-icon amber"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"/><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/></svg></div></div><div class="stat-value">3</div><span class="stat-delta delta-neu">Applied this week</span></div>
+        <div class="stat-card blue"><div class="stat-top"><span class="stat-label">Avg Caseload</span><div class="stat-icon blue"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div></div><div class="stat-value">6.6</div><span class="stat-delta delta-neu">clients per amb.</span></div>
+        <div class="stat-card purple"><div class="stat-top"><span class="stat-label">Avg Rating</span><div class="stat-icon purple"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div></div><div class="stat-value">4.8</div><span class="stat-delta delta-up">▲ +0.1 this month</span></div>
+      </div>
+
+      <!-- Pending approvals banner -->
+      <div class="alert alert-amber" style="margin-bottom:20px;">
+        <span class="alert-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"/><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/></svg></span>
+        <div class="alert-body">
+          <strong>3 ambassador applications awaiting approval</strong>
+          Applications are reviewed within 48 hours. Check the Pending tab to approve or decline.
+        </div>
+        <label for="amb-tab-pending" class="btn btn-sm" style="background:var(--adm-amber);color:#fff;border:none;cursor:pointer;white-space:nowrap;">Review now →</label>
+      </div>
+
+      <div class="card">
+        <div class="tabs-row">
+          <label for="amb-tab-active"  class="tab-lbl">Active <span class="badge badge-green"  style="font-size:10px;padding:1px 7px;">47</span></label>
+          <label for="amb-tab-pending" class="tab-lbl">Pending <span class="badge badge-amber" style="font-size:10px;padding:1px 7px;">3</span></label>
+          <label for="amb-tab-inactive" class="tab-lbl">Inactive <span class="badge badge-slate" style="font-size:10px;padding:1px 7px;">8</span></label>
+        </div>
+
+        <div class="filter-bar">
+          <div class="search-wrap">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input class="search-inp" type="text" placeholder="Search ambassador name or university…">
+          </div>
+          <select class="filter-sel"><option>All universities</option><option>Manchester</option><option>UCL</option><option>King's College</option><option>Leeds</option><option>Edinburgh</option><option>Birmingham</option></select>
+          <select class="filter-sel"><option>Sort: Best rated</option><option>Sort: Most sessions</option><option>Sort: Lowest capacity</option><option>Sort: Newest</option></select>
+          <p style="font-size:12px;color:var(--adm-txt-muted);align-self:center;white-space:nowrap;">Click a row to view details</p>
+        </div>
+
+        <div class="amb-panels">
+
+          <!-- ── Active ambassadors ── -->
+          <div id="amb-panel-active" class="tab-panel">
+            <div class="data-table-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Ambassador</th>
+                    <th>University</th>
+                    <th>Specialisms</th>
+                    <th>Clients</th>
+                    <th>Sessions</th>
+                    <th>Rating</th>
+                    <th>Capacity</th>
+                    <th>Status</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+
+                  <!-- 1 Maya Johnson -->
+                  <tr class="amb-row" data-amb="1">
+                    <td><label for="as-1" class="row-sel-lbl"><div class="user-cell"><div class="user-ava green">MJ</div><div><div class="user-name">Maya Johnson</div><div class="user-sub">maya.j@manchester.ac.uk</div></div></div></label></td>
+                    <td style="font-size:12px;">Manchester</td>
+                    <td><div style="display:flex;gap:4px;flex-wrap:wrap;"><span class="badge badge-blue" style="font-size:10px;">Anxiety</span><span class="badge badge-blue" style="font-size:10px;">Stress</span></div></td>
+                    <td style="font-weight:700;color:var(--adm-txt-head);">8 / 10</td>
+                    <td style="font-weight:700;color:var(--adm-txt-head);">143</td>
+                    <td><div style="display:flex;align-items:center;gap:6px;"><span class="star-rating">★★★★★</span><span style="font-size:12px;font-weight:700;color:var(--adm-txt-head);">4.9</span></div></td>
+                    <td><div class="capacity-bar"><div class="cap-track"><div class="cap-fill" style="width:80%;background:var(--adm-amber);"></div></div><span style="font-size:11px;color:var(--adm-amber);font-weight:700;">80%</span></div></td>
+                    <td><span class="badge badge-green">Active</span></td>
+                    <td><a href="admin-amb-detail.html" class="row-link">View →</a></td>
+                  </tr>
+
+                  <!-- 2 Keiran Roberts -->
+                  <tr class="amb-row" data-amb="2">
+                    <td><label for="as-2" class="row-sel-lbl"><div class="user-cell"><div class="user-ava blue">KR</div><div><div class="user-name">Keiran Roberts</div><div class="user-sub">k.roberts@ucl.ac.uk</div></div></div></label></td>
+                    <td style="font-size:12px;">UCL</td>
+                    <td><div style="display:flex;gap:4px;flex-wrap:wrap;"><span class="badge badge-teal" style="font-size:10px;">CBT</span><span class="badge badge-teal" style="font-size:10px;">Goals</span></div></td>
+                    <td style="font-weight:700;color:var(--adm-txt-head);">5 / 10</td>
+                    <td style="font-weight:700;color:var(--adm-txt-head);">89</td>
+                    <td><div style="display:flex;align-items:center;gap:6px;"><span class="star-rating">★★★★★</span><span style="font-size:12px;font-weight:700;color:var(--adm-txt-head);">4.8</span></div></td>
+                    <td><div class="capacity-bar"><div class="cap-track"><div class="cap-fill" style="width:50%;background:var(--adm-green);"></div></div><span style="font-size:11px;color:var(--adm-green);font-weight:700;">50%</span></div></td>
+                    <td><span class="badge badge-green">Active</span></td>
+                    <td><a href="admin-amb-detail.html" class="row-link">View →</a></td>
+                  </tr>
+
+                  <!-- 3 Layla Nguyen -->
+                  <tr class="amb-row" data-amb="3">
+                    <td><label for="as-3" class="row-sel-lbl"><div class="user-cell"><div class="user-ava amber">LN</div><div><div class="user-name">Layla Nguyen</div><div class="user-sub">l.nguyen@kcl.ac.uk</div></div></div></label></td>
+                    <td style="font-size:12px;">King's College</td>
+                    <td><div style="display:flex;gap:4px;flex-wrap:wrap;"><span class="badge badge-purple" style="font-size:10px;">Trauma</span><span class="badge badge-purple" style="font-size:10px;">Identity</span></div></td>
+                    <td style="font-weight:700;color:var(--adm-txt-head);">7 / 8</td>
+                    <td style="font-weight:700;color:var(--adm-txt-head);">112</td>
+                    <td><div style="display:flex;align-items:center;gap:6px;"><span class="star-rating">★★★★☆</span><span style="font-size:12px;font-weight:700;color:var(--adm-txt-head);">4.6</span></div></td>
+                    <td><div class="capacity-bar"><div class="cap-track"><div class="cap-fill" style="width:88%;background:var(--adm-red);"></div></div><span style="font-size:11px;color:var(--adm-red);font-weight:700;">88%</span></div></td>
+                    <td><span class="badge badge-amber">Near full</span></td>
+                    <td><a href="admin-amb-detail.html" class="row-link">View →</a></td>
+                  </tr>
+
+                  <!-- 4 Dev Nair -->
+                  <tr class="amb-row" data-amb="4">
+                    <td><label for="as-4" class="row-sel-lbl"><div class="user-cell"><div class="user-ava purple">DN</div><div><div class="user-name">Dev Nair</div><div class="user-sub">d.nair@leeds.ac.uk</div></div></div></label></td>
+                    <td style="font-size:12px;">Leeds</td>
+                    <td><div style="display:flex;gap:4px;flex-wrap:wrap;"><span class="badge badge-blue" style="font-size:10px;">Academic</span><span class="badge badge-blue" style="font-size:10px;">Resilience</span></div></td>
+                    <td style="font-weight:700;color:var(--adm-txt-head);">4 / 10</td>
+                    <td style="font-weight:700;color:var(--adm-txt-head);">67</td>
+                    <td><div style="display:flex;align-items:center;gap:6px;"><span class="star-rating">★★★★★</span><span style="font-size:12px;font-weight:700;color:var(--adm-txt-head);">5.0</span></div></td>
+                    <td><div class="capacity-bar"><div class="cap-track"><div class="cap-fill" style="width:40%;background:var(--adm-green);"></div></div><span style="font-size:11px;color:var(--adm-green);font-weight:700;">40%</span></div></td>
+                    <td><span class="badge badge-green">Active</span></td>
+                    <td><a href="admin-amb-detail.html" class="row-link">View →</a></td>
+                  </tr>
+
+                  <!-- 5 Aisha Patel -->
+                  <tr class="amb-row" data-amb="5">
+                    <td><label for="as-5" class="row-sel-lbl"><div class="user-cell"><div class="user-ava" style="background:linear-gradient(135deg,#7c3aed,#a78bfa);">AP</div><div><div class="user-name">Aisha Patel</div><div class="user-sub">a.patel@ed.ac.uk</div></div></div></label></td>
+                    <td style="font-size:12px;">Edinburgh</td>
+                    <td><div style="display:flex;gap:4px;flex-wrap:wrap;"><span class="badge badge-blue" style="font-size:10px;">Anxiety</span><span class="badge badge-blue" style="font-size:10px;">Depression</span></div></td>
+                    <td style="font-weight:700;color:var(--adm-txt-head);">6 / 8</td>
+                    <td style="font-weight:700;color:var(--adm-txt-head);">94</td>
+                    <td><div style="display:flex;align-items:center;gap:6px;"><span class="star-rating">★★★★☆</span><span style="font-size:12px;font-weight:700;color:var(--adm-txt-head);">4.7</span></div></td>
+                    <td><div class="capacity-bar"><div class="cap-track"><div class="cap-fill" style="width:75%;background:var(--adm-amber);"></div></div><span style="font-size:11px;color:var(--adm-amber);font-weight:700;">75%</span></div></td>
+                    <td><span class="badge badge-green">Active</span></td>
+                    <td><a href="admin-amb-detail.html" class="row-link">View →</a></td>
+                  </tr>
+
+                  <!-- 6 Marcus Chen -->
+                  <tr class="amb-row" data-amb="6">
+                    <td><label for="as-6" class="row-sel-lbl"><div class="user-cell"><div class="user-ava" style="background:linear-gradient(135deg,#0891b2,#06b6d4);">MC</div><div><div class="user-name">Marcus Chen</div><div class="user-sub">m.chen@bham.ac.uk</div></div></div></label></td>
+                    <td style="font-size:12px;">Birmingham</td>
+                    <td><div style="display:flex;gap:4px;flex-wrap:wrap;"><span class="badge badge-teal" style="font-size:10px;">Social anxiety</span><span class="badge badge-teal" style="font-size:10px;">Mindfulness</span></div></td>
+                    <td style="font-weight:700;color:var(--adm-txt-head);">3 / 10</td>
+                    <td style="font-weight:700;color:var(--adm-txt-head);">45</td>
+                    <td><div style="display:flex;align-items:center;gap:6px;"><span class="star-rating">★★★★☆</span><span style="font-size:12px;font-weight:700;color:var(--adm-txt-head);">4.5</span></div></td>
+                    <td><div class="capacity-bar"><div class="cap-track"><div class="cap-fill" style="width:30%;background:var(--adm-green);"></div></div><span style="font-size:11px;color:var(--adm-green);font-weight:700;">30%</span></div></td>
+                    <td><span class="badge badge-green">Active</span></td>
+                    <td><a href="admin-amb-detail.html" class="row-link">View →</a></td>
+                  </tr>
+
+                  <!-- 7 Sophie Williams -->
+                  <tr class="amb-row" data-amb="7">
+                    <td><label for="as-7" class="row-sel-lbl"><div class="user-cell"><div class="user-ava" style="background:linear-gradient(135deg,#db2777,#f472b6);">SW</div><div><div class="user-name">Sophie Williams</div><div class="user-sub">s.williams@durham.ac.uk</div></div></div></label></td>
+                    <td style="font-size:12px;">Durham</td>
+                    <td><div style="display:flex;gap:4px;flex-wrap:wrap;"><span class="badge badge-purple" style="font-size:10px;">Grief</span><span class="badge badge-purple" style="font-size:10px;">Relationships</span></div></td>
+                    <td style="font-weight:700;color:var(--adm-txt-head);">9 / 10</td>
+                    <td style="font-weight:700;color:var(--adm-txt-head);">128</td>
+                    <td><div style="display:flex;align-items:center;gap:6px;"><span class="star-rating">★★★★★</span><span style="font-size:12px;font-weight:700;color:var(--adm-txt-head);">4.9</span></div></td>
+                    <td><div class="capacity-bar"><div class="cap-track"><div class="cap-fill" style="width:90%;background:var(--adm-red);"></div></div><span style="font-size:11px;color:var(--adm-red);font-weight:700;">90%</span></div></td>
+                    <td><span class="badge badge-amber">Near full</span></td>
+                    <td><a href="admin-amb-detail.html" class="row-link">View →</a></td>
+                  </tr>
+
+                  <!-- 8 Omar Hassan -->
+                  <tr class="amb-row" data-amb="8">
+                    <td><label for="as-8" class="row-sel-lbl"><div class="user-cell"><div class="user-ava" style="background:linear-gradient(135deg,#b45309,#d97706);">OH</div><div><div class="user-name">Omar Hassan</div><div class="user-sub">o.hassan@sheffield.ac.uk</div></div></div></label></td>
+                    <td style="font-size:12px;">Sheffield</td>
+                    <td><div style="display:flex;gap:4px;flex-wrap:wrap;"><span class="badge badge-blue" style="font-size:10px;">Cultural adjustment</span><span class="badge badge-blue" style="font-size:10px;">Stress</span></div></td>
+                    <td style="font-weight:700;color:var(--adm-txt-head);">7 / 10</td>
+                    <td style="font-weight:700;color:var(--adm-txt-head);">87</td>
+                    <td><div style="display:flex;align-items:center;gap:6px;"><span class="star-rating">★★★★★</span><span style="font-size:12px;font-weight:700;color:var(--adm-txt-head);">4.8</span></div></td>
+                    <td><div class="capacity-bar"><div class="cap-track"><div class="cap-fill" style="width:70%;background:var(--adm-amber);"></div></div><span style="font-size:11px;color:var(--adm-amber);font-weight:700;">70%</span></div></td>
+                    <td><span class="badge badge-green">Active</span></td>
+                    <td><a href="admin-amb-detail.html" class="row-link">View →</a></td>
+                  </tr>
+
+                  <!-- 9 Zara Ahmed -->
+                  <tr class="amb-row" data-amb="9">
+                    <td><label for="as-9" class="row-sel-lbl"><div class="user-cell"><div class="user-ava" style="background:linear-gradient(135deg,#047857,#10b981);">ZA</div><div><div class="user-name">Zara Ahmed</div><div class="user-sub">z.ahmed@bristol.ac.uk</div></div></div></label></td>
+                    <td style="font-size:12px;">Bristol</td>
+                    <td><div style="display:flex;gap:4px;flex-wrap:wrap;"><span class="badge badge-teal" style="font-size:10px;">CBT</span><span class="badge badge-teal" style="font-size:10px;">Eating habits</span></div></td>
+                    <td style="font-weight:700;color:var(--adm-txt-head);">5 / 8</td>
+                    <td style="font-weight:700;color:var(--adm-txt-head);">62</td>
+                    <td><div style="display:flex;align-items:center;gap:6px;"><span class="star-rating">★★★★☆</span><span style="font-size:12px;font-weight:700;color:var(--adm-txt-head);">4.6</span></div></td>
+                    <td><div class="capacity-bar"><div class="cap-track"><div class="cap-fill" style="width:63%;background:var(--adm-amber);"></div></div><span style="font-size:11px;color:var(--adm-amber);font-weight:700;">63%</span></div></td>
+                    <td><span class="badge badge-green">Active</span></td>
+                    <td><a href="admin-amb-detail.html" class="row-link">View →</a></td>
+                  </tr>
+
+                  <!-- 10 Tom Bradshaw -->
+                  <tr class="amb-row" data-amb="10">
+                    <td><label for="as-10" class="row-sel-lbl"><div class="user-cell"><div class="user-ava" style="background:linear-gradient(135deg,#1d4ed8,#60a5fa);">TB</div><div><div class="user-name">Tom Bradshaw</div><div class="user-sub">t.bradshaw@nottingham.ac.uk</div></div></div></label></td>
+                    <td style="font-size:12px;">Nottingham</td>
+                    <td><div style="display:flex;gap:4px;flex-wrap:wrap;"><span class="badge badge-blue" style="font-size:10px;">Academic</span><span class="badge badge-blue" style="font-size:10px;">Career</span></div></td>
+                    <td style="font-weight:700;color:var(--adm-txt-head);">2 / 10</td>
+                    <td style="font-weight:700;color:var(--adm-txt-head);">31</td>
+                    <td><div style="display:flex;align-items:center;gap:6px;"><span class="star-rating">★★★★☆</span><span style="font-size:12px;font-weight:700;color:var(--adm-txt-head);">4.4</span></div></td>
+                    <td><div class="capacity-bar"><div class="cap-track"><div class="cap-fill" style="width:20%;background:var(--adm-green);"></div></div><span style="font-size:11px;color:var(--adm-green);font-weight:700;">20%</span></div></td>
+                    <td><span class="badge badge-green">Active</span></td>
+                    <td><a href="admin-amb-detail.html" class="row-link">View →</a></td>
+                  </tr>
+
+                </tbody>
+              </table>
+            </div>
+            <div class="pagination">
+              <span class="pagination-info">Showing 1–10 of 47 active ambassadors</span>
+              <div class="pagination-btns"><button class="page-btn">‹</button><button class="page-btn active">1</button><button class="page-btn">2</button><button class="page-btn">3</button><button class="page-btn">5</button><button class="page-btn">›</button></div>
+            </div>
+          </div>
+
+          <!-- ── Pending applications ── -->
+          <div id="amb-panel-pending" class="tab-panel">
+            <div style="padding:20px;display:flex;flex-direction:column;gap:16px;">
+
+              <div style="border:1px solid var(--adm-border);border-radius:var(--adm-r-md);overflow:hidden;">
+                <div style="background:var(--adm-bg);padding:14px 20px;border-bottom:1px solid var(--adm-border);display:flex;align-items:center;justify-content:space-between;">
+                  <div class="user-cell"><div class="user-ava green">JR</div><div><div class="user-name">Jamie Rivera</div><div class="user-sub">Univ. of Manchester · Applied 28 Mar 2026</div></div></div>
+                  <div style="display:flex;gap:8px;align-items:center;">
+                    <span class="badge badge-amber">Awaiting review</span>
+                    <button class="btn btn-primary btn-sm">Approve</button>
+                    <button class="btn btn-danger btn-sm">Decline</button>
+                  </div>
+                </div>
+                <div style="padding:16px 20px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;">
+                  <div><p style="font-size:11px;color:var(--adm-txt-muted);font-weight:700;margin-bottom:4px;">MOTIVATION</p><p style="font-size:13px;color:var(--adm-txt-body);">"I want to support others through the same challenges I faced in first year."</p></div>
+                  <div><p style="font-size:11px;color:var(--adm-txt-muted);font-weight:700;margin-bottom:4px;">SPECIALISMS APPLIED</p><div style="display:flex;gap:4px;flex-wrap:wrap;"><span class="badge badge-blue">Anxiety</span><span class="badge badge-blue">Academic stress</span><span class="badge badge-blue">Loneliness</span></div></div>
+                  <div><p style="font-size:11px;color:var(--adm-txt-muted);font-weight:700;margin-bottom:4px;">AVAILABILITY</p><p style="font-size:13px;color:var(--adm-txt-body);">Mon, Wed, Fri afternoons · 10 h/wk</p></div>
+                </div>
+              </div>
+
+              <div style="border:1px solid var(--adm-border);border-radius:var(--adm-r-md);overflow:hidden;">
+                <div style="background:var(--adm-bg);padding:14px 20px;border-bottom:1px solid var(--adm-border);display:flex;align-items:center;justify-content:space-between;">
+                  <div class="user-cell"><div class="user-ava blue">PL</div><div><div class="user-name">Priya Lal</div><div class="user-sub">UCL · Applied 27 Mar 2026</div></div></div>
+                  <div style="display:flex;gap:8px;align-items:center;"><span class="badge badge-amber">Awaiting review</span><button class="btn btn-primary btn-sm">Approve</button><button class="btn btn-danger btn-sm">Decline</button></div>
+                </div>
+                <div style="padding:16px 20px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;">
+                  <div><p style="font-size:11px;color:var(--adm-txt-muted);font-weight:700;margin-bottom:4px;">MOTIVATION</p><p style="font-size:13px;color:var(--adm-txt-body);">"Completed mental health first aid training and want to give back."</p></div>
+                  <div><p style="font-size:11px;color:var(--adm-txt-muted);font-weight:700;margin-bottom:4px;">SPECIALISMS APPLIED</p><div style="display:flex;gap:4px;flex-wrap:wrap;"><span class="badge badge-teal">CBT</span><span class="badge badge-teal">Grief</span><span class="badge badge-teal">Goal setting</span></div></div>
+                  <div><p style="font-size:11px;color:var(--adm-txt-muted);font-weight:700;margin-bottom:4px;">AVAILABILITY</p><p style="font-size:13px;color:var(--adm-txt-body);">Tue, Thu, Sat mornings · 8 h/wk</p></div>
+                </div>
+              </div>
+
+              <div style="border:1px solid var(--adm-border);border-radius:var(--adm-r-md);overflow:hidden;">
+                <div style="background:var(--adm-bg);padding:14px 20px;border-bottom:1px solid var(--adm-border);display:flex;align-items:center;justify-content:space-between;">
+                  <div class="user-cell"><div class="user-ava amber">TN</div><div><div class="user-name">Thomas Ngu</div><div class="user-sub">King's College London · Applied 26 Mar 2026</div></div></div>
+                  <div style="display:flex;gap:8px;align-items:center;"><span class="badge badge-amber">Awaiting review</span><button class="btn btn-primary btn-sm">Approve</button><button class="btn btn-danger btn-sm">Decline</button></div>
+                </div>
+                <div style="padding:16px 20px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;">
+                  <div><p style="font-size:11px;color:var(--adm-txt-muted);font-weight:700;margin-bottom:4px;">MOTIVATION</p><p style="font-size:13px;color:var(--adm-txt-body);">"Passionate about reducing stigma around men's mental health."</p></div>
+                  <div><p style="font-size:11px;color:var(--adm-txt-muted);font-weight:700;margin-bottom:4px;">SPECIALISMS APPLIED</p><div style="display:flex;gap:4px;flex-wrap:wrap;"><span class="badge badge-purple">Identity</span><span class="badge badge-purple">Social anxiety</span></div></div>
+                  <div><p style="font-size:11px;color:var(--adm-txt-muted);font-weight:700;margin-bottom:4px;">AVAILABILITY</p><p style="font-size:13px;color:var(--adm-txt-body);">Weekends + Wed evenings · 6 h/wk</p></div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- ── Inactive ── -->
+          <div id="amb-panel-inactive" class="tab-panel">
+            <div class="data-table-wrap">
+              <table class="data-table">
+                <thead><tr><th>Ambassador</th><th>University</th><th>Last active</th><th>Reason</th><th>Sessions total</th><th></th></tr></thead>
+                <tbody>
+                  <tr>
+                    <td><div class="user-cell"><div class="user-ava" style="background:#f1f5f9;color:#94a3b8;">FP</div><div><div class="user-name">Felix Park</div><div class="user-sub">felix.p@manchester.ac.uk</div></div></div></td>
+                    <td style="font-size:12px;">Manchester</td>
+                    <td style="font-size:12px;color:var(--adm-txt-muted);">14 Feb 2026</td>
+                    <td><span class="badge badge-slate">Graduated</span></td>
+                    <td style="font-weight:700;color:var(--adm-txt-head);">87</td>
+                    <td><a href="admin-amb-detail.html" class="row-link">View →</a></td>
+                  </tr>
+                  <tr>
+                    <td><div class="user-cell"><div class="user-ava" style="background:#f1f5f9;color:#94a3b8;">CH</div><div><div class="user-name">Clara Hayes</div><div class="user-sub">c.hayes@ucl.ac.uk</div></div></div></td>
+                    <td style="font-size:12px;">UCL</td>
+                    <td style="font-size:12px;color:var(--adm-txt-muted);">2 Jan 2026</td>
+                    <td><span class="badge badge-slate">On leave</span></td>
+                    <td style="font-weight:700;color:var(--adm-txt-head);">34</td>
+                    <td><a href="admin-amb-detail.html" class="row-link">View →</a></td>
+                  </tr>
+                  <tr>
+                    <td><div class="user-cell"><div class="user-ava" style="background:#f1f5f9;color:#94a3b8;">RK</div><div><div class="user-name">Rina Kobayashi</div><div class="user-sub">r.kobayashi@warwick.ac.uk</div></div></div></td>
+                    <td style="font-size:12px;">Warwick</td>
+                    <td style="font-size:12px;color:var(--adm-txt-muted);">5 Dec 2025</td>
+                    <td><span class="badge badge-slate">Personal reasons</span></td>
+                    <td style="font-weight:700;color:var(--adm-txt-head);">52</td>
+                    <td><a href="admin-amb-detail.html" class="row-link">View →</a></td>
+                  </tr>
+                  <tr>
+                    <td><div class="user-cell"><div class="user-ava" style="background:#f1f5f9;color:#94a3b8;">BM</div><div><div class="user-name">Ben Moore</div><div class="user-sub">b.moore@exeter.ac.uk</div></div></div></td>
+                    <td style="font-size:12px;">Exeter</td>
+                    <td style="font-size:12px;color:var(--adm-txt-muted);">19 Nov 2025</td>
+                    <td><span class="badge badge-slate">Year abroad</span></td>
+                    <td style="font-weight:700;color:var(--adm-txt-head);">23</td>
+                    <td><a href="admin-amb-detail.html" class="row-link">View →</a></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════
+       AMBASSADOR DETAIL PANEL (CSS-only slide-in)
+       ════════════════════════════════════════ -->
+  <div class="amb-detail-overlay">
+
+    <!-- ── 1: Maya Johnson ── -->
+    <div class="adp" data-amb="1">
+      <div class="adp-head">
+        <label for="as-1" class="adp-close" title="Close">×</label>
+        <div class="adp-ava" style="background:linear-gradient(135deg,#1d6e55,#2d9676);">MJ</div>
+        <div class="adp-name">Maya Johnson</div>
+        <div class="adp-role">Peer Support Specialist · University of Manchester</div>
+        <div class="adp-badges">
+          <span class="adp-badge">Anxiety</span>
+          <span class="adp-badge">Academic stress</span>
+          <span class="adp-badge">CBT techniques</span>
+          <span class="adp-badge">Goal setting</span>
+        </div>
+      </div>
+      <div class="adp-body">
+        <div class="adp-section">
+          <p class="adp-section-title">Bio</p>
+          <p style="font-size:13px;color:var(--adm-txt-body);line-height:1.6;">Focused on student wellbeing, academic stress, and building resilience. 3 years of peer support experience. Mental health first aid certified.</p>
+        </div>
+        <div class="adp-section">
+          <p class="adp-section-title">Performance</p>
+          <div class="adp-stats">
+            <div class="adp-stat"><div class="adp-stat-val">143</div><div class="adp-stat-lbl">Total Sessions</div></div>
+            <div class="adp-stat"><div class="adp-stat-val">8/10</div><div class="adp-stat-lbl">Clients (active)</div></div>
+            <div class="adp-stat"><div class="adp-stat-val">94%</div><div class="adp-stat-lbl">Completion rate</div></div>
+            <div class="adp-stat"><div class="adp-stat-val">18 mo</div><div class="adp-stat-lbl">Time on platform</div></div>
+          </div>
+          <div style="margin-top:12px;">
+            <div class="adp-rating">
+              <div class="adp-rating-val">4.9</div>
+              <div>
+                <div class="adp-rating-stars">★★★★★</div>
+                <div class="adp-rating-reviews">Based on 38 client reviews</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="adp-section">
+          <p class="adp-section-title">Availability</p>
+          <div class="adp-avail">
+            <span class="adp-avail-chip">Mon AM</span>
+            <span class="adp-avail-chip">Tue PM</span>
+            <span class="adp-avail-chip">Wed AM</span>
+            <span class="adp-avail-chip">Fri AM</span>
+          </div>
+          <p style="font-size:11px;color:var(--adm-txt-muted);margin-top:8px;">Max 10 clients · Currently 8 active</p>
+        </div>
+        <div class="adp-section">
+          <p class="adp-section-title">Recent sessions</p>
+          <div class="adp-session-row"><div><div class="adp-session-name">Emma Clarke</div><div class="adp-session-date">Today, 10:00 AM</div></div><span class="badge badge-green">Completed</span></div>
+          <div class="adp-session-row"><div><div class="adp-session-name">Jake Thompson</div><div class="adp-session-date">Yesterday, 2:00 PM</div></div><span class="badge badge-green">Completed</span></div>
+          <div class="adp-session-row"><div><div class="adp-session-name">Priya Sharma</div><div class="adp-session-date">27 Mar, 11:00 AM</div></div><span class="badge badge-green">Completed</span></div>
+        </div>
+        <div class="adp-section">
+          <p class="adp-section-title">Admin notes</p>
+          <p style="font-size:12px;color:var(--adm-txt-body);line-height:1.5;background:var(--adm-bg);border-radius:8px;padding:10px;">Excellent ambassador. Flagged a welfare concern for client Emma Clarke on 20 Mar — handled professionally. Recommended for senior peer mentor role.</p>
+        </div>
+      </div>
+      <div class="adp-actions">
+        <div class="adp-actions-row">
+          <a href="admin-amb-detail.html" class="btn btn-primary" style="flex:1;text-align:center;">Full profile →</a>
+          <button class="btn btn-ghost" style="flex:1;">Message</button>
+        </div>
+        <div class="adp-actions-row">
+          <button class="btn btn-ghost" style="flex:1;font-size:12px;">Edit details</button>
+          <button class="btn btn-danger" style="flex:1;font-size:12px;">Deactivate</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── 2: Keiran Roberts ── -->
+    <div class="adp" data-amb="2">
+      <div class="adp-head">
+        <label for="as-2" class="adp-close" title="Close">×</label>
+        <div class="adp-ava" style="background:linear-gradient(135deg,#134a75,#175d92);">KR</div>
+        <div class="adp-name">Keiran Roberts</div>
+        <div class="adp-role">Peer Support Specialist · UCL</div>
+        <div class="adp-badges"><span class="adp-badge">CBT</span><span class="adp-badge">Goal setting</span><span class="adp-badge">Resilience</span></div>
+      </div>
+      <div class="adp-body">
+        <div class="adp-section"><p class="adp-section-title">Bio</p><p style="font-size:13px;color:var(--adm-txt-body);line-height:1.6;">Psychology graduate with 2 years of peer mentoring experience. Specialises in CBT-informed techniques and structured goal setting.</p></div>
+        <div class="adp-section"><p class="adp-section-title">Performance</p>
+          <div class="adp-stats">
+            <div class="adp-stat"><div class="adp-stat-val">89</div><div class="adp-stat-lbl">Total Sessions</div></div>
+            <div class="adp-stat"><div class="adp-stat-val">5/10</div><div class="adp-stat-lbl">Clients (active)</div></div>
+            <div class="adp-stat"><div class="adp-stat-val">96%</div><div class="adp-stat-lbl">Completion rate</div></div>
+            <div class="adp-stat"><div class="adp-stat-val">11 mo</div><div class="adp-stat-lbl">Time on platform</div></div>
+          </div>
+          <div style="margin-top:12px;"><div class="adp-rating"><div class="adp-rating-val">4.8</div><div><div class="adp-rating-stars">★★★★★</div><div class="adp-rating-reviews">Based on 24 client reviews</div></div></div></div>
+        </div>
+        <div class="adp-section"><p class="adp-section-title">Availability</p><div class="adp-avail"><span class="adp-avail-chip">Tue PM</span><span class="adp-avail-chip">Wed PM</span><span class="adp-avail-chip">Thu PM</span><span class="adp-avail-chip">Sat AM</span></div><p style="font-size:11px;color:var(--adm-txt-muted);margin-top:8px;">Max 10 clients · Currently 5 active — has capacity</p></div>
+        <div class="adp-section"><p class="adp-section-title">Recent sessions</p>
+          <div class="adp-session-row"><div><div class="adp-session-name">Oliver Brown</div><div class="adp-session-date">Today, 3:00 PM</div></div><span class="badge badge-green">Completed</span></div>
+          <div class="adp-session-row"><div><div class="adp-session-name">Hannah Lee</div><div class="adp-session-date">28 Mar, 1:00 PM</div></div><span class="badge badge-green">Completed</span></div>
+        </div>
+      </div>
+      <div class="adp-actions">
+        <div class="adp-actions-row"><a href="admin-amb-detail.html" class="btn btn-primary" style="flex:1;text-align:center;">Full profile →</a><button class="btn btn-ghost" style="flex:1;">Message</button></div>
+        <div class="adp-actions-row"><button class="btn btn-ghost" style="flex:1;font-size:12px;">Edit details</button><button class="btn btn-danger" style="flex:1;font-size:12px;">Deactivate</button></div>
+      </div>
+    </div>
+
+    <!-- ── 3: Layla Nguyen ── -->
+    <div class="adp" data-amb="3">
+      <div class="adp-head">
+        <label for="as-3" class="adp-close" title="Close">×</label>
+        <div class="adp-ava" style="background:linear-gradient(135deg,#b45309,#d97706);">LN</div>
+        <div class="adp-name">Layla Nguyen</div>
+        <div class="adp-role">Peer Support Specialist · King's College London</div>
+        <div class="adp-badges"><span class="adp-badge">Trauma</span><span class="adp-badge">Identity</span><span class="adp-badge">Relationships</span></div>
+      </div>
+      <div class="adp-body">
+        <div class="adp-section"><p class="adp-section-title">Bio</p><p style="font-size:13px;color:var(--adm-txt-body);line-height:1.6;">Trained in trauma-informed support. Supports students navigating identity, belonging, and relationship challenges with empathy and structure.</p></div>
+        <div class="adp-section"><p class="adp-section-title">Performance</p>
+          <div class="adp-stats">
+            <div class="adp-stat"><div class="adp-stat-val">112</div><div class="adp-stat-lbl">Total Sessions</div></div>
+            <div class="adp-stat"><div class="adp-stat-val">7/8</div><div class="adp-stat-lbl">Clients (active)</div></div>
+            <div class="adp-stat"><div class="adp-stat-val">91%</div><div class="adp-stat-lbl">Completion rate</div></div>
+            <div class="adp-stat"><div class="adp-stat-val">14 mo</div><div class="adp-stat-lbl">Time on platform</div></div>
+          </div>
+          <div style="margin-top:12px;"><div class="adp-rating"><div class="adp-rating-val">4.6</div><div><div class="adp-rating-stars">★★★★☆</div><div class="adp-rating-reviews">Based on 31 client reviews</div></div></div></div>
+        </div>
+        <div class="adp-section"><p class="adp-section-title">Availability</p><div class="adp-avail"><span class="adp-avail-chip">Mon PM</span><span class="adp-avail-chip">Wed AM</span><span class="adp-avail-chip">Fri PM</span></div><p style="font-size:11px;color:var(--adm-txt-muted);margin-top:8px;color:var(--adm-red);">Near full capacity — 7 of 8 slots taken</p></div>
+        <div class="adp-section"><p class="adp-section-title">Recent sessions</p>
+          <div class="adp-session-row"><div><div class="adp-session-name">Mia Foster</div><div class="adp-session-date">Today, 11:00 AM</div></div><span class="badge badge-green">Completed</span></div>
+          <div class="adp-session-row"><div><div class="adp-session-name">Sam Kowalski</div><div class="adp-session-date">27 Mar, 4:00 PM</div></div><span class="badge badge-amber">Note pending</span></div>
+        </div>
+      </div>
+      <div class="adp-actions">
+        <div class="adp-actions-row"><a href="admin-amb-detail.html" class="btn btn-primary" style="flex:1;text-align:center;">Full profile →</a><button class="btn btn-ghost" style="flex:1;">Message</button></div>
+        <div class="adp-actions-row"><button class="btn btn-ghost" style="flex:1;font-size:12px;">Edit details</button><button class="btn btn-danger" style="flex:1;font-size:12px;">Deactivate</button></div>
+      </div>
+    </div>
+
+    <!-- ── 4: Dev Nair ── -->
+    <div class="adp" data-amb="4">
+      <div class="adp-head">
+        <label for="as-4" class="adp-close" title="Close">×</label>
+        <div class="adp-ava" style="background:linear-gradient(135deg,#5b21b6,#7c3aed);">DN</div>
+        <div class="adp-name">Dev Nair</div>
+        <div class="adp-role">Peer Support Specialist · University of Leeds</div>
+        <div class="adp-badges"><span class="adp-badge">Academic stress</span><span class="adp-badge">Resilience</span><span class="adp-badge">Career anxiety</span></div>
+      </div>
+      <div class="adp-body">
+        <div class="adp-section"><p class="adp-section-title">Bio</p><p style="font-size:13px;color:var(--adm-txt-body);line-height:1.6;">Perfect 5.0 rating. Focuses on academic performance anxiety and building long-term resilience. 4 years mentoring experience.</p></div>
+        <div class="adp-section"><p class="adp-section-title">Performance</p>
+          <div class="adp-stats">
+            <div class="adp-stat"><div class="adp-stat-val">67</div><div class="adp-stat-lbl">Total Sessions</div></div>
+            <div class="adp-stat"><div class="adp-stat-val">4/10</div><div class="adp-stat-lbl">Clients (active)</div></div>
+            <div class="adp-stat"><div class="adp-stat-val">100%</div><div class="adp-stat-lbl">Completion rate</div></div>
+            <div class="adp-stat"><div class="adp-stat-val">9 mo</div><div class="adp-stat-lbl">Time on platform</div></div>
+          </div>
+          <div style="margin-top:12px;"><div class="adp-rating"><div class="adp-rating-val">5.0</div><div><div class="adp-rating-stars">★★★★★</div><div class="adp-rating-reviews">Based on 18 client reviews</div></div></div></div>
+        </div>
+        <div class="adp-section"><p class="adp-section-title">Availability</p><div class="adp-avail"><span class="adp-avail-chip">Mon AM</span><span class="adp-avail-chip">Thu AM</span><span class="adp-avail-chip">Fri PM</span><span class="adp-avail-chip">Sat AM</span></div><p style="font-size:11px;color:var(--adm-txt-muted);margin-top:8px;">Plenty of capacity — can take 6 more clients</p></div>
+        <div class="adp-section"><p class="adp-section-title">Recent sessions</p>
+          <div class="adp-session-row"><div><div class="adp-session-name">Alex Carter</div><div class="adp-session-date">Today, 9:00 AM</div></div><span class="badge badge-green">Completed</span></div>
+        </div>
+      </div>
+      <div class="adp-actions">
+        <div class="adp-actions-row"><a href="admin-amb-detail.html" class="btn btn-primary" style="flex:1;text-align:center;">Full profile →</a><button class="btn btn-ghost" style="flex:1;">Message</button></div>
+        <div class="adp-actions-row"><button class="btn btn-ghost" style="flex:1;font-size:12px;">Edit details</button><button class="btn btn-danger" style="flex:1;font-size:12px;">Deactivate</button></div>
+      </div>
+    </div>
+
+    <!-- ── 5: Aisha Patel ── -->
+    <div class="adp" data-amb="5">
+      <div class="adp-head">
+        <label for="as-5" class="adp-close" title="Close">×</label>
+        <div class="adp-ava" style="background:linear-gradient(135deg,#7c3aed,#a78bfa);">AP</div>
+        <div class="adp-name">Aisha Patel</div>
+        <div class="adp-role">Peer Support Specialist · University of Edinburgh</div>
+        <div class="adp-badges"><span class="adp-badge">Anxiety</span><span class="adp-badge">Depression</span><span class="adp-badge">Mindfulness</span></div>
+      </div>
+      <div class="adp-body">
+        <div class="adp-section"><p class="adp-section-title">Bio</p><p style="font-size:13px;color:var(--adm-txt-body);line-height:1.6;">Lived experience with anxiety and depression. Completed wellbeing coach training. Committed to stigma-free, compassionate support.</p></div>
+        <div class="adp-section"><p class="adp-section-title">Performance</p>
+          <div class="adp-stats">
+            <div class="adp-stat"><div class="adp-stat-val">94</div><div class="adp-stat-lbl">Total Sessions</div></div>
+            <div class="adp-stat"><div class="adp-stat-val">6/8</div><div class="adp-stat-lbl">Clients (active)</div></div>
+            <div class="adp-stat"><div class="adp-stat-val">92%</div><div class="adp-stat-lbl">Completion rate</div></div>
+            <div class="adp-stat"><div class="adp-stat-val">12 mo</div><div class="adp-stat-lbl">Time on platform</div></div>
+          </div>
+          <div style="margin-top:12px;"><div class="adp-rating"><div class="adp-rating-val">4.7</div><div><div class="adp-rating-stars">★★★★☆</div><div class="adp-rating-reviews">Based on 27 client reviews</div></div></div></div>
+        </div>
+        <div class="adp-section"><p class="adp-section-title">Availability</p><div class="adp-avail"><span class="adp-avail-chip">Tue AM</span><span class="adp-avail-chip">Wed PM</span><span class="adp-avail-chip">Sun AM</span></div></div>
+        <div class="adp-section"><p class="adp-section-title">Recent sessions</p>
+          <div class="adp-session-row"><div><div class="adp-session-name">Lily Evans</div><div class="adp-session-date">Today, 10:30 AM</div></div><span class="badge badge-green">Completed</span></div>
+          <div class="adp-session-row"><div><div class="adp-session-name">Ben Walsh</div><div class="adp-session-date">28 Mar, 2:30 PM</div></div><span class="badge badge-green">Completed</span></div>
+        </div>
+      </div>
+      <div class="adp-actions">
+        <div class="adp-actions-row"><a href="admin-amb-detail.html" class="btn btn-primary" style="flex:1;text-align:center;">Full profile →</a><button class="btn btn-ghost" style="flex:1;">Message</button></div>
+        <div class="adp-actions-row"><button class="btn btn-ghost" style="flex:1;font-size:12px;">Edit details</button><button class="btn btn-danger" style="flex:1;font-size:12px;">Deactivate</button></div>
+      </div>
+    </div>
+
+    <!-- ── 6–10: Shared simplified panels ── -->
+    <div class="adp" data-amb="6">
+      <div class="adp-head">
+        <label for="as-6" class="adp-close" title="Close">×</label>
+        <div class="adp-ava" style="background:linear-gradient(135deg,#0891b2,#06b6d4);">MC</div>
+        <div class="adp-name">Marcus Chen</div>
+        <div class="adp-role">Peer Support Specialist · University of Birmingham</div>
+        <div class="adp-badges"><span class="adp-badge">Social anxiety</span><span class="adp-badge">Mindfulness</span></div>
+      </div>
+      <div class="adp-body">
+        <div class="adp-section"><p class="adp-section-title">Bio</p><p style="font-size:13px;color:var(--adm-txt-body);line-height:1.6;">Joined 9 months ago. Brings a calm and structured approach to social anxiety support. Growing caseload with excellent early reviews.</p></div>
+        <div class="adp-section"><p class="adp-section-title">Performance</p>
+          <div class="adp-stats">
+            <div class="adp-stat"><div class="adp-stat-val">45</div><div class="adp-stat-lbl">Total Sessions</div></div>
+            <div class="adp-stat"><div class="adp-stat-val">3/10</div><div class="adp-stat-lbl">Clients (active)</div></div>
+            <div class="adp-stat"><div class="adp-stat-val">97%</div><div class="adp-stat-lbl">Completion rate</div></div>
+            <div class="adp-stat"><div class="adp-stat-val">9 mo</div><div class="adp-stat-lbl">Time on platform</div></div>
+          </div>
+          <div style="margin-top:12px;"><div class="adp-rating"><div class="adp-rating-val">4.5</div><div><div class="adp-rating-stars">★★★★☆</div><div class="adp-rating-reviews">Based on 11 client reviews</div></div></div></div>
+        </div>
+        <div class="adp-section"><p class="adp-section-title">Availability</p><div class="adp-avail"><span class="adp-avail-chip">Mon PM</span><span class="adp-avail-chip">Wed AM</span><span class="adp-avail-chip">Fri AM</span></div><p style="font-size:11px;color:var(--adm-txt-muted);margin-top:8px;">Plenty of capacity — can take 7 more clients</p></div>
+      </div>
+      <div class="adp-actions">
+        <div class="adp-actions-row"><a href="admin-amb-detail.html" class="btn btn-primary" style="flex:1;text-align:center;">Full profile →</a><button class="btn btn-ghost" style="flex:1;">Message</button></div>
+        <div class="adp-actions-row"><button class="btn btn-ghost" style="flex:1;font-size:12px;">Edit details</button><button class="btn btn-danger" style="flex:1;font-size:12px;">Deactivate</button></div>
+      </div>
+    </div>
+
+    <div class="adp" data-amb="7">
+      <div class="adp-head">
+        <label for="as-7" class="adp-close" title="Close">×</label>
+        <div class="adp-ava" style="background:linear-gradient(135deg,#db2777,#f472b6);">SW</div>
+        <div class="adp-name">Sophie Williams</div>
+        <div class="adp-role">Peer Support Specialist · Durham University</div>
+        <div class="adp-badges"><span class="adp-badge">Grief</span><span class="adp-badge">Relationships</span><span class="adp-badge">Bereavement</span></div>
+      </div>
+      <div class="adp-body">
+        <div class="adp-section"><p class="adp-section-title">Bio</p><p style="font-size:13px;color:var(--adm-txt-body);line-height:1.6;">Specialises in grief, loss, and relationship challenges. One of the platform's highest-rated ambassadors. Near full capacity.</p></div>
+        <div class="adp-section"><p class="adp-section-title">Performance</p>
+          <div class="adp-stats">
+            <div class="adp-stat"><div class="adp-stat-val">128</div><div class="adp-stat-lbl">Total Sessions</div></div>
+            <div class="adp-stat"><div class="adp-stat-val">9/10</div><div class="adp-stat-lbl">Clients (active)</div></div>
+            <div class="adp-stat"><div class="adp-stat-val">93%</div><div class="adp-stat-lbl">Completion rate</div></div>
+            <div class="adp-stat"><div class="adp-stat-val">16 mo</div><div class="adp-stat-lbl">Time on platform</div></div>
+          </div>
+          <div style="margin-top:12px;"><div class="adp-rating"><div class="adp-rating-val">4.9</div><div><div class="adp-rating-stars">★★★★★</div><div class="adp-rating-reviews">Based on 36 client reviews</div></div></div></div>
+        </div>
+        <div class="adp-section"><p class="adp-section-title">Availability</p><div class="adp-avail"><span class="adp-avail-chip">Tue PM</span><span class="adp-avail-chip">Thu AM</span><span class="adp-avail-chip">Sat PM</span></div><p style="font-size:11px;color:var(--adm-red);margin-top:8px;font-weight:600;">Near full — 9 of 10 slots taken</p></div>
+      </div>
+      <div class="adp-actions">
+        <div class="adp-actions-row"><a href="admin-amb-detail.html" class="btn btn-primary" style="flex:1;text-align:center;">Full profile →</a><button class="btn btn-ghost" style="flex:1;">Message</button></div>
+        <div class="adp-actions-row"><button class="btn btn-ghost" style="flex:1;font-size:12px;">Edit details</button><button class="btn btn-danger" style="flex:1;font-size:12px;">Deactivate</button></div>
+      </div>
+    </div>
+
+    <div class="adp" data-amb="8">
+      <div class="adp-head">
+        <label for="as-8" class="adp-close" title="Close">×</label>
+        <div class="adp-ava" style="background:linear-gradient(135deg,#b45309,#d97706);">OH</div>
+        <div class="adp-name">Omar Hassan</div>
+        <div class="adp-role">Peer Support Specialist · University of Sheffield</div>
+        <div class="adp-badges"><span class="adp-badge">Cultural adjustment</span><span class="adp-badge">Stress</span><span class="adp-badge">Immigration</span></div>
+      </div>
+      <div class="adp-body">
+        <div class="adp-section"><p class="adp-section-title">Bio</p><p style="font-size:13px;color:var(--adm-txt-body);line-height:1.6;">International student himself, specialises in cultural adjustment and the stress of adapting to life in the UK. Highly empathetic approach.</p></div>
+        <div class="adp-section"><p class="adp-section-title">Performance</p>
+          <div class="adp-stats">
+            <div class="adp-stat"><div class="adp-stat-val">87</div><div class="adp-stat-lbl">Total Sessions</div></div>
+            <div class="adp-stat"><div class="adp-stat-val">7/10</div><div class="adp-stat-lbl">Clients (active)</div></div>
+            <div class="adp-stat"><div class="adp-stat-val">95%</div><div class="adp-stat-lbl">Completion rate</div></div>
+            <div class="adp-stat"><div class="adp-stat-val">13 mo</div><div class="adp-stat-lbl">Time on platform</div></div>
+          </div>
+          <div style="margin-top:12px;"><div class="adp-rating"><div class="adp-rating-val">4.8</div><div><div class="adp-rating-stars">★★★★★</div><div class="adp-rating-reviews">Based on 22 client reviews</div></div></div></div>
+        </div>
+        <div class="adp-section"><p class="adp-section-title">Availability</p><div class="adp-avail"><span class="adp-avail-chip">Mon AM</span><span class="adp-avail-chip">Thu PM</span><span class="adp-avail-chip">Sun PM</span></div></div>
+      </div>
+      <div class="adp-actions">
+        <div class="adp-actions-row"><a href="admin-amb-detail.html" class="btn btn-primary" style="flex:1;text-align:center;">Full profile →</a><button class="btn btn-ghost" style="flex:1;">Message</button></div>
+        <div class="adp-actions-row"><button class="btn btn-ghost" style="flex:1;font-size:12px;">Edit details</button><button class="btn btn-danger" style="flex:1;font-size:12px;">Deactivate</button></div>
+      </div>
+    </div>
+
+    <div class="adp" data-amb="9">
+      <div class="adp-head">
+        <label for="as-9" class="adp-close" title="Close">×</label>
+        <div class="adp-ava" style="background:linear-gradient(135deg,#047857,#10b981);">ZA</div>
+        <div class="adp-name">Zara Ahmed</div>
+        <div class="adp-role">Peer Support Specialist · University of Bristol</div>
+        <div class="adp-badges"><span class="adp-badge">CBT</span><span class="adp-badge">Eating habits</span><span class="adp-badge">Body image</span></div>
+      </div>
+      <div class="adp-body">
+        <div class="adp-section"><p class="adp-section-title">Bio</p><p style="font-size:13px;color:var(--adm-txt-body);line-height:1.6;">Nutrition and wellbeing focused. Supports students navigating disordered eating habits and body image concerns using non-judgmental CBT approaches.</p></div>
+        <div class="adp-section"><p class="adp-section-title">Performance</p>
+          <div class="adp-stats">
+            <div class="adp-stat"><div class="adp-stat-val">62</div><div class="adp-stat-lbl">Total Sessions</div></div>
+            <div class="adp-stat"><div class="adp-stat-val">5/8</div><div class="adp-stat-lbl">Clients (active)</div></div>
+            <div class="adp-stat"><div class="adp-stat-val">90%</div><div class="adp-stat-lbl">Completion rate</div></div>
+            <div class="adp-stat"><div class="adp-stat-val">10 mo</div><div class="adp-stat-lbl">Time on platform</div></div>
+          </div>
+          <div style="margin-top:12px;"><div class="adp-rating"><div class="adp-rating-val">4.6</div><div><div class="adp-rating-stars">★★★★☆</div><div class="adp-rating-reviews">Based on 15 client reviews</div></div></div></div>
+        </div>
+        <div class="adp-section"><p class="adp-section-title">Availability</p><div class="adp-avail"><span class="adp-avail-chip">Wed AM</span><span class="adp-avail-chip">Fri PM</span><span class="adp-avail-chip">Sat AM</span></div></div>
+      </div>
+      <div class="adp-actions">
+        <div class="adp-actions-row"><a href="admin-amb-detail.html" class="btn btn-primary" style="flex:1;text-align:center;">Full profile →</a><button class="btn btn-ghost" style="flex:1;">Message</button></div>
+        <div class="adp-actions-row"><button class="btn btn-ghost" style="flex:1;font-size:12px;">Edit details</button><button class="btn btn-danger" style="flex:1;font-size:12px;">Deactivate</button></div>
+      </div>
+    </div>
+
+    <div class="adp" data-amb="10">
+      <div class="adp-head">
+        <label for="as-10" class="adp-close" title="Close">×</label>
+        <div class="adp-ava" style="background:linear-gradient(135deg,#1d4ed8,#60a5fa);">TB</div>
+        <div class="adp-name">Tom Bradshaw</div>
+        <div class="adp-role">Peer Support Specialist · University of Nottingham</div>
+        <div class="adp-badges"><span class="adp-badge">Academic</span><span class="adp-badge">Career anxiety</span></div>
+      </div>
+      <div class="adp-body">
+        <div class="adp-section"><p class="adp-section-title">Bio</p><p style="font-size:13px;color:var(--adm-txt-body);line-height:1.6;">Newly active ambassador. Final-year student supporting peers with academic pressure and career planning. Building his caseload steadily.</p></div>
+        <div class="adp-section"><p class="adp-section-title">Performance</p>
+          <div class="adp-stats">
+            <div class="adp-stat"><div class="adp-stat-val">31</div><div class="adp-stat-lbl">Total Sessions</div></div>
+            <div class="adp-stat"><div class="adp-stat-val">2/10</div><div class="adp-stat-lbl">Clients (active)</div></div>
+            <div class="adp-stat"><div class="adp-stat-val">100%</div><div class="adp-stat-lbl">Completion rate</div></div>
+            <div class="adp-stat"><div class="adp-stat-val">4 mo</div><div class="adp-stat-lbl">Time on platform</div></div>
+          </div>
+          <div style="margin-top:12px;"><div class="adp-rating"><div class="adp-rating-val">4.4</div><div><div class="adp-rating-stars">★★★★☆</div><div class="adp-rating-reviews">Based on 6 client reviews</div></div></div></div>
+        </div>
+        <div class="adp-section"><p class="adp-section-title">Availability</p><div class="adp-avail"><span class="adp-avail-chip">Tue AM</span><span class="adp-avail-chip">Thu AM</span><span class="adp-avail-chip">Sat AM</span></div><p style="font-size:11px;color:var(--adm-green);margin-top:8px;font-weight:600;">Lots of capacity — 8 slots available</p></div>
+      </div>
+      <div class="adp-actions">
+        <div class="adp-actions-row"><a href="admin-amb-detail.html" class="btn btn-primary" style="flex:1;text-align:center;">Full profile →</a><button class="btn btn-ghost" style="flex:1;">Message</button></div>
+        <div class="adp-actions-row"><button class="btn btn-ghost" style="flex:1;font-size:12px;">Edit details</button><button class="btn btn-danger" style="flex:1;font-size:12px;">Deactivate</button></div>
+      </div>
+    </div>
+
+  </div><!-- /amb-detail-overlay -->
+
+</div>
+</body>
+</html>

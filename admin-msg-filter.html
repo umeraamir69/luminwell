@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Messages Filter — Luminwell Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-family: 'DM Sans', sans-serif; background: #1a2236; min-height: 100vh; display: flex; align-items: flex-start; justify-content: flex-end; padding: 70px 28px 28px; -webkit-font-smoothing: antialiased; }
+
+  /* ── Token set (matches admin.css) ── */
+  :root {
+    --blue:      #2d9676;
+    --blue-dk:   #1d6e55;
+    --blue-lt:   #eaf5f1;
+    --blue-xlt:  #f4faf7;
+    --teal:      #175d92;
+    --teal-lt:   #e0eef8;
+    --amber:     #d97706;
+    --amber-lt:  #fef3c7;
+    --red:       #dc2626;
+    --red-lt:    #fee2e2;
+    --green:     #059669;
+    --green-lt:  #d1fae5;
+    --border:    rgba(12,25,41,.1);
+    --border-lt: rgba(12,25,41,.05);
+    --bg:        #f8f9fb;
+    --surface:   #ffffff;
+    --txt-head:  #0c1929;
+    --txt-body:  #334155;
+    --txt-muted: #64748b;
+    --txt-faint: #94a3b8;
+    --r-xs: 6px; --r-sm: 10px; --r-md: 14px; --r-lg: 20px;
+    --shadow-lg: 0 16px 60px rgba(12,25,41,.22), 0 4px 16px rgba(12,25,41,.14);
+  }
+
+  /* ── Popup shell ── */
+  .filter-popup {
+    width: 400px;
+    background: var(--surface);
+    border-radius: var(--r-lg);
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── Header ── */
+  .fp-head {
+    padding: 18px 22px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(135deg, #134a75, #175d92 60%, #2d9676);
+    color: #fff;
+  }
+  .fp-head-left { display: flex; align-items: center; gap: 10px; }
+  .fp-head-icon {
+    width: 34px; height: 34px;
+    background: rgba(255,255,255,.15);
+    border-radius: var(--r-sm);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .fp-title { font-size: 15px; font-weight: 800; letter-spacing: -.2px; }
+  .fp-subtitle { font-size: 11px; opacity: .65; margin-top: 1px; }
+  .fp-close {
+    background: rgba(255,255,255,.15); border: none;
+    width: 30px; height: 30px; border-radius: 50%;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 18px; line-height: 1; font-weight: 300;
+    transition: background .15s;
+  }
+  .fp-close:hover { background: rgba(255,255,255,.28); }
+
+  /* ── Active filters strip ── */
+  .fp-active-strip {
+    padding: 10px 22px;
+    background: var(--blue-xlt);
+    border-bottom: 1px solid rgba(45,150,118,.15);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .fp-active-label { font-size: 10px; font-weight: 700; color: var(--blue-dk); text-transform: uppercase; letter-spacing: .5px; flex-shrink: 0; }
+  .fp-chip {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: var(--blue-lt); border: 1px solid rgba(45,150,118,.25);
+    color: var(--blue-dk); border-radius: 20px;
+    padding: 2px 8px 2px 10px; font-size: 11px; font-weight: 600;
+  }
+  .fp-chip-x { background: none; border: none; cursor: pointer; color: var(--blue-dk); font-size: 14px; line-height: 1; padding: 0; margin-left: 1px; opacity: .6; }
+  .fp-chip-x:hover { opacity: 1; }
+  .fp-clear-all { margin-left: auto; font-size: 11px; font-weight: 700; color: var(--blue); cursor: pointer; background: none; border: none; white-space: nowrap; }
+
+  /* ── Scrollable body ── */
+  .fp-body {
+    padding: 0;
+    overflow-y: auto;
+    max-height: calc(100vh - 260px);
+  }
+
+  /* ── Section ── */
+  .fp-section {
+    padding: 16px 22px;
+    border-bottom: 1px solid var(--border-lt);
+  }
+  .fp-section:last-child { border-bottom: none; }
+  .fp-section-title {
+    font-size: 10px; font-weight: 800; color: var(--txt-muted);
+    letter-spacing: .7px; text-transform: uppercase; margin-bottom: 12px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .fp-section-title svg { opacity: .6; }
+
+  /* ── Radio pill group ── */
+  .pill-group { display: flex; gap: 6px; flex-wrap: wrap; }
+  .pill-opt { display: flex; align-items: center; }
+  .pill-opt input[type="radio"],
+  .pill-opt input[type="checkbox"] { display: none; }
+  .pill-opt label {
+    padding: 6px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 20px;
+    font-size: 12px; font-weight: 600;
+    color: var(--txt-muted);
+    cursor: pointer;
+    transition: all .15s;
+    white-space: nowrap;
+    display: flex; align-items: center; gap: 5px;
+  }
+  .pill-opt input:checked + label {
+    background: var(--blue);
+    border-color: var(--blue);
+    color: #fff;
+    box-shadow: 0 2px 10px rgba(45,150,118,.28);
+  }
+  .pill-opt label:hover { border-color: var(--blue); color: var(--blue); }
+
+  /* ── Risk level pills ── */
+  .pill-opt input:checked + label.risk-high  { background: var(--red);   border-color: var(--red);   }
+  .pill-opt input:checked + label.risk-med   { background: var(--amber); border-color: var(--amber); }
+  .pill-opt input:checked + label.risk-low   { background: var(--teal);  border-color: var(--teal);  }
+  .pill-opt input:checked + label.risk-none  { background: var(--green); border-color: var(--green); }
+
+  .risk-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .risk-dot.high { background: var(--red); }
+  .risk-dot.med  { background: var(--amber); }
+  .risk-dot.low  { background: var(--teal); }
+  .risk-dot.none { background: var(--green); }
+
+  /* ── Checkbox group ── */
+  .check-group { display: flex; flex-direction: column; gap: 8px; }
+  .check-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 9px 12px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--r-sm);
+    cursor: pointer;
+    transition: border-color .15s, background .15s;
+  }
+  .check-item:hover { border-color: var(--blue); background: var(--blue-xlt); }
+  .check-item input[type="checkbox"] {
+    width: 16px; height: 16px;
+    accent-color: var(--blue);
+    cursor: pointer; flex-shrink: 0;
+  }
+  .check-item-label { font-size: 13px; font-weight: 500; color: var(--txt-body); flex: 1; }
+  .check-item-count { font-size: 11px; color: var(--txt-faint); font-weight: 600; }
+
+  /* ── Date range ── */
+  .date-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .date-field { display: flex; flex-direction: column; gap: 4px; }
+  .date-label { font-size: 10px; font-weight: 700; color: var(--txt-muted); text-transform: uppercase; letter-spacing: .4px; }
+  .date-input {
+    border: 1.5px solid var(--border);
+    border-radius: var(--r-sm);
+    padding: 8px 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    color: var(--txt-head);
+    background: var(--surface);
+    outline: none;
+    transition: border-color .15s, box-shadow .15s;
+  }
+  .date-input:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(45,150,118,.12); }
+
+  /* ── Dropdown ── */
+  .fp-select {
+    width: 100%;
+    border: 1.5px solid var(--border);
+    border-radius: var(--r-sm);
+    padding: 9px 34px 9px 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    color: var(--txt-head);
+    background: var(--surface);
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    outline: none;
+    cursor: pointer;
+    transition: border-color .15s;
+  }
+  .fp-select:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(45,150,118,.12); }
+
+  /* ── Range slider ── */
+  .range-wrap { display: flex; flex-direction: column; gap: 8px; }
+  .range-labels { display: flex; justify-content: space-between; font-size: 11px; color: var(--txt-muted); font-weight: 600; }
+  .range-val { font-size: 13px; font-weight: 800; color: var(--blue); }
+  input[type="range"] {
+    width: 100%; accent-color: var(--blue);
+    height: 4px; cursor: pointer;
+  }
+
+  /* ── Sort toggle ── */
+  .sort-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .sort-opt { display: flex; }
+  .sort-opt input[type="radio"] { display: none; }
+  .sort-opt label {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--r-sm);
+    font-size: 12px; font-weight: 600;
+    color: var(--txt-muted);
+    cursor: pointer;
+    text-align: center;
+    transition: all .15s;
+    display: flex; align-items: center; justify-content: center; gap: 5px;
+  }
+  .sort-opt input:checked + label {
+    background: var(--teal-lt);
+    border-color: var(--teal);
+    color: var(--teal);
+    font-weight: 700;
+  }
+  .sort-opt label:hover { border-color: var(--teal); color: var(--teal); }
+
+  /* ── Footer ── */
+  .fp-foot {
+    padding: 14px 22px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    background: var(--bg);
+  }
+  .fp-foot-note { font-size: 11px; color: var(--txt-muted); flex: 1; }
+  .btn-reset {
+    padding: 8px 16px; border-radius: var(--r-sm);
+    border: 1.5px solid var(--border);
+    background: var(--surface); color: var(--txt-muted);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px; font-weight: 600; cursor: pointer;
+    transition: all .15s;
+  }
+  .btn-reset:hover { border-color: var(--blue); color: var(--blue); }
+  .btn-apply {
+    padding: 8px 22px; border-radius: var(--r-sm);
+    border: none;
+    background: linear-gradient(135deg, #2d9676, #1d6e55);
+    color: #fff;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px; font-weight: 700; cursor: pointer;
+    box-shadow: 0 3px 12px rgba(45,150,118,.3);
+    display: flex; align-items: center; gap: 6px;
+    transition: box-shadow .15s;
+  }
+  .btn-apply:hover { box-shadow: 0 5px 20px rgba(45,150,118,.4); }
+
+  /* ── Result count badge ── */
+  .result-badge {
+    background: var(--blue);
+    color: #fff;
+    border-radius: 20px;
+    padding: 1px 8px;
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  /* ── Divider ── */
+  .fp-divider { height: 1px; background: var(--border-lt); margin: 2px 0; }
+</style>
+</head>
+<body>
+
+  <div class="filter-popup">
+
+    <!-- Header -->
+    <div class="fp-head">
+      <div class="fp-head-left">
+        <div class="fp-head-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+          </svg>
+        </div>
+        <div>
+          <div class="fp-title">Filter Messages</div>
+          <div class="fp-subtitle">Narrow conversations by type, risk, date &amp; more</div>
+        </div>
+      </div>
+      <button class="fp-close" title="Close">×</button>
+    </div>
+
+    <!-- Active filters strip -->
+    <div class="fp-active-strip">
+      <span class="fp-active-label">Active:</span>
+      <span class="fp-chip">Flagged <button class="fp-chip-x">×</button></span>
+      <span class="fp-chip">High risk <button class="fp-chip-x">×</button></span>
+      <span class="fp-chip">Last 7 days <button class="fp-chip-x">×</button></span>
+      <button class="fp-clear-all">Clear all</button>
+    </div>
+
+    <!-- Scrollable body -->
+    <div class="fp-body">
+
+      <!-- 1. Message type -->
+      <div class="fp-section">
+        <div class="fp-section-title">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          Message Type
+        </div>
+        <div class="pill-group">
+          <div class="pill-opt"><input type="radio" name="msg-type" id="mt-all" checked><label for="mt-all">All</label></div>
+          <div class="pill-opt"><input type="radio" name="msg-type" id="mt-unread"><label for="mt-unread">Unread</label></div>
+          <div class="pill-opt"><input type="radio" name="msg-type" id="mt-flagged"><label for="mt-flagged">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
+            Flagged
+          </label></div>
+          <div class="pill-opt"><input type="radio" name="msg-type" id="mt-session"><label for="mt-session">Session related</label></div>
+          <div class="pill-opt"><input type="radio" name="msg-type" id="mt-support"><label for="mt-support">Support requests</label></div>
+          <div class="pill-opt"><input type="radio" name="msg-type" id="mt-admin"><label for="mt-admin">System / admin</label></div>
+        </div>
+      </div>
+
+      <!-- 2. Risk level -->
+      <div class="fp-section">
+        <div class="fp-section-title">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          Risk Level
+        </div>
+        <div class="pill-group">
+          <div class="pill-opt"><input type="radio" name="risk" id="r-any" checked><label for="r-any">Any</label></div>
+          <div class="pill-opt"><input type="radio" name="risk" id="r-high"><label for="r-high" class="risk-high"><span class="risk-dot high"></span>High risk</label></div>
+          <div class="pill-opt"><input type="radio" name="risk" id="r-med"><label for="r-med" class="risk-med"><span class="risk-dot med"></span>Medium</label></div>
+          <div class="pill-opt"><input type="radio" name="risk" id="r-low"><label for="r-low" class="risk-low"><span class="risk-dot low"></span>Low concern</label></div>
+          <div class="pill-opt"><input type="radio" name="risk" id="r-none"><label for="r-none" class="risk-none"><span class="risk-dot none"></span>No flag</label></div>
+        </div>
+      </div>
+
+      <!-- 3. Status -->
+      <div class="fp-section">
+        <div class="fp-section-title">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          Status
+        </div>
+        <div class="check-group">
+          <label class="check-item">
+            <input type="checkbox" checked>
+            <span class="check-item-label">Open / Active conversations</span>
+            <span class="check-item-count">87</span>
+          </label>
+          <label class="check-item">
+            <input type="checkbox" checked>
+            <span class="check-item-label">Awaiting reply</span>
+            <span class="check-item-count">24</span>
+          </label>
+          <label class="check-item">
+            <input type="checkbox">
+            <span class="check-item-label">Under review</span>
+            <span class="check-item-count">3</span>
+          </label>
+          <label class="check-item">
+            <input type="checkbox">
+            <span class="check-item-label">Archived / Closed</span>
+            <span class="check-item-count">1,090</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- 4. Ambassador -->
+      <div class="fp-section">
+        <div class="fp-section-title">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          Ambassador
+        </div>
+        <select class="fp-select">
+          <option value="">All ambassadors</option>
+          <option>Maya Johnson (Manchester)</option>
+          <option>Keiran Roberts (UCL)</option>
+          <option>Layla Nguyen (King's College)</option>
+          <option>Dev Nair (Leeds)</option>
+          <option>Aisha Patel (Edinburgh)</option>
+          <option>Marcus Chen (Birmingham)</option>
+          <option>Sophie Williams (Durham)</option>
+          <option>Omar Hassan (Sheffield)</option>
+        </select>
+      </div>
+
+      <!-- 5. University -->
+      <div class="fp-section">
+        <div class="fp-section-title">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          University
+        </div>
+        <select class="fp-select">
+          <option value="">All universities</option>
+          <option>University of Manchester</option>
+          <option>UCL</option>
+          <option>King's College London</option>
+          <option>University of Leeds</option>
+          <option>University of Edinburgh</option>
+          <option>University of Birmingham</option>
+          <option>Durham University</option>
+          <option>University of Sheffield</option>
+          <option>University of Bristol</option>
+          <option>University of Nottingham</option>
+        </select>
+      </div>
+
+      <!-- 6. Date range -->
+      <div class="fp-section">
+        <div class="fp-section-title">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Date Range
+        </div>
+
+        <!-- Quick presets -->
+        <div class="pill-group" style="margin-bottom:10px;">
+          <div class="pill-opt"><input type="radio" name="date-preset" id="dp-today"><label for="dp-today">Today</label></div>
+          <div class="pill-opt"><input type="radio" name="date-preset" id="dp-7d" checked><label for="dp-7d">Last 7 days</label></div>
+          <div class="pill-opt"><input type="radio" name="date-preset" id="dp-30d"><label for="dp-30d">Last 30 days</label></div>
+          <div class="pill-opt"><input type="radio" name="date-preset" id="dp-custom"><label for="dp-custom">Custom</label></div>
+        </div>
+
+        <!-- Custom date inputs -->
+        <div class="date-grid">
+          <div class="date-field">
+            <span class="date-label">From</span>
+            <input type="date" class="date-input" value="2026-03-22">
+          </div>
+          <div class="date-field">
+            <span class="date-label">To</span>
+            <input type="date" class="date-input" value="2026-03-29">
+          </div>
+        </div>
+      </div>
+
+      <!-- 7. Message volume threshold -->
+      <div class="fp-section">
+        <div class="fp-section-title">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          Min. messages in conversation
+        </div>
+        <div class="range-wrap">
+          <div class="range-labels">
+            <span>1 message</span>
+            <span class="range-val">5+</span>
+            <span>50+</span>
+          </div>
+          <input type="range" min="1" max="50" value="5">
+        </div>
+      </div>
+
+      <!-- 8. Sort by -->
+      <div class="fp-section">
+        <div class="fp-section-title">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+          Sort By
+        </div>
+        <div class="sort-grid">
+          <div class="sort-opt">
+            <input type="radio" name="sort" id="s-recent" checked>
+            <label for="s-recent">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              Most recent
+            </label>
+          </div>
+          <div class="sort-opt">
+            <input type="radio" name="sort" id="s-oldest">
+            <label for="s-oldest">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+              Oldest first
+            </label>
+          </div>
+          <div class="sort-opt">
+            <input type="radio" name="sort" id="s-risk">
+            <label for="s-risk">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg>
+              Highest risk
+            </label>
+          </div>
+          <div class="sort-opt">
+            <input type="radio" name="sort" id="s-volume">
+            <label for="s-volume">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+              Most messages
+            </label>
+          </div>
+          <div class="sort-opt">
+            <input type="radio" name="sort" id="s-unread">
+            <label for="s-unread">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              Unread first
+            </label>
+          </div>
+          <div class="sort-opt">
+            <input type="radio" name="sort" id="s-response">
+            <label for="s-response">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+              Fastest response
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- 9. Additional options -->
+      <div class="fp-section">
+        <div class="fp-section-title">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06-.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          Additional Options
+        </div>
+        <div class="check-group">
+          <label class="check-item">
+            <input type="checkbox" checked>
+            <span class="check-item-label">Include archived conversations</span>
+          </label>
+          <label class="check-item">
+            <input type="checkbox">
+            <span class="check-item-label">Only conversations with welfare notes</span>
+          </label>
+          <label class="check-item">
+            <input type="checkbox">
+            <span class="check-item-label">Only conversations with session bookings</span>
+          </label>
+          <label class="check-item">
+            <input type="checkbox" checked>
+            <span class="check-item-label">Show system / automated messages</span>
+          </label>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="fp-foot">
+      <span class="fp-foot-note">
+        <span class="result-badge">34</span>
+        &nbsp;conversations match
+      </span>
+      <button class="btn-reset">Reset</button>
+      <button class="btn-apply">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        Apply filters
+      </button>
+    </div>
+
+  </div>
+
+</body>
+</html>

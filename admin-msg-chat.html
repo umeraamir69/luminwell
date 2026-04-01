@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Messages — Luminwell Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="admin.css">
+<style>
+
+  /* ── Override main content to fill height ── */
+  .admin-main { display: flex; flex-direction: column; overflow: hidden; }
+  .admin-content { flex: 1; overflow: hidden; padding: 0; display: flex; flex-direction: column; }
+
+  /* ── Messaging shell ── */
+  .msg-shell {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+    background: var(--adm-bg);
+  }
+
+  /* ══════════════════════════════════════════
+     LEFT PANEL — Conversation list
+  ══════════════════════════════════════════ */
+  .conv-panel {
+    width: 320px;
+    flex-shrink: 0;
+    background: var(--adm-surface);
+    border-right: 1px solid var(--adm-border);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .conv-panel-head {
+    padding: 16px 18px 12px;
+    border-bottom: 1px solid var(--adm-border);
+    flex-shrink: 0;
+  }
+  .conv-panel-title {
+    font-size: 15px; font-weight: 800; color: var(--adm-txt-head);
+    margin-bottom: 10px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .conv-search {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--adm-bg);
+    border: 1.5px solid var(--adm-border);
+    border-radius: var(--adm-r-sm);
+    padding: 7px 12px;
+    margin-bottom: 10px;
+  }
+  .conv-search input {
+    border: none; background: none; outline: none;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px; color: var(--adm-txt-head);
+    width: 100%;
+  }
+  .conv-search input::placeholder { color: var(--adm-txt-faint); }
+
+  .conv-filters {
+    display: flex; gap: 4px;
+  }
+  .conv-filter-btn {
+    padding: 4px 10px; border-radius: 20px;
+    border: 1.5px solid var(--adm-border);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px; font-weight: 700;
+    color: var(--adm-txt-muted);
+    background: var(--adm-surface);
+    cursor: pointer; transition: all .15s;
+  }
+  .conv-filter-btn.active,
+  .conv-filter-btn:hover {
+    background: var(--adm-blue-lt);
+    border-color: var(--adm-blue);
+    color: var(--adm-blue-dk);
+  }
+  .conv-filter-btn.red.active { background: var(--adm-red-lt); border-color: var(--adm-red); color: var(--adm-red); }
+
+  /* Conversation list */
+  .conv-list { overflow-y: auto; flex: 1; }
+  .conv-item {
+    display: flex; align-items: flex-start; gap: 11px;
+    padding: 13px 18px;
+    border-bottom: 1px solid var(--adm-border-lt);
+    cursor: pointer;
+    transition: background .15s;
+    position: relative;
+  }
+  .conv-item:hover { background: var(--adm-bg); }
+  .conv-item.active { background: var(--adm-blue-xlt); border-left: 3px solid var(--adm-blue); padding-left: 15px; }
+  .conv-item.flagged { background: #fff8f8; border-left: 3px solid var(--adm-red); padding-left: 15px; }
+  .conv-item.unread .conv-name { font-weight: 800; }
+  .conv-item.unread .conv-preview { color: var(--adm-txt-body); font-weight: 600; }
+
+  .conv-ava { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 800; color: #fff; flex-shrink: 0; }
+  .conv-body { flex: 1; min-width: 0; }
+  .conv-name { font-size: 13px; font-weight: 700; color: var(--adm-txt-head); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 2px; }
+  .conv-preview { font-size: 11px; color: var(--adm-txt-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.4; }
+  .conv-right { text-align: right; flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 5px; }
+  .conv-time { font-size: 10px; color: var(--adm-txt-faint); font-weight: 600; white-space: nowrap; }
+  .conv-dot { width: 8px; height: 8px; border-radius: 50%; }
+  .conv-dot.blue   { background: var(--adm-blue); }
+  .conv-dot.red    { background: var(--adm-red); }
+  .conv-dot.amber  { background: var(--adm-amber); }
+
+  /* ══════════════════════════════════════════
+     MIDDLE — Chat thread
+  ══════════════════════════════════════════ */
+  .chat-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: var(--adm-bg);
+  }
+
+  /* Chat topbar */
+  .chat-head {
+    background: var(--adm-surface);
+    border-bottom: 1px solid var(--adm-border);
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-shrink: 0;
+    box-shadow: var(--adm-shadow-xs);
+  }
+  .chat-head-user { flex: 1; display: flex; align-items: center; gap: 12px; }
+  .chat-head-info {}
+  .chat-head-name { font-size: 15px; font-weight: 800; color: var(--adm-txt-head); }
+  .chat-head-sub  { font-size: 11px; color: var(--adm-txt-muted); margin-top: 1px; display: flex; align-items: center; gap: 5px; }
+  .online-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--adm-green); display: inline-block; }
+  .chat-head-actions { display: flex; gap: 6px; align-items: center; }
+  .chat-icon-btn {
+    width: 34px; height: 34px; border-radius: var(--adm-r-sm);
+    border: 1.5px solid var(--adm-border);
+    background: var(--adm-surface);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; color: var(--adm-txt-muted);
+    transition: all .15s;
+  }
+  .chat-icon-btn:hover { border-color: var(--adm-blue); color: var(--adm-blue); background: var(--adm-blue-xlt); }
+  .flag-pill {
+    display: flex; align-items: center; gap: 5px;
+    background: var(--adm-red-lt);
+    border: 1px solid rgba(220,38,38,.2);
+    border-radius: 20px;
+    padding: 4px 10px;
+    font-size: 11px; font-weight: 700; color: var(--adm-red);
+  }
+
+  /* Messages area */
+  .chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  /* Date divider */
+  .chat-date-divider {
+    display: flex; align-items: center; gap: 10px;
+    margin: 14px 0 10px;
+  }
+  .chat-date-divider::before,
+  .chat-date-divider::after { content: ''; flex: 1; height: 1px; background: var(--adm-border); }
+  .chat-date-divider span { font-size: 10px; font-weight: 700; color: var(--adm-txt-faint); white-space: nowrap; text-transform: uppercase; letter-spacing: .5px; }
+
+  /* Message bubble */
+  .msg-group { display: flex; gap: 8px; align-items: flex-end; margin-bottom: 12px; }
+  .msg-group.sent { flex-direction: row-reverse; }
+
+  .msg-ava {
+    width: 30px; height: 30px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 800; color: #fff;
+    flex-shrink: 0;
+  }
+
+  .msg-bubbles { display: flex; flex-direction: column; gap: 3px; max-width: 70%; }
+  .msg-group.sent .msg-bubbles { align-items: flex-end; }
+
+  .msg-sender-name { font-size: 10px; font-weight: 700; color: var(--adm-txt-muted); margin-bottom: 3px; padding: 0 4px; }
+  .msg-group.sent .msg-sender-name { text-align: right; }
+
+  .bubble {
+    padding: 10px 14px;
+    border-radius: 16px;
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--adm-txt-body);
+    background: var(--adm-surface);
+    box-shadow: var(--adm-shadow-xs);
+    border: 1px solid var(--adm-border-lt);
+    position: relative;
+  }
+  .bubble.sent {
+    background: linear-gradient(135deg, #2d9676, #175d92);
+    color: #fff;
+    border: none;
+    box-shadow: 0 2px 10px rgba(45,150,118,.25);
+  }
+  .bubble.flagged-bubble {
+    background: linear-gradient(90deg, #fff1f2, #fff5f5);
+    border: 1px solid rgba(220,38,38,.25);
+    border-left: 3px solid var(--adm-red);
+  }
+
+  /* Flag indicator on bubble */
+  .flag-tag {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: var(--adm-red-lt); border: 1px solid rgba(220,38,38,.2);
+    color: var(--adm-red);
+    border-radius: 20px; padding: 2px 8px;
+    font-size: 10px; font-weight: 700;
+    margin-top: 5px;
+    cursor: pointer;
+  }
+
+  .msg-time-stamp { font-size: 10px; color: var(--adm-txt-faint); padding: 0 4px; margin-top: 1px; }
+  .msg-group.sent .msg-time-stamp { text-align: right; }
+
+  /* System message */
+  .system-msg {
+    text-align: center;
+    font-size: 11px; font-weight: 600;
+    color: var(--adm-txt-faint);
+    background: var(--adm-surface);
+    border: 1px solid var(--adm-border-lt);
+    border-radius: 20px;
+    padding: 5px 14px;
+    margin: 8px auto;
+    max-width: 320px;
+  }
+
+  /* Welfare flag notice inside chat */
+  .welfare-notice {
+    background: linear-gradient(90deg, #fff1f2, #fff5f5);
+    border: 1px solid rgba(220,38,38,.2);
+    border-left: 4px solid var(--adm-red);
+    border-radius: var(--adm-r-sm);
+    padding: 12px 16px;
+    margin: 8px 0 12px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .welfare-notice-body p  { font-size: 12px; font-weight: 700; color: var(--adm-red); margin-bottom: 3px; }
+  .welfare-notice-body small { font-size: 11px; color: var(--adm-txt-muted); }
+  .welfare-notice-actions { display: flex; gap: 6px; margin-top: 8px; }
+
+  /* Typing indicator */
+  .typing-row { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
+  .typing-dots {
+    background: var(--adm-surface);
+    border: 1px solid var(--adm-border-lt);
+    border-radius: 16px;
+    padding: 10px 16px;
+    display: flex; gap: 4px; align-items: center;
+  }
+  .typing-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--adm-txt-faint);
+    animation: typing-bounce .9s ease-in-out infinite;
+  }
+  .typing-dot:nth-child(2) { animation-delay: .15s; }
+  .typing-dot:nth-child(3) { animation-delay: .3s; }
+  @keyframes typing-bounce {
+    0%,60%,100% { transform: translateY(0); }
+    30%          { transform: translateY(-5px); }
+  }
+
+  /* Chat input area */
+  .chat-input-wrap {
+    background: var(--adm-surface);
+    border-top: 1px solid var(--adm-border);
+    padding: 12px 16px;
+    flex-shrink: 0;
+  }
+  .chat-input-bar {
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+    background: var(--adm-bg);
+    border: 1.5px solid var(--adm-border);
+    border-radius: var(--adm-r-md);
+    padding: 10px 14px;
+    transition: border-color .15s;
+  }
+  .chat-input-bar:focus-within { border-color: var(--adm-blue); box-shadow: 0 0 0 3px rgba(45,150,118,.1); }
+  .chat-input-bar textarea {
+    flex: 1; border: none; background: none; outline: none; resize: none;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px; color: var(--adm-txt-head);
+    line-height: 1.5; min-height: 20px; max-height: 100px;
+    overflow-y: auto;
+  }
+  .chat-input-bar textarea::placeholder { color: var(--adm-txt-faint); }
+  .chat-input-actions { display: flex; gap: 6px; align-items: center; flex-shrink: 0; }
+  .ci-btn {
+    width: 30px; height: 30px; border-radius: 8px;
+    border: none; background: none;
+    cursor: pointer; color: var(--adm-txt-muted);
+    display: flex; align-items: center; justify-content: center;
+    transition: color .15s;
+  }
+  .ci-btn:hover { color: var(--adm-blue); }
+  .ci-send {
+    width: 36px; height: 36px; border-radius: var(--adm-r-sm);
+    border: none;
+    background: linear-gradient(135deg, #2d9676, #1d6e55);
+    cursor: pointer; color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 2px 8px rgba(45,150,118,.3);
+    transition: box-shadow .15s;
+  }
+  .ci-send:hover { box-shadow: 0 4px 16px rgba(45,150,118,.4); }
+  .chat-input-meta {
+    display: flex; justify-content: space-between;
+    padding: 6px 2px 0;
+    font-size: 10px; color: var(--adm-txt-faint); font-weight: 600;
+  }
+  .admin-tag {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: var(--adm-teal-lt); color: var(--adm-teal);
+    border-radius: 20px; padding: 2px 8px;
+    font-size: 10px; font-weight: 700;
+  }
+
+  /* ══════════════════════════════════════════
+     RIGHT PANEL — User info
+  ══════════════════════════════════════════ */
+  .info-panel {
+    width: 280px;
+    flex-shrink: 0;
+    background: var(--adm-surface);
+    border-left: 1px solid var(--adm-border);
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+  }
+
+  .info-user-card {
+    padding: 20px 18px 16px;
+    border-bottom: 1px solid var(--adm-border);
+    text-align: center;
+  }
+  .info-ava {
+    width: 56px; height: 56px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; font-weight: 800; color: #fff;
+    margin: 0 auto 10px;
+    background: linear-gradient(135deg, #dc2626, #f87171);
+    border: 3px solid rgba(220,38,38,.2);
+  }
+  .info-name { font-size: 15px; font-weight: 800; color: var(--adm-txt-head); margin-bottom: 2px; }
+  .info-sub  { font-size: 11px; color: var(--adm-txt-muted); margin-bottom: 12px; }
+  .info-badges { display: flex; justify-content: center; gap: 6px; flex-wrap: wrap; }
+
+  .info-section { padding: 14px 18px; border-bottom: 1px solid var(--adm-border-lt); }
+  .info-section-title {
+    font-size: 10px; font-weight: 800; color: var(--adm-txt-muted);
+    letter-spacing: .6px; text-transform: uppercase; margin-bottom: 10px;
+  }
+  .info-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 12px; }
+  .info-row:last-child { margin-bottom: 0; }
+  .info-key { color: var(--adm-txt-muted); font-weight: 500; }
+  .info-val { color: var(--adm-txt-head); font-weight: 700; }
+
+  .mood-mini { display: flex; gap: 3px; align-items: flex-end; height: 32px; }
+  .mood-bar-mini { flex: 1; border-radius: 2px 2px 0 0; min-height: 4px; }
+
+  .info-actions { padding: 14px 18px; display: flex; flex-direction: column; gap: 6px; }
+  .info-btn {
+    display: flex; align-items: center; gap: 8px;
+    padding: 9px 12px; border-radius: var(--adm-r-sm);
+    border: 1.5px solid var(--adm-border);
+    background: var(--adm-surface);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px; font-weight: 600;
+    color: var(--adm-txt-body);
+    cursor: pointer; transition: all .15s;
+    text-decoration: none;
+  }
+  .info-btn:hover { border-color: var(--adm-blue); color: var(--adm-blue); background: var(--adm-blue-xlt); }
+  .info-btn.danger { border-color: rgba(220,38,38,.25); color: var(--adm-red); background: var(--adm-red-lt); }
+  .info-btn.danger:hover { border-color: var(--adm-red); background: #fee2e2; }
+  .info-btn svg { flex-shrink: 0; }
+</style>
+</head>
+<body>
+
+<input type="checkbox" id="sidebar-toggle" class="sidebar-toggle-check">
+
+<div class="admin-shell">
+
+  <!-- ── Sidebar ── -->
+  <aside class="admin-sidebar">
+    <div class="sidebar__logo"><div class="logo-mark"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17 8C8 10 5.9 16.17 3.82 22A13.34 13.34 0 0 0 18 8Z"/><path d="M9 9c-1.5 3.5-2.5 7-3 10C8 18 11 15 13 12" fill="rgba(255,255,255,.35)"/></svg></div><div class="logo-text-wrap"><div class="logo-name">Luminwell</div><span class="logo-badge-pill">ADMIN PANEL</span></div></div>
+    <label for="sidebar-toggle" class="sidebar__collapse-btn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg></label>
+    <nav class="sidebar__nav">
+      <div class="nav-section">
+        <p class="nav-label">Main</p>
+        <a href="admin-home.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg><span class="link-text">Overview</span></a>
+        <a href="admin-analytics.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg><span class="link-text">Analytics</span></a>
+      </div>
+      <div class="nav-section">
+        <p class="nav-label">People</p>
+        <a href="admin-users.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span class="link-text">Users</span><span class="nav-badge nav-badge--slate">2,841</span></a>
+        <a href="admin-ambassadors.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><span class="link-text">Ambassadors</span><span class="nav-badge nav-badge--amber">3 new</span></a>
+        <a href="admin-matching.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg><span class="link-text">Matching</span></a>
+      </div>
+      <div class="nav-section">
+        <p class="nav-label">Operations</p>
+        <a href="admin-sessions.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><span class="link-text">Sessions</span></a>
+        <a href="admin-welfare.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span class="link-text">Welfare &amp; Safety</span><span class="nav-badge nav-badge--red">5</span></a>
+        <a href="admin-messages.html" class="sidebar__link active"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span class="link-text">Messages</span></a>
+      </div>
+      <div class="nav-section">
+        <p class="nav-label">Platform</p>
+        <a href="admin-content.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span class="link-text">Content</span></a>
+        <a href="admin-settings.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06-.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span class="link-text">Settings</span></a>
+        <a href="admin-privacy.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><span class="link-text">Privacy &amp; GDPR</span></a>
+      </div>
+    </nav>
+    <div class="sidebar__foot">
+      <div class="sidebar__foot-user"><div class="admin-ava-sm">A</div><div class="sidebar__foot-info"><p>Admin User</p><small>Super Admin</small></div></div>
+      <button class="sidebar__signout">Sign out</button>
+    </div>
+  </aside>
+
+  <!-- ── Main ── -->
+  <div class="admin-main">
+
+    <header class="admin-topbar">
+      <div class="topbar-left">
+        <label for="sidebar-toggle" class="topbar-menu-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></label>
+        <nav class="breadcrumb">
+          <a href="admin-home.html">Admin</a>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+          <a href="admin-messages.html">Messages</a>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+          <span class="bc-active">Alex Turner → Maya Johnson</span>
+        </nav>
+      </div>
+      <div class="topbar-right">
+        <div class="notif-wrap">
+          <input type="checkbox" id="notif-toggle" class="notif-check">
+          <label for="notif-toggle" class="topbar-icon-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><span class="notif-dot"></span></label>
+          <div class="notif-drop"><div class="notif-drop-head"><h4>Notifications</h4><a href="#">Mark all read</a></div><div class="notif-item unread"><div class="notif-ico red"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div><div class="notif-body"><p><strong>Critical welfare flag</strong> — Alex T.</p><small>9 min ago</small></div></div><div class="notif-drop-foot"><a href="admin-welfare.html">View all →</a></div></div>
+        </div>
+        <div class="topbar-user"><div class="topbar-ava">A</div><div class="topbar-user-info"><div class="u-name">Admin</div><div class="u-role">Super Admin</div></div></div>
+      </div>
+    </header>
+
+    <!-- ── Messaging shell ── -->
+    <div class="admin-content">
+      <div class="msg-shell">
+
+        <!-- ══ LEFT: Conversation list ══ -->
+        <div class="conv-panel">
+          <div class="conv-panel-head">
+            <div class="conv-panel-title">
+              Messages
+              <a href="admin-messages.html" style="font-size:11px;color:var(--adm-blue);font-weight:700;">All →</a>
+            </div>
+            <div class="conv-search">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--adm-txt-faint);flex-shrink:0;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input type="text" placeholder="Search conversations…">
+            </div>
+            <div class="conv-filters">
+              <button class="conv-filter-btn red active">Flagged</button>
+              <button class="conv-filter-btn">Unread</button>
+              <button class="conv-filter-btn">All</button>
+            </div>
+          </div>
+
+          <div class="conv-list">
+
+            <!-- Active / flagged -->
+            <div class="conv-item flagged active">
+              <div class="conv-ava" style="background:linear-gradient(135deg,#dc2626,#f87171);">AT</div>
+              <div class="conv-body">
+                <div class="conv-name">Alex Turner → Maya Johnson</div>
+                <div class="conv-preview">"I don't think I can keep going with the sessions…"</div>
+              </div>
+              <div class="conv-right">
+                <span class="conv-time">9m</span>
+                <span class="conv-dot red"></span>
+              </div>
+            </div>
+
+            <div class="conv-item unread">
+              <div class="conv-ava" style="background:linear-gradient(135deg,#d97706,#fbbf24);">JM</div>
+              <div class="conv-body">
+                <div class="conv-name">Jordan Mills → Keiran Roberts</div>
+                <div class="conv-preview">"Thanks for today, it was really helpful. Can we book…"</div>
+              </div>
+              <div class="conv-right">
+                <span class="conv-time">34m</span>
+                <span class="conv-dot blue"></span>
+              </div>
+            </div>
+
+            <div class="conv-item unread">
+              <div class="conv-ava" style="background:linear-gradient(135deg,#0891b2,#06b6d4);">FC</div>
+              <div class="conv-body">
+                <div class="conv-name">Fatima Choudhry → Layla Nguyen</div>
+                <div class="conv-preview">"I'm a bit nervous about the first session — do I need…"</div>
+              </div>
+              <div class="conv-right">
+                <span class="conv-time">1h</span>
+                <span class="conv-dot blue"></span>
+              </div>
+            </div>
+
+            <div class="conv-item">
+              <div class="conv-ava" style="background:linear-gradient(135deg,#059669,#34d399);">OB</div>
+              <div class="conv-body">
+                <div class="conv-name">Ollie Barnes → Dev Nair</div>
+                <div class="conv-preview">"I finished the journalling homework — it really helped!"</div>
+              </div>
+              <div class="conv-right">
+                <span class="conv-time">2h</span>
+              </div>
+            </div>
+
+            <div class="conv-item">
+              <div class="conv-ava" style="background:linear-gradient(135deg,#175d92,#2d9676);">NK</div>
+              <div class="conv-body">
+                <div class="conv-name">Natasha Kwei → Maya Johnson</div>
+                <div class="conv-preview">"When will I be matched with an ambassador? I signed…"</div>
+              </div>
+              <div class="conv-right">
+                <span class="conv-time">3h</span>
+              </div>
+            </div>
+
+            <div class="conv-item">
+              <div class="conv-ava" style="background:linear-gradient(135deg,#7c3aed,#a78bfa);">PT</div>
+              <div class="conv-body">
+                <div class="conv-name">Priya Thakur → Keiran Roberts</div>
+                <div class="conv-preview">"Could we reschedule tomorrow's session to 2pm?"</div>
+              </div>
+              <div class="conv-right">
+                <span class="conv-time">5h</span>
+              </div>
+            </div>
+
+            <div class="conv-item">
+              <div class="conv-ava" style="background:linear-gradient(135deg,#d97706,#fbbf24);">EW</div>
+              <div class="conv-body">
+                <div class="conv-name">Eva Williams → Layla Nguyen</div>
+                <div class="conv-preview">"I've had a better week — I wrote in my journal every day!"</div>
+              </div>
+              <div class="conv-right">
+                <span class="conv-time">Yest.</span>
+              </div>
+            </div>
+
+            <div class="conv-item">
+              <div class="conv-ava" style="background:linear-gradient(135deg,#059669,#10b981);">TN</div>
+              <div class="conv-body">
+                <div class="conv-name">Tobi Nwosu → Maya Johnson</div>
+                <div class="conv-preview">"Session was great. Looking forward to the next one!"</div>
+              </div>
+              <div class="conv-right">
+                <span class="conv-time">Yest.</span>
+              </div>
+            </div>
+
+            <div class="conv-item">
+              <div class="conv-ava" style="background:linear-gradient(135deg,#4f46e5,#818cf8);">LM</div>
+              <div class="conv-body">
+                <div class="conv-name">Lily Moore → Sophie Williams</div>
+                <div class="conv-preview">"Thank you for listening today. It really helped to talk."</div>
+              </div>
+              <div class="conv-right">
+                <span class="conv-time">2d</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ══ MIDDLE: Chat thread ══ -->
+        <div class="chat-panel">
+
+          <!-- Chat header -->
+          <div class="chat-head">
+            <div class="chat-head-user">
+              <div class="conv-ava" style="background:linear-gradient(135deg,#dc2626,#f87171);width:40px;height:40px;font-size:14px;">AT</div>
+              <div class="chat-head-info">
+                <div class="chat-head-name">Alex Turner → Maya Johnson</div>
+                <div class="chat-head-sub">
+                  <span class="online-dot"></span> Maya is online · Session last: Today 10:00 AM · Manchester · Law Year 1
+                </div>
+              </div>
+            </div>
+            <div class="chat-head-actions">
+              <div class="flag-pill">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                HIGH RISK
+              </div>
+              <button class="chat-icon-btn" title="Search in conversation">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              </button>
+              <button class="chat-icon-btn" title="Export conversation">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              </button>
+              <button class="chat-icon-btn" title="View welfare case">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              </button>
+              <button class="chat-icon-btn" title="More options">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Messages -->
+          <div class="chat-messages">
+
+            <div class="chat-date-divider"><span>Tuesday 24 March 2026</span></div>
+
+            <!-- Received -->
+            <div class="msg-group">
+              <div class="msg-ava" style="background:linear-gradient(135deg,#dc2626,#f87171);">AT</div>
+              <div class="msg-bubbles">
+                <div class="msg-sender-name">Alex Turner</div>
+                <div class="bubble">Hey Maya, just wanted to say the last session was really helpful. I've been trying to use the breathing exercises you showed me.</div>
+                <div class="msg-time-stamp">2:14 PM</div>
+              </div>
+            </div>
+
+            <!-- Sent (ambassador) -->
+            <div class="msg-group sent">
+              <div class="msg-ava" style="background:linear-gradient(135deg,#1d6e55,#2d9676);">MJ</div>
+              <div class="msg-bubbles">
+                <div class="msg-sender-name">Maya Johnson</div>
+                <div class="bubble sent">That's wonderful to hear Alex! I'm really proud of you for practising them. How are you feeling today overall?</div>
+                <div class="msg-time-stamp">2:17 PM</div>
+              </div>
+            </div>
+
+            <div class="msg-group">
+              <div class="msg-ava" style="background:linear-gradient(135deg,#dc2626,#f87171);">AT</div>
+              <div class="msg-bubbles">
+                <div class="bubble">Honestly... not great. The exam pressure is building up and I feel like I can't keep up with everything. Some days feel really dark.</div>
+                <div class="msg-time-stamp">2:22 PM</div>
+              </div>
+            </div>
+
+            <div class="msg-group sent">
+              <div class="msg-ava" style="background:linear-gradient(135deg,#1d6e55,#2d9676);">MJ</div>
+              <div class="msg-bubbles">
+                <div class="bubble sent">Thank you for telling me that. I hear you — exam season is genuinely really tough. Can we book a session this week to talk through everything properly? I want to make sure you have the right support.</div>
+                <div class="msg-time-stamp">2:25 PM</div>
+              </div>
+            </div>
+
+            <div class="msg-group">
+              <div class="msg-ava" style="background:linear-gradient(135deg,#dc2626,#f87171);">AT</div>
+              <div class="msg-bubbles">
+                <div class="bubble">Yeah that would be good. Wednesday morning maybe?</div>
+                <div class="msg-time-stamp">2:27 PM</div>
+              </div>
+            </div>
+
+            <div class="chat-date-divider"><span>Today — Sunday 29 March 2026</span></div>
+
+            <div class="system-msg">Session booked — Wednesday 1 April · 10:00 AM · 50 min</div>
+
+            <div class="msg-group sent">
+              <div class="msg-ava" style="background:linear-gradient(135deg,#1d6e55,#2d9676);">MJ</div>
+              <div class="msg-bubbles">
+                <div class="bubble sent">Morning Alex, just checking in ahead of our session. How are you doing today?</div>
+                <div class="msg-time-stamp">9:04 AM</div>
+              </div>
+            </div>
+
+            <!-- Flagged message -->
+            <div class="msg-group">
+              <div class="msg-ava" style="background:linear-gradient(135deg,#dc2626,#f87171);">AT</div>
+              <div class="msg-bubbles">
+                <div class="bubble flagged-bubble">I don't think I can keep going with the sessions, it's too much. I don't see the point anymore. Everything just feels too hard.</div>
+                <span class="flag-tag">
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg>
+                  AI flagged · High risk language · Review
+                </span>
+                <div class="msg-time-stamp">9:47 AM</div>
+              </div>
+            </div>
+
+            <!-- Welfare notice auto-generated -->
+            <div class="welfare-notice">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--adm-red)" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              <div class="welfare-notice-body">
+                <p>Welfare flag automatically raised — High risk language detected</p>
+                <small>Ambassador Maya Johnson was notified · Admin review required within 1 hour · 9:47 AM</small>
+                <div class="welfare-notice-actions">
+                  <a href="admin-welfare.html" class="btn btn-danger btn-sm">Open welfare case →</a>
+                  <button class="btn btn-secondary btn-sm">Dismiss flag</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="msg-group sent">
+              <div class="msg-ava" style="background:linear-gradient(135deg,#1d6e55,#2d9676);">MJ</div>
+              <div class="msg-bubbles">
+                <div class="bubble sent">Alex, thank you for telling me. What you're feeling is real and it matters. I'm here. Can we speak on a call right now? I want to make sure you're safe.</div>
+                <div class="msg-time-stamp">9:52 AM</div>
+              </div>
+            </div>
+
+            <!-- Admin joined -->
+            <div class="system-msg">Admin joined the conversation — 9:55 AM</div>
+
+            <div class="msg-group sent">
+              <div class="msg-ava" style="background:linear-gradient(135deg,#134a75,#175d92);">A</div>
+              <div class="msg-bubbles">
+                <div class="msg-sender-name">Admin Team</div>
+                <div class="bubble sent" style="background:linear-gradient(135deg,#134a75,#175d92);">Hi Alex, this is the Luminwell admin team. We want you to know that support is available right now. You are not alone. If you're in immediate distress, please call Samaritans: 116 123 (free, 24/7).</div>
+                <div class="msg-time-stamp">9:56 AM</div>
+              </div>
+            </div>
+
+            <!-- Typing indicator -->
+            <div class="typing-row">
+              <div class="msg-ava" style="background:linear-gradient(135deg,#dc2626,#f87171);width:30px;height:30px;font-size:10px;">AT</div>
+              <div class="typing-dots">
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+              </div>
+              <span style="font-size:11px;color:var(--adm-txt-faint);margin-left:4px;">Alex is typing…</span>
+            </div>
+
+          </div>
+
+          <!-- Input area -->
+          <div class="chat-input-wrap">
+            <div class="chat-input-bar">
+              <textarea placeholder="Reply as admin team…" rows="1"></textarea>
+              <div class="chat-input-actions">
+                <button class="ci-btn" title="Attach file">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+                </button>
+                <button class="ci-btn" title="Insert template">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                </button>
+                <button class="ci-send" title="Send message">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                </button>
+              </div>
+            </div>
+            <div class="chat-input-meta">
+              <span>Replying as <span class="admin-tag"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Admin Team</span> — visible to both user and ambassador</span>
+              <span>Press Enter to send</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══ RIGHT: User info panel ══ -->
+        <div class="info-panel">
+
+          <!-- User card -->
+          <div class="info-user-card">
+            <div class="info-ava">AT</div>
+            <div class="info-name">Alex Turner</div>
+            <div class="info-sub">University of Manchester · Law Year 1</div>
+            <div class="info-badges">
+              <span class="badge badge-red" style="font-size:10px;">High risk</span>
+              <span class="badge badge-amber" style="font-size:10px;">Flagged</span>
+            </div>
+          </div>
+
+          <!-- Assigned ambassador -->
+          <div class="info-section">
+            <div class="info-section-title">Ambassador</div>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div class="conv-ava" style="background:linear-gradient(135deg,#1d6e55,#2d9676);width:36px;height:36px;font-size:12px;">MJ</div>
+              <div>
+                <p style="font-size:13px;font-weight:700;color:var(--adm-txt-head);">Maya Johnson</p>
+                <p style="font-size:11px;color:var(--adm-green);font-weight:600;">● Online now</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Key stats -->
+          <div class="info-section">
+            <div class="info-section-title">Details</div>
+            <div class="info-row"><span class="info-key">Sessions total</span><span class="info-val">12</span></div>
+            <div class="info-row"><span class="info-key">Matched</span><span class="info-val">4 months ago</span></div>
+            <div class="info-row"><span class="info-key">Last session</span><span class="info-val">Today</span></div>
+            <div class="info-row"><span class="info-key">Next session</span><span class="info-val">1 Apr · 10 AM</span></div>
+            <div class="info-row"><span class="info-key">Journal entries</span><span class="info-val">34</span></div>
+            <div class="info-row"><span class="info-key">Welfare flags</span><span class="info-val" style="color:var(--adm-red);">2</span></div>
+          </div>
+
+          <!-- Mood trend (mini) -->
+          <div class="info-section">
+            <div class="info-section-title" style="display:flex;justify-content:space-between;">
+              Mood trend · 7d
+              <span style="font-size:10px;color:var(--adm-red);font-weight:700;">▼ Declining</span>
+            </div>
+            <div class="mood-mini">
+              <div class="mood-bar-mini" style="height:55%;background:var(--adm-green);border-radius:2px 2px 0 0;"></div>
+              <div class="mood-bar-mini" style="height:60%;background:var(--adm-green);border-radius:2px 2px 0 0;"></div>
+              <div class="mood-bar-mini" style="height:50%;background:var(--adm-amber);border-radius:2px 2px 0 0;"></div>
+              <div class="mood-bar-mini" style="height:40%;background:var(--adm-amber);border-radius:2px 2px 0 0;"></div>
+              <div class="mood-bar-mini" style="height:30%;background:var(--adm-amber);border-radius:2px 2px 0 0;"></div>
+              <div class="mood-bar-mini" style="height:22%;background:#f87171;border-radius:2px 2px 0 0;"></div>
+              <div class="mood-bar-mini" style="height:15%;background:var(--adm-red);border-radius:2px 2px 0 0;"></div>
+            </div>
+            <p style="font-size:10px;color:var(--adm-txt-faint);margin-top:6px;">Avg 4.1 → 2.3 over last 7 days</p>
+          </div>
+
+          <!-- Last journal note -->
+          <div class="info-section">
+            <div class="info-section-title">Latest journal entry</div>
+            <p style="font-size:12px;color:var(--adm-txt-body);line-height:1.55;font-style:italic;">"I keep waking up at 3am thinking about exams. I don't know how to switch off. Nothing feels like it's going to be okay."</p>
+            <p style="font-size:10px;color:var(--adm-txt-faint);margin-top:6px;">28 Mar 2026 · 11:42 PM</p>
+          </div>
+
+          <!-- Actions -->
+          <div class="info-actions">
+            <a href="admin-welfare.html" class="info-btn danger">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              Open welfare case
+            </a>
+            <button class="info-btn">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              Message ambassador
+            </button>
+            <button class="info-btn">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              View user profile
+            </button>
+            <button class="info-btn">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Export conversation
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

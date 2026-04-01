@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Messages — Luminwell Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="admin.css">
+<style>
+  .msg-row {
+    display: flex; align-items: center; gap: 14px;
+    padding: 14px 20px; border-bottom: 1px solid var(--adm-border);
+    cursor: pointer; transition: background .15s;
+  }
+  .msg-row:last-child { border-bottom: none; }
+  .msg-row:hover { background: var(--adm-bg); }
+  .msg-row.unread { background: var(--adm-blue-xlt); }
+  .msg-row.unread:hover { background: #e0eeff; }
+  .msg-meta { flex: 1; min-width: 0; }
+  .msg-pair { font-size: 13px; font-weight: 700; color: var(--adm-txt-head); margin-bottom: 3px; }
+  .msg-preview { font-size: 12px; color: var(--adm-txt-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .msg-row.unread .msg-preview { color: var(--adm-txt-body); font-weight: 600; }
+  .msg-right { text-align: right; flex-shrink: 0; }
+  .msg-time { font-size: 11px; color: var(--adm-txt-faint); margin-bottom: 5px; }
+  .unread-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--adm-blue); margin-left: auto; }
+  .flag-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--adm-red); margin-left: auto; }
+  .msg-avatars { display: flex; gap: -4px; position: relative; flex-shrink: 0; width: 54px; }
+  .msg-ava1 { position: absolute; left: 0; }
+  .msg-ava2 { position: absolute; left: 22px; border: 2px solid var(--adm-surface); }
+</style>
+</head>
+<body>
+<input type="checkbox" id="sidebar-toggle" class="sidebar-toggle-check">
+<div class="admin-shell">
+
+  <aside class="admin-sidebar">
+    <div class="sidebar__logo"><div class="logo-mark"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17 8C8 10 5.9 16.17 3.82 22A13.34 13.34 0 0 0 18 8Z"/><path d="M9 9c-1.5 3.5-2.5 7-3 10C8 18 11 15 13 12" fill="rgba(255,255,255,.35)"/></svg></div><div class="logo-text-wrap"><div class="logo-name">Luminwell</div><span class="logo-badge-pill">ADMIN PANEL</span></div></div>
+    <label for="sidebar-toggle" class="sidebar__collapse-btn" title="Collapse sidebar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg></label>
+    <nav class="sidebar__nav">
+      <div class="nav-section">
+        <p class="nav-label">Main</p>
+        <a href="admin-home.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg><span class="link-text">Overview</span></a>
+        <a href="admin-analytics.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg><span class="link-text">Analytics</span></a>
+      </div>
+      <div class="nav-section">
+        <p class="nav-label">People</p>
+        <a href="admin-users.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span class="link-text">Users</span><span class="nav-badge nav-badge--slate">2,841</span></a>
+        <a href="admin-ambassadors.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><span class="link-text">Ambassadors</span><span class="nav-badge nav-badge--amber">3 new</span></a>
+        <a href="admin-matching.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg><span class="link-text">Matching</span></a>
+      </div>
+      <div class="nav-section">
+        <p class="nav-label">Operations</p>
+        <a href="admin-sessions.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><span class="link-text">Sessions</span></a>
+        <a href="admin-welfare.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span class="link-text">Welfare &amp; Safety</span><span class="nav-badge nav-badge--red">5</span></a>
+        <a href="admin-messages.html" class="sidebar__link active"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span class="link-text">Messages</span></a>
+      </div>
+      <div class="nav-section">
+        <p class="nav-label">Platform</p>
+        <a href="admin-content.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg><span class="link-text">Content</span></a>
+        <a href="admin-settings.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06-.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span class="link-text">Settings</span></a>
+        <a href="admin-privacy.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><span class="link-text">Privacy &amp; GDPR</span></a>
+      </div>
+    </nav>
+    <div class="sidebar__foot">
+      <div class="sidebar__foot-user"><div class="admin-ava-sm">A</div><div class="sidebar__foot-info"><p>Admin User</p><small>Super Admin</small></div></div>
+      <button class="sidebar__signout"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px;"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Sign out</button>
+    </div>
+  </aside>
+
+  <div class="admin-main">
+    <header class="admin-topbar">
+      <div class="topbar-left">
+        <label for="sidebar-toggle" class="topbar-menu-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></label>
+        <nav class="breadcrumb"><a href="admin-home.html">Admin</a><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg><span class="bc-active">Messages</span></nav>
+      </div>
+      <div class="topbar-right">
+        <div class="notif-wrap"><input type="checkbox" id="notif-toggle" class="notif-check"><label for="notif-toggle" class="topbar-icon-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><span class="notif-dot"></span></label><div class="notif-drop"><div class="notif-drop-head"><h4>Notifications</h4><a href="#">Mark all read</a></div><div class="notif-item unread"><div class="notif-ico red"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div><div class="notif-body"><p><strong>Critical welfare flag</strong></p><small>2 min ago</small></div></div><div class="notif-drop-foot"><a href="admin-welfare.html">View all →</a></div></div></div>
+        <div class="topbar-user"><div class="topbar-ava">A</div><div class="topbar-user-info"><div class="u-name">Admin</div><div class="u-role">Super Admin</div></div></div>
+      </div>
+    </header>
+
+    <div class="admin-content">
+
+      <div class="page-hero">
+        <div class="page-hero-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+        <div class="page-hero-text">
+          <h1>Messages</h1>
+          <p>Platform-wide conversations between users &amp; ambassadors · Monitor &amp; moderate</p>
+        </div>
+        <div class="page-hero-actions">
+          <a href="admin-msg-filter.html" class="btn btn-white"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px;"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>Filter</a>
+          <button class="btn btn-primary" style="background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);">Export logs</button>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-row" style="grid-template-columns:repeat(4,1fr);margin-bottom:24px;">
+        <div class="stat-card blue"><div class="stat-top"><span class="stat-label">Total Conversations</span><div class="stat-icon blue"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div></div><div class="stat-value">1,204</div><span class="stat-delta delta-up">▲ +34 this week</span></div>
+        <div class="stat-card amber"><div class="stat-top"><span class="stat-label">Flagged Messages</span><div class="stat-icon amber"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg></div></div><div class="stat-value">3</div><span class="stat-delta delta-neu">Needs review</span></div>
+        <div class="stat-card teal"><div class="stat-top"><span class="stat-label">Avg Response Time</span><div class="stat-icon teal"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div></div><div class="stat-value">4.2h</div><span class="stat-delta delta-up">▼ 1.1h faster</span></div>
+        <div class="stat-card blue"><div class="stat-top"><span class="stat-label">Active Today</span><div class="stat-icon blue"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg></div></div><div class="stat-value">87</div><span class="stat-delta delta-neu">conversations</span></div>
+      </div>
+
+      <div class="grid-2">
+
+        <!-- Recent conversations -->
+        <div class="card" style="grid-column:span 1;">
+          <div class="card-head">
+            <div class="card-title">Recent Conversations</div>
+            <div class="filter-bar" style="border:none;padding:0;gap:8px;">
+              <div class="search-wrap" style="min-width:160px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input class="search-inp" type="text" placeholder="Search…"></div>
+            </div>
+          </div>
+
+          <a href="admin-msg-chat.html" class="msg-row unread" style="text-decoration:none;display:flex;align-items:center;padding:14px 18px;gap:12px;border-bottom:1px solid var(--adm-border-lt);background:linear-gradient(90deg,#fff8f8,#fff);border-left:3px solid var(--adm-red);cursor:pointer;">
+            <div class="user-cell" style="flex:1;min-width:0;"><div class="user-ava red" style="width:36px;height:36px;font-size:12px;flex-shrink:0;">AT</div><div class="msg-meta"><div class="msg-pair">Alex Turner → Maya Johnson</div><div class="msg-preview">"I don't think I can keep going with the sessions, it's too much…"</div></div></div>
+            <div class="msg-right"><div class="msg-time">9 min ago</div><div class="flag-dot"></div></div>
+          </a>
+          <div class="msg-row unread">
+            <div class="user-cell" style="flex:1;min-width:0;"><div class="user-ava amber" style="width:36px;height:36px;font-size:12px;flex-shrink:0;">JM</div><div class="msg-meta"><div class="msg-pair">Jordan Mills → Keiran Rhodes</div><div class="msg-preview">"Thanks for today, it was really helpful. Can we book again for next week?"</div></div></div>
+            <div class="msg-right"><div class="msg-time">34 min ago</div><div class="unread-dot"></div></div>
+          </div>
+          <div class="msg-row unread">
+            <div class="user-cell" style="flex:1;min-width:0;"><div class="user-ava teal" style="width:36px;height:36px;font-size:12px;flex-shrink:0;">FC</div><div class="msg-meta"><div class="msg-pair">Fatima Choudhry → Layla Nasser</div><div class="msg-preview">"I'm a bit nervous about the first session — do I need to prepare anything?"</div></div></div>
+            <div class="msg-right"><div class="msg-time">1h ago</div><div class="unread-dot"></div></div>
+          </div>
+          <div class="msg-row">
+            <div class="user-cell" style="flex:1;min-width:0;"><div class="user-ava green" style="width:36px;height:36px;font-size:12px;flex-shrink:0;">OB</div><div class="msg-meta"><div class="msg-pair">Ollie Barnes → Dev Narayan</div><div class="msg-preview">"I finished the journalling homework you suggested — it really helped!"</div></div></div>
+            <div class="msg-right"><div class="msg-time">2h ago</div></div>
+          </div>
+          <div class="msg-row">
+            <div class="user-cell" style="flex:1;min-width:0;"><div class="user-ava blue" style="width:36px;height:36px;font-size:12px;flex-shrink:0;">NK</div><div class="msg-meta"><div class="msg-pair">Natasha Kwei → Maya Johnson</div><div class="msg-preview">"When will I be matched with an ambassador? I signed up 2 days ago."</div></div></div>
+            <div class="msg-right"><div class="msg-time">3h ago</div></div>
+          </div>
+          <div class="msg-row">
+            <div class="user-cell" style="flex:1;min-width:0;"><div class="user-ava purple" style="width:36px;height:36px;font-size:12px;flex-shrink:0;">PT</div><div class="msg-meta"><div class="msg-pair">Priya Thakur → Keiran Rhodes</div><div class="msg-preview">"Could we reschedule tomorrow's session to 2pm instead?"</div></div></div>
+            <div class="msg-right"><div class="msg-time">5h ago</div></div>
+          </div>
+          <div class="msg-row">
+            <div class="user-cell" style="flex:1;min-width:0;"><div class="user-ava amber" style="width:36px;height:36px;font-size:12px;flex-shrink:0;">EW</div><div class="msg-meta"><div class="msg-pair">Eva Williams → Layla Nasser</div><div class="msg-preview">"I've been having a better week — I wrote in my journal every day!"</div></div></div>
+            <div class="msg-right"><div class="msg-time">Yesterday</div></div>
+          </div>
+          <div class="msg-row">
+            <div class="user-cell" style="flex:1;min-width:0;"><div class="user-ava green" style="width:36px;height:36px;font-size:12px;flex-shrink:0;">TN</div><div class="msg-meta"><div class="msg-pair">Tobi Nwosu → Maya Johnson</div><div class="msg-preview">"Session was great today. Looking forward to the next one."</div></div></div>
+            <div class="msg-right"><div class="msg-time">Yesterday</div></div>
+          </div>
+
+          <div class="pagination"><span class="pagination-info">Showing 1–8 of 1,204 conversations</span><div class="pagination-btns"><button class="page-btn" disabled>‹</button><button class="page-btn active">1</button><button class="page-btn">2</button><button class="page-btn">3</button><span style="padding:0 6px;color:var(--adm-txt-faint);font-size:13px;">…</span><button class="page-btn">151</button><button class="page-btn">›</button></div></div>
+        </div>
+
+        <!-- Right column -->
+        <div style="display:flex;flex-direction:column;gap:16px;">
+
+          <!-- Flagged messages -->
+          <div class="card">
+            <div class="card-head"><div class="card-title" style="display:flex;align-items:center;gap:7px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg> Flagged Messages <span class="badge badge-red" style="margin-left:6px;">3</span></div></div>
+            <div style="padding:0;">
+                <div class="msg-row" style="background:var(--adm-red-lt);">
+                <div class="user-ava red" style="width:32px;height:32px;font-size:11px;flex-shrink:0;">AT</div>
+                <div class="msg-meta"><div class="msg-pair">Alex Turner — <span style="color:var(--adm-red);font-size:11px;font-weight:700;">HIGH RISK</span></div><div class="msg-preview">"I don't think I can keep going…"</div></div>
+                <a href="admin-msg-chat.html" class="btn btn-danger btn-sm" style="flex-shrink:0;">Review</a>
+              </div>
+              <div class="msg-row">
+                <div class="user-ava amber" style="width:32px;height:32px;font-size:11px;flex-shrink:0;">JM</div>
+                <div class="msg-meta"><div class="msg-pair">Jordan Mills — <span style="color:var(--adm-amber);font-size:11px;font-weight:700;">MEDIUM</span></div><div class="msg-preview">"I've been cancelling everything lately…"</div></div>
+                <button class="btn btn-secondary btn-sm" style="flex-shrink:0;">Review</button>
+              </div>
+              <div class="msg-row">
+                <div class="user-ava blue" style="width:32px;height:32px;font-size:11px;flex-shrink:0;">BR</div>
+                <div class="msg-meta"><div class="msg-pair">Ben Richardson — <span style="color:var(--adm-blue);font-size:11px;font-weight:700;">LOW</span></div><div class="msg-preview">"Everything feels pointless this week…"</div></div>
+                <button class="btn btn-secondary btn-sm" style="flex-shrink:0;">Review</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Message volume -->
+          <div class="card">
+            <div class="card-head"><div class="card-title">Volume — Last 7 Days</div></div>
+            <div class="card-body">
+              <div style="display:flex;flex-direction:column;gap:10px;">
+                <div style="display:flex;align-items:center;gap:10px;"><span style="font-size:11px;font-weight:600;color:var(--adm-txt-muted);min-width:30px;">Mon</span><div style="flex:1;height:8px;background:var(--adm-border);border-radius:4px;overflow:hidden;"><div style="width:55%;height:100%;background:var(--adm-blue);border-radius:4px;"></div></div><span style="font-size:11px;font-weight:700;color:var(--adm-txt-head);min-width:24px;">142</span></div>
+                <div style="display:flex;align-items:center;gap:10px;"><span style="font-size:11px;font-weight:600;color:var(--adm-txt-muted);min-width:30px;">Tue</span><div style="flex:1;height:8px;background:var(--adm-border);border-radius:4px;overflow:hidden;"><div style="width:70%;height:100%;background:var(--adm-blue);border-radius:4px;"></div></div><span style="font-size:11px;font-weight:700;color:var(--adm-txt-head);min-width:24px;">181</span></div>
+                <div style="display:flex;align-items:center;gap:10px;"><span style="font-size:11px;font-weight:600;color:var(--adm-txt-muted);min-width:30px;">Wed</span><div style="flex:1;height:8px;background:var(--adm-border);border-radius:4px;overflow:hidden;"><div style="width:80%;height:100%;background:var(--adm-blue);border-radius:4px;"></div></div><span style="font-size:11px;font-weight:700;color:var(--adm-txt-head);min-width:24px;">207</span></div>
+                <div style="display:flex;align-items:center;gap:10px;"><span style="font-size:11px;font-weight:600;color:var(--adm-txt-muted);min-width:30px;">Thu</span><div style="flex:1;height:8px;background:var(--adm-border);border-radius:4px;overflow:hidden;"><div style="width:65%;height:100%;background:var(--adm-blue);border-radius:4px;"></div></div><span style="font-size:11px;font-weight:700;color:var(--adm-txt-head);min-width:24px;">168</span></div>
+                <div style="display:flex;align-items:center;gap:10px;"><span style="font-size:11px;font-weight:600;color:var(--adm-txt-muted);min-width:30px;">Fri</span><div style="flex:1;height:8px;background:var(--adm-border);border-radius:4px;overflow:hidden;"><div style="width:90%;height:100%;background:var(--adm-teal);border-radius:4px;"></div></div><span style="font-size:11px;font-weight:700;color:var(--adm-txt-head);min-width:24px;">231</span></div>
+                <div style="display:flex;align-items:center;gap:10px;"><span style="font-size:11px;font-weight:600;color:var(--adm-txt-muted);min-width:30px;">Sat</span><div style="flex:1;height:8px;background:var(--adm-border);border-radius:4px;overflow:hidden;"><div style="width:30%;height:100%;background:var(--adm-blue-lt);border-radius:4px;"></div></div><span style="font-size:11px;font-weight:700;color:var(--adm-txt-head);min-width:24px;">78</span></div>
+                <div style="display:flex;align-items:center;gap:10px;"><span style="font-size:11px;font-weight:600;color:var(--adm-txt-muted);min-width:30px;">Sun</span><div style="flex:1;height:8px;background:var(--adm-border);border-radius:4px;overflow:hidden;"><div style="width:25%;height:100%;background:var(--adm-blue-lt);border-radius:4px;"></div></div><span style="font-size:11px;font-weight:700;color:var(--adm-txt-head);min-width:24px;">65</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
