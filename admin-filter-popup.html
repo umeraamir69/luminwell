@@ -291,6 +291,13 @@
   }
   .fp-btn-apply:hover { box-shadow: 0 4px 14px rgba(45,150,118,.45); transform: translateY(-1px); }
 
+  @media (max-width: 480px) {
+    body { padding: 16px 12px; align-items: flex-start; }
+    .fp-range-row { grid-template-columns: 1fr; }
+    .fp-footer { flex-direction: column; }
+    .fp-header { flex-wrap: wrap; gap: 10px; }
+  }
+
 </style>
 </head>
 <body>

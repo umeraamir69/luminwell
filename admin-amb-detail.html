@@ -110,8 +110,9 @@
   .sec-label::after { content: ''; flex: 1; height: 1px; background: var(--adm-border); }
 
   /* ── Sessions chart ── */
-  .sessions-chart { display: flex; align-items: flex-end; gap: 6px; height: 100px; }
-  .sc-col { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; }
+  .sessions-chart { display: flex; align-items: stretch; gap: 6px; height: 110px; }
+  .sc-col { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; position: relative; }
+  .sc-count { font-size: 9px; font-weight: 800; color: var(--adm-txt-muted); text-align: center; margin-bottom: 3px; }
   .sc-bar {
     border-radius: 4px 4px 0 0;
     background: linear-gradient(180deg, #4db896 0%, #2d9676 100%);
@@ -251,7 +252,7 @@
       </div>
     </nav>
     <div class="sidebar__foot">
-      <div class="sidebar__foot-user"><div class="admin-ava-sm">A</div><div class="sidebar__foot-info"><p>Admin User</p><small>Super Admin</small></div></div>
+      <div class="sidebar__foot-user"><div class="admin-ava-sm">T</div><div class="sidebar__foot-info"><p>Tenner</p><small>Super Admin</small></div></div>
       <button class="sidebar__signout">Sign out</button>
     </div>
   </aside>
@@ -277,7 +278,7 @@
             <div class="notif-drop-foot"><a href="#">View all →</a></div>
           </div>
         </div>
-        <div class="topbar-user"><div class="topbar-ava">A</div><div class="topbar-user-info"><div class="u-name">Admin</div><div class="u-role">Super Admin</div></div></div>
+        <div class="topbar-user"><div class="topbar-ava">T</div><div class="topbar-user-info"><div class="u-name">Tenner</div><div class="u-role">Super Admin</div></div></div>
       </div>
     </header>
 
@@ -361,14 +362,14 @@
               <div style="display:flex;gap:20px;align-items:flex-end;">
                 <div style="flex:1;">
                   <div class="sessions-chart">
-                    <div class="sc-col"><div class="sc-bar" style="height:35%;"></div></div>
-                    <div class="sc-col"><div class="sc-bar" style="height:45%;"></div></div>
-                    <div class="sc-col"><div class="sc-bar" style="height:55%;"></div></div>
-                    <div class="sc-col"><div class="sc-bar" style="height:60%;"></div></div>
-                    <div class="sc-col"><div class="sc-bar" style="height:70%;"></div></div>
-                    <div class="sc-col"><div class="sc-bar" style="height:80%;"></div></div>
-                    <div class="sc-col"><div class="sc-bar" style="height:90%;"></div></div>
-                    <div class="sc-col"><div class="sc-bar" style="height:100%;"></div></div>
+                    <div class="sc-col"><div class="sc-count">5</div><div class="sc-bar" style="height:23%;"></div></div>
+                    <div class="sc-col"><div class="sc-count">6</div><div class="sc-bar" style="height:27%;"></div></div>
+                    <div class="sc-col"><div class="sc-count">5</div><div class="sc-bar" style="height:23%;"></div></div>
+                    <div class="sc-col"><div class="sc-count">10</div><div class="sc-bar" style="height:45%;"></div></div>
+                    <div class="sc-col"><div class="sc-count">9</div><div class="sc-bar" style="height:41%;"></div></div>
+                    <div class="sc-col"><div class="sc-count">12</div><div class="sc-bar" style="height:55%;"></div></div>
+                    <div class="sc-col"><div class="sc-count">15</div><div class="sc-bar" style="height:68%;"></div></div>
+                    <div class="sc-col"><div class="sc-count" style="color:var(--adm-blue);font-weight:900;">22</div><div class="sc-bar" style="height:100%;background:linear-gradient(180deg,#175d92,#134a75);"></div></div>
                   </div>
                   <div class="sc-axis">
                     <span class="sc-lbl">3 Feb</span>

@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Invite Admin User · Luminwell Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="admin.css">
+<style>
+  /* Role cards */
+  .role-radio { display:none; }
+  .role-card {
+    border:2px solid var(--adm-border);
+    border-radius:var(--adm-r-md);
+    padding:16px 18px;
+    cursor:pointer;
+    transition:border-color .15s, box-shadow .15s, background .15s;
+    position:relative;
+  }
+  .role-card:hover { border-color:#94a3b8; }
+  .role-radio:checked + .role-card {
+    border-color:var(--adm-blue);
+    background:var(--adm-blue-xlt);
+    box-shadow:0 0 0 3px rgba(45,150,118,.1);
+  }
+  .role-card-icon {
+    width:36px; height:36px; border-radius:10px;
+    display:flex; align-items:center; justify-content:center;
+    margin-bottom:10px;
+  }
+  .role-card-name { font-size:14px; font-weight:800; color:var(--adm-txt-head); margin-bottom:3px; }
+  .role-card-desc { font-size:12px; color:var(--adm-txt-muted); line-height:1.4; }
+  .role-card-check {
+    width:18px; height:18px; border-radius:50%;
+    border:2px solid var(--adm-border); position:absolute; top:14px; right:14px;
+    display:flex; align-items:center; justify-content:center;
+    transition:border-color .15s, background .15s;
+  }
+  .role-radio:checked + .role-card .role-card-check {
+    background:var(--adm-blue); border-color:var(--adm-blue);
+  }
+  .role-radio:checked + .role-card .role-card-check::after {
+    content:''; width:6px; height:6px; border-radius:50%; background:#fff;
+  }
+
+  /* Permission toggles */
+  .perm-toggle-check { display:none; }
+  .perm-row {
+    display:flex; align-items:center; justify-content:space-between;
+    padding:12px 0; border-bottom:1px solid var(--adm-border-lt);
+  }
+  .perm-row:last-child { border-bottom:none; }
+  .perm-info { flex:1; }
+  .perm-name { font-size:13px; font-weight:700; color:var(--adm-txt-head); }
+  .perm-desc { font-size:11px; color:var(--adm-txt-muted); margin-top:2px; }
+  .perm-toggle-label {
+    width:40px; height:22px; border-radius:11px;
+    background:var(--adm-border); cursor:pointer;
+    position:relative; flex-shrink:0; transition:background .2s;
+  }
+  .perm-toggle-label::after {
+    content:''; position:absolute; width:18px; height:18px;
+    border-radius:50%; background:#fff; top:2px; left:2px;
+    transition:transform .2s; box-shadow:0 1px 3px rgba(0,0,0,.15);
+  }
+  .perm-toggle-check:checked + .perm-toggle-label { background:var(--adm-blue); }
+  .perm-toggle-check:checked + .perm-toggle-label::after { transform:translateX(18px); }
+
+  /* Form inputs */
+  .form-group { margin-bottom:18px; }
+  .form-label { display:block; font-size:12px; font-weight:800; color:var(--adm-txt-head); letter-spacing:.3px; margin-bottom:6px; text-transform:uppercase; }
+  .form-input, .form-select, .form-textarea {
+    width:100%; padding:10px 14px; border:1.5px solid var(--adm-border);
+    border-radius:10px; font-family:inherit; font-size:13px;
+    color:var(--adm-txt-body); background:var(--adm-surface); outline:none;
+    transition:border-color .15s, box-shadow .15s; box-sizing:border-box;
+  }
+  .form-input:focus, .form-select:focus, .form-textarea:focus {
+    border-color:var(--adm-blue); box-shadow:0 0 0 3px rgba(45,150,118,.1);
+  }
+  .form-select { appearance:none; -webkit-appearance:none; cursor:pointer; }
+  .form-select-wrap { position:relative; }
+  .form-select-wrap svg { position:absolute; right:12px; top:50%; transform:translateY(-50%); pointer-events:none; color:var(--adm-txt-muted); }
+  .form-textarea { resize:vertical; min-height:90px; line-height:1.5; }
+  .form-hint { font-size:11px; color:var(--adm-txt-muted); margin-top:5px; }
+  .form-row { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+
+  /* Invited user cards (existing admins) */
+  .admin-row {
+    display:flex; align-items:center; gap:12px;
+    padding:10px 0; border-bottom:1px solid var(--adm-border-lt);
+  }
+  .admin-row:last-child { border-bottom:none; }
+  .admin-ava { width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:800; flex-shrink:0; }
+
+  /* Page layout */
+  .invite-grid { display:grid; grid-template-columns:1fr 320px; gap:24px; align-items:start; }
+
+  /* Success state preview */
+  .invite-preview {
+    background:linear-gradient(135deg,rgba(45,150,118,.06),rgba(23,93,146,.04));
+    border:1px solid rgba(45,150,118,.2); border-radius:12px; padding:20px;
+  }
+</style>
+</head>
+<body>
+<input type="checkbox" id="sidebar-toggle" class="sidebar-toggle-check">
+
+<!-- Role radio states -->
+<input type="radio" name="role-select" id="role-super" class="role-radio" checked>
+<input type="radio" name="role-select" id="role-admin" class="role-radio">
+<input type="radio" name="role-select" id="role-welfare" class="role-radio">
+<input type="radio" name="role-select" id="role-readonly" class="role-radio">
+
+<!-- Permission toggle states (on by default for some) -->
+<input type="checkbox" id="perm-users" class="perm-toggle-check" checked>
+<input type="checkbox" id="perm-ambassadors" class="perm-toggle-check" checked>
+<input type="checkbox" id="perm-sessions" class="perm-toggle-check" checked>
+<input type="checkbox" id="perm-welfare" class="perm-toggle-check" checked>
+<input type="checkbox" id="perm-messages" class="perm-toggle-check">
+<input type="checkbox" id="perm-content" class="perm-toggle-check">
+<input type="checkbox" id="perm-analytics" class="perm-toggle-check" checked>
+<input type="checkbox" id="perm-settings" class="perm-toggle-check">
+<input type="checkbox" id="perm-privacy" class="perm-toggle-check">
+
+<div class="admin-shell">
+
+  <!-- Sidebar -->
+  <aside class="admin-sidebar">
+    <div class="sidebar__logo">
+      <div class="logo-mark"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17 8C8 10 5.9 16.17 3.82 22A13.34 13.34 0 0 0 18 8Z"/><path d="M9 9c-1.5 3.5-2.5 7-3 10C8 18 11 15 13 12" fill="rgba(255,255,255,.35)"/></svg></div>
+      <div class="logo-text-wrap"><div class="logo-name">Luminwell</div><span class="logo-badge-pill">ADMIN</span></div>
+    </div>
+    <label for="sidebar-toggle" class="sidebar__collapse-btn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+    </label>
+    <nav class="sidebar__nav">
+      <div class="nav-section">
+        <p class="nav-label">MAIN</p>
+        <a href="admin-home.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span class="link-text">Overview</span></a>
+        <a href="admin-analytics.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg><span class="link-text">Analytics</span></a>
+      </div>
+      <div class="nav-section">
+        <p class="nav-label">PEOPLE</p>
+        <a href="admin-users.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span class="link-text">Users</span><span class="nav-badge nav-badge--slate">2,841</span></a>
+        <a href="admin-ambassadors.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><span class="link-text">Ambassadors</span><span class="nav-badge nav-badge--amber">3 new</span></a>
+        <a href="admin-matching.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg><span class="link-text">Matching</span></a>
+      </div>
+      <div class="nav-section">
+        <p class="nav-label">OPERATIONS</p>
+        <a href="admin-sessions.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><span class="link-text">Sessions</span></a>
+        <a href="admin-welfare.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span class="link-text">Welfare &amp; Safety</span><span class="nav-badge nav-badge--red">5</span></a>
+        <a href="admin-messages.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span class="link-text">Messages</span></a>
+      </div>
+      <div class="nav-section">
+        <p class="nav-label">PLATFORM</p>
+        <a href="admin-content.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span class="link-text">Content</span></a>
+        <a href="admin-settings.html" class="sidebar__link active"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06-.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span class="link-text">Settings</span></a>
+        <a href="admin-privacy.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><span class="link-text">Privacy &amp; GDPR</span></a>
+      </div>
+    </nav>
+    <div class="sidebar__foot">
+      <div class="sidebar__foot-user">
+        <div class="admin-ava-sm">T</div>
+        <div class="sidebar__foot-info"><p>Tenner</p><small>Super Admin</small></div>
+      </div>
+      <button class="sidebar__signout">Sign out</button>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <div class="admin-main">
+    <header class="admin-topbar">
+      <div class="topbar-left">
+        <label for="sidebar-toggle" class="topbar-menu-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </label>
+        <nav class="breadcrumb">
+          <a href="admin-home.html">Admin</a>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+          <a href="admin-settings.html">Settings</a>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+          <span class="bc-active">Invite Admin</span>
+        </nav>
+      </div>
+      <div class="topbar-right">
+        <div class="notif-wrap">
+          <input type="checkbox" id="notif-toggle" class="notif-check">
+          <label for="notif-toggle" class="topbar-icon-btn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            <span class="notif-dot"></span>
+          </label>
+          <div class="notif-drop">
+            <div class="notif-drop-head"><h4>Notifications</h4><a href="#">Mark all read</a></div>
+            <div class="notif-item unread">
+              <div class="notif-ico red"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+              <div class="notif-body"><p><strong>Critical welfare flag</strong> — Alex T.</p><small>2 min ago</small></div>
+            </div>
+            <div class="notif-drop-foot"><a href="admin-welfare.html">View all alerts &rarr;</a></div>
+          </div>
+        </div>
+        <div class="topbar-user">
+          <div class="topbar-ava">T</div>
+          <div class="topbar-user-info"><div class="u-name">Tenner</div><div class="u-role">Super Admin</div></div>
+        </div>
+      </div>
+    </header>
+
+    <div class="admin-content">
+
+      <!-- Page header -->
+      <div class="page-hero">
+        <div class="page-hero-icon">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+        </div>
+        <div class="page-hero-text">
+          <h1>Invite Admin User</h1>
+          <p>Add a new admin to the Luminwell platform. They'll receive an email with a secure setup link.</p>
+        </div>
+        <div class="page-hero-actions">
+          <a href="admin-settings.html" class="btn btn-white" style="text-decoration:none;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+            Back to Settings
+          </a>
+        </div>
+      </div>
+
+      <div class="invite-grid">
+
+        <!-- LEFT: form -->
+        <div style="display:flex;flex-direction:column;gap:20px;">
+
+          <!-- Personal details -->
+          <div class="card">
+            <div class="card-head"><div class="card-title">Personal Details</div></div>
+            <div class="card-body">
+              <div class="form-row">
+                <div class="form-group" style="margin-bottom:0;">
+                  <label class="form-label">First name</label>
+                  <input class="form-input" type="text" placeholder="e.g. Sarah">
+                </div>
+                <div class="form-group" style="margin-bottom:0;">
+                  <label class="form-label">Last name</label>
+                  <input class="form-input" type="text" placeholder="e.g. Thompson">
+                </div>
+              </div>
+              <div class="form-group" style="margin-top:16px;">
+                <label class="form-label">Work email address</label>
+                <input class="form-input" type="email" placeholder="sarah.thompson@luminwell.co.uk">
+                <div class="form-hint">The invitation will be sent to this address. Use an official organisational email.</div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Job title / department</label>
+                <input class="form-input" type="text" placeholder="e.g. Welfare Lead, University of Manchester">
+              </div>
+              <div class="form-group" style="margin-bottom:0;">
+                <label class="form-label">Personal message (optional)</label>
+                <textarea class="form-textarea" placeholder="Add a short welcome note to the invitation email..."></textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- Role selection -->
+          <div class="card">
+            <div class="card-head"><div class="card-title">Select Role</div><span style="font-size:12px;color:var(--adm-txt-muted);">Choose the access level for this admin</span></div>
+            <div class="card-body">
+              <div class="role-select-grid">
+
+                <div>
+                  <input type="radio" name="role-select" id="role-super" class="role-radio">
+                  <label for="role-super" class="role-card">
+                    <div class="role-card-check"></div>
+                    <div class="role-card-icon" style="background:rgba(23,93,146,.12);color:#175d92;">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    </div>
+                    <div class="role-card-name">Super Admin</div>
+                    <div class="role-card-desc">Full platform access including settings, billing, and user deletion.</div>
+                  </label>
+                </div>
+
+                <div>
+                  <input type="radio" name="role-select" id="role-admin" class="role-radio">
+                  <label for="role-admin" class="role-card">
+                    <div class="role-card-check"></div>
+                    <div class="role-card-icon" style="background:rgba(45,150,118,.12);color:var(--adm-blue);">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06-.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09"/></svg>
+                    </div>
+                    <div class="role-card-name">Admin</div>
+                    <div class="role-card-desc">Manage users, ambassadors, sessions and content. No billing access.</div>
+                  </label>
+                </div>
+
+                <div>
+                  <input type="radio" name="role-select" id="role-welfare" class="role-radio">
+                  <label for="role-welfare" class="role-card">
+                    <div class="role-card-check"></div>
+                    <div class="role-card-icon" style="background:rgba(245,158,11,.12);color:var(--adm-amber);">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.42 4.58a5.4 5.4 0 0 0-7.65 0l-.77.78-.77-.78a5.4 5.4 0 0 0-7.65 0C1.46 6.7 1.33 10.28 4 13l8 8 8-8c2.67-2.72 2.54-6.3.42-8.42z"/></svg>
+                    </div>
+                    <div class="role-card-name">Welfare Lead</div>
+                    <div class="role-card-desc">Focused access to welfare alerts, flags, and safeguarding tools only.</div>
+                  </label>
+                </div>
+
+                <div>
+                  <input type="radio" name="role-select" id="role-readonly" class="role-radio">
+                  <label for="role-readonly" class="role-card">
+                    <div class="role-card-check"></div>
+                    <div class="role-card-icon" style="background:rgba(100,116,139,.1);color:#64748b;">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    </div>
+                    <div class="role-card-name">Read-only</div>
+                    <div class="role-card-desc">View dashboards and reports. Cannot edit any data or take actions.</div>
+                  </label>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <!-- Permissions -->
+          <div class="card">
+            <div class="card-head"><div class="card-title">Granular Permissions</div><span style="font-size:12px;color:var(--adm-txt-muted);">Customise module access</span></div>
+            <div class="card-body" style="padding-top:8px;">
+
+              <div class="perm-row">
+                <div class="perm-info"><div class="perm-name">Users</div><div class="perm-desc">View and manage student, client &amp; professional accounts</div></div>
+                <input type="checkbox" id="perm-users" class="perm-toggle-check" checked>
+                <label for="perm-users" class="perm-toggle-label"></label>
+              </div>
+              <div class="perm-row">
+                <div class="perm-info"><div class="perm-name">Ambassadors</div><div class="perm-desc">Approve, manage and review ambassador profiles</div></div>
+                <input type="checkbox" id="perm-ambassadors" class="perm-toggle-check" checked>
+                <label for="perm-ambassadors" class="perm-toggle-label"></label>
+              </div>
+              <div class="perm-row">
+                <div class="perm-info"><div class="perm-name">Sessions</div><div class="perm-desc">View session logs, notes, and ratings</div></div>
+                <input type="checkbox" id="perm-sessions" class="perm-toggle-check" checked>
+                <label for="perm-sessions" class="perm-toggle-label"></label>
+              </div>
+              <div class="perm-row">
+                <div class="perm-info"><div class="perm-name">Welfare &amp; Safety</div><div class="perm-desc">Access welfare flags, critical alerts, and safeguarding tools</div></div>
+                <input type="checkbox" id="perm-welfare" class="perm-toggle-check" checked>
+                <label for="perm-welfare" class="perm-toggle-label"></label>
+              </div>
+              <div class="perm-row">
+                <div class="perm-info"><div class="perm-name">Messages</div><div class="perm-desc">Read and moderate platform messages</div></div>
+                <input type="checkbox" id="perm-messages" class="perm-toggle-check">
+                <label for="perm-messages" class="perm-toggle-label"></label>
+              </div>
+              <div class="perm-row">
+                <div class="perm-info"><div class="perm-name">Content</div><div class="perm-desc">Publish, edit and remove wellbeing resources</div></div>
+                <input type="checkbox" id="perm-content" class="perm-toggle-check">
+                <label for="perm-content" class="perm-toggle-label"></label>
+              </div>
+              <div class="perm-row">
+                <div class="perm-info"><div class="perm-name">Analytics</div><div class="perm-desc">View platform analytics and reporting dashboards</div></div>
+                <input type="checkbox" id="perm-analytics" class="perm-toggle-check" checked>
+                <label for="perm-analytics" class="perm-toggle-label"></label>
+              </div>
+              <div class="perm-row">
+                <div class="perm-info"><div class="perm-name">Settings</div><div class="perm-desc">Modify platform configuration and system settings</div></div>
+                <input type="checkbox" id="perm-settings" class="perm-toggle-check">
+                <label for="perm-settings" class="perm-toggle-label"></label>
+              </div>
+              <div class="perm-row">
+                <div class="perm-info"><div class="perm-name">Privacy &amp; GDPR</div><div class="perm-desc">Manage data requests, deletions, and audit logs</div></div>
+                <input type="checkbox" id="perm-privacy" class="perm-toggle-check">
+                <label for="perm-privacy" class="perm-toggle-label"></label>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Send button -->
+          <div style="display:flex;gap:12px;align-items:center;justify-content:flex-end;">
+            <a href="admin-settings.html" class="btn btn-secondary" style="text-decoration:none;">Cancel</a>
+            <button class="btn btn-primary" style="padding:10px 28px;font-size:14px;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+              Send Invitation
+            </button>
+          </div>
+
+        </div><!-- /left -->
+
+        <!-- RIGHT: preview + existing admins -->
+        <div style="display:flex;flex-direction:column;gap:16px;">
+
+          <!-- Invite preview -->
+          <div class="card">
+            <div class="card-head"><div class="card-title">Invitation Preview</div></div>
+            <div class="card-body">
+              <div class="invite-preview">
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+                  <div class="logo-mark" style="width:32px;height:32px;border-radius:8px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17 8C8 10 5.9 16.17 3.82 22A13.34 13.34 0 0 0 18 8Z"/></svg></div>
+                  <div style="font-size:14px;font-weight:800;color:var(--adm-txt-head);">Luminwell</div>
+                </div>
+                <div style="font-size:15px;font-weight:800;color:var(--adm-txt-head);margin-bottom:6px;">You've been invited to join Luminwell Admin</div>
+                <div style="font-size:12px;color:var(--adm-txt-muted);margin-bottom:14px;line-height:1.5;">Tenner has invited you to join the Luminwell Admin platform as an <strong>Admin</strong>. Click the button below to set up your account.</div>
+                <div style="background:var(--adm-blue);color:#fff;border-radius:10px;padding:10px 18px;font-size:13px;font-weight:700;text-align:center;margin-bottom:12px;">Accept Invitation &rarr;</div>
+                <div style="font-size:11px;color:var(--adm-txt-muted);text-align:center;">Link expires in 72 hours. Contact Tenner if you have any questions.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Access summary -->
+          <div class="card">
+            <div class="card-head"><div class="card-title">Access Summary</div></div>
+            <div class="card-body" style="padding-top:8px;">
+              <div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--adm-border-lt);">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--adm-green)" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                <span style="font-size:12px;color:var(--adm-txt-body);">Users</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--adm-border-lt);">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--adm-green)" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                <span style="font-size:12px;color:var(--adm-txt-body);">Ambassadors</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--adm-border-lt);">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--adm-green)" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                <span style="font-size:12px;color:var(--adm-txt-body);">Sessions</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--adm-border-lt);">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--adm-green)" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                <span style="font-size:12px;color:var(--adm-txt-body);">Welfare &amp; Safety</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--adm-border-lt);">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--adm-green)" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                <span style="font-size:12px;color:var(--adm-txt-body);">Analytics</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--adm-border-lt);">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--adm-border)" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                <span style="font-size:12px;color:var(--adm-txt-muted);">Messages</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--adm-border-lt);">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--adm-border)" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                <span style="font-size:12px;color:var(--adm-txt-muted);">Content management</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--adm-border-lt);">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--adm-border)" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                <span style="font-size:12px;color:var(--adm-txt-muted);">Platform settings</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;padding:8px 0;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--adm-border)" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                <span style="font-size:12px;color:var(--adm-txt-muted);">Privacy &amp; GDPR</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Existing admins -->
+          <div class="card">
+            <div class="card-head"><div class="card-title">Current Admin Users</div><span style="font-size:12px;color:var(--adm-txt-muted);">4 active</span></div>
+            <div class="card-body" style="padding-top:8px;">
+              <div class="admin-row">
+                <div class="admin-ava user-ava blue" style="width:36px;height:36px;font-size:13px;">T</div>
+                <div style="flex:1;">
+                  <div style="font-size:13px;font-weight:700;color:var(--adm-txt-head);">Tenner</div>
+                  <div style="font-size:11px;color:var(--adm-txt-muted);">tenner@luminwell.co.uk</div>
+                </div>
+                <span class="badge badge-blue" style="font-size:10px;">Super Admin</span>
+              </div>
+              <div class="admin-row">
+                <div class="admin-ava user-ava green" style="width:36px;height:36px;font-size:13px;">RP</div>
+                <div style="flex:1;">
+                  <div style="font-size:13px;font-weight:700;color:var(--adm-txt-head);">Rachel Parker</div>
+                  <div style="font-size:11px;color:var(--adm-txt-muted);">r.parker@luminwell.co.uk</div>
+                </div>
+                <span class="badge badge-green" style="font-size:10px;">Admin</span>
+              </div>
+              <div class="admin-row">
+                <div class="admin-ava user-ava amber" style="width:36px;height:36px;font-size:13px;">JH</div>
+                <div style="flex:1;">
+                  <div style="font-size:13px;font-weight:700;color:var(--adm-txt-head);">James Hughes</div>
+                  <div style="font-size:11px;color:var(--adm-txt-muted);">j.hughes@luminwell.co.uk</div>
+                </div>
+                <span class="badge badge-amber" style="font-size:10px;">Welfare Lead</span>
+              </div>
+              <div class="admin-row">
+                <div class="admin-ava user-ava teal" style="width:36px;height:36px;font-size:13px;">SW</div>
+                <div style="flex:1;">
+                  <div style="font-size:13px;font-weight:700;color:var(--adm-txt-head);">Sophie Webb</div>
+                  <div style="font-size:11px;color:var(--adm-txt-muted);">s.webb@luminwell.co.uk</div>
+                </div>
+                <span class="badge badge-slate" style="font-size:10px;">Read-only</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pending invites -->
+          <div class="card">
+            <div class="card-head"><div class="card-title">Pending Invites</div><span class="badge badge-amber" style="font-size:10px;">1 pending</span></div>
+            <div class="card-body" style="padding-top:8px;">
+              <div class="admin-row">
+                <div class="admin-ava" style="width:36px;height:36px;background:var(--adm-bg);border:2px dashed var(--adm-border);border-radius:50%;display:flex;align-items:center;justify-content:center;">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--adm-txt-muted)" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                </div>
+                <div style="flex:1;">
+                  <div style="font-size:13px;font-weight:700;color:var(--adm-txt-head);">Oliver Grant</div>
+                  <div style="font-size:11px;color:var(--adm-txt-muted);">o.grant@uom.ac.uk &middot; Expires in 38h</div>
+                </div>
+                <button class="btn btn-ghost btn-sm" style="font-size:11px;padding:4px 10px;">Resend</button>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /right -->
+      </div>
+
+    </div>
+  </div>
+</div>
+</body>
+</html>

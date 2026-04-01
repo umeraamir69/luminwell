@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Add Ambassador — Luminwell Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="admin.css">
+<style>
+
+/* ── Step radio inputs ── */
+.step-radio { display: none; }
+
+/* ── Step visibility ── */
+.step-panel { display: none; }
+html:has(#step-1:checked) .step-panel[data-step="1"] { display: block; }
+html:has(#step-2:checked) .step-panel[data-step="2"] { display: block; }
+html:has(#step-3:checked) .step-panel[data-step="3"] { display: block; }
+html:has(#step-4:checked) .step-panel[data-step="4"] { display: block; }
+html:has(#step-5:checked) .step-panel[data-step="5"] { display: block; }
+
+/* ── Step indicator dots ── */
+.step-indicator { display: flex; align-items: center; justify-content: center; gap: 0; margin-bottom: 32px; }
+.step-node {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  position: relative; z-index: 1;
+}
+.step-circle {
+  width: 36px; height: 36px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 800;
+  border: 2px solid var(--adm-border);
+  background: var(--adm-surface);
+  color: var(--adm-txt-muted);
+  transition: all .25s;
+}
+.step-label {
+  font-size: 10px; font-weight: 700; color: var(--adm-txt-faint);
+  text-transform: uppercase; letter-spacing: .5px; white-space: nowrap;
+  transition: color .25s;
+}
+.step-connector {
+  width: 60px; height: 2px;
+  background: var(--adm-border);
+  margin: 0; margin-bottom: 22px; flex-shrink: 0;
+  transition: background .25s;
+}
+
+/* Active step styling */
+html:has(#step-1:checked) .step-node[data-for="1"] .step-circle,
+html:has(#step-2:checked) .step-node[data-for="2"] .step-circle,
+html:has(#step-3:checked) .step-node[data-for="3"] .step-circle,
+html:has(#step-4:checked) .step-node[data-for="4"] .step-circle,
+html:has(#step-5:checked) .step-node[data-for="5"] .step-circle {
+  background: linear-gradient(135deg, #2d9676, #175d92);
+  border-color: transparent;
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(45,150,118,.35);
+}
+html:has(#step-1:checked) .step-node[data-for="1"] .step-label,
+html:has(#step-2:checked) .step-node[data-for="2"] .step-label,
+html:has(#step-3:checked) .step-node[data-for="3"] .step-label,
+html:has(#step-4:checked) .step-node[data-for="4"] .step-label,
+html:has(#step-5:checked) .step-node[data-for="5"] .step-label {
+  color: var(--adm-blue);
+}
+
+/* Completed steps (step N is done when current step > N) */
+html:has(#step-2:checked) .step-node[data-for="1"] .step-circle,
+html:has(#step-3:checked) .step-node[data-for="1"] .step-circle,
+html:has(#step-3:checked) .step-node[data-for="2"] .step-circle,
+html:has(#step-4:checked) .step-node[data-for="1"] .step-circle,
+html:has(#step-4:checked) .step-node[data-for="2"] .step-circle,
+html:has(#step-4:checked) .step-node[data-for="3"] .step-circle,
+html:has(#step-5:checked) .step-node[data-for="1"] .step-circle,
+html:has(#step-5:checked) .step-node[data-for="2"] .step-circle,
+html:has(#step-5:checked) .step-node[data-for="3"] .step-circle,
+html:has(#step-5:checked) .step-node[data-for="4"] .step-circle {
+  background: var(--adm-green);
+  border-color: transparent;
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(16,185,129,.2);
+}
+
+/* Filled connectors */
+html:has(#step-2:checked) .step-connector[data-after="1"],
+html:has(#step-3:checked) .step-connector[data-after="1"],
+html:has(#step-3:checked) .step-connector[data-after="2"],
+html:has(#step-4:checked) .step-connector[data-after="1"],
+html:has(#step-4:checked) .step-connector[data-after="2"],
+html:has(#step-4:checked) .step-connector[data-after="3"],
+html:has(#step-5:checked) .step-connector[data-after="1"],
+html:has(#step-5:checked) .step-connector[data-after="2"],
+html:has(#step-5:checked) .step-connector[data-after="3"],
+html:has(#step-5:checked) .step-connector[data-after="4"] {
+  background: var(--adm-green);
+}
+
+/* ── Form layout ── */
+.form-shell {
+  max-width: 740px; margin: 0 auto;
+}
+.step-title {
+  font-size: 22px; font-weight: 800; color: var(--adm-txt-head);
+  letter-spacing: -.3px; margin-bottom: 4px;
+}
+.step-desc {
+  font-size: 13px; color: var(--adm-txt-muted); margin-bottom: 24px;
+}
+.form-section {
+  margin-bottom: 28px;
+}
+.form-section-title {
+  font-size: 11px; font-weight: 800; color: var(--adm-txt-muted);
+  text-transform: uppercase; letter-spacing: .6px;
+  margin-bottom: 14px; padding-bottom: 8px;
+  border-bottom: 1px solid var(--adm-border);
+  display: flex; align-items: center; gap: 8px;
+}
+.form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.form-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+
+/* ── Photo upload ── */
+.photo-upload-area {
+  display: flex; align-items: center; gap: 20px; margin-bottom: 20px;
+}
+.photo-placeholder {
+  width: 72px; height: 72px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--adm-blue-lt), var(--adm-teal-lt));
+  border: 2px dashed var(--adm-border);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.photo-upload-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 16px; border-radius: var(--adm-r-sm);
+  border: 1.5px solid var(--adm-border);
+  background: var(--adm-surface);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px; font-weight: 700;
+  color: var(--adm-txt-body);
+  cursor: pointer;
+}
+.photo-upload-note { font-size: 11px; color: var(--adm-txt-faint); margin-top: 4px; }
+
+/* ── Skill chips ── */
+.skill-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.skill-chip input[type="checkbox"] { display: none; }
+.skill-chip label {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 6px 13px; border-radius: 20px;
+  border: 1.5px solid var(--adm-border);
+  background: var(--adm-surface);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px; font-weight: 600;
+  color: var(--adm-txt-muted);
+  cursor: pointer; transition: all .15s;
+}
+.skill-chip input:checked + label {
+  background: var(--adm-blue-lt);
+  border-color: var(--adm-blue);
+  color: var(--adm-blue-dk);
+}
+.skill-chip label:hover {
+  border-color: var(--adm-blue);
+  color: var(--adm-blue);
+}
+
+/* ── Radio pills ── */
+.radio-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+.radio-pill input[type="radio"] { display: none; }
+.radio-pill label {
+  padding: 7px 16px; border-radius: 20px;
+  border: 1.5px solid var(--adm-border);
+  background: var(--adm-surface);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px; font-weight: 600;
+  color: var(--adm-txt-muted);
+  cursor: pointer; transition: all .15s;
+}
+.radio-pill input:checked + label {
+  background: linear-gradient(135deg, #eaf5f1, #f0faf6);
+  border-color: var(--adm-blue);
+  color: var(--adm-blue-dk);
+  font-weight: 700;
+}
+
+/* ── Availability grid ── */
+.avail-grid {
+  border: 1px solid var(--adm-border);
+  border-radius: var(--adm-r-md);
+  overflow: hidden;
+}
+.avail-grid-head {
+  display: grid; grid-template-columns: 100px repeat(7, 1fr);
+  background: var(--adm-bg);
+  border-bottom: 1px solid var(--adm-border);
+}
+.avail-grid-head-cell {
+  padding: 8px 4px; text-align: center;
+  font-size: 11px; font-weight: 800; color: var(--adm-txt-muted);
+  border-right: 1px solid var(--adm-border-lt);
+}
+.avail-grid-head-cell:last-child { border-right: none; }
+.avail-grid-row {
+  display: grid; grid-template-columns: 100px repeat(7, 1fr);
+  border-bottom: 1px solid var(--adm-border-lt);
+}
+.avail-grid-row:last-child { border-bottom: none; }
+.avail-row-label {
+  padding: 10px 12px; font-size: 11px; font-weight: 700; color: var(--adm-txt-muted);
+  background: var(--adm-bg);
+  border-right: 1px solid var(--adm-border);
+  display: flex; align-items: center;
+}
+.avail-cell {
+  display: flex; align-items: center; justify-content: center;
+  border-right: 1px solid var(--adm-border-lt);
+  padding: 6px 4px;
+}
+.avail-cell:last-child { border-right: none; }
+.avail-check { display: none; }
+.avail-check + label {
+  width: 24px; height: 24px; border-radius: 6px;
+  border: 1.5px solid var(--adm-border);
+  background: var(--adm-surface);
+  cursor: pointer; display: block; transition: all .15s;
+}
+.avail-check:checked + label {
+  background: var(--adm-blue);
+  border-color: var(--adm-blue);
+}
+.avail-check:checked + label::after {
+  content: '';
+  display: block;
+  width: 5px; height: 9px;
+  border: 2px solid #fff;
+  border-top: none; border-left: none;
+  transform: rotate(45deg) translate(4px, 1px);
+}
+
+/* ── Checklist ── */
+.checklist-item {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 12px 14px; border-radius: var(--adm-r-sm);
+  border: 1.5px solid var(--adm-border);
+  margin-bottom: 10px; background: var(--adm-surface);
+  cursor: pointer; transition: border-color .15s;
+}
+.checklist-item input { display: none; }
+.checklist-check {
+  width: 20px; height: 20px; border-radius: 6px;
+  border: 1.5px solid var(--adm-border);
+  background: var(--adm-surface);
+  flex-shrink: 0; margin-top: 1px; transition: all .15s;
+  display: flex; align-items: center; justify-content: center;
+}
+.checklist-check svg { display: none; }
+.checklist-item:has(input:checked) { border-color: var(--adm-blue); background: var(--adm-blue-xlt); }
+.checklist-item:has(input:checked) .checklist-check { background: var(--adm-blue); border-color: var(--adm-blue); }
+.checklist-item:has(input:checked) .checklist-check svg { display: block; }
+.checklist-text { font-size: 13px; font-weight: 600; color: var(--adm-txt-body); line-height: 1.5; }
+
+/* ── Review card ── */
+.review-block {
+  background: var(--adm-surface);
+  border: 1px solid var(--adm-border);
+  border-radius: var(--adm-r-md);
+  margin-bottom: 16px; overflow: hidden;
+}
+.review-block-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 16px;
+  background: var(--adm-bg);
+  border-bottom: 1px solid var(--adm-border);
+}
+.review-block-title { font-size: 12px; font-weight: 800; color: var(--adm-txt-head); text-transform: uppercase; letter-spacing: .4px; }
+.review-row { display: flex; justify-content: space-between; align-items: flex-start; padding: 10px 16px; border-bottom: 1px solid var(--adm-border-lt); }
+.review-row:last-child { border-bottom: none; }
+.review-key { font-size: 12px; color: var(--adm-txt-muted); font-weight: 500; }
+.review-val { font-size: 12px; color: var(--adm-txt-head); font-weight: 700; text-align: right; max-width: 60%; }
+
+/* ── Nav buttons ── */
+.step-nav {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 0 0; border-top: 1px solid var(--adm-border);
+  margin-top: 32px;
+}
+.btn-step-next {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 11px 24px; border-radius: var(--adm-r-sm);
+  background: linear-gradient(135deg, #2d9676, #175d92);
+  color: #fff; font-family: 'DM Sans', sans-serif;
+  font-size: 14px; font-weight: 700;
+  border: none; cursor: pointer;
+  box-shadow: 0 4px 14px rgba(45,150,118,.3);
+  transition: box-shadow .15s;
+  text-decoration: none;
+}
+.btn-step-next:hover { box-shadow: 0 6px 20px rgba(45,150,118,.4); }
+.btn-step-back {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 11px 20px; border-radius: var(--adm-r-sm);
+  background: var(--adm-surface);
+  border: 1.5px solid var(--adm-border);
+  color: var(--adm-txt-body);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px; font-weight: 600;
+  cursor: pointer; transition: border-color .15s;
+  text-decoration: none;
+}
+.btn-step-back:hover { border-color: var(--adm-blue); color: var(--adm-blue); }
+.step-counter { font-size: 12px; font-weight: 700; color: var(--adm-txt-faint); }
+
+/* ── Info tip ── */
+.info-tip {
+  display: flex; gap: 10px; align-items: flex-start;
+  background: var(--adm-blue-xlt);
+  border: 1px solid var(--adm-blue-lt);
+  border-radius: var(--adm-r-sm);
+  padding: 12px 14px; margin-bottom: 20px;
+  font-size: 12px; color: var(--adm-blue-dk); line-height: 1.5;
+}
+</style>
+</head>
+<body>
+
+<!-- Step radio controls -->
+<input type="radio" name="step" id="step-1" class="step-radio" checked>
+<input type="radio" name="step" id="step-2" class="step-radio">
+<input type="radio" name="step" id="step-3" class="step-radio">
+<input type="radio" name="step" id="step-4" class="step-radio">
+<input type="radio" name="step" id="step-5" class="step-radio">
+<input type="checkbox" id="sidebar-toggle" class="sidebar-toggle-check">
+
+<div class="admin-shell">
+
+  <!-- ── Sidebar ── -->
+  <aside class="admin-sidebar">
+    <div class="sidebar__logo"><div class="logo-mark"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17 8C8 10 5.9 16.17 3.82 22A13.34 13.34 0 0 0 18 8Z"/><path d="M9 9c-1.5 3.5-2.5 7-3 10C8 18 11 15 13 12" fill="rgba(255,255,255,.35)"/></svg></div><div class="logo-text-wrap"><div class="logo-name">Luminwell</div><span class="logo-badge-pill">ADMIN PANEL</span></div></div>
+    <label for="sidebar-toggle" class="sidebar__collapse-btn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg></label>
+    <nav class="sidebar__nav">
+      <div class="nav-section">
+        <p class="nav-label">Main</p>
+        <a href="admin-home.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg><span class="link-text">Overview</span></a>
+        <a href="admin-analytics.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg><span class="link-text">Analytics</span></a>
+      </div>
+      <div class="nav-section">
+        <p class="nav-label">People</p>
+        <a href="admin-users.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg><span class="link-text">Users</span></a>
+        <a href="admin-ambassadors.html" class="sidebar__link active"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><span class="link-text">Ambassadors</span></a>
+        <a href="admin-matching.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg><span class="link-text">Matching</span></a>
+      </div>
+      <div class="nav-section">
+        <p class="nav-label">Operations</p>
+        <a href="admin-sessions.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><span class="link-text">Sessions</span></a>
+        <a href="admin-welfare.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span class="link-text">Welfare &amp; Safety</span><span class="nav-badge nav-badge--red">5</span></a>
+        <a href="admin-messages.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span class="link-text">Messages</span></a>
+      </div>
+      <div class="nav-section">
+        <p class="nav-label">Platform</p>
+        <a href="admin-content.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span class="link-text">Content</span></a>
+        <a href="admin-settings.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06-.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span class="link-text">Settings</span></a>
+        <a href="admin-privacy.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><span class="link-text">Privacy &amp; GDPR</span></a>
+      </div>
+    </nav>
+    <div class="sidebar__foot">
+      <div class="sidebar__foot-user"><div class="admin-ava-sm">T</div><div class="sidebar__foot-info"><p>Tenner</p><small>Super Admin</small></div></div>
+      <button class="sidebar__signout"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px;"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Sign out</button>
+    </div>
+  </aside>
+
+  <!-- ── Main ── -->
+  <div class="admin-main">
+    <header class="admin-topbar">
+      <div class="topbar-left">
+        <label for="sidebar-toggle" class="topbar-menu-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></label>
+        <nav class="breadcrumb">
+          <a href="admin-home.html">Admin</a>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+          <a href="admin-ambassadors.html">Ambassadors</a>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+          <span class="bc-active">Add Ambassador</span>
+        </nav>
+      </div>
+      <div class="topbar-right">
+        <div class="notif-wrap">
+          <input type="checkbox" id="notif-toggle" class="notif-check">
+          <label for="notif-toggle" class="topbar-icon-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><span class="notif-dot"></span></label>
+          <div class="notif-drop"><div class="notif-drop-head"><h4>Notifications</h4><a href="#">Mark all read</a></div><div class="notif-item unread"><div class="notif-ico red"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div><div class="notif-body"><p><strong>Critical welfare flag</strong></p><small>2 min ago</small></div></div><div class="notif-drop-foot"><a href="admin-welfare.html">View all →</a></div></div>
+        </div>
+        <div class="topbar-user"><div class="topbar-ava">T</div><div class="topbar-user-info"><div class="u-name">Tenner</div><div class="u-role">Super Admin</div></div></div>
+      </div>
+    </header>
+
+    <div class="admin-content">
+      <div class="form-shell">
+
+        <!-- Page title -->
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;">
+          <div>
+            <h1 style="font-size:22px;font-weight:900;color:var(--adm-txt-head);letter-spacing:-.3px;margin-bottom:3px;">Add New Ambassador</h1>
+            <p style="font-size:13px;color:var(--adm-txt-muted);">Complete all steps to create an ambassador account on the platform</p>
+          </div>
+          <a href="admin-ambassadors.html" class="btn btn-ghost btn-sm">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+            Back to list
+          </a>
+        </div>
+
+        <!-- ── Step indicator ── -->
+        <div class="step-indicator">
+          <div class="step-node" data-for="1">
+            <div class="step-circle">1</div>
+            <span class="step-label">Personal</span>
+          </div>
+          <div class="step-connector" data-after="1"></div>
+          <div class="step-node" data-for="2">
+            <div class="step-circle">2</div>
+            <span class="step-label">Background</span>
+          </div>
+          <div class="step-connector" data-after="2"></div>
+          <div class="step-node" data-for="3">
+            <div class="step-circle">3</div>
+            <span class="step-label">Skills</span>
+          </div>
+          <div class="step-connector" data-after="3"></div>
+          <div class="step-node" data-for="4">
+            <div class="step-circle">4</div>
+            <span class="step-label">Availability</span>
+          </div>
+          <div class="step-connector" data-after="4"></div>
+          <div class="step-node" data-for="5">
+            <div class="step-circle">5</div>
+            <span class="step-label">Review</span>
+          </div>
+        </div>
+
+        <!-- ════════════════════════════
+             STEP 1 · Personal Info
+        ════════════════════════════ -->
+        <div class="step-panel card" data-step="1">
+          <div class="card-body" style="padding:28px;">
+
+            <div class="step-title">Personal Information</div>
+            <p class="step-desc">Basic details about the new ambassador</p>
+
+            <!-- Photo -->
+            <div class="photo-upload-area">
+              <div class="photo-placeholder">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--adm-txt-faint)" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              </div>
+              <div>
+                <button class="photo-upload-btn">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                  Upload photo
+                </button>
+                <p class="photo-upload-note">JPG, PNG or WEBP · Max 5MB · Square recommended</p>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <div class="form-section-title">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                Name &amp; Contact
+              </div>
+              <div class="form-grid-2">
+                <div class="form-group">
+                  <label class="form-label">First name <span style="color:var(--adm-red);">*</span></label>
+                  <input class="form-input" type="text" placeholder="e.g. Maya">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Last name <span style="color:var(--adm-red);">*</span></label>
+                  <input class="form-input" type="text" placeholder="e.g. Johnson">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Email address <span style="color:var(--adm-red);">*</span></label>
+                  <input class="form-input" type="email" placeholder="e.g. maya.j@university.ac.uk">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Phone number</label>
+                  <input class="form-input" type="tel" placeholder="e.g. +44 7700 900000">
+                </div>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <div class="form-section-title">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                Demographics
+              </div>
+              <div class="form-grid-2">
+                <div class="form-group">
+                  <label class="form-label">Date of birth</label>
+                  <input class="form-input" type="date">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Age group</label>
+                  <select class="form-select">
+                    <option value="">Select age group</option>
+                    <option>18–20</option>
+                    <option>21–25</option>
+                    <option>26–30</option>
+                    <option>31–35</option>
+                    <option>36+</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Gender identity</label>
+                  <select class="form-select">
+                    <option value="">Prefer not to say</option>
+                    <option>Woman</option>
+                    <option>Man</option>
+                    <option>Non-binary</option>
+                    <option>Other / self-describe</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Location (city)</label>
+                  <input class="form-input" type="text" placeholder="e.g. Manchester">
+                </div>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <div class="form-section-title">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                Languages
+              </div>
+              <div class="form-group">
+                <label class="form-label">Languages spoken</label>
+                <div class="skill-chips">
+                  <span class="skill-chip"><input type="checkbox" id="lang-en"><label for="lang-en">English</label></span>
+                  <span class="skill-chip"><input type="checkbox" id="lang-fr"><label for="lang-fr">French</label></span>
+                  <span class="skill-chip"><input type="checkbox" id="lang-es"><label for="lang-es">Spanish</label></span>
+                  <span class="skill-chip"><input type="checkbox" id="lang-ar"><label for="lang-ar">Arabic</label></span>
+                  <span class="skill-chip"><input type="checkbox" id="lang-zh"><label for="lang-zh">Mandarin</label></span>
+                  <span class="skill-chip"><input type="checkbox" id="lang-hi"><label for="lang-hi">Hindi</label></span>
+                  <span class="skill-chip"><input type="checkbox" id="lang-ur"><label for="lang-ur">Urdu</label></span>
+                  <span class="skill-chip"><input type="checkbox" id="lang-pt"><label for="lang-pt">Portuguese</label></span>
+                  <span class="skill-chip"><input type="checkbox" id="lang-de"><label for="lang-de">German</label></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="step-nav">
+              <span class="step-counter">Step 1 of 5</span>
+              <label for="step-2" class="btn-step-next">
+                Continue
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════════════════
+             STEP 2 · Background
+        ════════════════════════════ -->
+        <div class="step-panel card" data-step="2">
+          <div class="card-body" style="padding:28px;">
+
+            <div class="step-title">Education &amp; Background</div>
+            <p class="step-desc">Academic details and peer support experience</p>
+
+            <div class="form-section">
+              <div class="form-section-title">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+                University &amp; Course
+              </div>
+              <div class="form-grid-2">
+                <div class="form-group">
+                  <label class="form-label">University / Institution <span style="color:var(--adm-red);">*</span></label>
+                  <input class="form-input" type="text" placeholder="e.g. University of Manchester">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Course / Subject</label>
+                  <input class="form-input" type="text" placeholder="e.g. Psychology">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Year of study / graduation</label>
+                  <select class="form-select">
+                    <option>Year 1</option>
+                    <option>Year 2</option>
+                    <option>Year 3</option>
+                    <option selected>Year 4 / Masters</option>
+                    <option>PhD / Postgrad</option>
+                    <option>Graduate (alumni)</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Student ID (optional)</label>
+                  <input class="form-input" type="text" placeholder="e.g. 11234567">
+                </div>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <div class="form-section-title">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                Qualifications &amp; Training
+              </div>
+              <div class="form-group" style="margin-bottom:14px;">
+                <label class="form-label">Relevant certifications or training</label>
+                <textarea class="form-input" rows="3" style="resize:vertical;" placeholder="e.g. Mental Health First Aid (MHFA), CBT fundamentals, Samaritans listening skills…"></textarea>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Years of peer support / mentoring experience</label>
+                <div class="radio-pills" style="margin-top:8px;">
+                  <span class="radio-pill"><input type="radio" name="exp" id="exp-0"><label for="exp-0">Less than 1 year</label></span>
+                  <span class="radio-pill"><input type="radio" name="exp" id="exp-1"><label for="exp-1">1–2 years</label></span>
+                  <span class="radio-pill"><input type="radio" name="exp" id="exp-2"><label for="exp-2">2–3 years</label></span>
+                  <span class="radio-pill"><input type="radio" name="exp" id="exp-3" checked><label for="exp-3">3–5 years</label></span>
+                  <span class="radio-pill"><input type="radio" name="exp" id="exp-4"><label for="exp-4">5+ years</label></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <div class="form-section-title">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                Previous Platform Experience
+              </div>
+              <div class="form-grid-2">
+                <div class="form-group">
+                  <label class="form-label">Previous ambassador at another platform?</label>
+                  <select class="form-select">
+                    <option>No, this is my first time</option>
+                    <option>Yes — similar platform</option>
+                    <option>Yes — university scheme</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">DBS check status</label>
+                  <select class="form-select">
+                    <option>Not yet completed</option>
+                    <option>In progress</option>
+                    <option>Completed (valid)</option>
+                    <option>Completed (enhanced)</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="step-nav">
+              <label for="step-1" class="btn-step-back">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+                Back
+              </label>
+              <span class="step-counter">Step 2 of 5</span>
+              <label for="step-3" class="btn-step-next">
+                Continue
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════════════════
+             STEP 3 · Skills & Support Areas
+        ════════════════════════════ -->
+        <div class="step-panel card" data-step="3">
+          <div class="card-body" style="padding:28px;">
+
+            <div class="step-title">Skills &amp; Support Areas</div>
+            <p class="step-desc">Select the areas this ambassador can best support users in</p>
+
+            <div class="info-tip">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              Select all areas that apply. These are used by our matching algorithm to connect this ambassador with the most suitable users.
+            </div>
+
+            <div class="form-section">
+              <div class="form-section-title">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                Mental Wellbeing
+              </div>
+              <div class="skill-chips">
+                <span class="skill-chip"><input type="checkbox" id="sk-anxiety"><label for="sk-anxiety">Anxiety</label></span>
+                <span class="skill-chip"><input type="checkbox" id="sk-depression"><label for="sk-depression">Low mood / Depression</label></span>
+                <span class="skill-chip"><input type="checkbox" id="sk-stress"><label for="sk-stress">Stress management</label></span>
+                <span class="skill-chip"><input type="checkbox" id="sk-loneliness"><label for="sk-loneliness">Loneliness &amp; isolation</label></span>
+                <span class="skill-chip"><input type="checkbox" id="sk-trauma"><label for="sk-trauma">Trauma-informed support</label></span>
+                <span class="skill-chip"><input type="checkbox" id="sk-mindfulness"><label for="sk-mindfulness">Mindfulness</label></span>
+                <span class="skill-chip"><input type="checkbox" id="sk-identity"><label for="sk-identity">Identity &amp; belonging</label></span>
+                <span class="skill-chip"><input type="checkbox" id="sk-grief"><label for="sk-grief">Grief &amp; loss</label></span>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <div class="form-section-title">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+                Academic &amp; Career
+              </div>
+              <div class="skill-chips">
+                <span class="skill-chip"><input type="checkbox" id="sk-academic"><label for="sk-academic">Academic pressure</label></span>
+                <span class="skill-chip"><input type="checkbox" id="sk-exams"><label for="sk-exams">Exam anxiety</label></span>
+                <span class="skill-chip"><input type="checkbox" id="sk-career"><label for="sk-career">Career uncertainty</label></span>
+                <span class="skill-chip"><input type="checkbox" id="sk-goals"><label for="sk-goals">Goal setting</label></span>
+                <span class="skill-chip"><input type="checkbox" id="sk-motivation"><label for="sk-motivation">Motivation &amp; focus</label></span>
+                <span class="skill-chip"><input type="checkbox" id="sk-procras"><label for="sk-procras">Procrastination</label></span>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <div class="form-section-title">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                Relationships &amp; Life
+              </div>
+              <div class="skill-chips">
+                <span class="skill-chip"><input type="checkbox" id="sk-relations"><label for="sk-relations">Relationships</label></span>
+                <span class="skill-chip"><input type="checkbox" id="sk-family"><label for="sk-family">Family dynamics</label></span>
+                <span class="skill-chip"><input type="checkbox" id="sk-sleep"><label for="sk-sleep">Sleep &amp; self-care</label></span>
+                <span class="skill-chip"><input type="checkbox" id="sk-finance"><label for="sk-finance">Financial stress</label></span>
+                <span class="skill-chip"><input type="checkbox" id="sk-transition"><label for="sk-transition">Life transitions</label></span>
+                <span class="skill-chip"><input type="checkbox" id="sk-resilience"><label for="sk-resilience">Resilience building</label></span>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <div class="form-section-title">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                Approach &amp; Techniques
+              </div>
+              <div class="skill-chips">
+                <span class="skill-chip"><input type="checkbox" id="sk-cbt"><label for="sk-cbt">CBT techniques</label></span>
+                <span class="skill-chip"><input type="checkbox" id="sk-act"><label for="sk-act">ACT / Acceptance</label></span>
+                <span class="skill-chip"><input type="checkbox" id="sk-journalling"><label for="sk-journalling">Journalling</label></span>
+                <span class="skill-chip"><input type="checkbox" id="sk-coaching"><label for="sk-coaching">Coaching approach</label></span>
+                <span class="skill-chip"><input type="checkbox" id="sk-breathing"><label for="sk-breathing">Breathwork</label></span>
+                <span class="skill-chip"><input type="checkbox" id="sk-active"><label for="sk-active">Active listening</label></span>
+              </div>
+            </div>
+
+            <div class="step-nav">
+              <label for="step-2" class="btn-step-back">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+                Back
+              </label>
+              <span class="step-counter">Step 3 of 5</span>
+              <label for="step-4" class="btn-step-next">
+                Continue
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════════════════
+             STEP 4 · Availability & Style
+        ════════════════════════════ -->
+        <div class="step-panel card" data-step="4">
+          <div class="card-body" style="padding:28px;">
+
+            <div class="step-title">Availability &amp; Session Style</div>
+            <p class="step-desc">When can this ambassador take sessions, and how do they prefer to work?</p>
+
+            <div class="form-section">
+              <div class="form-section-title">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                Capacity
+              </div>
+              <div class="form-grid-2" style="margin-bottom:14px;">
+                <div class="form-group">
+                  <label class="form-label">Maximum clients at one time</label>
+                  <div class="radio-pills" style="margin-top:8px;flex-wrap:wrap;">
+                    <span class="radio-pill"><input type="radio" name="maxcli" id="mc-4"><label for="mc-4">Up to 4</label></span>
+                    <span class="radio-pill"><input type="radio" name="maxcli" id="mc-6"><label for="mc-6">Up to 6</label></span>
+                    <span class="radio-pill"><input type="radio" name="maxcli" id="mc-8" checked><label for="mc-8">Up to 8</label></span>
+                    <span class="radio-pill"><input type="radio" name="maxcli" id="mc-10"><label for="mc-10">Up to 10</label></span>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Preferred session format</label>
+                  <div class="radio-pills" style="margin-top:8px;">
+                    <span class="radio-pill"><input type="radio" name="fmt" id="fmt-video" checked><label for="fmt-video">Video</label></span>
+                    <span class="radio-pill"><input type="radio" name="fmt" id="fmt-audio"><label for="fmt-audio">Audio</label></span>
+                    <span class="radio-pill"><input type="radio" name="fmt" id="fmt-text"><label for="fmt-text">Text</label></span>
+                    <span class="radio-pill"><input type="radio" name="fmt" id="fmt-any"><label for="fmt-any">Any</label></span>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Preferred weekly hours for sessions</label>
+                <div class="radio-pills" style="margin-top:8px;">
+                  <span class="radio-pill"><input type="radio" name="hrs" id="hrs-2"><label for="hrs-2">1–2 hours</label></span>
+                  <span class="radio-pill"><input type="radio" name="hrs" id="hrs-4" checked><label for="hrs-4">3–4 hours</label></span>
+                  <span class="radio-pill"><input type="radio" name="hrs" id="hrs-6"><label for="hrs-6">5–6 hours</label></span>
+                  <span class="radio-pill"><input type="radio" name="hrs" id="hrs-8"><label for="hrs-8">7–8 hours</label></span>
+                  <span class="radio-pill"><input type="radio" name="hrs" id="hrs-more"><label for="hrs-more">8+ hours</label></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <div class="form-section-title">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                Weekly Availability
+              </div>
+              <p style="font-size:12px;color:var(--adm-txt-muted);margin-bottom:12px;">Tick the slots when this ambassador is typically available for sessions</p>
+
+              <div class="avail-grid">
+                <div class="avail-grid-head">
+                  <div class="avail-grid-head-cell" style="text-align:left;padding-left:12px;"></div>
+                  <div class="avail-grid-head-cell">Mon</div>
+                  <div class="avail-grid-head-cell">Tue</div>
+                  <div class="avail-grid-head-cell">Wed</div>
+                  <div class="avail-grid-head-cell">Thu</div>
+                  <div class="avail-grid-head-cell">Fri</div>
+                  <div class="avail-grid-head-cell">Sat</div>
+                  <div class="avail-grid-head-cell">Sun</div>
+                </div>
+                <!-- Morning -->
+                <div class="avail-grid-row">
+                  <div class="avail-row-label">Morning<br><span style="font-size:9px;color:var(--adm-txt-faint);">8am–12pm</span></div>
+                  <div class="avail-cell"><input type="checkbox" id="am-mon" class="avail-check"><label for="am-mon"></label></div>
+                  <div class="avail-cell"><input type="checkbox" id="am-tue" class="avail-check" checked><label for="am-tue"></label></div>
+                  <div class="avail-cell"><input type="checkbox" id="am-wed" class="avail-check" checked><label for="am-wed"></label></div>
+                  <div class="avail-cell"><input type="checkbox" id="am-thu" class="avail-check"><label for="am-thu"></label></div>
+                  <div class="avail-cell"><input type="checkbox" id="am-fri" class="avail-check" checked><label for="am-fri"></label></div>
+                  <div class="avail-cell"><input type="checkbox" id="am-sat" class="avail-check"><label for="am-sat"></label></div>
+                  <div class="avail-cell"><input type="checkbox" id="am-sun" class="avail-check"><label for="am-sun"></label></div>
+                </div>
+                <!-- Afternoon -->
+                <div class="avail-grid-row">
+                  <div class="avail-row-label">Afternoon<br><span style="font-size:9px;color:var(--adm-txt-faint);">12pm–5pm</span></div>
+                  <div class="avail-cell"><input type="checkbox" id="pm-mon" class="avail-check" checked><label for="pm-mon"></label></div>
+                  <div class="avail-cell"><input type="checkbox" id="pm-tue" class="avail-check"><label for="pm-tue"></label></div>
+                  <div class="avail-cell"><input type="checkbox" id="pm-wed" class="avail-check"><label for="pm-wed"></label></div>
+                  <div class="avail-cell"><input type="checkbox" id="pm-thu" class="avail-check" checked><label for="pm-thu"></label></div>
+                  <div class="avail-cell"><input type="checkbox" id="pm-fri" class="avail-check"><label for="pm-fri"></label></div>
+                  <div class="avail-cell"><input type="checkbox" id="pm-sat" class="avail-check" checked><label for="pm-sat"></label></div>
+                  <div class="avail-cell"><input type="checkbox" id="pm-sun" class="avail-check"><label for="pm-sun"></label></div>
+                </div>
+                <!-- Evening -->
+                <div class="avail-grid-row">
+                  <div class="avail-row-label">Evening<br><span style="font-size:9px;color:var(--adm-txt-faint);">5pm–9pm</span></div>
+                  <div class="avail-cell"><input type="checkbox" id="eve-mon" class="avail-check"><label for="eve-mon"></label></div>
+                  <div class="avail-cell"><input type="checkbox" id="eve-tue" class="avail-check" checked><label for="eve-tue"></label></div>
+                  <div class="avail-cell"><input type="checkbox" id="eve-wed" class="avail-check"><label for="eve-wed"></label></div>
+                  <div class="avail-cell"><input type="checkbox" id="eve-thu" class="avail-check"><label for="eve-thu"></label></div>
+                  <div class="avail-cell"><input type="checkbox" id="eve-fri" class="avail-check" checked><label for="eve-fri"></label></div>
+                  <div class="avail-cell"><input type="checkbox" id="eve-sat" class="avail-check"><label for="eve-sat"></label></div>
+                  <div class="avail-cell"><input type="checkbox" id="eve-sun" class="avail-check"><label for="eve-sun"></label></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <div class="form-section-title">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                Bio &amp; Motivation
+              </div>
+              <div class="form-group" style="margin-bottom:14px;">
+                <label class="form-label">Public bio <span style="color:var(--adm-txt-faint);">(shown to users before matching)</span></label>
+                <textarea class="form-input" rows="3" style="resize:vertical;" placeholder="A short, warm bio — e.g. "I'm a final-year Psychology student passionate about student mental health…""></textarea>
+                <p style="font-size:11px;color:var(--adm-txt-faint);margin-top:4px;">Max 200 characters recommended</p>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Why do you want to be an ambassador?</label>
+                <textarea class="form-input" rows="3" style="resize:vertical;" placeholder="Motivation statement (internal use only)…"></textarea>
+              </div>
+            </div>
+
+            <div class="step-nav">
+              <label for="step-3" class="btn-step-back">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+                Back
+              </label>
+              <span class="step-counter">Step 4 of 5</span>
+              <label for="step-5" class="btn-step-next">
+                Review &amp; Confirm
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════════════════
+             STEP 5 · Review & Submit
+        ════════════════════════════ -->
+        <div class="step-panel card" data-step="5">
+          <div class="card-body" style="padding:28px;">
+
+            <div class="step-title">Review &amp; Create Account</div>
+            <p class="step-desc">Check the details below before creating the ambassador account</p>
+
+            <div class="info-tip">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:1px;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              Once submitted, the ambassador will receive a welcome email with login instructions. You can edit their profile at any time from the Ambassadors page.
+            </div>
+
+            <!-- Review: Personal -->
+            <div class="review-block">
+              <div class="review-block-head">
+                <span class="review-block-title">Personal Information</span>
+                <label for="step-1" style="font-size:12px;color:var(--adm-blue);font-weight:700;cursor:pointer;">Edit →</label>
+              </div>
+              <div class="review-row"><span class="review-key">Full name</span><span class="review-val">Maya Johnson</span></div>
+              <div class="review-row"><span class="review-key">Email</span><span class="review-val">maya.j@manchester.ac.uk</span></div>
+              <div class="review-row"><span class="review-key">Age group</span><span class="review-val">21–25</span></div>
+              <div class="review-row"><span class="review-key">Location</span><span class="review-val">Manchester</span></div>
+              <div class="review-row"><span class="review-key">Languages</span><span class="review-val">English, French</span></div>
+            </div>
+
+            <!-- Review: Background -->
+            <div class="review-block">
+              <div class="review-block-head">
+                <span class="review-block-title">Education &amp; Background</span>
+                <label for="step-2" style="font-size:12px;color:var(--adm-blue);font-weight:700;cursor:pointer;">Edit →</label>
+              </div>
+              <div class="review-row"><span class="review-key">University</span><span class="review-val">University of Manchester</span></div>
+              <div class="review-row"><span class="review-key">Course</span><span class="review-val">Psychology</span></div>
+              <div class="review-row"><span class="review-key">Experience</span><span class="review-val">3–5 years</span></div>
+              <div class="review-row"><span class="review-key">DBS check</span><span class="review-val" style="color:var(--adm-green);">Completed (enhanced)</span></div>
+              <div class="review-row"><span class="review-key">Certifications</span><span class="review-val">Mental Health First Aid (MHFA), CBT fundamentals</span></div>
+            </div>
+
+            <!-- Review: Skills -->
+            <div class="review-block">
+              <div class="review-block-head">
+                <span class="review-block-title">Skills &amp; Support Areas</span>
+                <label for="step-3" style="font-size:12px;color:var(--adm-blue);font-weight:700;cursor:pointer;">Edit →</label>
+              </div>
+              <div class="review-row">
+                <span class="review-key">Selected areas</span>
+                <span class="review-val">
+                  <div style="display:flex;flex-wrap:wrap;gap:5px;justify-content:flex-end;">
+                    <span style="background:var(--adm-blue-lt);color:var(--adm-blue-dk);border-radius:20px;padding:2px 9px;font-size:11px;font-weight:700;">Anxiety</span>
+                    <span style="background:var(--adm-blue-lt);color:var(--adm-blue-dk);border-radius:20px;padding:2px 9px;font-size:11px;font-weight:700;">Academic pressure</span>
+                    <span style="background:var(--adm-blue-lt);color:var(--adm-blue-dk);border-radius:20px;padding:2px 9px;font-size:11px;font-weight:700;">CBT techniques</span>
+                    <span style="background:var(--adm-blue-lt);color:var(--adm-blue-dk);border-radius:20px;padding:2px 9px;font-size:11px;font-weight:700;">Goal setting</span>
+                    <span style="background:var(--adm-blue-lt);color:var(--adm-blue-dk);border-radius:20px;padding:2px 9px;font-size:11px;font-weight:700;">Resilience</span>
+                  </div>
+                </span>
+              </div>
+            </div>
+
+            <!-- Review: Availability -->
+            <div class="review-block">
+              <div class="review-block-head">
+                <span class="review-block-title">Availability &amp; Session Style</span>
+                <label for="step-4" style="font-size:12px;color:var(--adm-blue);font-weight:700;cursor:pointer;">Edit →</label>
+              </div>
+              <div class="review-row"><span class="review-key">Max clients</span><span class="review-val">Up to 8</span></div>
+              <div class="review-row"><span class="review-key">Format</span><span class="review-val">Video · Audio</span></div>
+              <div class="review-row"><span class="review-key">Weekly hours</span><span class="review-val">3–4 hours</span></div>
+              <div class="review-row">
+                <span class="review-key">Available slots</span>
+                <span class="review-val">
+                  <div style="display:flex;flex-wrap:wrap;gap:5px;justify-content:flex-end;">
+                    <span style="background:var(--adm-teal-lt);color:var(--adm-teal);border-radius:20px;padding:2px 9px;font-size:11px;font-weight:700;">Tue AM</span>
+                    <span style="background:var(--adm-teal-lt);color:var(--adm-teal);border-radius:20px;padding:2px 9px;font-size:11px;font-weight:700;">Wed AM</span>
+                    <span style="background:var(--adm-teal-lt);color:var(--adm-teal);border-radius:20px;padding:2px 9px;font-size:11px;font-weight:700;">Fri AM</span>
+                    <span style="background:var(--adm-teal-lt);color:var(--adm-teal);border-radius:20px;padding:2px 9px;font-size:11px;font-weight:700;">Mon PM</span>
+                    <span style="background:var(--adm-teal-lt);color:var(--adm-teal);border-radius:20px;padding:2px 9px;font-size:11px;font-weight:700;">Tue Eve</span>
+                  </div>
+                </span>
+              </div>
+            </div>
+
+            <!-- Agreement -->
+            <div style="background:var(--adm-bg);border:1px solid var(--adm-border);border-radius:var(--adm-r-md);padding:18px;margin-bottom:4px;">
+              <p style="font-size:12px;font-weight:800;color:var(--adm-txt-head);margin-bottom:12px;">Platform Agreement</p>
+
+              <label class="checklist-item">
+                <input type="checkbox" id="agree1">
+                <div class="checklist-check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+                <span class="checklist-text">I confirm this ambassador meets Luminwell's safeguarding requirements and has a valid DBS check</span>
+              </label>
+              <label class="checklist-item">
+                <input type="checkbox" id="agree2">
+                <div class="checklist-check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+                <span class="checklist-text">I confirm this ambassador has completed the required onboarding training and orientation</span>
+              </label>
+              <label class="checklist-item">
+                <input type="checkbox" id="agree3">
+                <div class="checklist-check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+                <span class="checklist-text">I confirm the ambassador has consented to their data being stored and used in line with our Privacy Policy and GDPR</span>
+              </label>
+            </div>
+
+            <div class="step-nav">
+              <label for="step-4" class="btn-step-back">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+                Back
+              </label>
+              <span class="step-counter">Step 5 of 5</span>
+              <a href="admin-ambassadors.html" class="btn-step-next" style="background:linear-gradient(135deg,#2d9676,#134a75);box-shadow:0 4px 16px rgba(45,150,118,.35);">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                Create Ambassador Account
+              </a>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /form-shell -->
+    </div><!-- /admin-content -->
+  </div><!-- /admin-main -->
+</div><!-- /admin-shell -->
+</body>
+</html>

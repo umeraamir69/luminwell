@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alex Okonkwo — User Profile · Luminwell Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="admin.css">
+<style>
+  .usr-hero {
+    background: linear-gradient(135deg, #134a75 0%, #175d92 55%, #2d9676 100%);
+    border-radius: var(--adm-r-lg);
+    padding: 28px 32px;
+    display: flex; align-items: flex-start; gap: 24px;
+    margin-bottom: 20px; color: #fff;
+    position: relative; overflow: hidden;
+  }
+  .usr-hero::before {
+    content:''; position:absolute; right:-40px; top:-40px;
+    width:220px; height:220px; border-radius:50%;
+    background:rgba(255,255,255,.05); pointer-events:none;
+  }
+  .usr-hero-ava {
+    width:80px; height:80px; border-radius:50%;
+    border:4px solid rgba(255,255,255,.35);
+    display:flex; align-items:center; justify-content:center;
+    font-size:28px; font-weight:800; flex-shrink:0;
+    background:linear-gradient(135deg,#1d6e55,#2d9676);
+  }
+  .usr-hero-info { flex:1; }
+  .usr-hero-name { font-size:24px; font-weight:800; letter-spacing:-.4px; margin-bottom:4px; }
+  .usr-hero-sub  { font-size:13px; opacity:.72; margin-bottom:12px; }
+  .usr-hero-tags { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:14px; }
+  .usr-hero-tag {
+    background:rgba(255,255,255,.18); border:1px solid rgba(255,255,255,.25);
+    border-radius:20px; padding:3px 12px; font-size:12px; font-weight:600;
+  }
+  .usr-hero-meta { display:flex; gap:20px; flex-wrap:wrap; }
+  .usr-hero-meta-item { font-size:12px; opacity:.7; display:flex; align-items:center; gap:5px; }
+  .usr-hero-actions { display:flex; flex-direction:column; gap:8px; align-items:flex-end; flex-shrink:0; }
+  .usr-status-pill {
+    background:rgba(255,255,255,.2); border:1px solid rgba(255,255,255,.3);
+    border-radius:20px; padding:4px 14px; font-size:12px; font-weight:700;
+    display:flex; align-items:center; gap:6px;
+  }
+  .usr-status-dot { width:7px; height:7px; border-radius:50%; background:#4ade80; }
+
+  .kpi-strip { display:grid; grid-template-columns:repeat(5,1fr); gap:12px; margin-bottom:20px; }
+  .kpi-card {
+    background:var(--adm-surface); border-radius:var(--adm-r-md);
+    border:1px solid var(--adm-border); padding:16px 18px;
+    box-shadow:var(--adm-shadow-sm); position:relative; overflow:hidden;
+  }
+  .kpi-card::before {
+    content:''; position:absolute; left:0; top:0; bottom:0;
+    width:3px; border-radius:0 2px 2px 0;
+  }
+  .kpi-card.teal::before  { background:var(--adm-blue); }
+  .kpi-card.green::before { background:var(--adm-green); }
+  .kpi-card.amber::before { background:var(--adm-amber); }
+  .kpi-card.blue::before  { background:#175d92; }
+  .kpi-label { font-size:10px; font-weight:800; letter-spacing:.5px; text-transform:uppercase; color:var(--adm-txt-muted); margin-bottom:8px; }
+  .kpi-val   { font-size:28px; font-weight:800; color:var(--adm-txt-head); letter-spacing:-.5px; line-height:1; }
+  .kpi-sub   { font-size:11px; color:var(--adm-txt-muted); margin-top:4px; }
+
+  .detail-grid { display:grid; grid-template-columns:1fr 340px; gap:20px; align-items:start; }
+
+  .info-row { display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--adm-border-lt); font-size:13px; }
+  .info-row:last-child { border-bottom:none; }
+  .info-label { color:var(--adm-txt-muted); font-weight:600; font-size:12px; }
+  .info-val   { color:var(--adm-txt-head); font-weight:700; text-align:right; }
+
+  .session-item { display:flex; align-items:center; gap:12px; padding:12px 0; border-bottom:1px solid var(--adm-border-lt); }
+  .session-item:last-child { border-bottom:none; }
+  .session-dot { width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .session-dot.green { background:var(--adm-green-lt); color:var(--adm-green); }
+  .session-dot.blue  { background:var(--adm-blue-lt);  color:var(--adm-blue); }
+  .session-dot.amber { background:rgba(245,158,11,.1);  color:var(--adm-amber); }
+  .session-info { flex:1; }
+  .session-title { font-size:13px; font-weight:700; color:var(--adm-txt-head); }
+  .session-sub   { font-size:11px; color:var(--adm-txt-muted); margin-top:2px; }
+
+  .journal-item { padding:12px 16px; background:var(--adm-bg); border-radius:10px; border-left:3px solid var(--adm-blue); margin-bottom:8px; }
+  .journal-item:last-child { margin-bottom:0; }
+  .journal-date { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; color:var(--adm-txt-muted); margin-bottom:4px; }
+  .journal-text { font-size:13px; color:var(--adm-txt-body); line-height:1.5; }
+  .journal-mood { display:inline-flex; align-items:center; gap:4px; margin-top:6px; font-size:11px; font-weight:700; color:var(--adm-blue); }
+
+  .act-item { display:flex; gap:10px; padding:8px 0; border-bottom:1px solid var(--adm-border-lt); font-size:12px; }
+  .act-item:last-child { border-bottom:none; }
+  .act-dot  { width:7px; height:7px; border-radius:50%; margin-top:5px; flex-shrink:0; }
+  .act-txt  { flex:1; color:var(--adm-txt-body); line-height:1.5; }
+  .act-time { color:var(--adm-txt-muted); white-space:nowrap; }
+
+  .admin-note-area {
+    width:100%; padding:10px 14px; border:1.5px solid var(--adm-border); border-radius:10px;
+    font-family:inherit; font-size:13px; color:var(--adm-txt-body); background:var(--adm-surface);
+    resize:vertical; min-height:80px; outline:none; transition:border-color .15s, box-shadow .15s; box-sizing:border-box;
+  }
+  .admin-note-area:focus { border-color:var(--adm-blue); box-shadow:0 0 0 3px rgba(45,150,118,.1); }
+</style>
+</head>
+<body>
+<input type="checkbox" id="sidebar-toggle" class="sidebar-toggle-check">
+<div class="admin-shell">
+
+  <!-- Sidebar -->
+  <aside class="admin-sidebar">
+    <div class="sidebar__logo">
+      <div class="logo-mark"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17 8C8 10 5.9 16.17 3.82 22A13.34 13.34 0 0 0 18 8Z"/><path d="M9 9c-1.5 3.5-2.5 7-3 10C8 18 11 15 13 12" fill="rgba(255,255,255,.35)"/></svg></div>
+      <div class="logo-text-wrap"><div class="logo-name">Luminwell</div><span class="logo-badge-pill">ADMIN</span></div>
+    </div>
+    <label for="sidebar-toggle" class="sidebar__collapse-btn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+    </label>
+    <nav class="sidebar__nav">
+      <div class="nav-section">
+        <p class="nav-label">MAIN</p>
+        <a href="admin-home.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span class="link-text">Overview</span></a>
+        <a href="admin-analytics.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg><span class="link-text">Analytics</span></a>
+      </div>
+      <div class="nav-section">
+        <p class="nav-label">PEOPLE</p>
+        <a href="admin-users.html" class="sidebar__link active"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span class="link-text">Users</span><span class="nav-badge nav-badge--slate">2,841</span></a>
+        <a href="admin-ambassadors.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><span class="link-text">Ambassadors</span><span class="nav-badge nav-badge--amber">3 new</span></a>
+        <a href="admin-matching.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg><span class="link-text">Matching</span></a>
+      </div>
+      <div class="nav-section">
+        <p class="nav-label">OPERATIONS</p>
+        <a href="admin-sessions.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><span class="link-text">Sessions</span></a>
+        <a href="admin-welfare.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span class="link-text">Welfare &amp; Safety</span><span class="nav-badge nav-badge--red">5</span></a>
+        <a href="admin-messages.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span class="link-text">Messages</span></a>
+      </div>
+      <div class="nav-section">
+        <p class="nav-label">PLATFORM</p>
+        <a href="admin-content.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span class="link-text">Content</span></a>
+        <a href="admin-settings.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06-.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span class="link-text">Settings</span></a>
+        <a href="admin-privacy.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><span class="link-text">Privacy &amp; GDPR</span></a>
+      </div>
+    </nav>
+    <div class="sidebar__foot">
+      <div class="sidebar__foot-user">
+        <div class="admin-ava-sm">T</div>
+        <div class="sidebar__foot-info"><p>Tenner</p><small>Super Admin</small></div>
+      </div>
+      <button class="sidebar__signout">Sign out</button>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <div class="admin-main">
+    <header class="admin-topbar">
+      <div class="topbar-left">
+        <label for="sidebar-toggle" class="topbar-menu-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </label>
+        <nav class="breadcrumb">
+          <a href="admin-home.html">Admin</a>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+          <a href="admin-users.html">Users</a>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+          <span class="bc-active">Alex Okonkwo</span>
+        </nav>
+      </div>
+      <div class="topbar-right">
+        <div class="notif-wrap">
+          <input type="checkbox" id="notif-toggle" class="notif-check">
+          <label for="notif-toggle" class="topbar-icon-btn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            <span class="notif-dot"></span>
+          </label>
+          <div class="notif-drop">
+            <div class="notif-drop-head"><h4>Notifications</h4><a href="#">Mark all read</a></div>
+            <div class="notif-item unread">
+              <div class="notif-ico red"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+              <div class="notif-body"><p><strong>Critical welfare flag</strong> — Alex T.</p><small>2 min ago</small></div>
+            </div>
+            <div class="notif-drop-foot"><a href="admin-welfare.html">View all alerts &rarr;</a></div>
+          </div>
+        </div>
+        <div class="topbar-user">
+          <div class="topbar-ava">T</div>
+          <div class="topbar-user-info"><div class="u-name">Tenner</div><div class="u-role">Super Admin</div></div>
+        </div>
+      </div>
+    </header>
+
+    <div class="admin-content">
+
+      <!-- Hero banner -->
+      <div class="usr-hero">
+        <div class="usr-hero-ava">AO</div>
+        <div class="usr-hero-info">
+          <div class="usr-hero-name">Alex Okonkwo</div>
+          <div class="usr-hero-sub">alex.o@manchester.ac.uk &nbsp;&middot;&nbsp; Joined 14 Sep 2023</div>
+          <div class="usr-hero-tags">
+            <span class="usr-hero-tag">Student</span>
+            <span class="usr-hero-tag">Psychology &middot; Year 2</span>
+            <span class="usr-hero-tag">University of Manchester</span>
+          </div>
+          <div class="usr-hero-meta">
+            <span class="usr-hero-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Last active: Today, 11:32 am</span>
+            <span class="usr-hero-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg> Ambassador: Maya Johnson</span>
+            <span class="usr-hero-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Manchester, UK</span>
+          </div>
+        </div>
+        <div class="usr-hero-actions">
+          <div class="usr-status-pill"><span class="usr-status-dot"></span> Active</div>
+          <a href="admin-welfare.html" class="btn btn-white btn-sm" style="font-size:12px;text-decoration:none;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Welfare log
+          </a>
+          <a href="admin-messages.html" class="btn btn-white btn-sm" style="font-size:12px;text-decoration:none;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Message
+          </a>
+        </div>
+      </div>
+
+      <!-- KPI strip -->
+      <div class="kpi-strip">
+        <div class="kpi-card teal"><div class="kpi-label">Sessions</div><div class="kpi-val">12</div><div class="kpi-sub">+2 this month</div></div>
+        <div class="kpi-card green"><div class="kpi-label">Journal Entries</div><div class="kpi-val">28</div><div class="kpi-sub">Last: 2 days ago</div></div>
+        <div class="kpi-card amber"><div class="kpi-label">Goals Achieved</div><div class="kpi-val">4<span style="font-size:16px;font-weight:600;color:var(--adm-txt-muted);"> / 6</span></div><div class="kpi-sub">67% completion</div></div>
+        <div class="kpi-card blue"><div class="kpi-label">Avg. Rating</div><div class="kpi-val" style="color:var(--adm-amber);">4.7</div><div class="kpi-sub">Rated 10 sessions</div></div>
+        <div class="kpi-card green"><div class="kpi-label">Wellbeing Score</div><div class="kpi-val" style="color:var(--adm-green);">75%</div><div class="kpi-sub">Good &nbsp;&#9650; +8%</div></div>
+      </div>
+
+      <!-- Two-col layout -->
+      <div class="detail-grid">
+
+        <!-- LEFT -->
+        <div style="display:flex;flex-direction:column;gap:20px;">
+
+          <!-- Session history -->
+          <div class="card">
+            <div class="card-head">
+              <div class="card-title">Session History</div>
+              <a href="admin-sessions.html" class="btn btn-ghost btn-sm">All sessions &rarr;</a>
+            </div>
+            <div class="card-body">
+              <div style="margin-bottom:16px;">
+                <div style="font-size:11px;font-weight:700;color:var(--adm-txt-muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Sessions per month</div>
+                <div style="display:flex;align-items:flex-end;gap:5px;height:60px;">
+                  <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;height:100%;"><div style="border-radius:3px 3px 0 0;background:linear-gradient(180deg,#34d399,#059669);height:40%;"></div></div>
+                  <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;height:100%;"><div style="border-radius:3px 3px 0 0;background:linear-gradient(180deg,#4db896,#2d9676);height:55%;"></div></div>
+                  <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;height:100%;"><div style="border-radius:3px 3px 0 0;background:linear-gradient(180deg,#fbbf24,#d97706);height:45%;"></div></div>
+                  <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;height:100%;"><div style="border-radius:3px 3px 0 0;background:linear-gradient(180deg,#34d399,#059669);height:70%;"></div></div>
+                  <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;height:100%;"><div style="border-radius:3px 3px 0 0;background:linear-gradient(180deg,#4db896,#2d9676);height:60%;"></div></div>
+                  <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;height:100%;"><div style="border-radius:3px 3px 0 0;background:linear-gradient(180deg,#fbbf24,#d97706);height:85%;"></div></div>
+                  <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;height:100%;"><div style="border-radius:3px 3px 0 0;background:linear-gradient(180deg,#60a5fa,#175d92);height:100%;"></div></div>
+                </div>
+                <div style="display:flex;gap:5px;margin-top:4px;">
+                  <span style="flex:1;text-align:center;font-size:9px;color:var(--adm-txt-muted);">Sep</span>
+                  <span style="flex:1;text-align:center;font-size:9px;color:var(--adm-txt-muted);">Oct</span>
+                  <span style="flex:1;text-align:center;font-size:9px;color:var(--adm-txt-muted);">Nov</span>
+                  <span style="flex:1;text-align:center;font-size:9px;color:var(--adm-txt-muted);">Dec</span>
+                  <span style="flex:1;text-align:center;font-size:9px;color:var(--adm-txt-muted);">Jan</span>
+                  <span style="flex:1;text-align:center;font-size:9px;color:var(--adm-txt-muted);">Feb</span>
+                  <span style="flex:1;text-align:center;font-size:9px;color:var(--adm-txt-muted);">Mar</span>
+                </div>
+              </div>
+              <div class="session-item">
+                <div class="session-dot green"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div>
+                <div class="session-info"><div class="session-title">Session 12 &mdash; Stress management &amp; revision planning</div><div class="session-sub">25 Mar 2025 &middot; 50 min &middot; Video call</div></div>
+                <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;"><span style="font-size:12px;color:var(--adm-amber);font-weight:700;">&#9733; 5.0</span><a href="admin-session-detail.html" class="row-link">View &rarr;</a></div>
+              </div>
+              <div class="session-item">
+                <div class="session-dot green"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div>
+                <div class="session-info"><div class="session-title">Session 11 &mdash; Goal review &amp; anxiety coping</div><div class="session-sub">18 Mar 2025 &middot; 45 min &middot; Video call</div></div>
+                <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;"><span style="font-size:12px;color:var(--adm-amber);font-weight:700;">&#9733; 4.8</span><a href="admin-session-detail.html" class="row-link">View &rarr;</a></div>
+              </div>
+              <div class="session-item">
+                <div class="session-dot amber"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+                <div class="session-info"><div class="session-title">Session 10 &mdash; Missed / No-show</div><div class="session-sub">11 Mar 2025 &middot; Rescheduled to 18 Mar</div></div>
+                <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;"><span class="badge badge-amber" style="font-size:10px;">Missed</span><a href="admin-session-detail.html" class="row-link">View &rarr;</a></div>
+              </div>
+              <div class="session-item">
+                <div class="session-dot green"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div>
+                <div class="session-info"><div class="session-title">Session 9 &mdash; Academic stress deep-dive</div><div class="session-sub">4 Mar 2025 &middot; 55 min &middot; Video call</div></div>
+                <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;"><span style="font-size:12px;color:var(--adm-amber);font-weight:700;">&#9733; 4.5</span><a href="admin-session-detail.html" class="row-link">View &rarr;</a></div>
+              </div>
+              <div class="session-item">
+                <div class="session-dot blue"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+                <div class="session-info"><div class="session-title">Session 13 &mdash; Upcoming</div><div class="session-sub">1 Apr 2025 &middot; 50 min &middot; Video call</div></div>
+                <span class="badge badge-blue" style="font-size:10px;">Upcoming</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Wellbeing trend -->
+          <div class="card">
+            <div class="card-head"><div class="card-title">Wellbeing &amp; Mood Trend</div><span class="badge badge-green" style="font-size:11px;">Improving</span></div>
+            <div class="card-body">
+              <div style="font-size:11px;font-weight:700;color:var(--adm-txt-muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Last 14 check-ins</div>
+              <div style="display:flex;align-items:flex-end;gap:4px;height:80px;margin-bottom:6px;">
+                <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;height:100%;"><div style="border-radius:3px 3px 0 0;background:linear-gradient(180deg,#fbbf24,#d97706);height:40%;"></div></div>
+                <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;height:100%;"><div style="border-radius:3px 3px 0 0;background:linear-gradient(180deg,#fbbf24,#d97706);height:45%;"></div></div>
+                <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;height:100%;"><div style="border-radius:3px 3px 0 0;background:linear-gradient(180deg,#4db896,#2d9676);height:55%;"></div></div>
+                <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;height:100%;"><div style="border-radius:3px 3px 0 0;background:linear-gradient(180deg,#4db896,#2d9676);height:50%;"></div></div>
+                <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;height:100%;"><div style="border-radius:3px 3px 0 0;background:linear-gradient(180deg,#4db896,#2d9676);height:60%;"></div></div>
+                <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;height:100%;"><div style="border-radius:3px 3px 0 0;background:linear-gradient(180deg,#34d399,#059669);height:70%;"></div></div>
+                <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;height:100%;"><div style="border-radius:3px 3px 0 0;background:linear-gradient(180deg,#fbbf24,#d97706);height:55%;"></div></div>
+                <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;height:100%;"><div style="border-radius:3px 3px 0 0;background:linear-gradient(180deg,#34d399,#059669);height:75%;"></div></div>
+                <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;height:100%;"><div style="border-radius:3px 3px 0 0;background:linear-gradient(180deg,#34d399,#059669);height:80%;"></div></div>
+                <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;height:100%;"><div style="border-radius:3px 3px 0 0;background:linear-gradient(180deg,#34d399,#059669);height:78%;"></div></div>
+                <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;height:100%;"><div style="border-radius:3px 3px 0 0;background:linear-gradient(180deg,#4db896,#2d9676);height:85%;"></div></div>
+                <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;height:100%;"><div style="border-radius:3px 3px 0 0;background:linear-gradient(180deg,#34d399,#059669);height:90%;"></div></div>
+                <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;height:100%;"><div style="border-radius:3px 3px 0 0;background:linear-gradient(180deg,#34d399,#059669);height:88%;"></div></div>
+                <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;height:100%;"><div style="border-radius:3px 3px 0 0;background:linear-gradient(180deg,#34d399,#059669);height:95%;"></div></div>
+              </div>
+              <div style="font-size:11px;color:var(--adm-txt-muted);margin-bottom:16px;">Mood has been consistently improving over the past 7 days.</div>
+              <div style="display:flex;gap:20px;flex-wrap:wrap;">
+                <div style="flex:1;min-width:120px;">
+                  <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--adm-txt-muted);margin-bottom:6px;">Top focus areas</div>
+                  <div style="display:flex;flex-direction:column;gap:6px;">
+                    <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;"><span style="font-size:12px;color:var(--adm-txt-body);white-space:nowrap;">Academic stress</span><div style="width:80px;height:5px;background:var(--adm-border);border-radius:3px;overflow:hidden;flex-shrink:0;"><div style="height:100%;width:75%;background:var(--adm-blue);border-radius:3px;"></div></div></div>
+                    <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;"><span style="font-size:12px;color:var(--adm-txt-body);">Anxiety</span><div style="width:80px;height:5px;background:var(--adm-border);border-radius:3px;overflow:hidden;flex-shrink:0;"><div style="height:100%;width:60%;background:var(--adm-amber);border-radius:3px;"></div></div></div>
+                    <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;"><span style="font-size:12px;color:var(--adm-txt-body);">Sleep</span><div style="width:80px;height:5px;background:var(--adm-border);border-radius:3px;overflow:hidden;flex-shrink:0;"><div style="height:100%;width:40%;background:var(--adm-green);border-radius:3px;"></div></div></div>
+                  </div>
+                </div>
+                <div style="flex:1;min-width:120px;">
+                  <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--adm-txt-muted);margin-bottom:6px;">Goal progress</div>
+                  <div style="font-size:22px;font-weight:800;color:var(--adm-txt-head);">4 <span style="font-size:13px;color:var(--adm-txt-muted);font-weight:600;">of 6 achieved</span></div>
+                  <div style="height:6px;background:var(--adm-border);border-radius:3px;overflow:hidden;margin-top:6px;"><div style="height:100%;width:67%;background:linear-gradient(90deg,#2d9676,#34d399);border-radius:3px;"></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Journal entries -->
+          <div class="card">
+            <div class="card-head"><div class="card-title">Recent Journal Entries</div><span style="font-size:12px;color:var(--adm-txt-muted);">28 total entries</span></div>
+            <div class="card-body">
+              <div class="journal-item">
+                <div class="journal-date">27 Mar 2025</div>
+                <div class="journal-text">"Feeling much better about my upcoming exams. Maya's breathing technique actually helped during my study session today. Still anxious but more manageable."</div>
+                <div class="journal-mood"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg> Good mood &middot; Academic stress, Anxiety</div>
+              </div>
+              <div class="journal-item" style="border-left-color:var(--adm-amber);">
+                <div class="journal-date">24 Mar 2025</div>
+                <div class="journal-text">"Had a rough night again, couldn't sleep properly. Worried about the group project deadline. Need to talk to Maya about this at our next session."</div>
+                <div class="journal-mood" style="color:var(--adm-amber);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="8" y1="15" x2="16" y2="15"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg> Okay mood &middot; Sleep, Academic stress</div>
+              </div>
+              <div class="journal-item" style="border-left-color:var(--adm-green);">
+                <div class="journal-date">20 Mar 2025</div>
+                <div class="journal-text">"Great session with Maya today. We set 2 new goals for next month. The journalling habit is really helping me process things better."</div>
+                <div class="journal-mood" style="color:var(--adm-green);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 13s1.5 3 4 3 4-3 4-3"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg> Great mood &middot; Goals, Motivation</div>
+              </div>
+            </div>
+          </div>
+        </div><!-- /left -->
+
+        <!-- RIGHT -->
+        <div style="display:flex;flex-direction:column;gap:16px;">
+          <!-- Profile -->
+          <div class="card">
+            <div class="card-head"><div class="card-title">Profile Details</div></div>
+            <div class="card-body" style="padding-top:8px;">
+              <div class="info-row"><span class="info-label">Full name</span><span class="info-val">Alex Okonkwo</span></div>
+              <div class="info-row"><span class="info-label">Email</span><span class="info-val" style="font-size:12px;">alex.o@manchester.ac.uk</span></div>
+              <div class="info-row"><span class="info-label">Phone</span><span class="info-val">+44 7890 123456</span></div>
+              <div class="info-row"><span class="info-label">Date of birth</span><span class="info-val">12 Apr 2003 (age 21)</span></div>
+              <div class="info-row"><span class="info-label">Gender</span><span class="info-val">Male</span></div>
+              <div class="info-row"><span class="info-label">University</span><span class="info-val">Univ. of Manchester</span></div>
+              <div class="info-row"><span class="info-label">Course</span><span class="info-val">Psychology</span></div>
+              <div class="info-row"><span class="info-label">Year</span><span class="info-val">Year 2</span></div>
+              <div class="info-row"><span class="info-label">Student ID</span><span class="info-val" style="font-size:12px;font-family:monospace;">MAN-2023-78341</span></div>
+              <div class="info-row"><span class="info-label">Joined</span><span class="info-val">14 Sep 2023</span></div>
+              <div class="info-row"><span class="info-label">Status</span><span class="info-val"><span class="badge badge-green">Active</span></span></div>
+            </div>
+          </div>
+          <!-- Ambassador -->
+          <div class="card">
+            <div class="card-head"><div class="card-title">Assigned Ambassador</div><a href="admin-amb-detail.html" class="btn btn-ghost btn-sm">View &rarr;</a></div>
+            <div class="card-body">
+              <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+                <div class="user-ava green" style="width:44px;height:44px;font-size:15px;flex-shrink:0;">MJ</div>
+                <div><div style="font-size:14px;font-weight:700;color:var(--adm-txt-head);">Maya Johnson</div><div style="font-size:12px;color:var(--adm-txt-muted);">Peer support specialist</div></div>
+              </div>
+              <div class="info-row" style="padding:6px 0;"><span class="info-label">Matched since</span><span class="info-val">14 Sep 2023</span></div>
+              <div class="info-row" style="padding:6px 0;"><span class="info-label">Sessions together</span><span class="info-val">12</span></div>
+              <div class="info-row" style="padding:6px 0;"><span class="info-label">Avg. rating</span><span class="info-val" style="color:var(--adm-amber);">&#9733; 4.8</span></div>
+              <div class="info-row" style="padding:6px 0;border-bottom:none;"><span class="info-label">Specialisms</span><span class="info-val" style="font-size:11px;">Academic stress, Anxiety, CBT</span></div>
+            </div>
+          </div>
+          <!-- Welfare -->
+          <div class="card">
+            <div class="card-head"><div class="card-title">Welfare Flags</div><span class="badge badge-green" style="font-size:11px;">0 active</span></div>
+            <div class="card-body">
+              <div style="text-align:center;padding:14px 0;color:var(--adm-txt-muted);font-size:13px;">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="display:block;margin:0 auto 8px;opacity:.35;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                No active welfare concerns
+              </div>
+              <div class="info-row" style="padding:6px 0;"><span class="info-label">Historic flags</span><span class="info-val">0</span></div>
+              <div class="info-row" style="padding:6px 0;border-bottom:none;"><span class="info-label">Last reviewed</span><span class="info-val" style="color:var(--adm-txt-muted);">N/A</span></div>
+            </div>
+          </div>
+          <!-- Admin actions -->
+          <div class="card">
+            <div class="card-head"><div class="card-title">Admin Actions</div></div>
+            <div class="card-body" style="display:flex;flex-direction:column;gap:8px;">
+              <button class="btn btn-secondary btn-sm" style="justify-content:flex-start;gap:8px;width:100%;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>Reassign ambassador</button>
+              <button class="btn btn-secondary btn-sm" style="justify-content:flex-start;gap:8px;width:100%;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Reset password</button>
+              <button class="btn btn-secondary btn-sm" style="justify-content:flex-start;gap:8px;width:100%;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Raise welfare flag</button>
+              <button class="btn btn-secondary btn-sm" style="justify-content:flex-start;gap:8px;width:100%;color:var(--adm-amber);border-color:rgba(245,158,11,.3);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>Suspend account</button>
+              <button class="btn btn-secondary btn-sm" style="justify-content:flex-start;gap:8px;width:100%;color:var(--adm-red);border-color:rgba(239,68,68,.25);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>Delete account</button>
+            </div>
+          </div>
+          <!-- Activity log -->
+          <div class="card">
+            <div class="card-head"><div class="card-title">Activity Log</div></div>
+            <div class="card-body" style="padding-top:8px;">
+              <div class="act-item"><div class="act-dot" style="background:var(--adm-green);"></div><div class="act-txt">Completed session 12 with Maya Johnson</div><div class="act-time">Today</div></div>
+              <div class="act-item"><div class="act-dot" style="background:var(--adm-blue);"></div><div class="act-txt">Added journal entry</div><div class="act-time">2 days ago</div></div>
+              <div class="act-item"><div class="act-dot" style="background:var(--adm-blue);"></div><div class="act-txt">Completed daily mood check-in</div><div class="act-time">2 days ago</div></div>
+              <div class="act-item"><div class="act-dot" style="background:var(--adm-amber);"></div><div class="act-txt">Missed session 10 &mdash; rescheduled</div><div class="act-time">18 Mar</div></div>
+              <div class="act-item"><div class="act-dot" style="background:var(--adm-green);"></div><div class="act-txt">Goal achieved: "Write in journal 3x/week"</div><div class="act-time">15 Mar</div></div>
+              <div class="act-item"><div class="act-dot" style="background:var(--adm-blue);"></div><div class="act-txt">Account created &amp; matched to Maya Johnson</div><div class="act-time">14 Sep 23</div></div>
+            </div>
+          </div>
+          <!-- Admin notes -->
+          <div class="card">
+            <div class="card-head"><div class="card-title">Admin Notes</div></div>
+            <div class="card-body">
+              <textarea class="admin-note-area" placeholder="Add a private admin note...">User is progressing well. Ambassador match is strong. Monitor exam period (May–Jun) for potential stress spikes.</textarea>
+              <div style="display:flex;justify-content:flex-end;margin-top:8px;"><button class="btn btn-primary btn-sm">Save note</button></div>
+            </div>
+          </div>
+        </div><!-- /right -->
+      </div>
+
+    </div>
+  </div>
+</div>
+</body>
+</html>

@@ -285,6 +285,14 @@
 
   /* ── Divider ── */
   .fp-divider { height: 1px; background: var(--border-lt); margin: 2px 0; }
+
+  @media (max-width: 440px) {
+    html { padding: 16px 12px 24px; align-items: stretch; }
+    .filter-popup { width: 100%; max-width: none; }
+    .date-grid, .sort-grid { grid-template-columns: 1fr; }
+    .fp-foot { flex-wrap: wrap; }
+    .fp-foot .btn-apply { flex: 1 1 100%; justify-content: center; }
+  }
 </style>
 </head>
 <body>

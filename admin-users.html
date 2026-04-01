@@ -70,6 +70,86 @@
 
   /* Filter bar layout override */
   .filter-bar { gap: 8px; }
+
+  /* Hero CTAs — stack full-width on small screens without flex-stretch issues */
+  .users-hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+  }
+  @media (max-width: 640px) {
+    .users-hero-actions {
+      flex-direction: column;
+      align-items: stretch;
+      width: 100%;
+    }
+    .users-hero-actions .btn {
+      flex: 0 0 auto;
+      width: 100%;
+      justify-content: center;
+    }
+  }
+
+  /* Tab summary row (students / clients / pros) */
+  .filter-bar--summary {
+    border-top: 1px solid var(--adm-border);
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px 12px;
+  }
+  .filter-bar__summary-lead {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--adm-txt-head);
+    min-width: 0;
+  }
+  .filter-bar__summary-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+    justify-content: flex-end;
+    margin-left: auto;
+  }
+  @media (max-width: 520px) {
+    .filter-bar--summary {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .filter-bar__summary-badges {
+      margin-left: 0;
+      justify-content: flex-start;
+    }
+  }
+
+  /* Main toolbar: Filters button full width when selects stack */
+  @media (max-width: 480px) {
+    .users-main-toolbar > a.btn {
+      flex: 1 1 100%;
+      justify-content: center;
+    }
+  }
+
+  /* Tables: allow user cells & risk bars to shrink inside horizontal scroll */
+  .data-table .user-cell { min-width: 0; }
+  .data-table .user-sub {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+  .data-table .risk-bar { min-width: 0; flex-shrink: 1; }
+
+  /* Long pagination row — scroll instead of clipping */
+  @media (max-width: 400px) {
+    .pagination-btns {
+      max-width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      flex-wrap: nowrap;
+      padding-bottom: 6px;
+      justify-content: flex-start;
+    }
+  }
 </style>
 </head>
 <body>
@@ -159,9 +239,9 @@
     </nav>
     <div class="sidebar__foot">
       <div class="sidebar__foot-user">
-        <div class="admin-ava-sm">A</div>
+        <div class="admin-ava-sm">T</div>
         <div class="sidebar__foot-info">
-          <p>Admin User</p>
+          <p>Tenner</p>
           <small>Super Admin</small>
         </div>
       </div>
@@ -204,8 +284,8 @@
           </div>
         </div>
         <div class="topbar-user">
-          <div class="topbar-ava">A</div>
-          <div class="topbar-user-info"><div class="u-name">Admin</div><div class="u-role">Super Admin</div></div>
+          <div class="topbar-ava">T</div>
+          <div class="topbar-user-info"><div class="u-name">Tenner</div><div class="u-role">Super Admin</div></div>
         </div>
       </div>
     </header>
@@ -219,7 +299,7 @@
           <h1>Users</h1>
           <p>All registered platform users — students, clients &amp; professionals</p>
         </div>
-        <div class="page-hero-actions"><a href="#" class="btn btn-white"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Export CSV</a><button class="btn btn-primary" style="background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);">+ Add user</button></div>
+        <div class="page-hero-actions users-hero-actions"><a href="#" class="btn btn-white"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Export CSV</a><button class="btn btn-primary" style="background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);">+ Add user</button></div>
       </div>
 
       <div class="page-header" style="display:none">
@@ -240,7 +320,7 @@
       </div>
 
       <!-- Summary strip -->
-      <div class="stats-row" style="grid-template-columns:repeat(4,1fr);margin-bottom:20px;">
+      <div class="stats-row stats-row--mb-20">
         <div class="stat-card blue">
           <div class="stat-top"><span class="stat-label">All Users</span><div class="stat-icon blue"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div></div>
           <div class="stat-value">2,841</div>
@@ -275,8 +355,8 @@
         </div>
 
         <!-- Filter bar -->
-        <div class="filter-bar">
-          <div class="search-wrap" style="flex:1;min-width:180px;">
+        <div class="filter-bar users-main-toolbar">
+          <div class="search-wrap">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
             <input class="search-inp" type="text" placeholder="Search by name, email, university…">
           </div>
@@ -363,7 +443,7 @@
                     </td>
                     <td style="font-size:12px;color:var(--adm-txt-muted);">Today</td>
                     <td><span class="badge badge-green">Active</span></td>
-                    <td><a href="#" class="row-link">View</a></td>
+                    <td><a href="admin-user-detail.html" class="row-link">View</a></td>
                   </tr>
                   <tr>
                     <td>
@@ -384,7 +464,7 @@
                     </td>
                     <td style="font-size:12px;color:var(--adm-txt-muted);">3 days ago</td>
                     <td><span class="badge badge-amber">Flagged</span></td>
-                    <td><a href="#" class="row-link">View</a></td>
+                    <td><a href="admin-user-detail.html" class="row-link">View</a></td>
                   </tr>
                   <tr>
                     <td>
@@ -405,7 +485,7 @@
                     </td>
                     <td style="font-size:12px;color:var(--adm-txt-muted);">Yesterday</td>
                     <td><span class="badge badge-green">Active</span></td>
-                    <td><a href="#" class="row-link">View</a></td>
+                    <td><a href="admin-user-detail.html" class="row-link">View</a></td>
                   </tr>
                   <tr>
                     <td>
@@ -426,7 +506,7 @@
                     </td>
                     <td style="font-size:12px;color:var(--adm-txt-muted);">Today</td>
                     <td><span class="badge badge-green">Active</span></td>
-                    <td><a href="#" class="row-link">View</a></td>
+                    <td><a href="admin-user-detail.html" class="row-link">View</a></td>
                   </tr>
                   <tr>
                     <td>
@@ -489,7 +569,7 @@
                     </td>
                     <td style="font-size:12px;color:var(--adm-txt-muted);">Today</td>
                     <td><span class="badge badge-green">Active</span></td>
-                    <td><a href="#" class="row-link">View</a></td>
+                    <td><a href="admin-user-detail.html" class="row-link">View</a></td>
                   </tr>
                   <tr>
                     <td>
@@ -510,7 +590,7 @@
                     </td>
                     <td style="font-size:12px;color:var(--adm-txt-muted);">Today</td>
                     <td><span class="badge badge-green">Active</span></td>
-                    <td><a href="#" class="row-link">View</a></td>
+                    <td><a href="admin-user-detail.html" class="row-link">View</a></td>
                   </tr>
                   <tr>
                     <td>
@@ -531,7 +611,7 @@
                     </td>
                     <td style="font-size:12px;color:var(--adm-txt-muted);">4 days ago</td>
                     <td><span class="badge badge-amber">Inactive</span></td>
-                    <td><a href="#" class="row-link">View</a></td>
+                    <td><a href="admin-user-detail.html" class="row-link">View</a></td>
                   </tr>
                   <tr>
                     <td>
@@ -552,7 +632,7 @@
                     </td>
                     <td style="font-size:12px;color:var(--adm-txt-muted);">Yesterday</td>
                     <td><span class="badge badge-green">Active</span></td>
-                    <td><a href="#" class="row-link">View</a></td>
+                    <td><a href="admin-user-detail.html" class="row-link">View</a></td>
                   </tr>
                   <tr>
                     <td>
@@ -573,7 +653,7 @@
                     </td>
                     <td style="font-size:12px;color:var(--adm-txt-muted);">2 days ago</td>
                     <td><span class="badge badge-green">Active</span></td>
-                    <td><a href="#" class="row-link">View</a></td>
+                    <td><a href="admin-user-detail.html" class="row-link">View</a></td>
                   </tr>
                   <tr>
                     <td>
@@ -615,7 +695,7 @@
                     </td>
                     <td style="font-size:12px;color:var(--adm-txt-muted);">Today</td>
                     <td><span class="badge badge-green">Active</span></td>
-                    <td><a href="#" class="row-link">View</a></td>
+                    <td><a href="admin-user-detail.html" class="row-link">View</a></td>
                   </tr>
                   <tr>
                     <td>
@@ -636,7 +716,7 @@
                     </td>
                     <td style="font-size:12px;color:var(--adm-txt-muted);">3 days ago</td>
                     <td><span class="badge badge-green">Active</span></td>
-                    <td><a href="#" class="row-link">View</a></td>
+                    <td><a href="admin-user-detail.html" class="row-link">View</a></td>
                   </tr>
                 </tbody>
               </table>
@@ -659,11 +739,13 @@
 
           <!-- STUDENTS panel -->
           <div id="panel-students" class="tab-panel">
-            <div class="filter-bar" style="border-top:1px solid var(--adm-border);padding:12px 20px;">
-              <span style="font-size:13px;font-weight:600;color:var(--adm-txt-head);">1,984 students registered</span>
-              <span class="badge badge-green" style="margin-left:auto;">1,812 active</span>
-              <span class="badge badge-amber">108 inactive</span>
-              <span class="badge badge-red">64 flagged</span>
+            <div class="filter-bar filter-bar--summary">
+              <span class="filter-bar__summary-lead">1,984 students registered</span>
+              <div class="filter-bar__summary-badges">
+                <span class="badge badge-green">1,812 active</span>
+                <span class="badge badge-amber">108 inactive</span>
+                <span class="badge badge-red">64 flagged</span>
+              </div>
             </div>
             <div class="data-table-wrap">
               <table class="data-table">
@@ -690,7 +772,7 @@
                     <td style="font-size:12px;font-weight:600;color:var(--adm-txt-head);">28</td>
                     <td><div class="risk-bar"><div class="risk-bar-track"><div class="risk-bar-fill" style="width:75%;background:var(--adm-green);"></div></div><span style="font-size:11px;color:var(--adm-green);font-weight:700;">Good</span></div></td>
                     <td><span class="badge badge-green">Active</span></td>
-                    <td><a href="#" class="row-link">View</a></td>
+                    <td><a href="admin-user-detail.html" class="row-link">View</a></td>
                   </tr>
                   <tr>
                     <td><div class="user-cell"><div class="user-ava teal">SR</div><div><div class="user-name">Sam Rivera</div><div class="user-sub">s.rivera@kcl.ac.uk</div></div></div></td>
@@ -701,7 +783,7 @@
                     <td style="font-size:12px;font-weight:600;color:var(--adm-txt-head);">14</td>
                     <td><div class="risk-bar"><div class="risk-bar-track"><div class="risk-bar-fill" style="width:60%;background:var(--adm-blue);"></div></div><span style="font-size:11px;color:var(--adm-blue);font-weight:700;">Steady</span></div></td>
                     <td><span class="badge badge-green">Active</span></td>
-                    <td><a href="#" class="row-link">View</a></td>
+                    <td><a href="admin-user-detail.html" class="row-link">View</a></td>
                   </tr>
                   <tr>
                     <td><div class="user-cell"><div class="user-ava red">AT</div><div><div class="user-name">Alex Turner</div><div class="user-sub">a.turner@manchester.ac.uk</div></div></div></td>
@@ -723,7 +805,7 @@
                     <td style="font-size:12px;font-weight:600;color:var(--adm-txt-head);">41</td>
                     <td><div class="risk-bar"><div class="risk-bar-track"><div class="risk-bar-fill" style="width:90%;background:var(--adm-green);"></div></div><span style="font-size:11px;color:var(--adm-green);font-weight:700;">Great</span></div></td>
                     <td><span class="badge badge-green">Active</span></td>
-                    <td><a href="#" class="row-link">View</a></td>
+                    <td><a href="admin-user-detail.html" class="row-link">View</a></td>
                   </tr>
                   <tr>
                     <td><div class="user-cell"><div class="user-ava teal">FC</div><div><div class="user-name">Fatima Choudhry</div><div class="user-sub">f.choudhry@kcl.ac.uk</div></div></div></td>
@@ -734,7 +816,7 @@
                     <td style="font-size:12px;font-weight:600;color:var(--adm-txt-head);">18</td>
                     <td><div class="risk-bar"><div class="risk-bar-track"><div class="risk-bar-fill" style="width:65%;background:var(--adm-blue);"></div></div><span style="font-size:11px;color:var(--adm-blue);font-weight:700;">Steady</span></div></td>
                     <td><span class="badge badge-green">Active</span></td>
-                    <td><a href="#" class="row-link">View</a></td>
+                    <td><a href="admin-user-detail.html" class="row-link">View</a></td>
                   </tr>
                   <tr>
                     <td><div class="user-cell"><div class="user-ava amber">ZH</div><div><div class="user-name">Zara Hassan</div><div class="user-sub">z.hassan@ucl.ac.uk</div></div></div></td>
@@ -745,7 +827,7 @@
                     <td style="font-size:12px;font-weight:600;color:var(--adm-txt-head);">32</td>
                     <td><div class="risk-bar"><div class="risk-bar-track"><div class="risk-bar-fill" style="width:80%;background:var(--adm-green);"></div></div><span style="font-size:11px;color:var(--adm-green);font-weight:700;">Good</span></div></td>
                     <td><span class="badge badge-green">Active</span></td>
-                    <td><a href="#" class="row-link">View</a></td>
+                    <td><a href="admin-user-detail.html" class="row-link">View</a></td>
                   </tr>
                   <tr>
                     <td><div class="user-cell"><div class="user-ava green">TN</div><div><div class="user-name">Tobi Nwosu</div><div class="user-sub">t.nwosu@manchester.ac.uk</div></div></div></td>
@@ -756,7 +838,7 @@
                     <td style="font-size:12px;font-weight:600;color:var(--adm-txt-head);">22</td>
                     <td><div class="risk-bar"><div class="risk-bar-track"><div class="risk-bar-fill" style="width:82%;background:var(--adm-green);"></div></div><span style="font-size:11px;color:var(--adm-green);font-weight:700;">Good</span></div></td>
                     <td><span class="badge badge-green">Active</span></td>
-                    <td><a href="#" class="row-link">View</a></td>
+                    <td><a href="admin-user-detail.html" class="row-link">View</a></td>
                   </tr>
                   <tr>
                     <td><div class="user-cell"><div class="user-ava purple">IK</div><div><div class="user-name">Isla Kim</div><div class="user-sub">i.kim@edinburgh.ac.uk</div></div></div></td>
@@ -789,11 +871,13 @@
 
           <!-- CLIENTS panel -->
           <div id="panel-clients" class="tab-panel">
-            <div class="filter-bar" style="border-top:1px solid var(--adm-border);padding:12px 20px;">
-              <span style="font-size:13px;font-weight:600;color:var(--adm-txt-head);">647 clients registered</span>
-              <span class="badge badge-green" style="margin-left:auto;">580 active</span>
-              <span class="badge badge-amber">42 inactive</span>
-              <span class="badge badge-blue">25 pending match</span>
+            <div class="filter-bar filter-bar--summary">
+              <span class="filter-bar__summary-lead">647 clients registered</span>
+              <div class="filter-bar__summary-badges">
+                <span class="badge badge-green">580 active</span>
+                <span class="badge badge-amber">42 inactive</span>
+                <span class="badge badge-blue">25 pending match</span>
+              </div>
             </div>
             <div class="data-table-wrap">
               <table class="data-table">
@@ -820,7 +904,7 @@
                     <td><div class="risk-bar"><div class="risk-bar-track"><div class="risk-bar-fill" style="width:30%;background:var(--adm-amber);"></div></div><span style="font-size:11px;color:var(--adm-amber);font-weight:700;">Low</span></div></td>
                     <td style="font-size:12px;color:var(--adm-txt-muted);">3 days ago</td>
                     <td><span class="badge badge-amber">Flagged</span></td>
-                    <td><a href="#" class="row-link">View</a></td>
+                    <td><a href="admin-user-detail.html" class="row-link">View</a></td>
                   </tr>
                   <tr>
                     <td><div class="user-cell"><div class="user-ava blue">NK</div><div><div class="user-name">Natasha Kwei</div><div class="user-sub">n.kwei@ucl.ac.uk</div></div></div></td>
@@ -842,7 +926,7 @@
                     <td><div class="risk-bar"><div class="risk-bar-track"><div class="risk-bar-fill" style="width:45%;background:var(--adm-amber);"></div></div><span style="font-size:11px;color:var(--adm-amber);font-weight:700;">Low</span></div></td>
                     <td style="font-size:12px;color:var(--adm-txt-muted);">4 days ago</td>
                     <td><span class="badge badge-amber">Inactive</span></td>
-                    <td><a href="#" class="row-link">View</a></td>
+                    <td><a href="admin-user-detail.html" class="row-link">View</a></td>
                   </tr>
                   <tr>
                     <td><div class="user-cell"><div class="user-ava red">CM</div><div><div class="user-name">Chloe Marsh</div><div class="user-sub">c.marsh@leeds.ac.uk</div></div></div></td>
@@ -864,7 +948,7 @@
                     <td><div class="risk-bar"><div class="risk-bar-track"><div class="risk-bar-fill" style="width:55%;background:var(--adm-blue);"></div></div><span style="font-size:11px;color:var(--adm-blue);font-weight:700;">Okay</span></div></td>
                     <td style="font-size:12px;color:var(--adm-txt-muted);">3 days ago</td>
                     <td><span class="badge badge-green">Active</span></td>
-                    <td><a href="#" class="row-link">View</a></td>
+                    <td><a href="admin-user-detail.html" class="row-link">View</a></td>
                   </tr>
                 </tbody>
               </table>
@@ -885,10 +969,12 @@
 
           <!-- PROFESSIONALS panel -->
           <div id="panel-pros" class="tab-panel">
-            <div class="filter-bar" style="border-top:1px solid var(--adm-border);padding:12px 20px;">
-              <span style="font-size:13px;font-weight:600;color:var(--adm-txt-head);">210 professionals registered</span>
-              <span class="badge badge-green" style="margin-left:auto;">198 active</span>
-              <span class="badge badge-slate">12 inactive</span>
+            <div class="filter-bar filter-bar--summary">
+              <span class="filter-bar__summary-lead">210 professionals registered</span>
+              <div class="filter-bar__summary-badges">
+                <span class="badge badge-green">198 active</span>
+                <span class="badge badge-slate">12 inactive</span>
+              </div>
             </div>
             <div class="data-table-wrap">
               <table class="data-table">
@@ -915,7 +1001,7 @@
                     <td><div class="risk-bar"><div class="risk-bar-track"><div class="risk-bar-fill" style="width:85%;background:var(--adm-green);"></div></div><span style="font-size:11px;color:var(--adm-green);font-weight:700;">Good</span></div></td>
                     <td style="font-size:12px;color:var(--adm-txt-muted);">Today</td>
                     <td><span class="badge badge-green">Active</span></td>
-                    <td><a href="#" class="row-link">View</a></td>
+                    <td><a href="admin-user-detail.html" class="row-link">View</a></td>
                   </tr>
                   <tr>
                     <td><div class="user-cell"><div class="user-ava teal">MW</div><div><div class="user-name">Marcus Webb</div><div class="user-sub">m.webb@company.com</div></div></div></td>
@@ -926,7 +1012,7 @@
                     <td><div class="risk-bar"><div class="risk-bar-track"><div class="risk-bar-fill" style="width:70%;background:var(--adm-blue);"></div></div><span style="font-size:11px;color:var(--adm-blue);font-weight:700;">Steady</span></div></td>
                     <td style="font-size:12px;color:var(--adm-txt-muted);">Yesterday</td>
                     <td><span class="badge badge-green">Active</span></td>
-                    <td><a href="#" class="row-link">View</a></td>
+                    <td><a href="admin-user-detail.html" class="row-link">View</a></td>
                   </tr>
                   <tr>
                     <td><div class="user-cell"><div class="user-ava blue">RP</div><div><div class="user-name">Ravi Patel</div><div class="user-sub">r.patel@nhs.uk</div></div></div></td>
@@ -937,7 +1023,7 @@
                     <td><div class="risk-bar"><div class="risk-bar-track"><div class="risk-bar-fill" style="width:70%;background:var(--adm-blue);"></div></div><span style="font-size:11px;color:var(--adm-blue);font-weight:700;">Steady</span></div></td>
                     <td style="font-size:12px;color:var(--adm-txt-muted);">2 days ago</td>
                     <td><span class="badge badge-green">Active</span></td>
-                    <td><a href="#" class="row-link">View</a></td>
+                    <td><a href="admin-user-detail.html" class="row-link">View</a></td>
                   </tr>
                   <tr>
                     <td><div class="user-cell"><div class="user-ava green">AD</div><div><div class="user-name">Amelia Drake</div><div class="user-sub">a.drake@lawfirm.co.uk</div></div></div></td>
@@ -948,7 +1034,7 @@
                     <td><div class="risk-bar"><div class="risk-bar-track"><div class="risk-bar-fill" style="width:88%;background:var(--adm-green);"></div></div><span style="font-size:11px;color:var(--adm-green);font-weight:700;">Great</span></div></td>
                     <td style="font-size:12px;color:var(--adm-txt-muted);">Today</td>
                     <td><span class="badge badge-green">Active</span></td>
-                    <td><a href="#" class="row-link">View</a></td>
+                    <td><a href="admin-user-detail.html" class="row-link">View</a></td>
                   </tr>
                   <tr>
                     <td><div class="user-cell"><div class="user-ava amber">JC</div><div><div class="user-name">James Calloway</div><div class="user-sub">j.calloway@startup.io</div></div></div></td>
@@ -959,7 +1045,7 @@
                     <td><div class="risk-bar"><div class="risk-bar-track"><div class="risk-bar-fill" style="width:60%;background:var(--adm-blue);"></div></div><span style="font-size:11px;color:var(--adm-blue);font-weight:700;">Steady</span></div></td>
                     <td style="font-size:12px;color:var(--adm-txt-muted);">Yesterday</td>
                     <td><span class="badge badge-green">Active</span></td>
-                    <td><a href="#" class="row-link">View</a></td>
+                    <td><a href="admin-user-detail.html" class="row-link">View</a></td>
                   </tr>
                 </tbody>
               </table>

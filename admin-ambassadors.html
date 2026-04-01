@@ -13,6 +13,15 @@
   html:has(#amb-tab-pending:checked)  .amb-panels #amb-panel-pending  { display: block; }
   html:has(#amb-tab-inactive:checked) .amb-panels #amb-panel-inactive { display: block; }
 
+  /* ── Active tab label highlight ── */
+  html:has(#amb-tab-active:checked)   label[for="amb-tab-active"],
+  html:has(#amb-tab-pending:checked)  label[for="amb-tab-pending"],
+  html:has(#amb-tab-inactive:checked) label[for="amb-tab-inactive"] {
+    color: var(--adm-blue);
+    border-bottom-color: var(--adm-blue);
+    font-weight: 700;
+  }
+
   /* ── Row selection: highlight selected row ── */
   html:has(#as-1:checked)  tr[data-amb="1"],
   html:has(#as-2:checked)  tr[data-amb="2"],
@@ -212,7 +221,7 @@
       </div>
     </nav>
     <div class="sidebar__foot">
-      <div class="sidebar__foot-user"><div class="admin-ava-sm">A</div><div class="sidebar__foot-info"><p>Admin User</p><small>Super Admin</small></div></div>
+      <div class="sidebar__foot-user"><div class="admin-ava-sm">T</div><div class="sidebar__foot-info"><p>Tenner</p><small>Super Admin</small></div></div>
       <button class="sidebar__signout">Sign out</button>
     </div>
   </aside>
@@ -237,7 +246,7 @@
             <div class="notif-drop-foot"><a href="admin-welfare.html">View all alerts →</a></div>
           </div>
         </div>
-        <div class="topbar-user"><div class="topbar-ava">A</div><div class="topbar-user-info"><div class="u-name">Admin</div><div class="u-role">Super Admin</div></div></div>
+        <div class="topbar-user"><div class="topbar-ava">T</div><div class="topbar-user-info"><div class="u-name">Tenner</div><div class="u-role">Super Admin</div></div></div>
       </div>
     </header>
 
@@ -251,14 +260,14 @@
         </div>
         <div class="page-hero-actions">
           <a href="#" class="btn btn-white">Export CSV</a>
-          <a href="admin-amb-onboard.html" class="btn btn-primary" style="background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);color:#fff;text-decoration:none;">
+          <a href="admin-amb-add.html" class="btn btn-primary" style="background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);color:#fff;text-decoration:none;">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right:5px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add Ambassador
           </a>
         </div>
       </div>
 
       <!-- Stats -->
-      <div class="stats-row" style="grid-template-columns:repeat(4,1fr);margin-bottom:20px;">
+      <div class="stats-row stats-row--mb-20">
         <div class="stat-card green"><div class="stat-top"><span class="stat-label">Active</span><div class="stat-icon green"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div></div><div class="stat-value">47</div><span class="stat-delta delta-up">▲ +3 this month</span></div>
         <div class="stat-card amber"><div class="stat-top"><span class="stat-label">Pending Review</span><div class="stat-icon amber"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"/><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/></svg></div></div><div class="stat-value">3</div><span class="stat-delta delta-neu">Applied this week</span></div>
         <div class="stat-card blue"><div class="stat-top"><span class="stat-label">Avg Caseload</span><div class="stat-icon blue"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div></div><div class="stat-value">6.6</div><span class="stat-delta delta-neu">clients per amb.</span></div>
@@ -266,13 +275,15 @@
       </div>
 
       <!-- Pending approvals banner -->
-      <div class="alert alert-amber" style="margin-bottom:20px;">
+      <div class="alert alert-amber" style="margin-bottom:20px;align-items:center;">
         <span class="alert-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"/><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/></svg></span>
-        <div class="alert-body">
+        <div class="alert-body" style="flex:1;">
           <strong>3 ambassador applications awaiting approval</strong>
-          Applications are reviewed within 48 hours. Check the Pending tab to approve or decline.
         </div>
-        <label for="amb-tab-pending" class="btn btn-sm" style="background:var(--adm-amber);color:#fff;border:none;cursor:pointer;white-space:nowrap;">Review now →</label>
+        <label for="amb-tab-pending" class="btn btn-sm" style="background:var(--adm-amber);color:#fff;border:none;cursor:pointer;white-space:nowrap;margin-left:auto;">Review now →</label>
+        <button onclick="this.closest('.alert').remove()" style="background:none;border:none;cursor:pointer;color:#92400e;opacity:.6;padding:4px;margin-left:8px;display:flex;align-items:center;" title="Dismiss">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
       </div>
 
       <div class="card">
@@ -289,7 +300,6 @@
           </div>
           <select class="filter-sel"><option>All universities</option><option>Manchester</option><option>UCL</option><option>King's College</option><option>Leeds</option><option>Edinburgh</option><option>Birmingham</option></select>
           <select class="filter-sel"><option>Sort: Best rated</option><option>Sort: Most sessions</option><option>Sort: Lowest capacity</option><option>Sort: Newest</option></select>
-          <p style="font-size:12px;color:var(--adm-txt-muted);align-self:center;white-space:nowrap;">Click a row to view details</p>
         </div>
 
         <div class="amb-panels">
@@ -465,7 +475,7 @@
                     <button class="btn btn-danger btn-sm">Decline</button>
                   </div>
                 </div>
-                <div style="padding:16px 20px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;">
+                <div class="amb-stat-row">
                   <div><p style="font-size:11px;color:var(--adm-txt-muted);font-weight:700;margin-bottom:4px;">MOTIVATION</p><p style="font-size:13px;color:var(--adm-txt-body);">"I want to support others through the same challenges I faced in first year."</p></div>
                   <div><p style="font-size:11px;color:var(--adm-txt-muted);font-weight:700;margin-bottom:4px;">SPECIALISMS APPLIED</p><div style="display:flex;gap:4px;flex-wrap:wrap;"><span class="badge badge-blue">Anxiety</span><span class="badge badge-blue">Academic stress</span><span class="badge badge-blue">Loneliness</span></div></div>
                   <div><p style="font-size:11px;color:var(--adm-txt-muted);font-weight:700;margin-bottom:4px;">AVAILABILITY</p><p style="font-size:13px;color:var(--adm-txt-body);">Mon, Wed, Fri afternoons · 10 h/wk</p></div>
@@ -477,7 +487,7 @@
                   <div class="user-cell"><div class="user-ava blue">PL</div><div><div class="user-name">Priya Lal</div><div class="user-sub">UCL · Applied 27 Mar 2026</div></div></div>
                   <div style="display:flex;gap:8px;align-items:center;"><span class="badge badge-amber">Awaiting review</span><button class="btn btn-primary btn-sm">Approve</button><button class="btn btn-danger btn-sm">Decline</button></div>
                 </div>
-                <div style="padding:16px 20px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;">
+                <div class="amb-stat-row">
                   <div><p style="font-size:11px;color:var(--adm-txt-muted);font-weight:700;margin-bottom:4px;">MOTIVATION</p><p style="font-size:13px;color:var(--adm-txt-body);">"Completed mental health first aid training and want to give back."</p></div>
                   <div><p style="font-size:11px;color:var(--adm-txt-muted);font-weight:700;margin-bottom:4px;">SPECIALISMS APPLIED</p><div style="display:flex;gap:4px;flex-wrap:wrap;"><span class="badge badge-teal">CBT</span><span class="badge badge-teal">Grief</span><span class="badge badge-teal">Goal setting</span></div></div>
                   <div><p style="font-size:11px;color:var(--adm-txt-muted);font-weight:700;margin-bottom:4px;">AVAILABILITY</p><p style="font-size:13px;color:var(--adm-txt-body);">Tue, Thu, Sat mornings · 8 h/wk</p></div>
@@ -489,7 +499,7 @@
                   <div class="user-cell"><div class="user-ava amber">TN</div><div><div class="user-name">Thomas Ngu</div><div class="user-sub">King's College London · Applied 26 Mar 2026</div></div></div>
                   <div style="display:flex;gap:8px;align-items:center;"><span class="badge badge-amber">Awaiting review</span><button class="btn btn-primary btn-sm">Approve</button><button class="btn btn-danger btn-sm">Decline</button></div>
                 </div>
-                <div style="padding:16px 20px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;">
+                <div class="amb-stat-row">
                   <div><p style="font-size:11px;color:var(--adm-txt-muted);font-weight:700;margin-bottom:4px;">MOTIVATION</p><p style="font-size:13px;color:var(--adm-txt-body);">"Passionate about reducing stigma around men's mental health."</p></div>
                   <div><p style="font-size:11px;color:var(--adm-txt-muted);font-weight:700;margin-bottom:4px;">SPECIALISMS APPLIED</p><div style="display:flex;gap:4px;flex-wrap:wrap;"><span class="badge badge-purple">Identity</span><span class="badge badge-purple">Social anxiety</span></div></div>
                   <div><p style="font-size:11px;color:var(--adm-txt-muted);font-weight:700;margin-bottom:4px;">AVAILABILITY</p><p style="font-size:13px;color:var(--adm-txt-body);">Weekends + Wed evenings · 6 h/wk</p></div>

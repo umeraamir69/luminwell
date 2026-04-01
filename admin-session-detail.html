@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Session #12 — Detail · Luminwell Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="admin.css">
+<style>
+  .sess-hero {
+    background: linear-gradient(135deg, #134a75 0%, #175d92 55%, #2d9676 100%);
+    border-radius: var(--adm-r-lg);
+    padding: 26px 32px;
+    display: flex; align-items: center; gap: 24px;
+    margin-bottom: 20px; color: #fff;
+    position: relative; overflow: hidden;
+  }
+  .sess-hero::before {
+    content:''; position:absolute; right:-40px; top:-40px;
+    width:200px; height:200px; border-radius:50%;
+    background:rgba(255,255,255,.05); pointer-events:none;
+  }
+  .sess-hero-icon {
+    width:64px; height:64px; border-radius:16px;
+    background:rgba(255,255,255,.18); border:2px solid rgba(255,255,255,.3);
+    display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  }
+  .sess-hero-info { flex:1; }
+  .sess-hero-title { font-size:22px; font-weight:800; letter-spacing:-.3px; margin-bottom:4px; }
+  .sess-hero-meta  { display:flex; gap:20px; flex-wrap:wrap; opacity:.78; font-size:12px; margin-top:8px; }
+  .sess-hero-meta-item { display:flex; align-items:center; gap:5px; }
+  .sess-hero-actions { display:flex; gap:8px; flex-shrink:0; }
+  .sess-status-pill {
+    background:rgba(255,255,255,.2); border:1px solid rgba(255,255,255,.3);
+    border-radius:20px; padding:4px 14px; font-size:12px; font-weight:700;
+    display:flex; align-items:center; gap:6px;
+  }
+  .sess-status-dot { width:7px; height:7px; border-radius:50%; background:#4ade80; }
+
+  /* Participants bar */
+  .participants-bar {
+    display:grid; grid-template-columns:1fr auto 1fr; align-items:center;
+    gap:16px; background:var(--adm-surface); border:1px solid var(--adm-border);
+    border-radius:var(--adm-r-md); padding:20px 24px; margin-bottom:20px;
+    box-shadow:var(--adm-shadow-sm);
+  }
+  .participant { display:flex; align-items:center; gap:12px; }
+  .participant.right { flex-direction:row-reverse; text-align:right; }
+  .participant-ava { width:48px; height:48px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:16px; font-weight:800; flex-shrink:0; }
+  .participant-name { font-size:14px; font-weight:700; color:var(--adm-txt-head); }
+  .participant-sub  { font-size:12px; color:var(--adm-txt-muted); margin-top:2px; }
+  .versus { font-size:12px; font-weight:800; color:var(--adm-txt-muted); text-align:center; white-space:nowrap; }
+
+  /* Detail grid */
+  .detail-grid { display:grid; grid-template-columns:1fr 300px; gap:20px; align-items:start; }
+
+  /* Info rows */
+  .info-row { display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--adm-border-lt); font-size:13px; }
+  .info-row:last-child { border-bottom:none; }
+  .info-label { color:var(--adm-txt-muted); font-weight:600; font-size:12px; }
+  .info-val   { color:var(--adm-txt-head); font-weight:700; text-align:right; }
+
+  /* Check-in comparison */
+  .checkin-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .checkin-box {
+    background:var(--adm-bg); border-radius:10px; padding:14px 16px;
+    border:1px solid var(--adm-border-lt);
+  }
+  .checkin-label { font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:.5px; color:var(--adm-txt-muted); margin-bottom:8px; }
+  .checkin-mood { font-size:22px; font-weight:800; margin-bottom:4px; }
+  .checkin-sub { font-size:11px; color:var(--adm-txt-muted); }
+
+  /* Notes area */
+  .note-section { margin-bottom:20px; }
+  .note-section-label { font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.5px; color:var(--adm-txt-muted); margin-bottom:8px; }
+  .note-block {
+    background:var(--adm-bg); border-radius:10px; padding:14px 16px;
+    font-size:13px; color:var(--adm-txt-body); line-height:1.65;
+    border-left:3px solid var(--adm-blue);
+  }
+  .note-block.green { border-left-color:var(--adm-green); }
+  .note-block.amber { border-left-color:var(--adm-amber); }
+
+  /* AI insight */
+  .ai-insight {
+    background:linear-gradient(135deg,rgba(45,150,118,.08),rgba(23,93,146,.06));
+    border:1px solid rgba(45,150,118,.2);
+    border-radius:12px; padding:16px 18px; margin-bottom:16px;
+  }
+  .ai-insight-head { display:flex; align-items:center; gap:8px; font-size:12px; font-weight:800; color:var(--adm-blue); margin-bottom:8px; text-transform:uppercase; letter-spacing:.5px; }
+  .ai-insight-text { font-size:13px; color:var(--adm-txt-body); line-height:1.6; }
+
+  /* Tag chips */
+  .tag-chips { display:flex; gap:6px; flex-wrap:wrap; margin-top:8px; }
+  .tag-chip { background:var(--adm-blue-lt); color:var(--adm-blue-dk); border-radius:20px; padding:3px 10px; font-size:11px; font-weight:700; }
+  .tag-chip.amber { background:rgba(245,158,11,.12); color:#92400e; }
+
+  /* Timeline */
+  .timeline-item { display:flex; gap:12px; padding:8px 0; }
+  .timeline-dot-wrap { display:flex; flex-direction:column; align-items:center; gap:0; }
+  .timeline-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; margin-top:4px; }
+  .timeline-line { width:2px; flex:1; background:var(--adm-border-lt); margin:4px 0; min-height:16px; }
+  .timeline-content { flex:1; padding-bottom:4px; }
+  .timeline-time { font-size:10px; color:var(--adm-txt-muted); font-weight:600; margin-bottom:2px; }
+  .timeline-text { font-size:12px; color:var(--adm-txt-body); line-height:1.5; }
+
+  .admin-note-area {
+    width:100%; padding:10px 14px; border:1.5px solid var(--adm-border); border-radius:10px;
+    font-family:inherit; font-size:13px; color:var(--adm-txt-body); background:var(--adm-surface);
+    resize:vertical; min-height:70px; outline:none; transition:border-color .15s; box-sizing:border-box;
+  }
+  .admin-note-area:focus { border-color:var(--adm-blue); box-shadow:0 0 0 3px rgba(45,150,118,.1); }
+</style>
+</head>
+<body>
+<input type="checkbox" id="sidebar-toggle" class="sidebar-toggle-check">
+<div class="admin-shell">
+
+  <!-- Sidebar -->
+  <aside class="admin-sidebar">
+    <div class="sidebar__logo">
+      <div class="logo-mark"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17 8C8 10 5.9 16.17 3.82 22A13.34 13.34 0 0 0 18 8Z"/><path d="M9 9c-1.5 3.5-2.5 7-3 10C8 18 11 15 13 12" fill="rgba(255,255,255,.35)"/></svg></div>
+      <div class="logo-text-wrap"><div class="logo-name">Luminwell</div><span class="logo-badge-pill">ADMIN</span></div>
+    </div>
+    <label for="sidebar-toggle" class="sidebar__collapse-btn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+    </label>
+    <nav class="sidebar__nav">
+      <div class="nav-section">
+        <p class="nav-label">MAIN</p>
+        <a href="admin-home.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span class="link-text">Overview</span></a>
+        <a href="admin-analytics.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg><span class="link-text">Analytics</span></a>
+      </div>
+      <div class="nav-section">
+        <p class="nav-label">PEOPLE</p>
+        <a href="admin-users.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span class="link-text">Users</span><span class="nav-badge nav-badge--slate">2,841</span></a>
+        <a href="admin-ambassadors.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><span class="link-text">Ambassadors</span><span class="nav-badge nav-badge--amber">3 new</span></a>
+        <a href="admin-matching.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg><span class="link-text">Matching</span></a>
+      </div>
+      <div class="nav-section">
+        <p class="nav-label">OPERATIONS</p>
+        <a href="admin-sessions.html" class="sidebar__link active"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><span class="link-text">Sessions</span></a>
+        <a href="admin-welfare.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span class="link-text">Welfare &amp; Safety</span><span class="nav-badge nav-badge--red">5</span></a>
+        <a href="admin-messages.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span class="link-text">Messages</span></a>
+      </div>
+      <div class="nav-section">
+        <p class="nav-label">PLATFORM</p>
+        <a href="admin-content.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span class="link-text">Content</span></a>
+        <a href="admin-settings.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06-.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span class="link-text">Settings</span></a>
+        <a href="admin-privacy.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><span class="link-text">Privacy &amp; GDPR</span></a>
+      </div>
+    </nav>
+    <div class="sidebar__foot">
+      <div class="sidebar__foot-user">
+        <div class="admin-ava-sm">T</div>
+        <div class="sidebar__foot-info"><p>Tenner</p><small>Super Admin</small></div>
+      </div>
+      <button class="sidebar__signout">Sign out</button>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <div class="admin-main">
+    <header class="admin-topbar">
+      <div class="topbar-left">
+        <label for="sidebar-toggle" class="topbar-menu-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </label>
+        <nav class="breadcrumb">
+          <a href="admin-home.html">Admin</a>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+          <a href="admin-sessions.html">Sessions</a>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+          <span class="bc-active">Session #12</span>
+        </nav>
+      </div>
+      <div class="topbar-right">
+        <div class="notif-wrap">
+          <input type="checkbox" id="notif-toggle" class="notif-check">
+          <label for="notif-toggle" class="topbar-icon-btn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            <span class="notif-dot"></span>
+          </label>
+          <div class="notif-drop">
+            <div class="notif-drop-head"><h4>Notifications</h4><a href="#">Mark all read</a></div>
+            <div class="notif-item unread">
+              <div class="notif-ico red"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+              <div class="notif-body"><p><strong>Critical welfare flag</strong> — Alex T.</p><small>2 min ago</small></div>
+            </div>
+            <div class="notif-drop-foot"><a href="admin-welfare.html">View all alerts &rarr;</a></div>
+          </div>
+        </div>
+        <div class="topbar-user">
+          <div class="topbar-ava">T</div>
+          <div class="topbar-user-info"><div class="u-name">Tenner</div><div class="u-role">Super Admin</div></div>
+        </div>
+      </div>
+    </header>
+
+    <div class="admin-content">
+
+      <!-- Session hero -->
+      <div class="sess-hero">
+        <div class="sess-hero-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        </div>
+        <div class="sess-hero-info">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;">
+            <div class="sess-hero-title">Session #12 &mdash; Stress management &amp; revision planning</div>
+            <span class="badge badge-green" style="font-size:11px;white-space:nowrap;">Completed</span>
+          </div>
+          <div class="sess-hero-meta">
+            <span class="sess-hero-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> Tuesday, 25 March 2025</span>
+            <span class="sess-hero-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> 2:00 pm &ndash; 2:50 pm (50 min)</span>
+            <span class="sess-hero-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg> Video call</span>
+            <span class="sess-hero-meta-item" style="color:#fde68a;">&#9733; 5.0 / 5.0</span>
+          </div>
+        </div>
+        <div class="sess-hero-actions">
+          <a href="admin-user-detail.html" class="btn btn-white btn-sm" style="font-size:12px;text-decoration:none;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg> View user
+          </a>
+          <button class="btn btn-white btn-sm" style="font-size:12px;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Export PDF
+          </button>
+        </div>
+      </div>
+
+      <!-- Participants -->
+      <div class="participants-bar">
+        <div class="participant">
+          <div class="participant-ava user-ava blue" style="width:48px;height:48px;font-size:15px;">AO</div>
+          <div>
+            <div class="participant-name">Alex Okonkwo</div>
+            <div class="participant-sub">Student &middot; Psychology Yr 2</div>
+            <div class="participant-sub">University of Manchester</div>
+          </div>
+        </div>
+        <div class="versus">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="display:block;margin:0 auto 4px;"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+          Video session
+        </div>
+        <div class="participant right">
+          <div class="participant-ava user-ava green" style="width:48px;height:48px;font-size:15px;">MJ</div>
+          <div>
+            <div class="participant-name">Maya Johnson</div>
+            <div class="participant-sub">Peer support specialist</div>
+            <div class="participant-sub">&#9733; 4.9 &middot; 143 sessions</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main grid -->
+      <div class="detail-grid">
+
+        <!-- LEFT: notes & content -->
+        <div style="display:flex;flex-direction:column;gap:20px;">
+
+          <!-- Pre/post check-in -->
+          <div class="card">
+            <div class="card-head"><div class="card-title">Check-in Comparison</div><span style="font-size:12px;color:var(--adm-txt-muted);">Before vs. after session</span></div>
+            <div class="card-body">
+              <div class="checkin-grid">
+                <div class="checkin-box">
+                  <div class="checkin-label">Before session</div>
+                  <div class="checkin-mood" style="color:var(--adm-amber);">Okay</div>
+                  <div style="font-size:20px;font-weight:800;color:var(--adm-txt-head);">3 / 5</div>
+                  <div class="checkin-sub" style="margin-top:6px;">"Feeling anxious about upcoming mock exams. Struggling to concentrate."</div>
+                  <div class="tag-chips" style="margin-top:8px;">
+                    <span class="tag-chip amber">Anxiety</span>
+                    <span class="tag-chip amber">Academic stress</span>
+                  </div>
+                </div>
+                <div class="checkin-box" style="border-left:3px solid var(--adm-green);">
+                  <div class="checkin-label">After session</div>
+                  <div class="checkin-mood" style="color:var(--adm-green);">Good</div>
+                  <div style="font-size:20px;font-weight:800;color:var(--adm-txt-head);">4 / 5</div>
+                  <div class="checkin-sub" style="margin-top:6px;">"Feel more equipped. Maya gave me a solid revision plan. Breathing exercise helped."</div>
+                  <div class="tag-chips" style="margin-top:8px;">
+                    <span class="tag-chip">Calm</span>
+                    <span class="tag-chip">Motivated</span>
+                  </div>
+                </div>
+              </div>
+              <div style="margin-top:12px;padding:10px 14px;background:var(--adm-green-lt);border-radius:10px;display:flex;align-items:center;gap:8px;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--adm-green);flex-shrink:0;"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+                <span style="font-size:12px;color:var(--adm-green);font-weight:700;">Mood improved by 1 point during this session</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Ambassador session notes -->
+          <div class="card">
+            <div class="card-head">
+              <div class="card-title">Session Notes</div>
+              <span style="font-size:11px;color:var(--adm-txt-muted);">Written by Maya Johnson</span>
+            </div>
+            <div class="card-body">
+              <div class="note-section">
+                <div class="note-section-label">Session summary</div>
+                <div class="note-block">Alex arrived feeling anxious about upcoming mock exams and struggling with concentration. We began with a 5-minute grounding exercise which visibly helped. Spent the majority of the session co-creating a structured revision plan covering the next 3 weeks, breaking subjects into manageable daily chunks. Discussed the importance of scheduled breaks and sleep hygiene during exam periods.</div>
+              </div>
+              <div class="note-section">
+                <div class="note-section-label">Key themes discussed</div>
+                <div class="tag-chips" style="margin-top:0;">
+                  <span class="tag-chip">Academic stress</span>
+                  <span class="tag-chip">Anxiety management</span>
+                  <span class="tag-chip">Revision planning</span>
+                  <span class="tag-chip">Sleep hygiene</span>
+                  <span class="tag-chip">Grounding techniques</span>
+                </div>
+              </div>
+              <div class="note-section">
+                <div class="note-section-label">Client mood at start</div>
+                <div class="note-block amber" style="color:var(--adm-amber);font-weight:700;font-size:14px;">Okay &mdash; 3/5 &nbsp;<span style="font-size:12px;font-weight:400;color:var(--adm-txt-muted);">Self-reported pre-session</span></div>
+              </div>
+              <div class="note-section">
+                <div class="note-section-label">Homework set for Alex</div>
+                <div class="note-block green">
+                  <ul style="margin:0;padding-left:16px;line-height:2;">
+                    <li>Follow the 3-week revision timetable created in session</li>
+                    <li>Practice the 4-7-8 breathing technique daily before studying</li>
+                    <li>Log mood and study hours in the journal each evening</li>
+                    <li>Aim for 7-8 hours sleep — no screens after 10:30 pm</li>
+                  </ul>
+                </div>
+              </div>
+              <div class="note-section">
+                <div class="note-section-label">Follow-up needed?</div>
+                <div class="note-block" style="display:flex;align-items:center;gap:8px;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--adm-green)" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  <span>Yes &mdash; check in on revision progress at next session. Monitor exam period anxiety.</span>
+                </div>
+              </div>
+              <div>
+                <div class="note-section-label">Welfare concerns</div>
+                <div class="note-block" style="display:flex;align-items:center;gap:8px;border-left-color:var(--adm-green);">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--adm-green)" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                  <span>None identified. Student appears well-supported and engaged.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- AI-generated insights -->
+          <div class="card">
+            <div class="card-head">
+              <div class="card-title">AI Insights</div>
+              <span class="badge badge-blue" style="font-size:11px;">Auto-generated</span>
+            </div>
+            <div class="card-body">
+              <div class="ai-insight">
+                <div class="ai-insight-head">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+                  Trend analysis
+                </div>
+                <div class="ai-insight-text">Alex's wellbeing score has increased by 15% over the past 4 sessions. Engagement with homework tasks is consistently high (rated 4/5 by ambassador). Academic stress remains the primary theme, typical for Year 2 psychology students approaching mock exams.</div>
+              </div>
+              <div class="ai-insight">
+                <div class="ai-insight-head">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                  Risk assessment
+                </div>
+                <div class="ai-insight-text">No welfare concerns detected. Mood trajectory is positive. Recommend continued bi-weekly sessions through the exam period (April&ndash;June). Consider checking in mid-way between sessions via platform message.</div>
+              </div>
+              <div class="ai-insight" style="margin-bottom:0;">
+                <div class="ai-insight-head">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                  Suggested actions
+                </div>
+                <div class="ai-insight-text">Ambassador may benefit from sharing exam wellbeing resources from the Content library. No ambassador reassignment needed &mdash; relationship strength is strong (12 sessions, 4.8 avg rating).</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Session timeline -->
+          <div class="card">
+            <div class="card-head"><div class="card-title">Session Timeline</div></div>
+            <div class="card-body" style="padding-top:8px;">
+              <div class="timeline-item">
+                <div class="timeline-dot-wrap"><div class="timeline-dot" style="background:var(--adm-blue);"></div><div class="timeline-line"></div></div>
+                <div class="timeline-content"><div class="timeline-time">2:00 pm</div><div class="timeline-text"><strong>Session started</strong> &mdash; both participants joined video call</div></div>
+              </div>
+              <div class="timeline-item">
+                <div class="timeline-dot-wrap"><div class="timeline-dot" style="background:var(--adm-green);"></div><div class="timeline-line"></div></div>
+                <div class="timeline-content"><div class="timeline-time">2:03 pm</div><div class="timeline-text">Pre-session check-in completed &mdash; mood rated 3/5</div></div>
+              </div>
+              <div class="timeline-item">
+                <div class="timeline-dot-wrap"><div class="timeline-dot" style="background:var(--adm-blue);"></div><div class="timeline-line"></div></div>
+                <div class="timeline-content"><div class="timeline-time">2:05 pm</div><div class="timeline-text">Grounding &amp; breathing exercise (5 min)</div></div>
+              </div>
+              <div class="timeline-item">
+                <div class="timeline-dot-wrap"><div class="timeline-dot" style="background:var(--adm-blue);"></div><div class="timeline-line"></div></div>
+                <div class="timeline-content"><div class="timeline-time">2:10 pm</div><div class="timeline-text">Discussion: Exam anxiety &amp; concentration difficulties</div></div>
+              </div>
+              <div class="timeline-item">
+                <div class="timeline-dot-wrap"><div class="timeline-dot" style="background:var(--adm-blue);"></div><div class="timeline-line"></div></div>
+                <div class="timeline-content"><div class="timeline-time">2:25 pm</div><div class="timeline-text">Co-created 3-week revision timetable &amp; study schedule</div></div>
+              </div>
+              <div class="timeline-item">
+                <div class="timeline-dot-wrap"><div class="timeline-dot" style="background:var(--adm-amber);"></div><div class="timeline-line"></div></div>
+                <div class="timeline-content"><div class="timeline-time">2:40 pm</div><div class="timeline-text">Sleep hygiene &amp; study break planning</div></div>
+              </div>
+              <div class="timeline-item">
+                <div class="timeline-dot-wrap"><div class="timeline-dot" style="background:var(--adm-green);"></div><div class="timeline-line"></div></div>
+                <div class="timeline-content"><div class="timeline-time">2:47 pm</div><div class="timeline-text">Post-session check-in &mdash; mood rated 4/5. Homework set.</div></div>
+              </div>
+              <div class="timeline-item">
+                <div class="timeline-dot-wrap"><div class="timeline-dot" style="background:var(--adm-blue);"></div></div>
+                <div class="timeline-content"><div class="timeline-time">2:50 pm</div><div class="timeline-text"><strong>Session ended</strong> &mdash; Next session booked for 1 April 2025</div></div>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /left -->
+
+        <!-- RIGHT: meta & actions -->
+        <div style="display:flex;flex-direction:column;gap:16px;">
+
+          <!-- Session details -->
+          <div class="card">
+            <div class="card-head"><div class="card-title">Session Details</div></div>
+            <div class="card-body" style="padding-top:8px;">
+              <div class="info-row"><span class="info-label">Session ID</span><span class="info-val" style="font-family:monospace;font-size:12px;">#LW-2025-0312</span></div>
+              <div class="info-row"><span class="info-label">Date</span><span class="info-val">25 Mar 2025</span></div>
+              <div class="info-row"><span class="info-label">Time</span><span class="info-val">2:00 &ndash; 2:50 pm</span></div>
+              <div class="info-row"><span class="info-label">Duration</span><span class="info-val">50 minutes</span></div>
+              <div class="info-row"><span class="info-label">Format</span><span class="info-val">Video call</span></div>
+              <div class="info-row"><span class="info-label">Session no.</span><span class="info-val">12 of pair</span></div>
+              <div class="info-row"><span class="info-label">Status</span><span class="info-val"><span class="badge badge-green">Completed</span></span></div>
+              <div class="info-row"><span class="info-label">Rating</span><span class="info-val" style="color:var(--adm-amber);">&#9733; 5.0 / 5.0</span></div>
+              <div class="info-row"><span class="info-label">Notes filed</span><span class="info-val"><span class="badge badge-green" style="font-size:10px;">Yes</span></span></div>
+              <div class="info-row"><span class="info-label">Welfare flag</span><span class="info-val"><span class="badge badge-slate" style="font-size:10px;">None</span></span></div>
+            </div>
+          </div>
+
+          <!-- Next session -->
+          <div class="card" style="border-left:3px solid var(--adm-blue);">
+            <div class="card-head"><div class="card-title">Next Session</div></div>
+            <div class="card-body" style="padding-top:8px;">
+              <div style="font-size:22px;font-weight:800;color:var(--adm-txt-head);margin-bottom:4px;">1 Apr 2025</div>
+              <div style="font-size:13px;color:var(--adm-txt-muted);margin-bottom:12px;">Tuesday &middot; 2:00 pm &middot; Video call</div>
+              <span class="badge badge-blue">Session #13 &middot; Upcoming</span>
+            </div>
+          </div>
+
+          <!-- Admin actions -->
+          <div class="card">
+            <div class="card-head"><div class="card-title">Admin Actions</div></div>
+            <div class="card-body" style="display:flex;flex-direction:column;gap:8px;">
+              <button class="btn btn-secondary btn-sm" style="justify-content:flex-start;gap:8px;width:100%;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Download full report</button>
+              <button class="btn btn-secondary btn-sm" style="justify-content:flex-start;gap:8px;width:100%;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Raise welfare concern</button>
+              <button class="btn btn-secondary btn-sm" style="justify-content:flex-start;gap:8px;width:100%;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Edit session record</button>
+              <button class="btn btn-secondary btn-sm" style="justify-content:flex-start;gap:8px;width:100%;color:var(--adm-amber);border-color:rgba(245,158,11,.3);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>Mark as disputed</button>
+            </div>
+          </div>
+
+          <!-- Admin notes -->
+          <div class="card">
+            <div class="card-head"><div class="card-title">Admin Notes</div></div>
+            <div class="card-body">
+              <textarea class="admin-note-area" placeholder="Add a private note about this session..."></textarea>
+              <div style="display:flex;justify-content:flex-end;margin-top:8px;"><button class="btn btn-primary btn-sm">Save note</button></div>
+            </div>
+          </div>
+
+        </div><!-- /right -->
+      </div>
+
+    </div>
+  </div>
+</div>
+</body>
+</html>

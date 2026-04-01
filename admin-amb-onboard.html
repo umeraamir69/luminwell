@@ -257,6 +257,19 @@
   }
   .ava-upload-text { font-size: 13px; color: var(--adm-txt-muted); }
   .ava-upload-text strong { color: var(--adm-blue); }
+
+  @media (max-width: 600px) {
+    .form-section-head { padding: 14px 18px; }
+    .form-section-body { padding: 16px 18px; }
+    .form-actions {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 12px;
+      padding: 16px 18px;
+    }
+    .form-actions-note { text-align: center; justify-content: center; }
+    .step-indicator { overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 4px; }
+  }
 </style>
 </head>
 <body>
@@ -294,7 +307,7 @@
       </div>
     </nav>
     <div class="sidebar__foot">
-      <div class="sidebar__foot-user"><div class="admin-ava-sm">A</div><div class="sidebar__foot-info"><p>Admin User</p><small>Super Admin</small></div></div>
+      <div class="sidebar__foot-user"><div class="admin-ava-sm">T</div><div class="sidebar__foot-info"><p>Tenner</p><small>Super Admin</small></div></div>
       <button class="sidebar__signout">Sign out</button>
     </div>
   </aside>
@@ -312,7 +325,7 @@
         </nav>
       </div>
       <div class="topbar-right">
-        <div class="topbar-user"><div class="topbar-ava">A</div><div class="topbar-user-info"><div class="u-name">Admin</div><div class="u-role">Super Admin</div></div></div>
+        <div class="topbar-user"><div class="topbar-ava">T</div><div class="topbar-user-info"><div class="u-name">Tenner</div><div class="u-role">Super Admin</div></div></div>
       </div>
     </header>
 
@@ -545,57 +558,57 @@
 
               <div class="field">
                 <label class="field-label" style="margin-bottom:8px;">Weekly availability <span class="field-required">*</span><span style="font-size:11px;color:var(--adm-txt-faint);font-weight:400;margin-left:4px;">Select all available slots</span></label>
-                <div style="display:flex;flex-direction:column;gap:10px;">
-
-                  <div style="display:grid;grid-template-columns:80px repeat(3,1fr);gap:8px;align-items:center;">
+                <div class="onboard-avail-stack">
+                  <div class="onboard-avail-scroll">
+                  <div class="onboard-avail-row">
                     <span style="font-size:11px;font-weight:700;color:var(--adm-txt-muted);"></span>
                     <span style="font-size:11px;font-weight:700;color:var(--adm-txt-muted);text-align:center;">Morning</span>
                     <span style="font-size:11px;font-weight:700;color:var(--adm-txt-muted);text-align:center;">Afternoon</span>
                     <span style="font-size:11px;font-weight:700;color:var(--adm-txt-muted);text-align:center;">Evening</span>
                   </div>
 
-                  <div style="display:grid;grid-template-columns:80px repeat(3,1fr);gap:8px;align-items:center;">
+                  <div class="onboard-avail-row">
                     <span style="font-size:12px;font-weight:700;color:var(--adm-txt-head);">Monday</span>
                     <label class="check-item" style="justify-content:center;padding:8px;"><input type="checkbox" checked><span style="font-size:11px;color:var(--adm-txt-muted);margin-left:4px;">9–12</span></label>
                     <label class="check-item" style="justify-content:center;padding:8px;"><input type="checkbox"><span style="font-size:11px;color:var(--adm-txt-muted);margin-left:4px;">12–5</span></label>
                     <label class="check-item" style="justify-content:center;padding:8px;"><input type="checkbox"><span style="font-size:11px;color:var(--adm-txt-muted);margin-left:4px;">5–9</span></label>
                   </div>
 
-                  <div style="display:grid;grid-template-columns:80px repeat(3,1fr);gap:8px;align-items:center;">
+                  <div class="onboard-avail-row">
                     <span style="font-size:12px;font-weight:700;color:var(--adm-txt-head);">Tuesday</span>
                     <label class="check-item" style="justify-content:center;padding:8px;"><input type="checkbox"><span style="font-size:11px;color:var(--adm-txt-muted);margin-left:4px;">9–12</span></label>
                     <label class="check-item" style="justify-content:center;padding:8px;"><input type="checkbox" checked><span style="font-size:11px;color:var(--adm-txt-muted);margin-left:4px;">12–5</span></label>
                     <label class="check-item" style="justify-content:center;padding:8px;"><input type="checkbox"><span style="font-size:11px;color:var(--adm-txt-muted);margin-left:4px;">5–9</span></label>
                   </div>
 
-                  <div style="display:grid;grid-template-columns:80px repeat(3,1fr);gap:8px;align-items:center;">
+                  <div class="onboard-avail-row">
                     <span style="font-size:12px;font-weight:700;color:var(--adm-txt-head);">Wednesday</span>
                     <label class="check-item" style="justify-content:center;padding:8px;"><input type="checkbox" checked><span style="font-size:11px;color:var(--adm-txt-muted);margin-left:4px;">9–12</span></label>
                     <label class="check-item" style="justify-content:center;padding:8px;"><input type="checkbox"><span style="font-size:11px;color:var(--adm-txt-muted);margin-left:4px;">12–5</span></label>
                     <label class="check-item" style="justify-content:center;padding:8px;"><input type="checkbox"><span style="font-size:11px;color:var(--adm-txt-muted);margin-left:4px;">5–9</span></label>
                   </div>
 
-                  <div style="display:grid;grid-template-columns:80px repeat(3,1fr);gap:8px;align-items:center;">
+                  <div class="onboard-avail-row">
                     <span style="font-size:12px;font-weight:700;color:var(--adm-txt-head);">Thursday</span>
                     <label class="check-item" style="justify-content:center;padding:8px;"><input type="checkbox"><span style="font-size:11px;color:var(--adm-txt-muted);margin-left:4px;">9–12</span></label>
                     <label class="check-item" style="justify-content:center;padding:8px;"><input type="checkbox"><span style="font-size:11px;color:var(--adm-txt-muted);margin-left:4px;">12–5</span></label>
                     <label class="check-item" style="justify-content:center;padding:8px;"><input type="checkbox"><span style="font-size:11px;color:var(--adm-txt-muted);margin-left:4px;">5–9</span></label>
                   </div>
 
-                  <div style="display:grid;grid-template-columns:80px repeat(3,1fr);gap:8px;align-items:center;">
+                  <div class="onboard-avail-row">
                     <span style="font-size:12px;font-weight:700;color:var(--adm-txt-head);">Friday</span>
                     <label class="check-item" style="justify-content:center;padding:8px;"><input type="checkbox" checked><span style="font-size:11px;color:var(--adm-txt-muted);margin-left:4px;">9–12</span></label>
                     <label class="check-item" style="justify-content:center;padding:8px;"><input type="checkbox"><span style="font-size:11px;color:var(--adm-txt-muted);margin-left:4px;">12–5</span></label>
                     <label class="check-item" style="justify-content:center;padding:8px;"><input type="checkbox"><span style="font-size:11px;color:var(--adm-txt-muted);margin-left:4px;">5–9</span></label>
                   </div>
 
-                  <div style="display:grid;grid-template-columns:80px repeat(3,1fr);gap:8px;align-items:center;">
+                  <div class="onboard-avail-row">
                     <span style="font-size:12px;font-weight:700;color:var(--adm-txt-head);">Weekend</span>
                     <label class="check-item" style="justify-content:center;padding:8px;"><input type="checkbox"><span style="font-size:11px;color:var(--adm-txt-muted);margin-left:4px;">9–12</span></label>
                     <label class="check-item" style="justify-content:center;padding:8px;"><input type="checkbox"><span style="font-size:11px;color:var(--adm-txt-muted);margin-left:4px;">12–5</span></label>
                     <label class="check-item" style="justify-content:center;padding:8px;"><input type="checkbox"><span style="font-size:11px;color:var(--adm-txt-muted);margin-left:4px;">5–9</span></label>
                   </div>
-
+                  </div>
                 </div>
               </div>
 

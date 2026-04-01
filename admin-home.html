@@ -65,6 +65,79 @@
   }
   .quick-action .qa-arrow { margin-left: auto; color: var(--adm-txt-faint); font-size: 16px; }
   .quick-action:hover .qa-arrow { color: var(--adm-blue); }
+
+  /* ── Home page grid rows ── */
+  .home-row2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+    align-items: start;
+  }
+
+  /* Chart inner flex wrapper */
+  .chart-inner {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+  }
+  .chart-kpi-panel {
+    min-width: 110px;
+    border-left: 1px solid var(--adm-border);
+    padding-left: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    justify-content: center;
+  }
+
+  /* ── Responsive overrides ── */
+  @media (max-width: 1100px) {
+    .home-row2 { grid-template-columns: 1fr 1fr; }
+  }
+
+  @media (max-width: 768px) {
+    /* Row 1: chart stacks above quick actions */
+    .grid-3-1 { grid-template-columns: 1fr !important; }
+
+    /* Chart KPI panel goes below chart on mobile */
+    .chart-inner { flex-direction: column; gap: 12px; }
+    .chart-kpi-panel {
+      border-left: none;
+      border-top: 1px solid var(--adm-border);
+      padding-left: 0;
+      padding-top: 12px;
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 16px;
+      min-width: 0;
+    }
+    .chart-kpi-panel > div { min-width: 80px; }
+
+    /* Row 2: single column */
+    .home-row2 { grid-template-columns: 1fr !important; }
+
+    /* Stats row: 2 cols */
+    .stats-row { grid-template-columns: 1fr 1fr !important; }
+
+    /* Alert banner wraps */
+    .adm-alert { flex-wrap: wrap; gap: 8px; }
+    .adm-alert > div:last-child { width: 100%; display: flex; flex-wrap: wrap; gap: 8px; }
+
+    /* Welfare mini cards stay readable */
+    .wf-mini { flex-direction: column; gap: 8px; }
+
+    /* Ambassador approval items */
+    .approval-item { flex-wrap: wrap; gap: 8px; }
+    .approval-actions { margin-left: 0; width: 100%; justify-content: flex-end; }
+
+    /* Activity items */
+    .act-item { gap: 8px; }
+  }
+
+  @media (max-width: 480px) {
+    .stats-row { grid-template-columns: 1fr !important; }
+    .chart-kpi-panel { gap: 12px; }
+  }
 </style>
 </head>
 <body>
@@ -157,9 +230,9 @@
 
     <div class="sidebar__foot">
       <div class="sidebar__foot-user">
-        <div class="admin-ava-sm">A</div>
+        <div class="admin-ava-sm">T</div>
         <div class="sidebar__foot-info">
-          <p>Admin User</p>
+          <p>Tenner</p>
           <small>Super Admin</small>
         </div>
       </div>
@@ -232,7 +305,7 @@
         </a>
 
         <div class="topbar-user">
-          <div class="topbar-ava">A</div>
+          <div class="topbar-ava">T</div>
           <div class="topbar-user-info">
             <div class="u-name">Admin Kumar</div>
             <div class="u-role">Super Admin</div>
@@ -268,23 +341,13 @@
         <span class="alert-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>
         <div class="alert-body">
           <strong>Critical welfare flag — immediate action required</strong>
-          Alex Turner has been flagged for self-harm risk indicators by Ambassador Maya Johnson. Escalation protocol triggered. Respond within 1 hour.
+          Alex Turner has been flagged for self-harm risk indicators by Ambassador Maya Johnson. Escalation protocol triggered.
           <a href="admin-welfare.html" style="font-weight:800;text-decoration:underline;margin-left:8px;">Open case →</a>
         </div>
       </div>
 
       <!-- ── Stats row ── -->
       <div class="stats-row">
-        <div class="stat-card blue">
-          <div class="stat-top">
-            <span class="stat-label">Total Users</span>
-            <div class="stat-icon blue">
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-            </div>
-          </div>
-          <div class="stat-value">2,841</div>
-          <span class="stat-delta delta-up">▲ +47 this week</span>
-        </div>
 
         <div class="stat-card green">
           <div class="stat-top">
@@ -343,7 +406,7 @@
       </div>
 
       <!-- ── Row 1: Chart + Quick Actions ── -->
-      <div class="grid-3-1" style="align-items:start;margin-bottom:20px;">
+      <div class="grid-3-1" style="align-items:start;margin-bottom:12px;">
 
         <!-- Sessions chart -->
         <div class="card">
@@ -354,17 +417,17 @@
             </div>
             <a href="admin-sessions.html" class="btn btn-ghost btn-sm" style="font-size:12px;">View all →</a>
           </div>
-          <div class="card-body" style="padding:16px 20px;">
-            <div style="display:flex;gap:20px;align-items:flex-end;">
-              <div style="flex:1;">
+          <div class="card-body" style="padding:12px 20px 16px;">
+            <div class="chart-inner">
+              <div style="flex:1;min-width:0;">
                 <div class="adm-chart" style="height:150px;">
-                  <div class="adm-chart-col"><div class="adm-chart-bar blue" style="height:25%;"></div></div>
-                  <div class="adm-chart-col"><div class="adm-chart-bar blue" style="height:34%;"></div></div>
+                  <div class="adm-chart-col"><div class="adm-chart-bar green" style="height:25%;"></div></div>
+                  <div class="adm-chart-col"><div class="adm-chart-bar amber" style="height:34%;"></div></div>
                   <div class="adm-chart-col"><div class="adm-chart-bar blue" style="height:42%;"></div></div>
-                  <div class="adm-chart-col"><div class="adm-chart-bar blue" style="height:53%;"></div></div>
-                  <div class="adm-chart-col"><div class="adm-chart-bar blue" style="height:62%;"></div></div>
+                  <div class="adm-chart-col"><div class="adm-chart-bar green" style="height:53%;"></div></div>
+                  <div class="adm-chart-col"><div class="adm-chart-bar amber" style="height:62%;"></div></div>
                   <div class="adm-chart-col"><div class="adm-chart-bar blue" style="height:72%;"></div></div>
-                  <div class="adm-chart-col"><div class="adm-chart-bar blue" style="height:85%;"></div></div>
+                  <div class="adm-chart-col"><div class="adm-chart-bar green" style="height:85%;"></div></div>
                   <div class="adm-chart-col"><div class="adm-chart-bar blue" style="height:100%;"></div></div>
                 </div>
                 <div class="adm-chart-axis">
@@ -379,7 +442,7 @@
                 </div>
               </div>
               <!-- Side KPIs -->
-              <div style="min-width:110px;border-left:1px solid var(--adm-border);padding-left:16px;display:flex;flex-direction:column;gap:16px;justify-content:center;">
+              <div class="chart-kpi-panel">
                 <div>
                   <p style="font-size:10px;font-weight:800;color:var(--adm-txt-muted);letter-spacing:.5px;text-transform:uppercase;margin-bottom:3px;">THIS WEEK</p>
                   <p style="font-size:26px;font-weight:900;color:var(--adm-txt-head);letter-spacing:-1px;line-height:1;">143</p>
@@ -433,7 +496,7 @@
       </div>
 
       <!-- ── Row 2: All other cards ── -->
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;align-items:start;">
+      <div class="home-row2">
 
         <!-- Welfare alerts -->
         <div class="card">

@@ -8,10 +8,19 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="admin.css">
 <style>
-  #ses-all:checked       ~ .ses-panels #ses-panel-all      { display: block; }
-  #ses-today:checked     ~ .ses-panels #ses-panel-today    { display: block; }
-  #ses-upcoming:checked  ~ .ses-panels #ses-panel-upcoming { display: block; }
-  #ses-past:checked      ~ .ses-panels #ses-panel-past     { display: block; }
+  html:has(#ses-all:checked)      .ses-panels #ses-panel-all      { display: block; }
+  html:has(#ses-today:checked)    .ses-panels #ses-panel-today    { display: block; }
+  html:has(#ses-upcoming:checked) .ses-panels #ses-panel-upcoming { display: block; }
+  html:has(#ses-past:checked)     .ses-panels #ses-panel-past     { display: block; }
+
+  html:has(#ses-all:checked)      label[for="ses-all"],
+  html:has(#ses-today:checked)    label[for="ses-today"],
+  html:has(#ses-upcoming:checked) label[for="ses-upcoming"],
+  html:has(#ses-past:checked)     label[for="ses-past"] {
+    color: var(--adm-blue);
+    border-bottom-color: var(--adm-blue);
+    font-weight: 700;
+  }
 </style>
 </head>
 <body>
@@ -53,7 +62,7 @@
       </div>
     </nav>
     <div class="sidebar__foot">
-      <div class="sidebar__foot-user"><div class="admin-ava-sm">A</div><div class="sidebar__foot-info"><p>Admin User</p><small>Super Admin</small></div></div>
+      <div class="sidebar__foot-user"><div class="admin-ava-sm">T</div><div class="sidebar__foot-info"><p>Tenner</p><small>Super Admin</small></div></div>
       <button class="sidebar__signout">Sign out</button>
     </div>
   </aside>
@@ -74,7 +83,7 @@
           <label for="notif-toggle" class="topbar-icon-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><span class="notif-dot"></span></label>
           <div class="notif-drop"><div class="notif-drop-head"><h4>Notifications</h4><a href="#">Mark all read</a></div><div class="notif-item unread"><div class="notif-ico red"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div><div class="notif-body"><p><strong>Critical welfare flag</strong> — Alex T.</p><small>2 min ago</small></div></div><div class="notif-drop-foot"><a href="admin-welfare.html">View all →</a></div></div>
         </div>
-        <div class="topbar-user"><div class="topbar-ava">A</div><div class="topbar-user-info"><div class="u-name">Admin</div><div class="u-role">Super Admin</div></div></div>
+        <div class="topbar-user"><div class="topbar-ava">T</div><div class="topbar-user-info"><div class="u-name">Tenner</div><div class="u-role">Super Admin</div></div></div>
       </div>
     </header>
 
@@ -91,7 +100,7 @@
 
 
       <!-- Stats -->
-      <div class="stats-row" style="grid-template-columns:repeat(5,1fr);margin-bottom:20px;">
+      <div class="stats-row stats-row--mb-20">
         <div class="stat-card blue"><div class="stat-top"><span class="stat-label">Today</span><div class="stat-icon blue"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div></div><div class="stat-value">23</div><span class="stat-delta delta-neu">18 done · 5 upcoming</span></div>
         <div class="stat-card green"><div class="stat-top"><span class="stat-label">This Week</span><div class="stat-icon green"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div></div><div class="stat-value">143</div><span class="stat-delta delta-up">▲ +18% vs last wk</span></div>
         <div class="stat-card amber"><div class="stat-top"><span class="stat-label">This Month</span><div class="stat-icon amber"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/></svg></div></div><div class="stat-value">489</div><span class="stat-delta delta-up">▲ +12%</span></div>
@@ -147,7 +156,7 @@
                     <td><span class="badge badge-green">Published</span></td>
                     <td style="font-size:13px;font-weight:700;color:var(--adm-amber);">★ 5.0</td>
                     <td><span class="badge badge-green">Completed</span></td>
-                    <td><a href="#" class="row-link">View</a></td>
+                    <td><a href="admin-session-detail.html" class="row-link">View</a></td>
                   </tr>
                   <tr>
                     <td style="font-size:12px;white-space:nowrap;"><strong style="color:var(--adm-txt-head);">Today</strong><br><span style="color:var(--adm-txt-muted);">11:30 AM</span></td>
@@ -158,7 +167,7 @@
                     <td><span class="badge badge-amber">Draft</span></td>
                     <td style="font-size:13px;font-weight:700;color:var(--adm-amber);">★ 4.5</td>
                     <td><span class="badge badge-green">Completed</span></td>
-                    <td><a href="#" class="row-link">View</a></td>
+                    <td><a href="admin-session-detail.html" class="row-link">View</a></td>
                   </tr>
                   <tr>
                     <td style="font-size:12px;white-space:nowrap;"><strong style="color:var(--adm-txt-head);">Today</strong><br><span style="color:var(--adm-txt-muted);">2:00 PM</span></td>
@@ -169,7 +178,7 @@
                     <td><span class="badge badge-slate">—</span></td>
                     <td style="font-size:12px;color:var(--adm-txt-faint);">—</td>
                     <td><span class="badge badge-blue">Upcoming</span></td>
-                    <td><a href="#" class="row-link">View</a></td>
+                    <td><a href="admin-session-detail.html" class="row-link">View</a></td>
                   </tr>
                   <tr>
                     <td style="font-size:12px;white-space:nowrap;"><strong style="color:var(--adm-txt-head);">28 Mar</strong><br><span style="color:var(--adm-txt-muted);">3:00 PM</span></td>
@@ -180,7 +189,7 @@
                     <td><span class="badge badge-slate">None</span></td>
                     <td style="font-size:12px;color:var(--adm-txt-faint);">—</td>
                     <td><span class="badge badge-red">Missed</span></td>
-                    <td><a href="#" class="row-link">View</a></td>
+                    <td><a href="admin-session-detail.html" class="row-link">View</a></td>
                   </tr>
                   <tr>
                     <td style="font-size:12px;white-space:nowrap;"><strong style="color:var(--adm-txt-head);">28 Mar</strong><br><span style="color:var(--adm-txt-muted);">10:00 AM</span></td>
@@ -191,7 +200,7 @@
                     <td><span class="badge badge-green">Published</span></td>
                     <td style="font-size:13px;font-weight:700;color:var(--adm-amber);">★ 4.8</td>
                     <td><span class="badge badge-green">Completed</span></td>
-                    <td><a href="#" class="row-link">View</a></td>
+                    <td><a href="admin-session-detail.html" class="row-link">View</a></td>
                   </tr>
                   <tr>
                     <td style="font-size:12px;white-space:nowrap;"><strong style="color:var(--adm-txt-head);">27 Mar</strong><br><span style="color:var(--adm-txt-muted);">1:00 PM</span></td>
@@ -204,11 +213,88 @@
                     <td><span class="badge badge-green">Completed</span></td>
                     <td><a href="admin-welfare.html" class="row-link" style="color:var(--adm-red);">Welfare →</a></td>
                   </tr>
+                  <tr>
+                    <td style="font-size:12px;white-space:nowrap;"><strong style="color:var(--adm-txt-head);">26 Mar</strong><br><span style="color:var(--adm-txt-muted);">3:00 PM</span></td>
+                    <td><div class="user-cell"><div class="user-ava blue">AO</div><div><div class="user-name">Alex Okonkwo</div><div class="user-sub">Student</div></div></div></td>
+                    <td><div class="user-cell"><div class="user-ava green">MJ</div><div><div class="user-name">Maya J.</div></div></div></td>
+                    <td><span class="badge badge-blue">Video</span></td>
+                    <td style="font-size:13px;font-weight:600;color:var(--adm-txt-head);">50 min</td>
+                    <td><span class="badge badge-green">Published</span></td>
+                    <td style="font-size:13px;font-weight:700;color:var(--adm-amber);">★ 5.0</td>
+                    <td><span class="badge badge-green">Completed</span></td>
+                    <td><a href="admin-session-detail.html" class="row-link">View</a></td>
+                  </tr>
+                  <tr>
+                    <td style="font-size:12px;white-space:nowrap;"><strong style="color:var(--adm-txt-head);">25 Mar</strong><br><span style="color:var(--adm-txt-muted);">11:00 AM</span></td>
+                    <td><div class="user-cell"><div class="user-ava amber">JM</div><div><div class="user-name">Jordan Mills</div><div class="user-sub">Student</div></div></div></td>
+                    <td><div class="user-cell"><div class="user-ava blue">KR</div><div><div class="user-name">Keiran R.</div></div></div></td>
+                    <td><span class="badge badge-blue">Video</span></td>
+                    <td style="font-size:13px;font-weight:600;color:var(--adm-txt-head);">—</td>
+                    <td><span class="badge badge-slate">—</span></td>
+                    <td style="font-size:12px;color:var(--adm-txt-faint);">—</td>
+                    <td><span class="badge badge-red">Missed</span></td>
+                    <td><a href="admin-session-detail.html" class="row-link">View</a></td>
+                  </tr>
+                  <tr>
+                    <td style="font-size:12px;white-space:nowrap;"><strong style="color:var(--adm-txt-head);">24 Mar</strong><br><span style="color:var(--adm-txt-muted);">2:30 PM</span></td>
+                    <td><div class="user-cell"><div class="user-ava teal">FC</div><div><div class="user-name">Fatima Choudhry</div><div class="user-sub">Student</div></div></div></td>
+                    <td><div class="user-cell"><div class="user-ava amber">LN</div><div><div class="user-name">Layla N.</div></div></div></td>
+                    <td><span class="badge badge-teal">Audio</span></td>
+                    <td style="font-size:13px;font-weight:600;color:var(--adm-txt-head);">55 min</td>
+                    <td><span class="badge badge-green">Published</span></td>
+                    <td style="font-size:13px;font-weight:700;color:var(--adm-amber);">★ 4.7</td>
+                    <td><span class="badge badge-green">Completed</span></td>
+                    <td><a href="admin-session-detail.html" class="row-link">View</a></td>
+                  </tr>
+                  <tr>
+                    <td style="font-size:12px;white-space:nowrap;"><strong style="color:var(--adm-txt-head);">23 Mar</strong><br><span style="color:var(--adm-txt-muted);">10:00 AM</span></td>
+                    <td><div class="user-cell"><div class="user-ava green">OB</div><div><div class="user-name">Ollie Barnes</div><div class="user-sub">Student</div></div></div></td>
+                    <td><div class="user-cell"><div class="user-ava purple">DN</div><div><div class="user-name">Dev N.</div></div></div></td>
+                    <td><span class="badge badge-blue">Video</span></td>
+                    <td style="font-size:13px;font-weight:600;color:var(--adm-txt-head);">48 min</td>
+                    <td><span class="badge badge-green">Published</span></td>
+                    <td style="font-size:13px;font-weight:700;color:var(--adm-amber);">★ 5.0</td>
+                    <td><span class="badge badge-green">Completed</span></td>
+                    <td><a href="#" class="row-link">View</a></td>
+                  </tr>
+                  <tr>
+                    <td style="font-size:12px;white-space:nowrap;"><strong style="color:var(--adm-txt-head);">22 Mar</strong><br><span style="color:var(--adm-txt-muted);">4:00 PM</span></td>
+                    <td><div class="user-cell"><div class="user-ava blue">NK</div><div><div class="user-name">Natasha Kwei</div><div class="user-sub">Student</div></div></div></td>
+                    <td><div class="user-cell"><div class="user-ava green">MJ</div><div><div class="user-name">Maya J.</div></div></div></td>
+                    <td><span class="badge badge-slate">Text</span></td>
+                    <td style="font-size:13px;font-weight:600;color:var(--adm-txt-head);">40 min</td>
+                    <td><span class="badge badge-amber">Draft</span></td>
+                    <td style="font-size:13px;font-weight:700;color:var(--adm-amber);">★ 4.6</td>
+                    <td><span class="badge badge-green">Completed</span></td>
+                    <td><a href="#" class="row-link">View</a></td>
+                  </tr>
+                  <tr>
+                    <td style="font-size:12px;white-space:nowrap;"><strong style="color:var(--adm-txt-head);">21 Mar</strong><br><span style="color:var(--adm-txt-muted);">1:00 PM</span></td>
+                    <td><div class="user-cell"><div class="user-ava purple">AP</div><div><div class="user-name">Aisha Patel</div><div class="user-sub">Student</div></div></div></td>
+                    <td><div class="user-cell"><div class="user-ava blue">KR</div><div><div class="user-name">Keiran R.</div></div></div></td>
+                    <td><span class="badge badge-blue">Video</span></td>
+                    <td style="font-size:13px;font-weight:600;color:var(--adm-txt-head);">52 min</td>
+                    <td><span class="badge badge-green">Published</span></td>
+                    <td style="font-size:13px;font-weight:700;color:var(--adm-amber);">★ 4.9</td>
+                    <td><span class="badge badge-green">Completed</span></td>
+                    <td><a href="#" class="row-link">View</a></td>
+                  </tr>
+                  <tr>
+                    <td style="font-size:12px;white-space:nowrap;"><strong style="color:var(--adm-txt-head);">20 Mar</strong><br><span style="color:var(--adm-txt-muted);">9:30 AM</span></td>
+                    <td><div class="user-cell"><div class="user-ava amber">EW</div><div><div class="user-name">Eva Williams</div><div class="user-sub">Student</div></div></div></td>
+                    <td><div class="user-cell"><div class="user-ava amber">LN</div><div><div class="user-name">Layla N.</div></div></div></td>
+                    <td><span class="badge badge-teal">Audio</span></td>
+                    <td style="font-size:13px;font-weight:600;color:var(--adm-txt-head);">45 min</td>
+                    <td><span class="badge badge-green">Published</span></td>
+                    <td style="font-size:13px;font-weight:700;color:var(--adm-amber);">★ 4.8</td>
+                    <td><span class="badge badge-green">Completed</span></td>
+                    <td><a href="#" class="row-link">View</a></td>
+                  </tr>
                 </tbody>
               </table>
             </div>
             <div class="pagination">
-              <span class="pagination-info">Showing 1–6 of 489 sessions this month</span>
+              <span class="pagination-info">Showing 1–14 of 489 sessions this month</span>
               <div class="pagination-btns"><button class="page-btn">‹</button><button class="page-btn active">1</button><button class="page-btn">2</button><button class="page-btn">3</button><span style="padding:0 6px;color:var(--adm-txt-faint);font-size:13px;">…</span><button class="page-btn">82</button><button class="page-btn">›</button></div>
             </div>
           </div>
@@ -260,6 +346,14 @@
                   <tr><td style="font-size:12px;">27 Mar · 1PM</td><td><div class="user-cell"><div class="user-ava red">AT</div><div class="user-name">Alex Turner</div></div></td><td style="font-size:12px;">Maya J.</td><td style="font-size:13px;font-weight:600;">60 min</td><td><span class="badge badge-red">Welfare</span></td><td style="font-size:12px;color:var(--adm-txt-faint);">—</td><td><span class="badge badge-green">Completed</span></td><td><a href="admin-welfare.html" class="row-link" style="color:var(--adm-red);">Welfare →</a></td></tr>
                   <tr><td style="font-size:12px;">26 Mar · 3PM</td><td><div class="user-cell"><div class="user-ava blue">AO</div><div class="user-name">Alex Okonkwo</div></div></td><td style="font-size:12px;">Maya J.</td><td style="font-size:13px;font-weight:600;">50 min</td><td><span class="badge badge-green">Published</span></td><td style="font-size:13px;font-weight:700;color:var(--adm-amber);">★ 5.0</td><td><span class="badge badge-green">Completed</span></td><td><a href="#" class="row-link">View</a></td></tr>
                   <tr><td style="font-size:12px;">25 Mar · 11AM</td><td><div class="user-cell"><div class="user-ava amber">JM</div><div class="user-name">Jordan Mills</div></div></td><td style="font-size:12px;">Keiran R.</td><td style="font-size:13px;font-weight:600;">—</td><td><span class="badge badge-slate">—</span></td><td style="font-size:12px;color:var(--adm-txt-faint);">—</td><td><span class="badge badge-red">Missed</span></td><td><a href="#" class="row-link">View</a></td></tr>
+                  <tr><td style="font-size:12px;">24 Mar · 2:30PM</td><td><div class="user-cell"><div class="user-ava teal">FC</div><div class="user-name">Fatima Choudhry</div></div></td><td style="font-size:12px;">Layla N.</td><td style="font-size:13px;font-weight:600;">55 min</td><td><span class="badge badge-green">Published</span></td><td style="font-size:13px;font-weight:700;color:var(--adm-amber);">★ 4.7</td><td><span class="badge badge-green">Completed</span></td><td><a href="#" class="row-link">View</a></td></tr>
+                  <tr><td style="font-size:12px;">23 Mar · 10AM</td><td><div class="user-cell"><div class="user-ava green">OB</div><div class="user-name">Ollie Barnes</div></div></td><td style="font-size:12px;">Dev N.</td><td style="font-size:13px;font-weight:600;">48 min</td><td><span class="badge badge-green">Published</span></td><td style="font-size:13px;font-weight:700;color:var(--adm-amber);">★ 5.0</td><td><span class="badge badge-green">Completed</span></td><td><a href="#" class="row-link">View</a></td></tr>
+                  <tr><td style="font-size:12px;">21 Mar · 1PM</td><td><div class="user-cell"><div class="user-ava purple">AP</div><div class="user-name">Aisha Patel</div></div></td><td style="font-size:12px;">Keiran R.</td><td style="font-size:13px;font-weight:600;">52 min</td><td><span class="badge badge-green">Published</span></td><td style="font-size:13px;font-weight:700;color:var(--adm-amber);">★ 4.9</td><td><span class="badge badge-green">Completed</span></td><td><a href="#" class="row-link">View</a></td></tr>
+                  <tr><td style="font-size:12px;">20 Mar · 9:30AM</td><td><div class="user-cell"><div class="user-ava amber">EW</div><div class="user-name">Eva Williams</div></div></td><td style="font-size:12px;">Layla N.</td><td style="font-size:13px;font-weight:600;">45 min</td><td><span class="badge badge-green">Published</span></td><td style="font-size:13px;font-weight:700;color:var(--adm-amber);">★ 4.8</td><td><span class="badge badge-green">Completed</span></td><td><a href="#" class="row-link">View</a></td></tr>
+                  <tr><td style="font-size:12px;">19 Mar · 3PM</td><td><div class="user-cell"><div class="user-ava blue">NK</div><div class="user-name">Natasha Kwei</div></div></td><td style="font-size:12px;">Maya J.</td><td style="font-size:13px;font-weight:600;">40 min</td><td><span class="badge badge-amber">Draft</span></td><td style="font-size:13px;font-weight:700;color:var(--adm-amber);">★ 4.6</td><td><span class="badge badge-green">Completed</span></td><td><a href="#" class="row-link">View</a></td></tr>
+                  <tr><td style="font-size:12px;">18 Mar · 11AM</td><td><div class="user-cell"><div class="user-ava red">AT</div><div class="user-name">Alex Turner</div></div></td><td style="font-size:12px;">Maya J.</td><td style="font-size:13px;font-weight:600;">60 min</td><td><span class="badge badge-green">Published</span></td><td style="font-size:13px;font-weight:700;color:var(--adm-amber);">★ 4.5</td><td><span class="badge badge-green">Completed</span></td><td><a href="#" class="row-link">View</a></td></tr>
+                  <tr><td style="font-size:12px;">17 Mar · 2PM</td><td><div class="user-cell"><div class="user-ava purple">PT</div><div class="user-name">Priya Thakur</div></div></td><td style="font-size:12px;">Keiran R.</td><td style="font-size:13px;font-weight:600;">50 min</td><td><span class="badge badge-green">Published</span></td><td style="font-size:13px;font-weight:700;color:var(--adm-amber);">★ 5.0</td><td><span class="badge badge-green">Completed</span></td><td><a href="#" class="row-link">View</a></td></tr>
+                  <tr><td style="font-size:12px;">15 Mar · 10AM</td><td><div class="user-cell"><div class="user-ava teal">SR</div><div class="user-name">Sam Rivera</div></div></td><td style="font-size:12px;">Layla N.</td><td style="font-size:13px;font-weight:600;">45 min</td><td><span class="badge badge-green">Published</span></td><td style="font-size:13px;font-weight:700;color:var(--adm-amber);">★ 4.9</td><td><span class="badge badge-green">Completed</span></td><td><a href="#" class="row-link">View</a></td></tr>
                 </tbody>
               </table>
             </div>

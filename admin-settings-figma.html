@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Settings — All Sections · Figma Export</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="admin.css">
+<style>
+  body { background: var(--adm-bg); padding: 40px; font-family: 'DM Sans', sans-serif; }
+  @media (max-width: 600px) { body { padding: 16px 14px; } }
+  .section-wrap { max-width: 860px; margin: 0 auto; }
+  .section-heading {
+    display: flex; align-items: center; gap: 12px;
+    font-size: 11px; font-weight: 800; letter-spacing: .7px;
+    text-transform: uppercase; color: var(--adm-txt-muted);
+    margin-bottom: 16px;
+  }
+  .section-heading::after { content: ''; flex: 1; height: 1px; background: var(--adm-border); }
+  .section-divider { margin: 40px 0; border: none; border-top: 2px dashed var(--adm-border); }
+
+  .settings-section { margin-bottom: 28px; }
+  .settings-section h3 {
+    font-size: 11px; font-weight: 800; color: var(--adm-txt-head);
+    text-transform: uppercase; letter-spacing: .5px;
+    margin-bottom: 14px; padding-bottom: 8px;
+    border-bottom: 2px solid var(--adm-border);
+  }
+  .settings-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .settings-danger { background: var(--adm-red-lt); border: 1px solid rgba(239,68,68,.2); border-radius: var(--adm-r-md); padding: 20px; margin-top: 28px; }
+  .settings-danger h3 { color: var(--adm-red); border-bottom-color: rgba(239,68,68,.2); }
+  .role-card { border: 1px solid var(--adm-border); border-radius: var(--adm-r-md); padding: 16px; background: var(--adm-surface); }
+  .role-card-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+  .role-card h4 { font-size:14px; font-weight:700; color:var(--adm-txt-head); }
+  .role-card p { font-size:12px; color:var(--adm-txt-muted); margin-bottom:10px; }
+  .perm-list { display: flex; flex-wrap: wrap; gap: 6px; }
+  .perm-tag { font-size:11px; font-weight:600; background:var(--adm-bg); color:var(--adm-txt-muted); padding:3px 9px; border-radius:20px; border:1px solid var(--adm-border); }
+  .admin-user-row { display:flex; align-items:center; gap:12px; padding:10px 0; border-bottom:1px solid var(--adm-border-lt); }
+  .admin-user-row:last-child { border-bottom:none; }
+</style>
+</head>
+<body>
+<div class="section-wrap">
+
+  <!-- ══════════════════════════════════
+       1 · GENERAL
+  ══════════════════════════════════ -->
+  <div class="section-heading">1 · General</div>
+  <div class="card">
+    <div class="card-head"><div class="card-title">General Settings</div><button class="btn btn-primary btn-sm">Save changes</button></div>
+    <div style="padding:24px;">
+
+      <div class="settings-section">
+        <h3>Platform Identity</h3>
+        <div class="settings-form-grid">
+          <div class="form-group"><label class="form-label">Platform name</label><input class="form-input" value="Luminwell" type="text"></div>
+          <div class="form-group"><label class="form-label">Support email</label><input class="form-input" value="support@luminwell.co.uk" type="email"></div>
+          <div class="form-group"><label class="form-label">Default language</label><select class="form-select"><option>English (UK)</option><option>English (US)</option></select></div>
+          <div class="form-group"><label class="form-label">Academic year start</label><input class="form-input" type="date" value="2025-09-15"></div>
+          <div class="form-group"><label class="form-label">Time zone</label><select class="form-select"><option>Europe/London (GMT)</option><option>Europe/Dublin</option><option>America/New_York</option></select></div>
+          <div class="form-group"><label class="form-label">Crisis helpline number</label><input class="form-input" value="116 123 (Samaritans)" type="text"></div>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <h3>Session Configuration</h3>
+        <div class="settings-form-grid">
+          <div class="form-group"><label class="form-label">Default session duration (minutes)</label><input class="form-input" type="number" value="50"></div>
+          <div class="form-group"><label class="form-label">Max sessions per user per month</label><input class="form-input" type="number" value="8"></div>
+          <div class="form-group"><label class="form-label">Session booking lead time (hours)</label><input class="form-input" type="number" value="24"></div>
+          <div class="form-group"><label class="form-label">Cancellation notice period (hours)</label><input class="form-input" type="number" value="12"></div>
+        </div>
+        <div style="margin-top:14px;">
+          <p class="form-label" style="margin-bottom:8px;">Session types enabled</p>
+          <div style="display:flex;gap:14px;">
+            <label style="display:flex;align-items:center;gap:8px;font-size:13px;"><input type="checkbox" checked> Video sessions</label>
+            <label style="display:flex;align-items:center;gap:8px;font-size:13px;"><input type="checkbox" checked> Audio-only sessions</label>
+            <label style="display:flex;align-items:center;gap:8px;font-size:13px;"><input type="checkbox" checked> Text / chat sessions</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <h3>Feature Flags</h3>
+        <div style="display:flex;flex-direction:column;">
+          <div class="toggle-row"><div class="toggle-info"><p>AI-assisted note generation</p><small>Enables AI tools in ambassador note editor</small></div><div><input type="checkbox" id="feat-ai" class="toggle-check" checked><label for="feat-ai" class="toggle-track"></label></div></div>
+          <div class="toggle-row"><div class="toggle-info"><p>Mood journalling</p><small>User daily mood check-in and journal</small></div><div><input type="checkbox" id="feat-journal" class="toggle-check" checked><label for="feat-journal" class="toggle-track"></label></div></div>
+          <div class="toggle-row"><div class="toggle-info"><p>AI journal mood detection</p><small>Automatic welfare flag based on journal language</small></div><div><input type="checkbox" id="feat-aijournal" class="toggle-check" checked><label for="feat-aijournal" class="toggle-track"></label></div></div>
+          <div class="toggle-row"><div class="toggle-info"><p>Peer matching algorithm</p><small>Automatic matching of users to ambassadors</small></div><div><input type="checkbox" id="feat-match" class="toggle-check" checked><label for="feat-match" class="toggle-track"></label></div></div>
+          <div class="toggle-row"><div class="toggle-info"><p>Group sessions (beta)</p><small>Allow ambassadors to host group sessions</small></div><div><input type="checkbox" id="feat-group" class="toggle-check"><label for="feat-group" class="toggle-track"></label></div></div>
+          <div class="toggle-row"><div class="toggle-info"><p>Peer resource library</p><small>Shared wellbeing resources visible to users</small></div><div><input type="checkbox" id="feat-lib" class="toggle-check" checked><label for="feat-lib" class="toggle-track"></label></div></div>
+        </div>
+      </div>
+
+      <div class="settings-danger">
+        <h3>Danger Zone</h3>
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px;background:rgba(239,68,68,.05);border-radius:var(--adm-r-sm);">
+            <div><p style="font-size:13px;font-weight:700;color:var(--adm-txt-head);">Clear all user data (test mode only)</p><p style="font-size:12px;color:var(--adm-txt-muted);">Permanently wipes all test accounts and data. Cannot be undone.</p></div>
+            <button class="btn btn-danger btn-sm" style="flex-shrink:0;">Clear test data</button>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px;background:rgba(239,68,68,.05);border-radius:var(--adm-r-sm);">
+            <div><p style="font-size:13px;font-weight:700;color:var(--adm-txt-head);">Put platform into maintenance mode</p><p style="font-size:12px;color:var(--adm-txt-muted);">Users will see a maintenance page. Admin access preserved.</p></div>
+            <button class="btn btn-danger btn-sm" style="flex-shrink:0;">Enable maintenance</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- ══════════════════════════════════
+       2 · MATCHING
+  ══════════════════════════════════ -->
+  <div class="section-heading">2 · Matching</div>
+  <div class="card">
+    <div class="card-head"><div class="card-title">Matching Settings</div><button class="btn btn-primary btn-sm">Save changes</button></div>
+    <div style="padding:24px;">
+      <div class="settings-section">
+        <h3>Matching Algorithm Weights</h3>
+        <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:14px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:var(--adm-bg);border-radius:var(--adm-r-sm);"><span style="font-size:13px;font-weight:600;">Specialism alignment</span><div style="display:flex;align-items:center;gap:10px;"><input type="range" min="0" max="100" value="40" style="width:100px;"><span style="font-size:12px;font-weight:700;min-width:30px;color:var(--adm-blue);">40%</span></div></div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:var(--adm-bg);border-radius:var(--adm-r-sm);"><span style="font-size:13px;font-weight:600;">University proximity</span><div style="display:flex;align-items:center;gap:10px;"><input type="range" min="0" max="100" value="25" style="width:100px;"><span style="font-size:12px;font-weight:700;min-width:30px;color:var(--adm-blue);">25%</span></div></div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:var(--adm-bg);border-radius:var(--adm-r-sm);"><span style="font-size:13px;font-weight:600;">Availability overlap</span><div style="display:flex;align-items:center;gap:10px;"><input type="range" min="0" max="100" value="25" style="width:100px;"><span style="font-size:12px;font-weight:700;min-width:30px;color:var(--adm-blue);">25%</span></div></div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:var(--adm-bg);border-radius:var(--adm-r-sm);"><span style="font-size:13px;font-weight:600;">Ambassador load balancing</span><div style="display:flex;align-items:center;gap:10px;"><input type="range" min="0" max="100" value="10" style="width:100px;"><span style="font-size:12px;font-weight:700;min-width:30px;color:var(--adm-blue);">10%</span></div></div>
+        </div>
+        <p style="font-size:12px;color:var(--adm-txt-muted);">Weights must total 100%. Current total: <strong style="color:var(--adm-green);">100% ✓</strong></p>
+      </div>
+      <div class="settings-section">
+        <h3>Match Rules</h3>
+        <div class="settings-form-grid">
+          <div class="form-group"><label class="form-label">Max clients per ambassador</label><input class="form-input" type="number" value="10"></div>
+          <div class="form-group"><label class="form-label">Max wait time before manual review (days)</label><input class="form-input" type="number" value="3"></div>
+          <div class="form-group"><label class="form-label">Min sessions before re-match allowed</label><input class="form-input" type="number" value="3"></div>
+          <div class="form-group"><label class="form-label">Max re-matches per user</label><input class="form-input" type="number" value="2"></div>
+        </div>
+        <div style="display:flex;flex-direction:column;margin-top:14px;">
+          <div class="toggle-row"><div class="toggle-info"><p>Allow users to request re-match</p><small>Users can request a new ambassador after 3 sessions</small></div><div><input type="checkbox" id="m-rematch" class="toggle-check" checked><label for="m-rematch" class="toggle-track"></label></div></div>
+          <div class="toggle-row"><div class="toggle-info"><p>Admin override required for all matches</p><small>All matches need admin approval before activation</small></div><div><input type="checkbox" id="m-override" class="toggle-check"><label for="m-override" class="toggle-track"></label></div></div>
+          <div class="toggle-row"><div class="toggle-info"><p>Same-university matching preferred</p><small>Prioritise matching within same institution</small></div><div><input type="checkbox" id="m-uni" class="toggle-check" checked><label for="m-uni" class="toggle-track"></label></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- ══════════════════════════════════
+       3 · NOTIFICATIONS
+  ══════════════════════════════════ -->
+  <div class="section-heading">3 · Notifications</div>
+  <div class="card">
+    <div class="card-head"><div class="card-title">Notification Rules</div><button class="btn btn-primary btn-sm">Save changes</button></div>
+    <div style="padding:24px;">
+      <div class="settings-section">
+        <h3>Automated Notification Rules</h3>
+        <div style="display:flex;flex-direction:column;">
+          <div class="toggle-row"><div class="toggle-info"><p>Notify user when matched to ambassador</p><small>Email + in-app · sent immediately</small></div><div><input type="checkbox" id="n1" class="toggle-check" checked><label for="n1" class="toggle-track"></label></div></div>
+          <div class="toggle-row"><div class="toggle-info"><p>Session reminder (24h before)</p><small>Email + push · 24 hours before scheduled time</small></div><div><input type="checkbox" id="n2" class="toggle-check" checked><label for="n2" class="toggle-track"></label></div></div>
+          <div class="toggle-row"><div class="toggle-info"><p>Session reminder (1h before)</p><small>Push notification only · 1 hour before</small></div><div><input type="checkbox" id="n3" class="toggle-check" checked><label for="n3" class="toggle-track"></label></div></div>
+          <div class="toggle-row"><div class="toggle-info"><p>Welfare flag alert to admin</p><small>Email + in-app · immediate — all severity levels</small></div><div><input type="checkbox" id="n4" class="toggle-check" checked><label for="n4" class="toggle-track"></label></div></div>
+          <div class="toggle-row"><div class="toggle-info"><p>Missed session alert (to ambassador)</p><small>In-app · 15 minutes after no-show</small></div><div><input type="checkbox" id="n5" class="toggle-check" checked><label for="n5" class="toggle-track"></label></div></div>
+          <div class="toggle-row"><div class="toggle-info"><p>Weekly engagement digest to admin</p><small>Email · every Monday at 8:00 AM</small></div><div><input type="checkbox" id="n6" class="toggle-check" checked><label for="n6" class="toggle-track"></label></div></div>
+          <div class="toggle-row"><div class="toggle-info"><p>Ambassador application submitted</p><small>Email to admin · immediate</small></div><div><input type="checkbox" id="n7" class="toggle-check" checked><label for="n7" class="toggle-track"></label></div></div>
+          <div class="toggle-row"><div class="toggle-info"><p>Journal mood dip detected</p><small>In-app alert to ambassador · next working day</small></div><div><input type="checkbox" id="n8" class="toggle-check" checked><label for="n8" class="toggle-track"></label></div></div>
+          <div class="toggle-row"><div class="toggle-info"><p>GDPR data request deadline approaching (7 days)</p><small>Email to admin · 7 days before due date</small></div><div><input type="checkbox" id="n9" class="toggle-check" checked><label for="n9" class="toggle-track"></label></div></div>
+          <div class="toggle-row"><div class="toggle-info"><p>Monthly platform report</p><small>PDF summary emailed to Super Admin</small></div><div><input type="checkbox" id="n10" class="toggle-check" checked><label for="n10" class="toggle-track"></label></div></div>
+        </div>
+      </div>
+      <div class="settings-section">
+        <h3>Notification Channels</h3>
+        <div class="settings-form-grid">
+          <div class="form-group"><label class="form-label">Admin notification email</label><input class="form-input" value="admin@luminwell.co.uk" type="email"></div>
+          <div class="form-group"><label class="form-label">Welfare lead email</label><input class="form-input" value="sarah@luminwell.co.uk" type="email"></div>
+          <div class="form-group"><label class="form-label">Digest send time</label><input class="form-input" type="time" value="08:00"></div>
+          <div class="form-group"><label class="form-label">Digest day</label><select class="form-select"><option>Monday</option><option>Tuesday</option><option>Wednesday</option></select></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- ══════════════════════════════════
+       4 · WELFARE
+  ══════════════════════════════════ -->
+  <div class="section-heading">4 · Welfare</div>
+  <div class="card">
+    <div class="card-head"><div class="card-title">Welfare Settings</div><button class="btn btn-primary btn-sm">Save changes</button></div>
+    <div style="padding:24px;">
+      <div class="settings-section">
+        <h3>Escalation Rules</h3>
+        <div class="settings-form-grid">
+          <div class="form-group"><label class="form-label">Critical flag response SLA (minutes)</label><input class="form-input" type="number" value="60"></div>
+          <div class="form-group"><label class="form-label">High flag response SLA (hours)</label><input class="form-input" type="number" value="24"></div>
+          <div class="form-group"><label class="form-label">Missed sessions before auto-flag</label><input class="form-input" type="number" value="3"></div>
+          <div class="form-group"><label class="form-label">Journal low-mood streak before flag (days)</label><input class="form-input" type="number" value="5"></div>
+          <div class="form-group"><label class="form-label">Welfare lead name</label><input class="form-input" value="Sarah Price" type="text"></div>
+          <div class="form-group"><label class="form-label">Welfare lead email</label><input class="form-input" value="sarah@luminwell.co.uk" type="email"></div>
+        </div>
+      </div>
+      <div class="settings-section">
+        <h3>Welfare Toggles</h3>
+        <div style="display:flex;flex-direction:column;">
+          <div class="toggle-row"><div class="toggle-info"><p>AI journal welfare detection</p><small>Auto-flag based on natural language processing</small></div><div><input type="checkbox" id="w1" class="toggle-check" checked><label for="w1" class="toggle-track"></label></div></div>
+          <div class="toggle-row"><div class="toggle-info"><p>Ambassador welfare reporting</p><small>Ambassadors can log welfare concerns from sessions</small></div><div><input type="checkbox" id="w2" class="toggle-check" checked><label for="w2" class="toggle-track"></label></div></div>
+          <div class="toggle-row"><div class="toggle-info"><p>Mandatory follow-up after critical flag</p><small>24h follow-up check required before flag can be closed</small></div><div><input type="checkbox" id="w3" class="toggle-check" checked><label for="w3" class="toggle-track"></label></div></div>
+          <div class="toggle-row"><div class="toggle-info"><p>Auto-suspend session access on critical flag</p><small>Temporarily pauses new session booking for flagged user</small></div><div><input type="checkbox" id="w4" class="toggle-check"><label for="w4" class="toggle-track"></label></div></div>
+          <div class="toggle-row"><div class="toggle-info"><p>Show crisis helpline number in app</p><small>Samaritans number shown in footer and welfare banner</small></div><div><input type="checkbox" id="w5" class="toggle-check" checked><label for="w5" class="toggle-track"></label></div></div>
+          <div class="toggle-row"><div class="toggle-info"><p>Ambassador anonymous welfare reports</p><small>Allow ambassadors to submit anonymous concerns</small></div><div><input type="checkbox" id="w6" class="toggle-check" checked><label for="w6" class="toggle-track"></label></div></div>
+        </div>
+      </div>
+      <div class="settings-section" style="background:var(--adm-amber-lt);border-radius:var(--adm-r-md);padding:16px;">
+        <h3>Crisis Keywords (AI Detection)</h3>
+        <p style="font-size:12px;color:var(--adm-txt-muted);margin-bottom:12px;">These keywords trigger an automatic welfare flag when detected in journal entries or messages.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;">
+          <span style="background:var(--adm-red-lt);color:var(--adm-red);border:1px solid rgba(220,38,38,.2);border-radius:20px;padding:3px 10px;font-size:11px;font-weight:700;">can't go on</span>
+          <span style="background:var(--adm-red-lt);color:var(--adm-red);border:1px solid rgba(220,38,38,.2);border-radius:20px;padding:3px 10px;font-size:11px;font-weight:700;">don't want to be here</span>
+          <span style="background:var(--adm-red-lt);color:var(--adm-red);border:1px solid rgba(220,38,38,.2);border-radius:20px;padding:3px 10px;font-size:11px;font-weight:700;">end it all</span>
+          <span style="background:var(--adm-red-lt);color:var(--adm-red);border:1px solid rgba(220,38,38,.2);border-radius:20px;padding:3px 10px;font-size:11px;font-weight:700;">hurt myself</span>
+          <span style="background:var(--adm-red-lt);color:var(--adm-red);border:1px solid rgba(220,38,38,.2);border-radius:20px;padding:3px 10px;font-size:11px;font-weight:700;">pointless</span>
+          <span style="background:var(--adm-amber-lt);color:#92400e;border:1px solid rgba(245,158,11,.2);border-radius:20px;padding:3px 10px;font-size:11px;font-weight:700;">everything is too much</span>
+          <span style="background:var(--adm-amber-lt);color:#92400e;border:1px solid rgba(245,158,11,.2);border-radius:20px;padding:3px 10px;font-size:11px;font-weight:700;">no point</span>
+          <button class="btn btn-ghost btn-sm" style="font-size:11px;">+ Add keyword</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- ══════════════════════════════════
+       5 · PRIVACY
+  ══════════════════════════════════ -->
+  <div class="section-heading">5 · Privacy</div>
+  <div class="card">
+    <div class="card-head"><div class="card-title">Privacy Settings</div><button class="btn btn-primary btn-sm">Save changes</button></div>
+    <div style="padding:24px;">
+      <div class="settings-section">
+        <h3>Data Retention Periods</h3>
+        <div class="settings-form-grid">
+          <div class="form-group"><label class="form-label">User account data retention (years)</label><input class="form-input" type="number" value="3"></div>
+          <div class="form-group"><label class="form-label">Session notes retention (years)</label><input class="form-input" type="number" value="7"></div>
+          <div class="form-group"><label class="form-label">Journal entry retention (years)</label><input class="form-input" type="number" value="3"></div>
+          <div class="form-group"><label class="form-label">Welfare log retention (years)</label><input class="form-input" type="number" value="7"></div>
+          <div class="form-group"><label class="form-label">Audit trail retention (years)</label><input class="form-input" type="number" value="10"></div>
+          <div class="form-group"><label class="form-label">Chat message retention (years)</label><input class="form-input" type="number" value="3"></div>
+        </div>
+      </div>
+      <div class="settings-section">
+        <h3>Consent &amp; GDPR</h3>
+        <div style="display:flex;flex-direction:column;">
+          <div class="toggle-row"><div class="toggle-info"><p>Require explicit consent on registration</p><small>GDPR compliant opt-in for data processing</small></div><div><input type="checkbox" id="p1" class="toggle-check" checked><label for="p1" class="toggle-track"></label></div></div>
+          <div class="toggle-row"><div class="toggle-info"><p>Allow users to export their data</p><small>GDPR Article 20 — right to data portability</small></div><div><input type="checkbox" id="p2" class="toggle-check" checked><label for="p2" class="toggle-track"></label></div></div>
+          <div class="toggle-row"><div class="toggle-info"><p>Allow users to request account deletion</p><small>GDPR Article 17 — right to erasure</small></div><div><input type="checkbox" id="p3" class="toggle-check" checked><label for="p3" class="toggle-track"></label></div></div>
+          <div class="toggle-row"><div class="toggle-info"><p>AI data processing disclosure shown to users</p><small>Shown where AI note generation is used</small></div><div><input type="checkbox" id="p4" class="toggle-check" checked><label for="p4" class="toggle-track"></label></div></div>
+          <div class="toggle-row"><div class="toggle-info"><p>Anonymise inactive users after retention period</p><small>Auto-anonymise accounts with no activity for 3 years</small></div><div><input type="checkbox" id="p5" class="toggle-check" checked><label for="p5" class="toggle-track"></label></div></div>
+          <div class="toggle-row"><div class="toggle-info"><p>Cookie consent banner</p><small>Show GDPR cookie consent on first visit</small></div><div><input type="checkbox" id="p6" class="toggle-check" checked><label for="p6" class="toggle-track"></label></div></div>
+        </div>
+      </div>
+      <div class="settings-section">
+        <h3>DPO &amp; ICO Details</h3>
+        <div class="settings-form-grid">
+          <div class="form-group"><label class="form-label">Data controller name</label><input class="form-input" value="Luminwell Ltd" type="text"></div>
+          <div class="form-group"><label class="form-label">DPO contact email</label><input class="form-input" value="dpo@luminwell.co.uk" type="email"></div>
+          <div class="form-group"><label class="form-label">ICO registration number</label><input class="form-input" value="ZB123456" type="text"></div>
+          <div class="form-group"><label class="form-label">Next audit due</label><input class="form-input" type="date" value="2026-06-01"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- ══════════════════════════════════
+       6 · ROLES & ACCESS
+  ══════════════════════════════════ -->
+  <div class="section-heading">6 · Roles &amp; Access</div>
+  <div class="card">
+    <div class="card-head"><div class="card-title">Roles &amp; Access Control</div><button class="btn btn-primary btn-sm">+ Invite admin user</button></div>
+    <div style="padding:24px;">
+
+      <div class="settings-section">
+        <h3>Platform Roles</h3>
+        <div class="settings-form-grid" style="margin-bottom:24px;">
+
+          <div class="role-card" style="border-left:3px solid var(--adm-red);">
+            <div class="role-card-head"><h4>Super Admin</h4><span class="badge badge-red">Full access</span></div>
+            <p>Complete platform control including settings, data access, GDPR tools and role management.</p>
+            <div class="perm-list"><span class="perm-tag">All users</span><span class="perm-tag">All data</span><span class="perm-tag">Settings</span><span class="perm-tag">GDPR tools</span><span class="perm-tag">Delete accounts</span><span class="perm-tag">Role management</span></div>
+          </div>
+
+          <div class="role-card" style="border-left:3px solid var(--adm-blue);">
+            <div class="role-card-head"><h4>Admin</h4><span class="badge badge-blue">Standard</span></div>
+            <p>Manage users, ambassadors, welfare flags and sessions. Cannot modify settings or delete accounts.</p>
+            <div class="perm-list"><span class="perm-tag">Users</span><span class="perm-tag">Ambassadors</span><span class="perm-tag">Welfare</span><span class="perm-tag">Sessions</span><span class="perm-tag">Analytics</span><span class="perm-tag">Messages</span></div>
+          </div>
+
+          <div class="role-card" style="border-left:3px solid var(--adm-amber);">
+            <div class="role-card-head"><h4>Welfare Officer</h4><span class="badge badge-amber">Restricted</span></div>
+            <p>View and action welfare flags only. No access to unrelated user data or settings.</p>
+            <div class="perm-list"><span class="perm-tag">Welfare flags</span><span class="perm-tag">Session notes</span><span class="perm-tag">Crisis contacts</span><span class="perm-tag">GDPR requests</span></div>
+          </div>
+
+          <div class="role-card" style="border-left:3px solid var(--adm-txt-faint);">
+            <div class="role-card-head"><h4>Read-only</h4><span class="badge badge-slate">View only</span></div>
+            <p>Analytics and reporting access for stakeholders. Cannot action or modify anything.</p>
+            <div class="perm-list"><span class="perm-tag">Analytics</span><span class="perm-tag">Reports</span><span class="perm-tag">Aggregate data</span><span class="perm-tag">Export reports</span></div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <h3>Current Admin Team</h3>
+        <div style="background:var(--adm-surface);border:1px solid var(--adm-border);border-radius:var(--adm-r-md);overflow:hidden;">
+          <div class="admin-user-row" style="padding:12px 16px;border-bottom:1px solid var(--adm-border);">
+            <div class="user-ava blue" style="flex-shrink:0;">AK</div>
+            <div style="flex:1;"><p style="font-size:13px;font-weight:700;color:var(--adm-txt-head);">Admin Kumar</p><p style="font-size:11px;color:var(--adm-txt-muted);">admin@luminwell.co.uk</p></div>
+            <span class="badge badge-red">Super Admin</span>
+            <span style="font-size:11px;color:var(--adm-txt-faint);">Last login: Today</span>
+            <button class="btn btn-ghost btn-sm">Edit</button>
+          </div>
+          <div class="admin-user-row" style="padding:12px 16px;border-bottom:1px solid var(--adm-border);">
+            <div class="user-ava green" style="flex-shrink:0;">SP</div>
+            <div style="flex:1;"><p style="font-size:13px;font-weight:700;color:var(--adm-txt-head);">Sarah Price</p><p style="font-size:11px;color:var(--adm-txt-muted);">sarah@luminwell.co.uk</p></div>
+            <span class="badge badge-amber">Welfare Officer</span>
+            <span style="font-size:11px;color:var(--adm-txt-faint);">Last login: Today</span>
+            <button class="btn btn-ghost btn-sm">Edit</button>
+          </div>
+          <div class="admin-user-row" style="padding:12px 16px;border-bottom:1px solid var(--adm-border);">
+            <div class="user-ava teal" style="flex-shrink:0;">RB</div>
+            <div style="flex:1;"><p style="font-size:13px;font-weight:700;color:var(--adm-txt-head);">Rachel Brooks</p><p style="font-size:11px;color:var(--adm-txt-muted);">rachel@luminwell.co.uk</p></div>
+            <span class="badge badge-blue">Admin</span>
+            <span style="font-size:11px;color:var(--adm-txt-faint);">Last login: 28 Mar</span>
+            <button class="btn btn-ghost btn-sm">Edit</button>
+          </div>
+          <div class="admin-user-row" style="padding:12px 16px;">
+            <div class="user-ava amber" style="flex-shrink:0;">MH</div>
+            <div style="flex:1;"><p style="font-size:13px;font-weight:700;color:var(--adm-txt-head);">Marcus Hughes</p><p style="font-size:11px;color:var(--adm-txt-muted);">marcus@stakeholder.co.uk</p></div>
+            <span class="badge badge-slate">Read-only</span>
+            <span style="font-size:11px;color:var(--adm-txt-faint);">Last login: 20 Mar</span>
+            <button class="btn btn-ghost btn-sm">Edit</button>
+          </div>
+        </div>
+        <div style="margin-top:12px;display:flex;justify-content:flex-end;">
+          <button class="btn btn-secondary btn-sm">+ Invite admin user</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
