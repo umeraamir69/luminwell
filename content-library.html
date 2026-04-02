@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Resources &amp; guides — Luminwell</title>
+  <meta name="description" content="Articles, wellbeing resources, ambassador training, and announcements from Luminwell." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,300;1,9..144,400;1,9..144,500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="ambassador-page.css" />
+  <link rel="stylesheet" href="content-public.css" />
+</head>
+<body class="page-content-library">
+
+  <nav class="nav" aria-label="Main navigation">
+    <div class="wrap">
+      <div class="nav__inner">
+        <a class="nav__brand" href="landing.html">
+          <img class="nav__logo" src="logo.png" alt="Luminwell" width="34" height="34" decoding="async" />
+          <span class="nav__wordmark">Luminwell</span>
+        </a>
+
+        <ul class="nav__links">
+          <li><a href="landing.html#how-it-works">How it Works</a></li>
+          <li><a href="matching.html">Matching</a></li>
+          <li><a href="content-library.html" class="is-active" aria-current="page">Resources</a></li>
+          <li><a href="pricing.html">Pricing</a></li>
+        </ul>
+
+        <div class="nav__right">
+          <a class="nav__crisis" href="tel:988" aria-label="Call 988 crisis lifeline">
+            <svg fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+            <span>988 Crisis</span>
+          </a>
+          <a class="btn btn--ghost" href="index.html">Log In</a>
+          <a class="btn btn--navy" href="onboarding-01-age.html">Get Started</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <header class="cp-hero" aria-labelledby="cp-hero-h1">
+    <div class="wrap">
+      <h1 class="cp-hero__h1" id="cp-hero-h1">Your <em>library</em> of support</h1>
+      <p class="cp-hero__sub">Resources, ambassador guides, and platform updates — the same content your team curates in the admin panel, shown here for students and peers.</p>
+    </div>
+  </header>
+
+  <div class="cp-toolbar">
+    <div class="cp-toolbar__inner">
+      <label class="cp-search" aria-label="Search resources">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="search" placeholder="Search articles and guides…" autocomplete="off" />
+      </label>
+      <select class="cp-select" aria-label="Category"><option>All categories</option><option>Mental health</option><option>Academic</option><option>Crisis</option><option>Wellbeing</option></select>
+      <select class="cp-select" aria-label="Audience"><option>All audiences</option><option>Students</option><option>Clients</option><option>Ambassadors</option></select>
+    </div>
+  </div>
+
+  <main class="wrap" style="padding-bottom:48px;">
+
+    <section class="cp-section" aria-labelledby="cp-ann">
+      <div class="cp-section__head">
+        <h2 class="cp-section__title" id="cp-ann">Announcements</h2>
+        <span class="cp-section__count">Active updates from the team</span>
+      </div>
+      <div class="cp-list" role="list">
+        <a class="cp-row" role="listitem" href="content-view.html?id=announce-ai-notes">
+          <div class="cp-row__thumb" style="background:#f4faf7;color:var(--navy);">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4"/><path d="M22 9h-4"/><path d="M22 15h-4"/><path d="M18 12H2v2a2 2 0 0 0 2 2h12l2 3V7l-2 3"/><path d="M2 10h16V7l2-3H4a2 2 0 0 0-2 2z"/></svg>
+          </div>
+          <div class="cp-row__body">
+            <div class="cp-row__title">New AI Note Feature Now Live for Ambassadors</div>
+            <div class="cp-row__meta">Ambassadors · Published 25 Mar 2026 · Expires 30 Apr 2026</div>
+          </div>
+          <span class="cp-row__tag cp-tag--announce">News</span>
+          <svg class="cp-row__chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+        </a>
+        <a class="cp-row" role="listitem" href="content-view.html?id=announce-maintenance">
+          <div class="cp-row__thumb" style="background:#fffbeb;color:#b45309;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          </div>
+          <div class="cp-row__body">
+            <div class="cp-row__title">Scheduled maintenance — Sunday 6 Apr at 2 AM</div>
+            <div class="cp-row__meta">All users · Published 28 Mar 2026</div>
+          </div>
+          <span class="cp-row__tag cp-tag--announce">News</span>
+          <svg class="cp-row__chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+        </a>
+        <a class="cp-row" role="listitem" href="content-view.html?id=welcome-cohort">
+          <div class="cp-row__thumb" style="background:#ecfdf5;color:var(--teal);">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22V12"/><path d="M5 3a7 7 0 0 0 7 7 7 7 0 0 0-7-7z"/><path d="M19 3a7 7 0 0 1-7 7 7 7 0 0 1 7-7z"/></svg>
+          </div>
+          <div class="cp-row__body">
+            <div class="cp-row__title">Welcome to the Spring 2026 Cohort</div>
+            <div class="cp-row__meta">All users · Published 1 Feb 2026 · No expiry</div>
+          </div>
+          <span class="cp-row__tag cp-tag--announce">News</span>
+          <svg class="cp-row__chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+        </a>
+      </div>
+    </section>
+
+    <section class="cp-section" aria-labelledby="cp-res">
+      <div class="cp-section__head">
+        <h2 class="cp-section__title" id="cp-res">Resources</h2>
+        <span class="cp-section__count">Wellbeing articles for everyone</span>
+      </div>
+      <div class="cp-list" role="list">
+        <a class="cp-row" role="listitem" href="content-view.html?id=understanding-anxiety">
+          <div class="cp-row__thumb" style="background:#f4faf7;color:var(--navy);">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          </div>
+          <div class="cp-row__body">
+            <div class="cp-row__title">Understanding Anxiety — A Student's Guide</div>
+            <div class="cp-row__meta">Mental health · All users · 1,284 views · Published 14 Mar 2026</div>
+          </div>
+          <span class="cp-row__tag cp-tag--mental">Mental health</span>
+          <svg class="cp-row__chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+        </a>
+        <a class="cp-row" role="listitem" href="content-view.html?id=academic-pressure">
+          <div class="cp-row__thumb" style="background:#eaf5f1;color:var(--teal);">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          </div>
+          <div class="cp-row__body">
+            <div class="cp-row__title">Managing Academic Pressure During Exam Season</div>
+            <div class="cp-row__meta">Academic · Students · 987 views · Published 2 Mar 2026</div>
+          </div>
+          <span class="cp-row__tag cp-tag--academic">Academic</span>
+          <svg class="cp-row__chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+        </a>
+        <a class="cp-row" role="listitem" href="content-view.html?id=crisis-support">
+          <div class="cp-row__thumb" style="background:#fef2f2;color:#b91c1c;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <div class="cp-row__body">
+            <div class="cp-row__title">Crisis Support — What to Do If You're Struggling Now</div>
+            <div class="cp-row__meta">Crisis · All users · 2,401 views · Published 1 Jan 2026</div>
+          </div>
+          <span class="cp-row__tag cp-tag--crisis">Crisis</span>
+          <svg class="cp-row__chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+        </a>
+        <a class="cp-row" role="listitem" href="content-view.html?id=wellbeing-habits">
+          <div class="cp-row__thumb" style="background:#ecfdf5;color:#047857;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <div class="cp-row__body">
+            <div class="cp-row__title">Building Daily Wellbeing Habits</div>
+            <div class="cp-row__meta">Wellbeing · All users · 756 views · Published 18 Feb 2026</div>
+          </div>
+          <span class="cp-row__tag cp-tag--wellbeing">Wellbeing</span>
+          <svg class="cp-row__chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+        </a>
+        <a class="cp-row" role="listitem" href="content-view.html?id=cbt-intro">
+          <div class="cp-row__thumb" style="background:#f4faf7;color:var(--navy);">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+          </div>
+          <div class="cp-row__body">
+            <div class="cp-row__title">Introduction to CBT Techniques</div>
+            <div class="cp-row__meta">Mental health · All users · 621 views · Published 10 Feb 2026</div>
+          </div>
+          <span class="cp-row__tag cp-tag--mental">Mental health</span>
+          <svg class="cp-row__chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+        </a>
+        <a class="cp-row" role="listitem" href="content-view.html?id=goals-guide">
+          <div class="cp-row__thumb" style="background:#ecfdf5;color:#047857;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+          </div>
+          <div class="cp-row__body">
+            <div class="cp-row__title">Setting Goals That Stick — A Practical Guide</div>
+            <div class="cp-row__meta">Wellbeing · All users · 534 views · Published 5 Feb 2026</div>
+          </div>
+          <span class="cp-row__tag cp-tag--wellbeing">Wellbeing</span>
+          <svg class="cp-row__chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+        </a>
+        <a class="cp-row" role="listitem" href="content-view.html?id=sleep-mental-health">
+          <div class="cp-row__thumb" style="background:#f4faf7;color:var(--navy);">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 7A5 5 0 0 0 7 7c0 3.33 1 5 2 6H7m5.5 3.5A1.5 1.5 0 0 1 11 15h2a1.5 1.5 0 0 1-1.5 1.5z"/><path d="M10 21h4"/></svg>
+          </div>
+          <div class="cp-row__body">
+            <div class="cp-row__title">Sleep &amp; Mental Health — What's the Connection?</div>
+            <div class="cp-row__meta">Mental health · Students · 448 views · Published 22 Jan 2026</div>
+          </div>
+          <span class="cp-row__tag cp-tag--mental">Mental health</span>
+          <svg class="cp-row__chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+        </a>
+      </div>
+    </section>
+
+    <section class="cp-section" aria-labelledby="cp-guides">
+      <div class="cp-section__head">
+        <h2 class="cp-section__title" id="cp-guides">Ambassador guides</h2>
+        <span class="cp-section__count">Training &amp; safeguarding</span>
+      </div>
+      <div class="cp-list" role="list">
+        <a class="cp-row" role="listitem" href="content-view.html?id=guide-onboarding">
+          <div class="cp-row__thumb" style="background:#f5f3ff;color:#5b21b6;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+          </div>
+          <div class="cp-row__body">
+            <div class="cp-row__title">Ambassador Onboarding Guide — Getting Started</div>
+            <div class="cp-row__meta">Ambassadors only · Required · 312 views · Published 1 Sep 2025</div>
+          </div>
+          <span class="cp-row__tag cp-tag--guide">Guide</span>
+          <svg class="cp-row__chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+        </a>
+        <a class="cp-row" role="listitem" href="content-view.html?id=guide-crisis-sessions">
+          <div class="cp-row__thumb" style="background:#fffbeb;color:#b45309;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          </div>
+          <div class="cp-row__body">
+            <div class="cp-row__title">Handling Crisis Moments in Sessions</div>
+            <div class="cp-row__meta">Ambassadors only · Required · 298 views · Published 5 Sep 2025</div>
+          </div>
+          <span class="cp-row__tag cp-tag--guide">Guide</span>
+          <svg class="cp-row__chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+        </a>
+        <a class="cp-row" role="listitem" href="content-view.html?id=guide-session-notes">
+          <div class="cp-row__thumb" style="background:#eaf5f1;color:var(--teal);">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          </div>
+          <div class="cp-row__body">
+            <div class="cp-row__title">How to Write Effective Session Notes</div>
+            <div class="cp-row__meta">Ambassadors only · Recommended · 275 views · Published 12 Sep 2025</div>
+          </div>
+          <span class="cp-row__tag cp-tag--guide">Guide</span>
+          <svg class="cp-row__chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+        </a>
+        <a class="cp-row" role="listitem" href="content-view.html?id=guide-safeguarding">
+          <div class="cp-row__thumb" style="background:#f4faf7;color:var(--navy);">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
+          <div class="cp-row__body">
+            <div class="cp-row__title">Confidentiality &amp; Safeguarding — Your Responsibilities</div>
+            <div class="cp-row__meta">Ambassadors only · Required · 310 views · Published 1 Sep 2025</div>
+          </div>
+          <span class="cp-row__tag cp-tag--guide">Guide</span>
+          <svg class="cp-row__chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer" aria-label="Site footer">
+    <div class="wrap">
+      <div class="footer__grid">
+        <div>
+          <div class="footer__brand-name">Luminwell</div>
+          <p class="footer__brand-desc">Peer mental health support for students and young adults. Judgment-free, private, and accessible.</p>
+          <a class="footer__crisis-link" href="tel:988">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            988 Crisis Line &mdash; always available
+          </a>
+        </div>
+        <div>
+          <div class="footer__col-h">Platform</div>
+          <ul class="footer__links">
+            <li><a href="landing.html#how-it-works">How it Works</a></li>
+            <li><a href="matching.html">Matching</a></li>
+            <li><a href="content-library.html">Resources &amp; guides</a></li>
+            <li><a href="pricing.html">Pricing</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="footer__col-h">Support</div>
+          <ul class="footer__links">
+            <li><a href="content-library.html">Help articles</a></li>
+            <li><a href="#">Community Forum</a></li>
+            <li><a href="#">Crisis Resources</a></li>
+            <li><a href="#">Contact Us</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="footer__col-h">Legal</div>
+          <ul class="footer__links">
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms of Service</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <span>&copy; 2026 Luminwell. All rights reserved.</span>
+        <span><a href="content-library.html" style="color:inherit;">Resources</a></span>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

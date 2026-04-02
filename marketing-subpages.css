@@ -1,0 +1,59 @@
+/* Full-width marketing subpages: Matching & Pricing */
+
+.page-matching,
+.page-pricing {
+  min-height: 100vh;
+  background: #f6f8fb;
+}
+
+.page-matching .nav .nav__links a.is-active,
+.page-pricing .nav .nav__links a.is-active {
+  color: var(--navy);
+  background: var(--navy-pale);
+  font-weight: 600;
+}
+
+/* Matching — indigo → navy → teal hero */
+.page-matching .hero--subpage {
+  background: linear-gradient(122deg, #312e81 0%, #1e3a5f 38%, #175d92 72%, #157a63 100%);
+}
+
+.page-matching .hero--subpage::before {
+  background:
+    radial-gradient(ellipse 70% 55% at 90% 10%, rgba(126, 232, 200, 0.2), transparent 50%),
+    radial-gradient(ellipse 50% 40% at 10% 90%, rgba(99, 102, 241, 0.25), transparent 50%);
+}
+
+.page-matching .hero--subpage .hero__h1 em {
+  color: #c4b5fd;
+}
+
+/* Pricing — deep navy → teal */
+.page-pricing .hero--subpage {
+  background: linear-gradient(128deg, #0a1628 0%, #0f3154 35%, #175d92 65%, #1d6e55 100%);
+}
+
+.page-pricing .hero--subpage::before {
+  background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(45, 150, 118, 0.25), transparent 55%);
+}
+
+.page-pricing .hero--subpage .hero__h1 em {
+  color: var(--mint);
+}
+
+/* Subpage hero: optional right column (match UI / price preview) */
+.hero--subpage .hero__inner {
+  align-items: center;
+}
+
+.hero--subpage .hero__visual--flush .match-ui {
+  margin: 0;
+  max-width: 100%;
+}
+
+@media (max-width: 920px) {
+  .page-matching .hero--subpage .hero__visual,
+  .page-pricing .hero--subpage .hero__visual {
+    display: flex;
+  }
+}

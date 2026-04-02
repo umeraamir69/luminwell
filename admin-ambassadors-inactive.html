@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inactive — Ambassadors · Luminwell Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="admin.css">
+<style>
+  #amb-panel-inactive.tab-panel { display: block; }
+  .amb-panels .data-table .user-cell { min-width: 0; }
+  .amb-panels .data-table .user-sub { overflow-wrap: anywhere; word-break: break-word; }
+  @media (max-width: 400px) {
+    .amb-panels .pagination-btns {
+      max-width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      flex-wrap: nowrap;
+      padding-bottom: 6px;
+      justify-content: flex-start;
+    }
+  }
+</style>
+</head>
+<body>
+
+<input type="checkbox" id="sidebar-toggle" class="sidebar-toggle-check">
+
+<div class="admin-shell">
+
+  <aside class="admin-sidebar">
+    <div class="sidebar__logo"><div class="logo-mark"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17 8C8 10 5.9 16.17 3.82 22A13.34 13.34 0 0 0 18 8Z"/><path d="M9 9c-1.5 3.5-2.5 7-3 10C8 18 11 15 13 12" fill="rgba(255,255,255,.35)"/></svg></div><div class="logo-text-wrap"><div class="logo-name">Luminwell</div><span class="logo-badge-pill">ADMIN</span></div></div>
+    <label for="sidebar-toggle" class="sidebar__collapse-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></label>
+    <nav class="sidebar__nav">
+      <div class="nav-section">
+        <p class="nav-label">MAIN</p>
+        <a href="admin-home.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span class="link-text">Overview</span></a>
+        <a href="admin-analytics.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg><span class="link-text">Analytics</span></a>
+      </div>
+      <div class="nav-section">
+        <p class="nav-label">PEOPLE</p>
+        <a href="admin-users.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span class="link-text">Users</span></a>
+        <a href="admin-ambassadors.html" class="sidebar__link active"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><span class="link-text">Ambassadors</span><span class="nav-badge nav-badge--amber">3 new</span></a>
+        <a href="admin-matching.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg><span class="link-text">Matching</span></a>
+      </div>
+      <div class="nav-section">
+        <p class="nav-label">OPERATIONS</p>
+        <a href="admin-sessions.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><span class="link-text">Sessions</span></a>
+        <a href="admin-welfare.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span class="link-text">Welfare &amp; Safety</span><span class="nav-badge nav-badge--red">5</span></a>
+        <a href="admin-messages.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span class="link-text">Messages</span></a>
+      </div>
+      <div class="nav-section">
+        <p class="nav-label">PLATFORM</p>
+        <a href="admin-content.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span class="link-text">Content</span></a>
+        <a href="admin-settings.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06-.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span class="link-text">Settings</span></a>
+        <a href="admin-privacy.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><span class="link-text">Privacy &amp; GDPR</span></a>
+      </div>
+    </nav>
+    <div class="sidebar__foot">
+      <div class="sidebar__foot-user"><div class="admin-ava-sm">T</div><div class="sidebar__foot-info"><p>Tenner</p><small>Super Admin</small></div></div>
+      <button class="sidebar__signout">Sign out</button>
+    </div>
+  </aside>
+
+  <div class="admin-main">
+    <header class="admin-topbar">
+      <div class="topbar-left">
+        <label for="sidebar-toggle" class="topbar-menu-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></label>
+        <nav class="breadcrumb">
+          <a href="admin-home.html">Admin</a>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+          <a href="admin-ambassadors.html">Ambassadors</a>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+          <span class="bc-active">Inactive</span>
+        </nav>
+      </div>
+      <div class="topbar-right">
+        <div class="notif-wrap">
+          <input type="checkbox" id="notif-toggle" class="notif-check">
+          <label for="notif-toggle" class="topbar-icon-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><span class="notif-dot"></span></label>
+          <div class="notif-drop">
+            <div class="notif-drop-head"><h4>Notifications</h4><a href="#">Mark all read</a></div>
+            <div class="notif-item unread"><div class="notif-ico amber"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"/><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/></svg></div><div class="notif-body"><p><strong>3 ambassador applications</strong> pending approval.</p><small>1 h ago</small></div></div>
+            <div class="notif-drop-foot"><a href="admin-welfare.html">View all alerts →</a></div>
+          </div>
+        </div>
+        <div class="topbar-user"><div class="topbar-ava">T</div><div class="topbar-user-info"><div class="u-name">Tenner</div><div class="u-role">Super Admin</div></div></div>
+      </div>
+    </header>
+
+    <div class="admin-content">
+
+      <div class="page-hero">
+        <div class="page-hero-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+        <div class="page-hero-text">
+          <h1>Inactive ambassadors</h1>
+          <p>Former or paused peer supporters — approvals, performance &amp; caseloads</p>
+        </div>
+        <div class="page-hero-actions ambassadors-hero-actions">
+          <a href="#" class="btn btn-white">Export CSV</a>
+          <a href="admin-amb-add-1.html" class="btn btn-primary" style="background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);color:#fff;text-decoration:none;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right:5px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add Ambassador
+          </a>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-row stats-row--mb-20">
+        <div class="stat-card green"><div class="stat-top"><span class="stat-label">Active</span><div class="stat-icon green"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div></div><div class="stat-value">47</div><span class="stat-delta delta-up">▲ +3 this month</span></div>
+        <div class="stat-card amber"><div class="stat-top"><span class="stat-label">Pending Review</span><div class="stat-icon amber"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"/><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/></svg></div></div><div class="stat-value">3</div><span class="stat-delta delta-neu">Applied this week</span></div>
+        <div class="stat-card blue"><div class="stat-top"><span class="stat-label">Avg Caseload</span><div class="stat-icon blue"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div></div><div class="stat-value">6.6</div><span class="stat-delta delta-neu">clients per amb.</span></div>
+        <div class="stat-card purple"><div class="stat-top"><span class="stat-label">Avg Rating</span><div class="stat-icon purple"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div></div><div class="stat-value">4.8</div><span class="stat-delta delta-up">▲ +0.1 this month</span></div>
+      </div>
+
+      <div class="card">
+        <div class="tabs-row">
+          <a href="admin-ambassadors.html" class="tab-lbl">Active <span class="badge badge-green"  style="font-size:10px;padding:1px 7px;">47</span></a>
+          <a href="admin-ambassadors-pending.html" class="tab-lbl">Pending <span class="badge badge-amber" style="font-size:10px;padding:1px 7px;">3</span></a>
+          <a href="admin-ambassadors-inactive.html" class="tab-lbl is-active" aria-current="page">Inactive <span class="badge badge-slate" style="font-size:10px;padding:1px 7px;">8</span></a>
+        </div>
+
+        <div class="filter-bar">
+          <div class="search-wrap">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input class="search-inp" type="text" placeholder="Search inactive ambassadors…">
+          </div>
+          <select class="filter-sel"><option>All reasons</option><option>Graduated</option><option>On leave</option></select>
+        </div>
+
+        <div class="amb-panels">
+
+          <div id="amb-panel-inactive" class="tab-panel">
+            <div class="data-table-wrap">
+              <table class="data-table">
+                <thead><tr><th>Ambassador</th><th>University</th><th>Last active</th><th>Reason</th><th>Sessions total</th><th></th></tr></thead>
+                <tbody>
+                  <tr>
+                    <td><div class="user-cell"><div class="user-ava" style="background:#f1f5f9;color:#94a3b8;">FP</div><div><div class="user-name">Felix Park</div><div class="user-sub">felix.p@manchester.ac.uk</div></div></div></td>
+                    <td style="font-size:12px;">Manchester</td>
+                    <td style="font-size:12px;color:var(--adm-txt-muted);">14 Feb 2026</td>
+                    <td><span class="badge badge-slate">Graduated</span></td>
+                    <td style="font-weight:700;color:var(--adm-txt-head);">87</td>
+                    <td><a href="admin-amb-detail.html" class="row-link">View →</a></td>
+                  </tr>
+                  <tr>
+                    <td><div class="user-cell"><div class="user-ava" style="background:#f1f5f9;color:#94a3b8;">CH</div><div><div class="user-name">Clara Hayes</div><div class="user-sub">c.hayes@ucl.ac.uk</div></div></div></td>
+                    <td style="font-size:12px;">UCL</td>
+                    <td style="font-size:12px;color:var(--adm-txt-muted);">2 Jan 2026</td>
+                    <td><span class="badge badge-slate">On leave</span></td>
+                    <td style="font-weight:700;color:var(--adm-txt-head);">34</td>
+                    <td><a href="admin-amb-detail.html" class="row-link">View →</a></td>
+                  </tr>
+                  <tr>
+                    <td><div class="user-cell"><div class="user-ava" style="background:#f1f5f9;color:#94a3b8;">RK</div><div><div class="user-name">Rina Kobayashi</div><div class="user-sub">r.kobayashi@warwick.ac.uk</div></div></div></td>
+                    <td style="font-size:12px;">Warwick</td>
+                    <td style="font-size:12px;color:var(--adm-txt-muted);">5 Dec 2025</td>
+                    <td><span class="badge badge-slate">Personal reasons</span></td>
+                    <td style="font-weight:700;color:var(--adm-txt-head);">52</td>
+                    <td><a href="admin-amb-detail.html" class="row-link">View →</a></td>
+                  </tr>
+                  <tr>
+                    <td><div class="user-cell"><div class="user-ava" style="background:#f1f5f9;color:#94a3b8;">BM</div><div><div class="user-name">Ben Moore</div><div class="user-sub">b.moore@exeter.ac.uk</div></div></div></td>
+                    <td style="font-size:12px;">Exeter</td>
+                    <td style="font-size:12px;color:var(--adm-txt-muted);">19 Nov 2025</td>
+                    <td><span class="badge badge-slate">Year abroad</span></td>
+                    <td style="font-weight:700;color:var(--adm-txt-head);">23</td>
+                    <td><a href="admin-amb-detail.html" class="row-link">View →</a></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

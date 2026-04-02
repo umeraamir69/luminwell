@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Past — Sessions · Luminwell Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="admin.css">
+<style>
+  #ses-panel-past.tab-panel { display: block; }
+</style>
+</head>
+<body>
+
+<input type="checkbox" id="sidebar-toggle" class="sidebar-toggle-check">
+<div class="admin-shell">
+
+  <aside class="admin-sidebar">
+    <div class="sidebar__logo"><div class="logo-mark"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17 8C8 10 5.9 16.17 3.82 22A13.34 13.34 0 0 0 18 8Z"/><path d="M9 9c-1.5 3.5-2.5 7-3 10C8 18 11 15 13 12" fill="rgba(255,255,255,.35)"/></svg></div><div class="logo-text-wrap"><div class="logo-name">Luminwell</div><span class="logo-badge-pill">ADMIN</span></div></div>
+    <label for="sidebar-toggle" class="sidebar__collapse-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></label>
+    <nav class="sidebar__nav">
+      <div class="nav-section">
+        <p class="nav-label">MAIN</p>
+        <a href="admin-home.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span class="link-text">Overview</span></a>
+        <a href="admin-analytics.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg><span class="link-text">Analytics</span></a>
+      </div>
+      <div class="nav-section">
+        <p class="nav-label">PEOPLE</p>
+        <a href="admin-users.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span class="link-text">Users</span></a>
+        <a href="admin-ambassadors.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><span class="link-text">Ambassadors</span></a>
+        <a href="admin-matching.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg><span class="link-text">Matching</span></a>
+      </div>
+      <div class="nav-section">
+        <p class="nav-label">OPERATIONS</p>
+        <a href="admin-sessions.html" class="sidebar__link active"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><span class="link-text">Sessions</span></a>
+        <a href="admin-welfare.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span class="link-text">Welfare &amp; Safety</span><span class="nav-badge nav-badge--red">5</span></a>
+        <a href="admin-messages.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span class="link-text">Messages</span></a>
+      </div>
+      <div class="nav-section">
+        <p class="nav-label">PLATFORM</p>
+        <a href="admin-content.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span class="link-text">Content</span></a>
+        <a href="admin-settings.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06-.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span class="link-text">Settings</span></a>
+        <a href="admin-privacy.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><span class="link-text">Privacy &amp; GDPR</span></a>
+      </div>
+    </nav>
+    <div class="sidebar__foot">
+      <div class="sidebar__foot-user"><div class="admin-ava-sm">T</div><div class="sidebar__foot-info"><p>Tenner</p><small>Super Admin</small></div></div>
+      <button class="sidebar__signout">Sign out</button>
+    </div>
+  </aside>
+
+  <div class="admin-main">
+    <header class="admin-topbar">
+      <div class="topbar-left">
+        <label for="sidebar-toggle" class="topbar-menu-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></label>
+        <nav class="breadcrumb">
+          <a href="admin-home.html">Admin</a>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+          <a href="admin-sessions.html">Sessions</a>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+          <span class="bc-active">Past</span>
+        </nav>
+      </div>
+      <div class="topbar-right">
+        <div class="notif-wrap">
+          <input type="checkbox" id="notif-toggle" class="notif-check">
+          <label for="notif-toggle" class="topbar-icon-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><span class="notif-dot"></span></label>
+          <div class="notif-drop"><div class="notif-drop-head"><h4>Notifications</h4><a href="#">Mark all read</a></div><div class="notif-item unread"><div class="notif-ico red"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div><div class="notif-body"><p><strong>Critical welfare flag</strong> — Alex T.</p><small>2 min ago</small></div></div><div class="notif-drop-foot"><a href="admin-welfare.html">View all →</a></div></div>
+        </div>
+        <div class="topbar-user"><div class="topbar-ava">T</div><div class="topbar-user-info"><div class="u-name">Tenner</div><div class="u-role">Super Admin</div></div></div>
+      </div>
+    </header>
+
+    <div class="admin-content">
+
+      <div class="page-hero">
+        <div class="page-hero-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+        <div class="page-hero-text">
+          <h1>Past sessions</h1>
+          <p>History, notes &amp; satisfaction ratings</p>
+        </div>
+        <div class="page-hero-actions"><a href="#" class="btn btn-white">Export CSV</a></div>
+      </div>
+
+
+      <!-- Stats -->
+      <div class="stats-row stats-row--mb-20">
+        <div class="stat-card blue"><div class="stat-top"><span class="stat-label">Today</span><div class="stat-icon blue"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div></div><div class="stat-value">23</div><span class="stat-delta delta-neu">18 done · 5 upcoming</span></div>
+        <div class="stat-card green"><div class="stat-top"><span class="stat-label">This Week</span><div class="stat-icon green"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div></div><div class="stat-value">143</div><span class="stat-delta delta-up">▲ +18% vs last wk</span></div>
+        <div class="stat-card amber"><div class="stat-top"><span class="stat-label">This Month</span><div class="stat-icon amber"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/></svg></div></div><div class="stat-value">489</div><span class="stat-delta delta-up">▲ +12%</span></div>
+        <div class="stat-card teal"><div class="stat-top"><span class="stat-label">Avg Duration</span><div class="stat-icon teal"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div></div><div class="stat-value">48<span style="font-size:16px;font-weight:600;">m</span></div><span class="stat-delta delta-neu">All session types</span></div>
+        <div class="stat-card purple"><div class="stat-top"><span class="stat-label">Satisfaction</span><div class="stat-icon purple"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div></div><div class="stat-value">4.8</div><span class="stat-delta delta-up">▲ +0.2</span></div>
+      </div>
+
+      <div class="card">
+        <div class="tabs-row">
+          <a href="admin-sessions.html" class="tab-lbl">All sessions</a>
+          <a href="admin-sessions-today.html" class="tab-lbl">Today <span class="badge badge-blue" style="font-size:10px;padding:1px 7px;">23</span></a>
+          <a href="admin-sessions-upcoming.html" class="tab-lbl">Upcoming <span class="badge badge-slate" style="font-size:10px;padding:1px 7px;">5</span></a>
+          <a href="admin-sessions-past.html" class="tab-lbl is-active" aria-current="page">Past <span class="badge badge-slate" style="font-size:10px;padding:1px 7px;">466</span></a>
+        </div>
+
+        <div class="filter-bar">
+          <div class="search-wrap">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input class="search-inp" type="text" placeholder="Search by user, ambassador, date…">
+          </div>
+          <select class="filter-sel"><option>All ambassadors</option><option>Maya Johnson</option><option>Keiran Roberts</option><option>Layla Nguyen</option></select>
+          <select class="filter-sel"><option>All types</option><option>Video</option><option>Audio</option><option>Text</option></select>
+          <select class="filter-sel"><option>All statuses</option><option>Completed</option><option>Upcoming</option><option>Missed</option><option>Cancelled</option></select>
+          <input type="date" class="filter-sel" value="2026-03-29">
+        </div>
+
+        <div class="ses-panels">
+
+          <div id="ses-panel-past" class="tab-panel">
+            <div style="padding:20px;font-size:13px;color:var(--adm-txt-muted);">Historical sessions — sorted by most recent. Click a row to view notes and satisfaction rating.</div>
+            <div class="data-table-wrap">
+              <table class="data-table">
+                <thead><tr><th>Date</th><th>User</th><th>Ambassador</th><th>Duration</th><th>Notes</th><th>Satisfaction</th><th>Status</th><th></th></tr></thead>
+                <tbody>
+                  <tr><td style="font-size:12px;">28 Mar · 10AM</td><td><div class="user-cell"><div class="user-ava purple">PT</div><div class="user-name">Priya Thakur</div></div></td><td style="font-size:12px;">Keiran R.</td><td style="font-size:13px;font-weight:600;">38 min</td><td><span class="badge badge-green">Published</span></td><td style="font-size:13px;font-weight:700;color:var(--adm-amber);">★ 4.8</td><td><span class="badge badge-green">Completed</span></td><td><a href="#" class="row-link">View</a></td></tr>
+                  <tr><td style="font-size:12px;">27 Mar · 1PM</td><td><div class="user-cell"><div class="user-ava red">AT</div><div class="user-name">Alex Turner</div></div></td><td style="font-size:12px;">Maya J.</td><td style="font-size:13px;font-weight:600;">60 min</td><td><span class="badge badge-red">Welfare</span></td><td style="font-size:12px;color:var(--adm-txt-faint);">—</td><td><span class="badge badge-green">Completed</span></td><td><a href="admin-welfare.html" class="row-link" style="color:var(--adm-red);">Welfare →</a></td></tr>
+                  <tr><td style="font-size:12px;">26 Mar · 3PM</td><td><div class="user-cell"><div class="user-ava blue">AO</div><div class="user-name">Alex Okonkwo</div></div></td><td style="font-size:12px;">Maya J.</td><td style="font-size:13px;font-weight:600;">50 min</td><td><span class="badge badge-green">Published</span></td><td style="font-size:13px;font-weight:700;color:var(--adm-amber);">★ 5.0</td><td><span class="badge badge-green">Completed</span></td><td><a href="#" class="row-link">View</a></td></tr>
+                  <tr><td style="font-size:12px;">25 Mar · 11AM</td><td><div class="user-cell"><div class="user-ava amber">JM</div><div class="user-name">Jordan Mills</div></div></td><td style="font-size:12px;">Keiran R.</td><td style="font-size:13px;font-weight:600;">—</td><td><span class="badge badge-slate">—</span></td><td style="font-size:12px;color:var(--adm-txt-faint);">—</td><td><span class="badge badge-red">Missed</span></td><td><a href="#" class="row-link">View</a></td></tr>
+                  <tr><td style="font-size:12px;">24 Mar · 2:30PM</td><td><div class="user-cell"><div class="user-ava teal">FC</div><div class="user-name">Fatima Choudhry</div></div></td><td style="font-size:12px;">Layla N.</td><td style="font-size:13px;font-weight:600;">55 min</td><td><span class="badge badge-green">Published</span></td><td style="font-size:13px;font-weight:700;color:var(--adm-amber);">★ 4.7</td><td><span class="badge badge-green">Completed</span></td><td><a href="#" class="row-link">View</a></td></tr>
+                  <tr><td style="font-size:12px;">23 Mar · 10AM</td><td><div class="user-cell"><div class="user-ava green">OB</div><div class="user-name">Ollie Barnes</div></div></td><td style="font-size:12px;">Dev N.</td><td style="font-size:13px;font-weight:600;">48 min</td><td><span class="badge badge-green">Published</span></td><td style="font-size:13px;font-weight:700;color:var(--adm-amber);">★ 5.0</td><td><span class="badge badge-green">Completed</span></td><td><a href="#" class="row-link">View</a></td></tr>
+                  <tr><td style="font-size:12px;">21 Mar · 1PM</td><td><div class="user-cell"><div class="user-ava purple">AP</div><div class="user-name">Aisha Patel</div></div></td><td style="font-size:12px;">Keiran R.</td><td style="font-size:13px;font-weight:600;">52 min</td><td><span class="badge badge-green">Published</span></td><td style="font-size:13px;font-weight:700;color:var(--adm-amber);">★ 4.9</td><td><span class="badge badge-green">Completed</span></td><td><a href="#" class="row-link">View</a></td></tr>
+                  <tr><td style="font-size:12px;">20 Mar · 9:30AM</td><td><div class="user-cell"><div class="user-ava amber">EW</div><div class="user-name">Eva Williams</div></div></td><td style="font-size:12px;">Layla N.</td><td style="font-size:13px;font-weight:600;">45 min</td><td><span class="badge badge-green">Published</span></td><td style="font-size:13px;font-weight:700;color:var(--adm-amber);">★ 4.8</td><td><span class="badge badge-green">Completed</span></td><td><a href="#" class="row-link">View</a></td></tr>
+                  <tr><td style="font-size:12px;">19 Mar · 3PM</td><td><div class="user-cell"><div class="user-ava blue">NK</div><div class="user-name">Natasha Kwei</div></div></td><td style="font-size:12px;">Maya J.</td><td style="font-size:13px;font-weight:600;">40 min</td><td><span class="badge badge-amber">Draft</span></td><td style="font-size:13px;font-weight:700;color:var(--adm-amber);">★ 4.6</td><td><span class="badge badge-green">Completed</span></td><td><a href="#" class="row-link">View</a></td></tr>
+                  <tr><td style="font-size:12px;">18 Mar · 11AM</td><td><div class="user-cell"><div class="user-ava red">AT</div><div class="user-name">Alex Turner</div></div></td><td style="font-size:12px;">Maya J.</td><td style="font-size:13px;font-weight:600;">60 min</td><td><span class="badge badge-green">Published</span></td><td style="font-size:13px;font-weight:700;color:var(--adm-amber);">★ 4.5</td><td><span class="badge badge-green">Completed</span></td><td><a href="#" class="row-link">View</a></td></tr>
+                  <tr><td style="font-size:12px;">17 Mar · 2PM</td><td><div class="user-cell"><div class="user-ava purple">PT</div><div class="user-name">Priya Thakur</div></div></td><td style="font-size:12px;">Keiran R.</td><td style="font-size:13px;font-weight:600;">50 min</td><td><span class="badge badge-green">Published</span></td><td style="font-size:13px;font-weight:700;color:var(--adm-amber);">★ 5.0</td><td><span class="badge badge-green">Completed</span></td><td><a href="#" class="row-link">View</a></td></tr>
+                  <tr><td style="font-size:12px;">15 Mar · 10AM</td><td><div class="user-cell"><div class="user-ava teal">SR</div><div class="user-name">Sam Rivera</div></div></td><td style="font-size:12px;">Layla N.</td><td style="font-size:13px;font-weight:600;">45 min</td><td><span class="badge badge-green">Published</span></td><td style="font-size:13px;font-weight:700;color:var(--adm-amber);">★ 4.9</td><td><span class="badge badge-green">Completed</span></td><td><a href="#" class="row-link">View</a></td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="pagination">
+              <span class="pagination-info">Showing 1–4 of 466 past sessions</span>
+              <div class="pagination-btns"><button class="page-btn">‹</button><button class="page-btn active">1</button><button class="page-btn">2</button><button class="page-btn">3</button><button class="page-btn">›</button></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

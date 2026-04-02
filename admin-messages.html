@@ -28,6 +28,108 @@
   .msg-avatars { display: flex; gap: -4px; position: relative; flex-shrink: 0; width: 54px; }
   .msg-ava1 { position: absolute; left: 0; }
   .msg-ava2 { position: absolute; left: 22px; border: 2px solid var(--adm-surface); }
+
+  /* ── Layout wrappers ── */
+  .messages-grid { min-width: 0; max-width: 100%; }
+  .messages-sidebar-col {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  /* Hero CTAs */
+  .messages-hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+  }
+  @media (max-width: 640px) {
+    .messages-hero-actions {
+      flex-direction: column;
+      align-items: stretch;
+      width: 100%;
+    }
+    .messages-hero-actions .btn {
+      flex: 0 0 auto;
+      width: 100%;
+      justify-content: center;
+    }
+  }
+
+  /* Recent list: title + search in card head */
+  .messages-card-head {
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .messages-card-head .messages-toolbar {
+    border: none;
+    padding: 0;
+    gap: 8px;
+    flex: 1 1 200px;
+    min-width: 0;
+    max-width: 100%;
+  }
+  .messages-card-head .messages-toolbar .search-wrap {
+    min-width: 0 !important;
+    flex: 1;
+    max-width: 100%;
+  }
+  @media (max-width: 600px) {
+    .messages-card-head .messages-toolbar {
+      flex-basis: 100%;
+    }
+  }
+
+  /* Message rows — narrow screens */
+  @media (max-width: 520px) {
+    .msg-row {
+      flex-wrap: wrap;
+      align-items: flex-start;
+      padding: 12px 14px;
+      gap: 10px;
+    }
+    .msg-row .user-cell {
+      flex: 1 1 100%;
+      min-width: 0;
+    }
+    .msg-row .msg-right {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      text-align: left;
+      flex-shrink: 0;
+    }
+    .msg-pair {
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+    /* Flagged card: avatar + meta + button */
+    .msg-row--flag .msg-meta {
+      flex: 1 1 calc(100% - 48px);
+      min-width: 0;
+    }
+    .msg-row--flag .btn {
+      flex: 1 1 100%;
+      justify-content: center;
+      margin-top: 4px;
+    }
+  }
+
+  @media (max-width: 400px) {
+    .messages-grid .pagination-btns {
+      max-width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      flex-wrap: nowrap;
+      padding-bottom: 6px;
+      justify-content: flex-start;
+    }
+  }
 </style>
 </head>
 <body>
@@ -88,7 +190,7 @@
           <h1>Messages</h1>
           <p>Platform-wide conversations between users &amp; ambassadors · Monitor &amp; moderate</p>
         </div>
-        <div class="page-hero-actions">
+        <div class="page-hero-actions messages-hero-actions">
           <a href="admin-msg-filter.html" class="btn btn-white"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px;"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>Filter</a>
           <button class="btn btn-primary" style="background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);">Export logs</button>
         </div>
@@ -102,14 +204,14 @@
         <div class="stat-card blue"><div class="stat-top"><span class="stat-label">Active Today</span><div class="stat-icon blue"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg></div></div><div class="stat-value">87</div><span class="stat-delta delta-neu">conversations</span></div>
       </div>
 
-      <div class="grid-2">
+      <div class="grid-2 messages-grid">
 
         <!-- Recent conversations -->
         <div class="card" style="grid-column:span 1;">
-          <div class="card-head">
+          <div class="card-head messages-card-head">
             <div class="card-title">Recent Conversations</div>
-            <div class="filter-bar" style="border:none;padding:0;gap:8px;">
-              <div class="search-wrap" style="min-width:160px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input class="search-inp" type="text" placeholder="Search…"></div>
+            <div class="filter-bar messages-toolbar">
+              <div class="search-wrap"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input class="search-inp" type="text" placeholder="Search…"></div>
             </div>
           </div>
 
@@ -150,23 +252,23 @@
         </div>
 
         <!-- Right column -->
-        <div style="display:flex;flex-direction:column;gap:16px;">
+        <div class="messages-sidebar-col">
 
           <!-- Flagged messages -->
           <div class="card">
             <div class="card-head"><div class="card-title" style="display:flex;align-items:center;gap:7px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg> Flagged Messages <span class="badge badge-red" style="margin-left:6px;">3</span></div></div>
             <div style="padding:0;">
-                <div class="msg-row" style="background:var(--adm-red-lt);">
+                <div class="msg-row msg-row--flag" style="background:var(--adm-red-lt);">
                 <div class="user-ava red" style="width:32px;height:32px;font-size:11px;flex-shrink:0;">AT</div>
                 <div class="msg-meta"><div class="msg-pair">Alex Turner — <span style="color:var(--adm-red);font-size:11px;font-weight:700;">HIGH RISK</span></div><div class="msg-preview">"I don't think I can keep going…"</div></div>
                 <a href="admin-msg-chat.html" class="btn btn-danger btn-sm" style="flex-shrink:0;">Review</a>
               </div>
-              <div class="msg-row">
+              <div class="msg-row msg-row--flag">
                 <div class="user-ava amber" style="width:32px;height:32px;font-size:11px;flex-shrink:0;">JM</div>
                 <div class="msg-meta"><div class="msg-pair">Jordan Mills — <span style="color:var(--adm-amber);font-size:11px;font-weight:700;">MEDIUM</span></div><div class="msg-preview">"I've been cancelling everything lately…"</div></div>
                 <button class="btn btn-secondary btn-sm" style="flex-shrink:0;">Review</button>
               </div>
-              <div class="msg-row">
+              <div class="msg-row msg-row--flag">
                 <div class="user-ava blue" style="width:32px;height:32px;font-size:11px;flex-shrink:0;">BR</div>
                 <div class="msg-meta"><div class="msg-pair">Ben Richardson — <span style="color:var(--adm-blue);font-size:11px;font-weight:700;">LOW</span></div><div class="msg-preview">"Everything feels pointless this week…"</div></div>
                 <button class="btn btn-secondary btn-sm" style="flex-shrink:0;">Review</button>

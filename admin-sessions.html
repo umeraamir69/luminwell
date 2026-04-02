@@ -8,29 +8,12 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="admin.css">
 <style>
-  html:has(#ses-all:checked)      .ses-panels #ses-panel-all      { display: block; }
-  html:has(#ses-today:checked)    .ses-panels #ses-panel-today    { display: block; }
-  html:has(#ses-upcoming:checked) .ses-panels #ses-panel-upcoming { display: block; }
-  html:has(#ses-past:checked)     .ses-panels #ses-panel-past     { display: block; }
-
-  html:has(#ses-all:checked)      label[for="ses-all"],
-  html:has(#ses-today:checked)    label[for="ses-today"],
-  html:has(#ses-upcoming:checked) label[for="ses-upcoming"],
-  html:has(#ses-past:checked)     label[for="ses-past"] {
-    color: var(--adm-blue);
-    border-bottom-color: var(--adm-blue);
-    font-weight: 700;
-  }
+  #ses-panel-all.tab-panel { display: block; }
 </style>
 </head>
 <body>
 
 <input type="checkbox" id="sidebar-toggle" class="sidebar-toggle-check">
-<input type="radio" name="ses-tabs" id="ses-all"      class="tab-check" checked>
-<input type="radio" name="ses-tabs" id="ses-today"    class="tab-check">
-<input type="radio" name="ses-tabs" id="ses-upcoming" class="tab-check">
-<input type="radio" name="ses-tabs" id="ses-past"     class="tab-check">
-
 <div class="admin-shell">
 
   <aside class="admin-sidebar">
@@ -110,10 +93,10 @@
 
       <div class="card">
         <div class="tabs-row">
-          <label for="ses-all"      class="tab-lbl">All sessions</label>
-          <label for="ses-today"    class="tab-lbl">Today <span class="badge badge-blue" style="font-size:10px;padding:1px 7px;">23</span></label>
-          <label for="ses-upcoming" class="tab-lbl">Upcoming <span class="badge badge-slate" style="font-size:10px;padding:1px 7px;">5</span></label>
-          <label for="ses-past"     class="tab-lbl">Past <span class="badge badge-slate" style="font-size:10px;padding:1px 7px;">466</span></label>
+          <a href="admin-sessions.html" class="tab-lbl is-active" aria-current="page">All sessions</a>
+          <a href="admin-sessions-today.html" class="tab-lbl">Today <span class="badge badge-blue" style="font-size:10px;padding:1px 7px;">23</span></a>
+          <a href="admin-sessions-upcoming.html" class="tab-lbl">Upcoming <span class="badge badge-slate" style="font-size:10px;padding:1px 7px;">5</span></a>
+          <a href="admin-sessions-past.html" class="tab-lbl">Past <span class="badge badge-slate" style="font-size:10px;padding:1px 7px;">466</span></a>
         </div>
 
         <div class="filter-bar">
@@ -299,69 +282,6 @@
             </div>
           </div>
 
-          <!-- Today -->
-          <div id="ses-panel-today" class="tab-panel">
-            <div style="padding:16px 20px;display:flex;gap:12px;border-bottom:1px solid var(--adm-border);">
-              <div style="flex:1;background:var(--adm-green-lt);border-radius:var(--adm-r-sm);padding:12px 16px;"><p style="font-size:11px;font-weight:700;color:#059669;text-transform:uppercase;margin-bottom:4px;">COMPLETED</p><p style="font-size:22px;font-weight:800;color:var(--adm-txt-head);">18</p></div>
-              <div style="flex:1;background:var(--adm-blue-lt);border-radius:var(--adm-r-sm);padding:12px 16px;"><p style="font-size:11px;font-weight:700;color:var(--adm-blue-dk);text-transform:uppercase;margin-bottom:4px;">UPCOMING</p><p style="font-size:22px;font-weight:800;color:var(--adm-txt-head);">5</p></div>
-              <div style="flex:1;background:var(--adm-amber-lt);border-radius:var(--adm-r-sm);padding:12px 16px;"><p style="font-size:11px;font-weight:700;color:#d97706;text-transform:uppercase;margin-bottom:4px;">MISSED</p><p style="font-size:22px;font-weight:800;color:var(--adm-txt-head);">0</p></div>
-            </div>
-            <div style="padding:16px 20px;font-size:13px;color:var(--adm-txt-muted);">Today's full session schedule — displaying sessions for Sunday 29 March 2026.</div>
-            <div class="data-table-wrap">
-              <table class="data-table">
-                <thead><tr><th>Time</th><th>User</th><th>Ambassador</th><th>Type</th><th>Duration</th><th>Status</th><th></th></tr></thead>
-                <tbody>
-                  <tr><td style="font-size:12px;font-weight:700;color:var(--adm-txt-head);">10:00 AM</td><td><div class="user-cell"><div class="user-ava blue">AO</div><div class="user-name">Alex Okonkwo</div></div></td><td style="font-size:12px;">Maya Johnson</td><td><span class="badge badge-blue">Video</span></td><td style="font-size:13px;font-weight:600;">52 min</td><td><span class="badge badge-green">Completed</span></td><td><a href="#" class="row-link">View</a></td></tr>
-                  <tr><td style="font-size:12px;font-weight:700;color:var(--adm-txt-head);">11:30 AM</td><td><div class="user-cell"><div class="user-ava teal">SR</div><div class="user-name">Sam Rivera</div></div></td><td style="font-size:12px;">Layla Nguyen</td><td><span class="badge badge-teal">Audio</span></td><td style="font-size:13px;font-weight:600;">45 min</td><td><span class="badge badge-green">Completed</span></td><td><a href="#" class="row-link">View</a></td></tr>
-                  <tr><td style="font-size:12px;font-weight:700;color:var(--adm-txt-head);">2:00 PM</td><td><div class="user-cell"><div class="user-ava green">OB</div><div class="user-name">Ollie Barnes</div></div></td><td style="font-size:12px;">Dev Nair</td><td><span class="badge badge-blue">Video</span></td><td style="font-size:13px;color:var(--adm-txt-faint);">—</td><td><span class="badge badge-blue">Upcoming</span></td><td><a href="#" class="row-link">View</a></td></tr>
-                  <tr><td style="font-size:12px;font-weight:700;color:var(--adm-txt-head);">3:30 PM</td><td><div class="user-cell"><div class="user-ava amber">JL</div><div class="user-name">Jade Ling</div></div></td><td style="font-size:12px;">Keiran Roberts</td><td><span class="badge badge-slate">Text</span></td><td style="font-size:13px;color:var(--adm-txt-faint);">—</td><td><span class="badge badge-blue">Upcoming</span></td><td><a href="#" class="row-link">View</a></td></tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          <!-- Upcoming -->
-          <div id="ses-panel-upcoming" class="tab-panel">
-            <div style="padding:20px;font-size:13px;color:var(--adm-txt-muted);">Sessions scheduled from now through the next 7 days.</div>
-            <div class="data-table-wrap">
-              <table class="data-table">
-                <thead><tr><th>Date &amp; Time</th><th>User</th><th>Ambassador</th><th>Type</th><th>Session #</th><th></th></tr></thead>
-                <tbody>
-                  <tr><td style="font-size:12px;white-space:nowrap;"><strong style="color:var(--adm-txt-head);">Today · 2:00 PM</strong></td><td><div class="user-cell"><div class="user-ava green">OB</div><div class="user-name">Ollie Barnes</div></div></td><td style="font-size:12px;">Dev N.</td><td><span class="badge badge-blue">Video</span></td><td style="font-size:12px;color:var(--adm-txt-muted);">Session 16</td><td><a href="#" class="row-link">View</a></td></tr>
-                  <tr><td style="font-size:12px;white-space:nowrap;"><strong style="color:var(--adm-txt-head);">Today · 3:30 PM</strong></td><td><div class="user-cell"><div class="user-ava amber">JL</div><div class="user-name">Jade Ling</div></div></td><td style="font-size:12px;">Keiran R.</td><td><span class="badge badge-slate">Text</span></td><td style="font-size:12px;color:var(--adm-txt-muted);">Session 4</td><td><a href="#" class="row-link">View</a></td></tr>
-                  <tr><td style="font-size:12px;white-space:nowrap;"><strong style="color:var(--adm-txt-head);">Mon 30 Mar · 9:00 AM</strong></td><td><div class="user-cell"><div class="user-ava blue">NK</div><div class="user-name">Natasha Kwei</div></div></td><td style="font-size:12px;">Maya J.</td><td><span class="badge badge-blue">Video</span></td><td style="font-size:12px;color:var(--adm-txt-muted);">Session 1</td><td><a href="#" class="row-link">View</a></td></tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          <!-- Past -->
-          <div id="ses-panel-past" class="tab-panel">
-            <div style="padding:20px;font-size:13px;color:var(--adm-txt-muted);">Historical sessions — sorted by most recent. Click a row to view notes and satisfaction rating.</div>
-            <div class="data-table-wrap">
-              <table class="data-table">
-                <thead><tr><th>Date</th><th>User</th><th>Ambassador</th><th>Duration</th><th>Notes</th><th>Satisfaction</th><th>Status</th><th></th></tr></thead>
-                <tbody>
-                  <tr><td style="font-size:12px;">28 Mar · 10AM</td><td><div class="user-cell"><div class="user-ava purple">PT</div><div class="user-name">Priya Thakur</div></div></td><td style="font-size:12px;">Keiran R.</td><td style="font-size:13px;font-weight:600;">38 min</td><td><span class="badge badge-green">Published</span></td><td style="font-size:13px;font-weight:700;color:var(--adm-amber);">★ 4.8</td><td><span class="badge badge-green">Completed</span></td><td><a href="#" class="row-link">View</a></td></tr>
-                  <tr><td style="font-size:12px;">27 Mar · 1PM</td><td><div class="user-cell"><div class="user-ava red">AT</div><div class="user-name">Alex Turner</div></div></td><td style="font-size:12px;">Maya J.</td><td style="font-size:13px;font-weight:600;">60 min</td><td><span class="badge badge-red">Welfare</span></td><td style="font-size:12px;color:var(--adm-txt-faint);">—</td><td><span class="badge badge-green">Completed</span></td><td><a href="admin-welfare.html" class="row-link" style="color:var(--adm-red);">Welfare →</a></td></tr>
-                  <tr><td style="font-size:12px;">26 Mar · 3PM</td><td><div class="user-cell"><div class="user-ava blue">AO</div><div class="user-name">Alex Okonkwo</div></div></td><td style="font-size:12px;">Maya J.</td><td style="font-size:13px;font-weight:600;">50 min</td><td><span class="badge badge-green">Published</span></td><td style="font-size:13px;font-weight:700;color:var(--adm-amber);">★ 5.0</td><td><span class="badge badge-green">Completed</span></td><td><a href="#" class="row-link">View</a></td></tr>
-                  <tr><td style="font-size:12px;">25 Mar · 11AM</td><td><div class="user-cell"><div class="user-ava amber">JM</div><div class="user-name">Jordan Mills</div></div></td><td style="font-size:12px;">Keiran R.</td><td style="font-size:13px;font-weight:600;">—</td><td><span class="badge badge-slate">—</span></td><td style="font-size:12px;color:var(--adm-txt-faint);">—</td><td><span class="badge badge-red">Missed</span></td><td><a href="#" class="row-link">View</a></td></tr>
-                  <tr><td style="font-size:12px;">24 Mar · 2:30PM</td><td><div class="user-cell"><div class="user-ava teal">FC</div><div class="user-name">Fatima Choudhry</div></div></td><td style="font-size:12px;">Layla N.</td><td style="font-size:13px;font-weight:600;">55 min</td><td><span class="badge badge-green">Published</span></td><td style="font-size:13px;font-weight:700;color:var(--adm-amber);">★ 4.7</td><td><span class="badge badge-green">Completed</span></td><td><a href="#" class="row-link">View</a></td></tr>
-                  <tr><td style="font-size:12px;">23 Mar · 10AM</td><td><div class="user-cell"><div class="user-ava green">OB</div><div class="user-name">Ollie Barnes</div></div></td><td style="font-size:12px;">Dev N.</td><td style="font-size:13px;font-weight:600;">48 min</td><td><span class="badge badge-green">Published</span></td><td style="font-size:13px;font-weight:700;color:var(--adm-amber);">★ 5.0</td><td><span class="badge badge-green">Completed</span></td><td><a href="#" class="row-link">View</a></td></tr>
-                  <tr><td style="font-size:12px;">21 Mar · 1PM</td><td><div class="user-cell"><div class="user-ava purple">AP</div><div class="user-name">Aisha Patel</div></div></td><td style="font-size:12px;">Keiran R.</td><td style="font-size:13px;font-weight:600;">52 min</td><td><span class="badge badge-green">Published</span></td><td style="font-size:13px;font-weight:700;color:var(--adm-amber);">★ 4.9</td><td><span class="badge badge-green">Completed</span></td><td><a href="#" class="row-link">View</a></td></tr>
-                  <tr><td style="font-size:12px;">20 Mar · 9:30AM</td><td><div class="user-cell"><div class="user-ava amber">EW</div><div class="user-name">Eva Williams</div></div></td><td style="font-size:12px;">Layla N.</td><td style="font-size:13px;font-weight:600;">45 min</td><td><span class="badge badge-green">Published</span></td><td style="font-size:13px;font-weight:700;color:var(--adm-amber);">★ 4.8</td><td><span class="badge badge-green">Completed</span></td><td><a href="#" class="row-link">View</a></td></tr>
-                  <tr><td style="font-size:12px;">19 Mar · 3PM</td><td><div class="user-cell"><div class="user-ava blue">NK</div><div class="user-name">Natasha Kwei</div></div></td><td style="font-size:12px;">Maya J.</td><td style="font-size:13px;font-weight:600;">40 min</td><td><span class="badge badge-amber">Draft</span></td><td style="font-size:13px;font-weight:700;color:var(--adm-amber);">★ 4.6</td><td><span class="badge badge-green">Completed</span></td><td><a href="#" class="row-link">View</a></td></tr>
-                  <tr><td style="font-size:12px;">18 Mar · 11AM</td><td><div class="user-cell"><div class="user-ava red">AT</div><div class="user-name">Alex Turner</div></div></td><td style="font-size:12px;">Maya J.</td><td style="font-size:13px;font-weight:600;">60 min</td><td><span class="badge badge-green">Published</span></td><td style="font-size:13px;font-weight:700;color:var(--adm-amber);">★ 4.5</td><td><span class="badge badge-green">Completed</span></td><td><a href="#" class="row-link">View</a></td></tr>
-                  <tr><td style="font-size:12px;">17 Mar · 2PM</td><td><div class="user-cell"><div class="user-ava purple">PT</div><div class="user-name">Priya Thakur</div></div></td><td style="font-size:12px;">Keiran R.</td><td style="font-size:13px;font-weight:600;">50 min</td><td><span class="badge badge-green">Published</span></td><td style="font-size:13px;font-weight:700;color:var(--adm-amber);">★ 5.0</td><td><span class="badge badge-green">Completed</span></td><td><a href="#" class="row-link">View</a></td></tr>
-                  <tr><td style="font-size:12px;">15 Mar · 10AM</td><td><div class="user-cell"><div class="user-ava teal">SR</div><div class="user-name">Sam Rivera</div></div></td><td style="font-size:12px;">Layla N.</td><td style="font-size:13px;font-weight:600;">45 min</td><td><span class="badge badge-green">Published</span></td><td style="font-size:13px;font-weight:700;color:var(--adm-amber);">★ 4.9</td><td><span class="badge badge-green">Completed</span></td><td><a href="#" class="row-link">View</a></td></tr>
-                </tbody>
-              </table>
-            </div>
-            <div class="pagination">
-              <span class="pagination-info">Showing 1–4 of 466 past sessions</span>
-              <div class="pagination-btns"><button class="page-btn">‹</button><button class="page-btn active">1</button><button class="page-btn">2</button><button class="page-btn">3</button><button class="page-btn">›</button></div>
-            </div>
-          </div>
 
         </div>
       </div>

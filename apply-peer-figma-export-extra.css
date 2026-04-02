@@ -1,0 +1,35 @@
+/* Stacked screens for HTML→Figma export (apply-peer-supporter-figma-export.html) */
+
+body.apply-peer-figma-bundle {
+  display: block;
+  min-height: auto;
+  margin: 0;
+  padding: 0 !important;
+}
+
+/* Each full screen stacks vertically */
+.apply-peer-figma-bundle .figma-apply-screen {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+  box-sizing: border-box;
+  border-bottom: 4px solid rgba(23, 93, 146, 0.22);
+}
+
+.apply-peer-figma-bundle .figma-apply-screen .lw-public-main {
+  flex: 1;
+}
+
+/* Step labels for designers */
+.apply-peer-figma-bundle .figma-screen-label {
+  font: 700 11px/1.2 "DM Sans", system-ui, sans-serif;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #175d92;
+  background: rgba(23, 93, 146, 0.08);
+  padding: 8px 16px;
+  text-align: center;
+  border-bottom: 1px solid rgba(23, 93, 146, 0.12);
+  flex-shrink: 0;
+}

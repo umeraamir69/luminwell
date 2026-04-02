@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Article — Luminwell</title>
+  <meta name="description" content="Read articles and guides from Luminwell." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,300;1,9..144,400;1,9..144,500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="ambassador-page.css" />
+  <link rel="stylesheet" href="content-public.css" />
+</head>
+<body class="page-content-view">
+
+  <nav class="nav" aria-label="Main navigation">
+    <div class="wrap">
+      <div class="nav__inner">
+        <a class="nav__brand" href="landing.html">
+          <img class="nav__logo" src="logo.png" alt="Luminwell" width="34" height="34" decoding="async" />
+          <span class="nav__wordmark">Luminwell</span>
+        </a>
+
+        <ul class="nav__links">
+          <li><a href="landing.html#how-it-works">How it Works</a></li>
+          <li><a href="matching.html">Matching</a></li>
+          <li><a href="content-library.html">Resources</a></li>
+          <li><a href="pricing.html">Pricing</a></li>
+        </ul>
+
+        <div class="nav__right">
+          <a class="nav__crisis" href="tel:988" aria-label="Call 988 crisis lifeline">
+            <svg fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+            <span>988 Crisis</span>
+          </a>
+          <a class="btn btn--ghost" href="index.html">Log In</a>
+          <a class="btn btn--navy" href="onboarding-01-age.html">Get Started</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="wrap cp-article-wrap">
+    <nav class="cp-breadcrumb" aria-label="Breadcrumb">
+      <a href="content-library.html">Resources</a>
+      <span aria-hidden="true">/</span>
+      <span id="cv-crumb-current">Article</span>
+    </nav>
+
+    <article class="cp-article" aria-labelledby="cv-title">
+      <span class="cp-article__label" id="cv-label">Resource</span>
+      <h1 class="cp-article__h1" id="cv-title">Understanding Anxiety — A Student's Guide</h1>
+      <p class="cp-article__meta" id="cv-meta">Mental health · All users · About 6 min read · Published 14 Mar 2026</p>
+      <div class="cp-article__prose" id="cv-body"></div>
+      <div class="cp-article__callout" id="cv-callout" hidden>
+        <strong>Need help right now?</strong> If you are in immediate danger, call emergency services. For 24/7 emotional support in the UK and Ireland, you can call Samaritans on <a href="tel:116123" style="color:var(--navy);font-weight:700;">116 123</a> — free and confidential.
+      </div>
+      <div class="cp-article__foot">
+        <a class="btn btn--ghost" href="content-library.html">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          Back to library
+        </a>
+        <a class="btn btn--teal" href="onboarding-01-age.html">Get support on Luminwell</a>
+      </div>
+    </article>
+  </main>
+
+  <footer class="footer" aria-label="Site footer">
+    <div class="wrap">
+      <div class="footer__grid">
+        <div>
+          <div class="footer__brand-name">Luminwell</div>
+          <p class="footer__brand-desc">Peer mental health support for students and young adults.</p>
+          <a class="footer__crisis-link" href="tel:988">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            988 Crisis Line
+          </a>
+        </div>
+        <div>
+          <div class="footer__col-h">Platform</div>
+          <ul class="footer__links">
+            <li><a href="content-library.html">Resources &amp; guides</a></li>
+            <li><a href="landing.html">Home</a></li>
+            <li><a href="pricing.html">Pricing</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="footer__col-h">Support</div>
+          <ul class="footer__links">
+            <li><a href="content-library.html">Browse articles</a></li>
+            <li><a href="#">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="footer__col-h">Legal</div>
+          <ul class="footer__links">
+            <li><a href="#">Privacy</a></li>
+            <li><a href="#">Terms</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <span>&copy; 2026 Luminwell</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+(function () {
+  var DEFAULT_ID = 'understanding-anxiety';
+  var params = new URLSearchParams(window.location.search);
+  var id = params.get('id') || DEFAULT_ID;
+
+  var articles = {
+    'understanding-anxiety': {
+      label: 'Resource',
+      title: "Understanding Anxiety — A Student's Guide",
+      meta: 'Mental health · All users · About 6 min read · Published 14 Mar 2026',
+      showCrisis: true,
+      body: '<p>Anxiety is a normal stress response — but when worry feels constant or overwhelming, it can get in the way of sleep, focus, and relationships. Many students experience this during transitions, exams, or when life feels uncertain.</p><h2>What anxiety can feel like</h2><p>You might notice racing thoughts, tension in your body, trouble sleeping, or a sense of dread without a clear cause. Everyone’s experience is different; there is no single "right" way for anxiety to show up.</p><h2>Gentle strategies that help</h2><ul><li><strong>Grounding:</strong> Name five things you see, four you can touch, three you hear, two you smell, one you taste.</li><li><strong>Breathing:</strong> Try a slower exhale than inhale (for example, in for 4 counts, out for 6) for a few rounds.</li><li><strong>Small steps:</strong> Break tasks into tiny actions so your brain sees progress.</li><li><strong>Connection:</strong> Talking to someone you trust — a friend, peer supporter, or counsellor — often lightens the load.</li></ul><p>If anxiety is affecting your daily life, professional support can make a real difference. Luminwell peers are here to listen without judgment and help you explore next steps.</p>'
+    },
+    'academic-pressure': {
+      label: 'Resource',
+      title: 'Managing Academic Pressure During Exam Season',
+      meta: 'Academic · Students · About 5 min read · Published 2 Mar 2026',
+      body: '<p>Exam season often brings a spike in stress. Some pressure can motivate you; too much can leave you exhausted, irritable, or stuck in procrastination.</p><h2>Protect your energy</h2><p>Schedule short breaks, eat regularly, and try to keep a consistent sleep window — even when deadlines pile up.</p><h2>Study smarter</h2><p>Mix topics, test yourself instead of only re-reading, and swap perfectionism for "good enough for this draft." Ask for extensions or support early if you need them — that is a strength, not a failure.</p>'
+    },
+    'crisis-support': {
+      label: 'Resource',
+      title: "Crisis Support — What to Do If You're Struggling Now",
+      meta: 'Crisis · All users · About 4 min read · Published 1 Jan 2026',
+      showCrisis: true,
+      body: '<p>If you are thinking about hurting yourself or feel unsafe, please reach out for immediate help. You deserve support, and crisis services exist to be used.</p><h2>Right now</h2><ul><li>Call your local emergency number if you are in immediate danger.</li><li>In the UK and Ireland, Samaritans: <strong>116 123</strong> (24/7).</li><li>Text or chat services may be available on your campus or through national helplines.</li></ul><p>On Luminwell, ambassadors can help you find resources and stay connected — they are not a substitute for emergency care, but they can walk beside you when things are heavy.</p>'
+    },
+    'wellbeing-habits': {
+      label: 'Resource',
+      title: 'Building Daily Wellbeing Habits',
+      meta: 'Wellbeing · All users · About 5 min read · Published 18 Feb 2026',
+      body: '<p>Small, repeatable habits often beat big resolutions. You do not need a perfect routine — just a few anchors that help your mind and body feel steadier.</p><h2>Ideas to try</h2><ul><li>One minute of daylight or fresh air after you wake up.</li><li>A single "shutdown" ritual before bed (dim lights, same playlist, or journaling one line).</li><li>One social connection per day, even a short message.</li></ul><p>Pick one habit, link it to something you already do (like brushing teeth), and build from there.</p>'
+    },
+    'cbt-intro': {
+      label: 'Resource',
+      title: 'Introduction to CBT Techniques',
+      meta: 'Mental health · All users · About 6 min read · Published 10 Feb 2026',
+      body: '<p>Cognitive behavioural therapy (CBT) explores how thoughts, feelings, and behaviours connect. Many self-help tools borrow CBT ideas: noticing patterns, questioning extreme thoughts, and trying small behaviour experiments.</p><p>This article is educational only — a trained therapist can tailor CBT to you. If you are curious, consider mentioning CBT when you speak with a counsellor.</p>'
+    },
+    'goals-guide': {
+      label: 'Resource',
+      title: 'Setting Goals That Stick — A Practical Guide',
+      meta: 'Wellbeing · All users · About 5 min read · Published 5 Feb 2026',
+      body: '<p>Goals work better when they are specific, kind, and flexible. Instead of "be less anxious," try "text one friend this week" or "take a ten-minute walk after lunch twice."</p><p>Review weekly: what helped? what got in the way? Adjust without shame — goals are experiments, not contracts.</p>'
+    },
+    'sleep-mental-health': {
+      label: 'Resource',
+      title: "Sleep & Mental Health — What's the Connection?",
+      meta: 'Mental health · Students · About 5 min read · Published 22 Jan 2026',
+      body: '<p>Poor sleep and difficult moods often travel together. Protecting sleep is one of the most evidence-backed ways to support mental health.</p><h2>Basics</h2><ul><li>Consistent wake time, even after a bad night.</li><li>Limit late caffeine and heavy screens right before bed.</li><li>If you cannot sleep, get up briefly and do something calm, then return when sleepy.</li></ul><p>Persistent insomnia deserves a chat with a health professional.</p>'
+    },
+    'announce-ai-notes': {
+      label: 'Announcement',
+      title: 'New AI Note Feature Now Live for Ambassadors',
+      meta: 'Ambassadors · Published 25 Mar 2026 · Active until 30 Apr 2026',
+      body: '<p>We have rolled out optional AI-assisted drafting for session notes. Notes remain yours to edit; nothing is shared without your review. Check the in-app guide for privacy details and how to turn features on or off.</p>'
+    },
+    'announce-maintenance': {
+      label: 'Announcement',
+      title: 'Scheduled maintenance — Sunday 6 Apr at 2 AM',
+      meta: 'All users · Published 28 Mar 2026',
+      body: '<p>Luminwell will be briefly unavailable for planned maintenance on Sunday 6 April, starting at 2:00 AM local time. We expect under an hour of downtime. Thank you for your patience.</p>'
+    },
+    'welcome-cohort': {
+      label: 'Announcement',
+      title: 'Welcome to the Spring 2026 Cohort',
+      meta: 'All users · Published 1 Feb 2026',
+      body: '<p>Whether you are here for peer support, journaling, or both — welcome. Explore matching, introduce yourself in community spaces when you feel ready, and remember: moving at your own pace is always allowed.</p>'
+    },
+    'guide-onboarding': {
+      label: 'Ambassador guide',
+      title: 'Ambassador Onboarding Guide — Getting Started',
+      meta: 'Ambassadors · Required reading · Published 1 Sep 2025',
+      body: '<p>Welcome to the ambassador community. Complete your profile, read safeguarding materials, and attend the live or recorded orientation. Your coordinator is listed in the ambassador dashboard if you have questions.</p><h2>First two weeks</h2><ul><li>Shadow one experienced ambassador if offered.</li><li>Practise note-taking using the template.</li><li>Set availability honestly — sustainable support helps everyone.</li></ul>'
+    },
+    'guide-crisis-sessions': {
+      label: 'Ambassador guide',
+      title: 'Handling Crisis Moments in Sessions',
+      meta: 'Ambassadors · Required reading · Published 5 Sep 2025',
+      showCrisis: true,
+      body: '<p>If a user discloses self-harm or suicide intent, stay calm, express care, and follow the welfare protocol immediately. Log notes according to policy and escalate — do not carry risk alone.</p><p>Your role is supportive, not clinical; linking to professional and crisis services is appropriate and expected.</p>'
+    },
+    'guide-session-notes': {
+      label: 'Ambassador guide',
+      title: 'How to Write Effective Session Notes',
+      meta: 'Ambassadors · Recommended · Published 12 Sep 2025',
+      body: '<p>Good notes are factual, timely, and respectful. Record themes discussed, agreed actions, and any safeguarding concerns using the structured fields. Avoid jargon or judgmental language.</p><p>Users may request their records where applicable; write as if the note could be read back with trust intact.</p>'
+    },
+    'guide-safeguarding': {
+      label: 'Ambassador guide',
+      title: 'Confidentiality & Safeguarding — Your Responsibilities',
+      meta: 'Ambassadors · Required reading · Published 1 Sep 2025',
+      showCrisis: true,
+      body: '<p>Confidentiality builds trust, but it is not absolute when someone is at risk of serious harm. Know your escalation routes, document decisions, and never promise secrecy you cannot keep.</p><p>Review updates to this guide each term; policies may change with regulation or university partnership requirements.</p>'
+    }
+  };
+
+  var a = articles[id];
+  if (!a) {
+    id = DEFAULT_ID;
+    a = articles[id];
+  }
+
+  document.getElementById('cv-label').textContent = a.label;
+  document.getElementById('cv-title').textContent = a.title;
+  document.getElementById('cv-meta').textContent = a.meta;
+  document.getElementById('cv-body').innerHTML = a.body;
+  document.getElementById('cv-crumb-current').textContent = a.title;
+  document.title = a.title + ' — Luminwell';
+  var co = document.getElementById('cv-callout');
+  co.hidden = !a.showCrisis;
+})();
+  </script>
+</body>
+</html>

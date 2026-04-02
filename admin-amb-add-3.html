@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Add Ambassador · Step 3 — Luminwell Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="admin.css">
+<link rel="stylesheet" href="amb-add-wizard.css">
+</head>
+<body>
+
+<input type="checkbox" id="sidebar-toggle" class="sidebar-toggle-check">
+
+<div class="admin-shell">
+
+  <!-- ── Sidebar ── -->
+  <aside class="admin-sidebar">
+    <div class="sidebar__logo"><div class="logo-mark"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17 8C8 10 5.9 16.17 3.82 22A13.34 13.34 0 0 0 18 8Z"/><path d="M9 9c-1.5 3.5-2.5 7-3 10C8 18 11 15 13 12" fill="rgba(255,255,255,.35)"/></svg></div><div class="logo-text-wrap"><div class="logo-name">Luminwell</div><span class="logo-badge-pill">ADMIN PANEL</span></div></div>
+    <label for="sidebar-toggle" class="sidebar__collapse-btn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg></label>
+    <nav class="sidebar__nav">
+      <div class="nav-section">
+        <p class="nav-label">Main</p>
+        <a href="admin-home.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg><span class="link-text">Overview</span></a>
+        <a href="admin-analytics.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg><span class="link-text">Analytics</span></a>
+      </div>
+      <div class="nav-section">
+        <p class="nav-label">People</p>
+        <a href="admin-users.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg><span class="link-text">Users</span></a>
+        <a href="admin-ambassadors.html" class="sidebar__link active"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><span class="link-text">Ambassadors</span></a>
+        <a href="admin-matching.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg><span class="link-text">Matching</span></a>
+      </div>
+      <div class="nav-section">
+        <p class="nav-label">Operations</p>
+        <a href="admin-sessions.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><span class="link-text">Sessions</span></a>
+        <a href="admin-welfare.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span class="link-text">Welfare &amp; Safety</span><span class="nav-badge nav-badge--red">5</span></a>
+        <a href="admin-messages.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span class="link-text">Messages</span></a>
+      </div>
+      <div class="nav-section">
+        <p class="nav-label">Platform</p>
+        <a href="admin-content.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span class="link-text">Content</span></a>
+        <a href="admin-settings.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06-.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span class="link-text">Settings</span></a>
+        <a href="admin-privacy.html" class="sidebar__link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><span class="link-text">Privacy &amp; GDPR</span></a>
+      </div>
+    </nav>
+    <div class="sidebar__foot">
+      <div class="sidebar__foot-user"><div class="admin-ava-sm">T</div><div class="sidebar__foot-info"><p>Tenner</p><small>Super Admin</small></div></div>
+      <button class="sidebar__signout"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px;"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Sign out</button>
+    </div>
+  </aside>
+
+  <!-- ── Main ── -->
+  <div class="admin-main">
+    <header class="admin-topbar">
+      <div class="topbar-left">
+        <label for="sidebar-toggle" class="topbar-menu-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></label>
+        <nav class="breadcrumb">
+          <a href="admin-home.html">Admin</a>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+          <a href="admin-ambassadors.html">Ambassadors</a>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+          <span class="bc-active">Add Ambassador · Step 3 of 5</span>
+        </nav>
+      </div>
+      <div class="topbar-right">
+        <div class="notif-wrap">
+          <input type="checkbox" id="notif-toggle" class="notif-check">
+          <label for="notif-toggle" class="topbar-icon-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><span class="notif-dot"></span></label>
+          <div class="notif-drop"><div class="notif-drop-head"><h4>Notifications</h4><a href="#">Mark all read</a></div><div class="notif-item unread"><div class="notif-ico red"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div><div class="notif-body"><p><strong>Critical welfare flag</strong></p><small>2 min ago</small></div></div><div class="notif-drop-foot"><a href="admin-welfare.html">View all →</a></div></div>
+        </div>
+        <div class="topbar-user"><div class="topbar-ava">T</div><div class="topbar-user-info"><div class="u-name">Tenner</div><div class="u-role">Super Admin</div></div></div>
+      </div>
+    </header>
+
+    <div class="admin-content">
+      <div class="form-shell">
+
+        <!-- Page title -->
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;flex-wrap:wrap;gap:12px;">
+          <div>
+            <h1 style="font-size:22px;font-weight:900;color:var(--adm-txt-head);letter-spacing:-.3px;margin-bottom:3px;">Add New Ambassador</h1>
+            <p style="font-size:13px;color:var(--adm-txt-muted);">Step 3 of 5 — use Next and Back to move between screens</p>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;">
+            <a href="admin-amb-add.html" class="btn btn-ghost btn-sm" style="text-decoration:none;">Single-page wizard</a>
+            <a href="admin-ambassadors.html" class="btn btn-ghost btn-sm" style="text-decoration:none;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+            Back to list
+          </a>
+          </div>
+        </div>
+
+        <div class="step-indicator">
+          <a href="admin-amb-add-1.html" class="step-node step-node--done">
+            <div class="step-circle">1</div>
+            <span class="step-label">Personal</span>
+          </a>
+          <div class="step-connector step-connector--done" data-after="1"></div>
+          <a href="admin-amb-add-2.html" class="step-node step-node--done">
+            <div class="step-circle">2</div>
+            <span class="step-label">Background</span>
+          </a>
+          <div class="step-connector step-connector--done" data-after="2"></div>
+          <div class="step-node step-node--current">
+            <div class="step-circle">3</div>
+            <span class="step-label">Skills</span>
+          </div>
+          <div class="step-connector" data-after="3"></div>
+          <div class="step-node">
+            <div class="step-circle">4</div>
+            <span class="step-label">Availability</span>
+          </div>
+          <div class="step-connector" data-after="4"></div>
+          <div class="step-node">
+            <div class="step-circle">5</div>
+            <span class="step-label">Review</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-body" style="padding:28px;">
+            <div class="step-title">Skills &amp; Support Areas</div>
+            <p class="step-desc">Select the areas this ambassador can best support users in</p>
+
+            <div class="info-tip">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            Select all areas that apply. These are used by our matching algorithm to connect this ambassador with the most suitable users.
+            </div>
+
+            <div class="form-section">
+            <div class="form-section-title">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+            Mental Wellbeing
+            </div>
+            <div class="skill-chips">
+            <span class="skill-chip"><input type="checkbox" id="sk-anxiety"><label for="sk-anxiety">Anxiety</label></span>
+            <span class="skill-chip"><input type="checkbox" id="sk-depression"><label for="sk-depression">Low mood / Depression</label></span>
+            <span class="skill-chip"><input type="checkbox" id="sk-stress"><label for="sk-stress">Stress management</label></span>
+            <span class="skill-chip"><input type="checkbox" id="sk-loneliness"><label for="sk-loneliness">Loneliness &amp; isolation</label></span>
+            <span class="skill-chip"><input type="checkbox" id="sk-trauma"><label for="sk-trauma">Trauma-informed support</label></span>
+            <span class="skill-chip"><input type="checkbox" id="sk-mindfulness"><label for="sk-mindfulness">Mindfulness</label></span>
+            <span class="skill-chip"><input type="checkbox" id="sk-identity"><label for="sk-identity">Identity &amp; belonging</label></span>
+            <span class="skill-chip"><input type="checkbox" id="sk-grief"><label for="sk-grief">Grief &amp; loss</label></span>
+            </div>
+            </div>
+
+            <div class="form-section">
+            <div class="form-section-title">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+            Academic &amp; Career
+            </div>
+            <div class="skill-chips">
+            <span class="skill-chip"><input type="checkbox" id="sk-academic"><label for="sk-academic">Academic pressure</label></span>
+            <span class="skill-chip"><input type="checkbox" id="sk-exams"><label for="sk-exams">Exam anxiety</label></span>
+            <span class="skill-chip"><input type="checkbox" id="sk-career"><label for="sk-career">Career uncertainty</label></span>
+            <span class="skill-chip"><input type="checkbox" id="sk-goals"><label for="sk-goals">Goal setting</label></span>
+            <span class="skill-chip"><input type="checkbox" id="sk-motivation"><label for="sk-motivation">Motivation &amp; focus</label></span>
+            <span class="skill-chip"><input type="checkbox" id="sk-procras"><label for="sk-procras">Procrastination</label></span>
+            </div>
+            </div>
+
+            <div class="form-section">
+            <div class="form-section-title">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            Relationships &amp; Life
+            </div>
+            <div class="skill-chips">
+            <span class="skill-chip"><input type="checkbox" id="sk-relations"><label for="sk-relations">Relationships</label></span>
+            <span class="skill-chip"><input type="checkbox" id="sk-family"><label for="sk-family">Family dynamics</label></span>
+            <span class="skill-chip"><input type="checkbox" id="sk-sleep"><label for="sk-sleep">Sleep &amp; self-care</label></span>
+            <span class="skill-chip"><input type="checkbox" id="sk-finance"><label for="sk-finance">Financial stress</label></span>
+            <span class="skill-chip"><input type="checkbox" id="sk-transition"><label for="sk-transition">Life transitions</label></span>
+            <span class="skill-chip"><input type="checkbox" id="sk-resilience"><label for="sk-resilience">Resilience building</label></span>
+            </div>
+            </div>
+
+            <div class="form-section">
+            <div class="form-section-title">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            Approach &amp; Techniques
+            </div>
+            <div class="skill-chips">
+            <span class="skill-chip"><input type="checkbox" id="sk-cbt"><label for="sk-cbt">CBT techniques</label></span>
+            <span class="skill-chip"><input type="checkbox" id="sk-act"><label for="sk-act">ACT / Acceptance</label></span>
+            <span class="skill-chip"><input type="checkbox" id="sk-journalling"><label for="sk-journalling">Journalling</label></span>
+            <span class="skill-chip"><input type="checkbox" id="sk-coaching"><label for="sk-coaching">Coaching approach</label></span>
+            <span class="skill-chip"><input type="checkbox" id="sk-breathing"><label for="sk-breathing">Breathwork</label></span>
+            <span class="skill-chip"><input type="checkbox" id="sk-active"><label for="sk-active">Active listening</label></span>
+            </div>
+            </div>
+
+            <div class="step-nav">
+            <a href="admin-amb-add-2.html" class="btn-step-back">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+            Back
+            </a>
+            <span class="step-counter">Step 3 of 5</span>
+            <a href="admin-amb-add-4.html" class="btn-step-next">
+            Continue
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+            </a>
+            </div>
+          </div>
+        </div>
+      </div><!-- /form-shell -->
+    </div><!-- /admin-content -->
+  </div><!-- /admin-main -->
+</div><!-- /admin-shell -->
+</body>
+</html>

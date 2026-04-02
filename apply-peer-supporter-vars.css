@@ -1,0 +1,96 @@
+/* Public “apply as peer supporter” flow — maps admin wizard tokens for amb-add-wizard.css */
+
+body.apply-peer-page {
+  --adm-bg: #f8f9fb;
+  --adm-surface: #ffffff;
+  --adm-border: rgba(12, 25, 41, 0.1);
+  --adm-border-lt: rgba(12, 25, 41, 0.05);
+  --adm-blue: #2d9676;
+  --adm-blue-dk: #1d6e55;
+  --adm-blue-lt: #eaf5f1;
+  --adm-blue-xlt: #f4faf7;
+  --adm-teal: #175d92;
+  --adm-teal-lt: #e0eef8;
+  --adm-green: #059669;
+  --adm-red: #dc2626;
+  --adm-txt-head: #0c1929;
+  --adm-txt-body: #334155;
+  --adm-txt-muted: #64748b;
+  --adm-txt-faint: #94a3b8;
+  --adm-r-sm: 10px;
+  --adm-r-md: 14px;
+  --adm-r-lg: 20px;
+}
+
+body.apply-peer-page .ob-card.apply-peer-wide {
+  max-width: 740px;
+}
+
+.apply-peer-hero {
+  padding: 0 28px 8px;
+  border-bottom: 1px solid var(--border, #e2e8f0);
+  margin-bottom: 8px;
+}
+.apply-peer-hero h1 {
+  font-family: var(--font-display, Georgia, serif);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--text, #0f172a);
+  letter-spacing: -0.02em;
+  margin-bottom: 4px;
+}
+.apply-peer-hero p {
+  font-size: 13px;
+  color: var(--text-muted, #64748b);
+  margin: 0;
+}
+
+.apply-peer-inner {
+  padding: 0 28px 28px;
+}
+
+.apply-peer-page .form-group {
+  margin-bottom: 18px;
+}
+.apply-peer-page .form-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--adm-txt-head);
+  margin-bottom: 6px;
+  letter-spacing: 0.1px;
+}
+.apply-peer-page .form-input,
+.apply-peer-page .form-select,
+.apply-peer-page textarea.form-input {
+  width: 100%;
+  padding: 10px 13px;
+  border: 1px solid var(--adm-border);
+  border-radius: var(--adm-r-sm);
+  font-size: 13px;
+  color: var(--adm-txt-body);
+  background: var(--adm-surface);
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  font-family: "DM Sans", system-ui, sans-serif;
+}
+.apply-peer-page .form-input:focus,
+.apply-peer-page .form-select:focus,
+.apply-peer-page textarea.form-input:focus {
+  border-color: var(--adm-blue);
+  box-shadow: 0 0 0 3px rgba(45, 150, 118, 0.1);
+}
+.apply-peer-page textarea.form-input {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.apply-peer-page .card {
+  background: var(--adm-surface);
+  border-radius: var(--adm-r-md);
+  border: 1px solid var(--adm-border);
+  box-shadow: 0 1px 4px rgba(12, 25, 41, 0.06);
+  overflow: hidden;
+  min-width: 0;
+  max-width: 100%;
+}

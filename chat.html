@@ -30,7 +30,7 @@
     <div class="sidebar__block">
       <div class="sidebar__label">Menu</div>
       <nav class="sb-nav" aria-label="Sections">
-        <a href="index.html" class="sb-nav__link is-active" aria-current="page">
+        <a href="index.html" class="sb-nav__link">
           <svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5L12 4l9 6.5V20a1 1 0 01-1 1h-5v-7H9v7H4a1 1 0 01-1-1v-9.5z"/></svg>
           Home
         </a>
@@ -130,132 +130,6 @@
 
     <!-- ══ CHAT AREA ══════════════════════════════════ -->
     <div class="chat-area" role="log" aria-label="Chat messages" aria-live="polite">
-
-      <!-- Date separator -->
-      <div class="chat-date-sep" aria-label="March 26 · Peer support">
-        <div class="chat-date-sep__line" aria-hidden="true"></div>
-        <span class="chat-date-sep__label">Mar 26 &middot; Peer support</span>
-        <div class="chat-date-sep__line" aria-hidden="true"></div>
-      </div>
-
-      <!-- ── User message 1 ──────────────────────────── -->
-      <div class="msg-row msg-row--user" role="article" aria-label="Your message">
-        <div class="msg-avatar msg-avatar--user" aria-hidden="true">U</div>
-        <div class="msg-bubble-wrap">
-          <div class="msg-bubble msg-bubble--user">
-            I need help with housing stress and anxiety — can you suggest people to talk to?
-          </div>
-          <span class="msg-time">9:41 AM</span>
-        </div>
-      </div>
-
-      <!-- ── AI response with peer cards ──────────────── -->
-      <div class="msg-row" role="article" aria-label="Luminwell response">
-        <div class="msg-avatar msg-avatar--ai" aria-hidden="true">L</div>
-        <div class="msg-bubble-wrap" style="max-width:80%;">
-          <div class="msg-bubble msg-bubble--ai">
-            <p>Based on what you shared—housing stress and anxiety—I've matched you with supporters whose experience and training line up with that (you'll always see why a match was suggested). Save anyone you'd like to connect with, or skip for now. There's no wrong choice.</p>
-
-            <!-- Peer matcher cards -->
-            <div class="peer-cards" role="list" aria-label="Suggested peer supporters">
-
-              <!-- Dr. Sarah Chen -->
-              <div class="peer-card" role="listitem">
-                <div class="peer-card__head">
-                  <div class="peer-card__avatar" style="background:linear-gradient(135deg,#475569,#94a3b8);" aria-hidden="true">👤</div>
-                  <p class="peer-card__name">Dr. Sarah Chen</p>
-                </div>
-                <div class="peer-card__tags">
-                  <span class="peer-card__tag">Housing</span>
-                  <span class="peer-card__tag">Anxiety</span>
-                </div>
-                <p class="peer-card__bio">Specialised · Licensed therapist (trauma-informed). Life transitions, financial and housing-related stress, and sleep. Video sessions; evening hours.</p>
-                <div class="peer-card__stars" aria-label="Rating: 4.9 out of 5">
-                  <div class="peer-card__star-icons" aria-hidden="true">
-                    <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                    <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                    <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                    <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                    <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                  </div>
-                  <span class="peer-card__rating">4.9/5</span>
-                </div>
-                <div class="peer-card__actions">
-                  <button type="button" class="btn-peer-skip">Skip</button>
-                  <button type="button" class="btn-peer-save">Save</button>
-                </div>
-              </div>
-
-              <!-- James Miller -->
-              <div class="peer-card" role="listitem">
-                <div class="peer-card__head">
-                  <div class="peer-card__avatar" style="background:linear-gradient(135deg,#059669,#34d399);" aria-hidden="true">👤</div>
-                  <p class="peer-card__name">James Miller</p>
-                </div>
-                <div class="peer-card__tags">
-                  <span class="peer-card__tag">Stress</span>
-                  <span class="peer-card__tag">Career</span>
-                </div>
-                <p class="peer-card__bio">Specialised · Counselor (CBT-informed). Workplace burnout, major life changes, and stress. Collaborative, clear booking — you'll always see date, time, and format up front.</p>
-                <div class="peer-card__stars" aria-label="Rating: 4.8 out of 5">
-                  <div class="peer-card__star-icons" aria-hidden="true">
-                    <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                    <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                    <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                    <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                    <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                  </div>
-                  <span class="peer-card__rating">4.8/5</span>
-                </div>
-                <div class="peer-card__actions">
-                  <button type="button" class="btn-peer-skip">Skip</button>
-                  <button type="button" class="btn-peer-save">Save</button>
-                </div>
-              </div>
-
-              <!-- Aisha Okonkwo -->
-              <div class="peer-card" role="listitem">
-                <div class="peer-card__head">
-                  <div class="peer-card__avatar" style="background:linear-gradient(135deg,#7c3aed,#c084fc);" aria-hidden="true">👤</div>
-                  <p class="peer-card__name">Aisha Okonkwo</p>
-                </div>
-                <div class="peer-card__tags">
-                  <span class="peer-card__tag">Anxiety</span>
-                  <span class="peer-card__tag">Family</span>
-                </div>
-                <p class="peer-card__bio">Peer · Trained peer supporter with lived experience around housing insecurity and family stress. Sliding scale. Identity-protected journal-style notes available.</p>
-                <div class="peer-card__stars" aria-label="Rating: 5.0 out of 5">
-                  <div class="peer-card__star-icons" aria-hidden="true">
-                    <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                    <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                    <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                    <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                    <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                  </div>
-                  <span class="peer-card__rating">5.0/5</span>
-                </div>
-                <div class="peer-card__actions">
-                  <button type="button" class="btn-peer-skip">Skip</button>
-                  <button type="button" class="btn-peer-save">Save</button>
-                </div>
-              </div>
-
-            </div><!-- /peer-cards -->
-          </div>
-          <span class="msg-time">9:41 AM</span>
-        </div>
-      </div>
-
-      <!-- Was this helpful? feedback -->
-      <div class="msg-feedback" aria-label="Message feedback">
-        <button type="button" class="msg-feedback__btn" aria-label="Helpful">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3H14z"/><path d="M7 22H4a2 2 0 01-2-2v-7a2 2 0 012-2h3"/></svg>
-        </button>
-        <button type="button" class="msg-feedback__btn" aria-label="Not helpful">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 15v4a3 3 0 003 3l4-9V2H5.72a2 2 0 00-2 1.7l-1.38 9a2 2 0 002 2.3H10z"/><path d="M17 2h2.67A2.31 2.31 0 0122 4v7a2.31 2.31 0 01-2.33 2H17"/></svg>
-        </button>
-        <span class="msg-feedback__label">Was this helpful?</span>
-      </div>
 
       <!-- ── Date separator (second session) ──────────── -->
       <div class="chat-date-sep" aria-label="Earlier in session" style="padding-top:16px;">

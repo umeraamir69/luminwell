@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Welfare &amp; Safety — Luminwell Admin</title>
+<title>Critical — Welfare · Luminwell Admin</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="admin.css">
 <style>
-  .wf-panels #wf-panel-all.tab-panel { display: block; }
+  .wf-panels #wf-panel-critical.tab-panel { display: block; }
 
   .flag-detail-card {
     background: var(--adm-surface);
@@ -83,7 +83,9 @@
         <nav class="breadcrumb">
           <a href="admin-home.html">Admin</a>
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
-          <span class="bc-active">Welfare &amp; Safety</span>
+          <a href="admin-welfare.html">Welfare &amp; Safety</a>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+          <span class="bc-active">Critical</span>
         </nav>
       </div>
       <div class="topbar-right">
@@ -101,8 +103,8 @@
       <div class="page-hero">
         <div class="page-hero-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
         <div class="page-hero-text">
-          <h1>Welfare &amp; Safety</h1>
-          <p>Safeguarding flags, crisis protocols &amp; escalation workflows</p>
+          <h1>Critical cases</h1>
+          <p>Immediate escalation protocol &amp; live case file</p>
         </div>
         <div class="page-hero-actions"><a href="admin-welfare.html" class="btn btn-white">Export audit log</a><button class="btn btn-primary" style="background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Report incident</button></div>
       </div>
@@ -133,110 +135,48 @@
         <div>
           <div class="card">
             <div class="tabs-row" style="border-radius:0;">
-              <a href="admin-welfare.html" class="tab-lbl is-active" aria-current="page">All <span class="badge badge-slate" style="font-size:10px;padding:1px 7px;">5</span></a>
+              <a href="admin-welfare.html" class="tab-lbl">All <span class="badge badge-slate" style="font-size:10px;padding:1px 7px;">5</span></a>
               <a href="admin-welfare-open.html" class="tab-lbl">Open <span class="badge badge-amber" style="font-size:10px;padding:1px 7px;">5</span></a>
-              <a href="admin-welfare-critical.html" class="tab-lbl">Critical <span class="badge badge-red" style="font-size:10px;padding:1px 7px;">1</span></a>
+              <a href="admin-welfare-critical.html" class="tab-lbl is-active" aria-current="page">Critical <span class="badge badge-red" style="font-size:10px;padding:1px 7px;">1</span></a>
               <a href="admin-welfare-resolved.html" class="tab-lbl">Resolved <span class="badge badge-green" style="font-size:10px;padding:1px 7px;">8</span></a>
             </div>
 
             <div class="wf-panels">
 
-              <!-- All panel -->
-              <div id="wf-panel-all" class="tab-panel">
+              <div id="wf-panel-critical" class="tab-panel">
                 <div style="padding:16px;">
-
                   <div class="flag-detail-card critical">
                     <div class="flag-header">
                       <div>
-                        <div class="flag-meta">
-                          <span class="flag-sev critical">Critical</span>
-                          <span style="font-size:11px;color:var(--adm-txt-faint);">Today · 9:47 AM</span>
-                        </div>
-                        <p style="font-size:15px;font-weight:800;color:var(--adm-txt-head);margin-bottom:2px;">Alex Turner</p>
-                        <p style="font-size:12px;color:var(--adm-txt-muted);">Flagged by Ambassador Maya Johnson · Manchester</p>
+                        <div class="flag-meta"><span class="flag-sev critical">Critical</span><span style="font-size:11px;color:var(--adm-txt-faint);">Today · 9:47 AM · Open 2 h 13 min</span></div>
+                        <p style="font-size:16px;font-weight:800;color:var(--adm-txt-head);margin-bottom:2px;">Alex Turner</p>
+                        <p style="font-size:12px;color:var(--adm-txt-muted);">Univ. of Manchester · Law Year 1 · Ambassador: Maya Johnson</p>
                       </div>
-                      <span class="badge badge-red">Open</span>
+                      <span class="badge badge-red">UNRESOLVED</span>
                     </div>
                     <div class="flag-body">
-                      <p><strong>Trigger:</strong> Client disclosed self-harm thoughts during session. Ambassador logged welfare note immediately. Risk indicators present in recent journal entries.</p>
+                      <p><strong>Session context:</strong> Client disclosed self-harm thoughts during scheduled session. Ambassador recognised verbal cues aligned with elevated risk. Welfare note logged immediately post-session.</p>
+                      <br>
+                      <p><strong>Contributing factors identified:</strong> Academic pressure (exam season), social isolation, 3 consecutive low-mood journal days, reduced sleep reported.</p>
                     </div>
-                    <div class="flag-actions">
-                      <button class="btn btn-danger btn-sm">Escalate to counselling</button>
-                      <button class="btn btn-primary btn-sm">Message ambassador</button>
-                      <button class="btn btn-secondary btn-sm">View full notes</button>
-                    </div>
-                  </div>
-
-                  <div class="flag-detail-card high">
-                    <div class="flag-header">
-                      <div>
-                        <div class="flag-meta"><span class="flag-sev high">High</span><span style="font-size:11px;color:var(--adm-txt-faint);">Today · 6:30 AM</span></div>
-                        <p style="font-size:15px;font-weight:800;color:var(--adm-txt-head);margin-bottom:2px;">Jordan Mills</p>
-                        <p style="font-size:12px;color:var(--adm-txt-muted);">Auto-flagged by platform · UCL</p>
+                    <div style="margin-top:16px;">
+                      <p style="font-size:11px;font-weight:700;color:var(--adm-txt-muted);letter-spacing:.5px;margin-bottom:10px;">ESCALATION PROTOCOL</p>
+                      <div class="escalation-steps">
+                        <div class="step"><div class="step-dot done"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="step-line"><p>Ambassador welfare note logged</p><small>Today · 9:47 AM · Maya Johnson</small></div></div>
+                        <div class="step"><div class="step-dot done"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="step-line"><p>Admin notification sent</p><small>Today · 9:47 AM · Automated</small></div></div>
+                        <div class="step"><div class="step-dot active">→</div><div class="step-line"><p>Admin review &amp; response — <strong>pending</strong></p><small>Required within 1 hour of flag</small></div></div>
+                        <div class="step"><div class="step-dot pending">4</div><div class="step-line"><p>Referral to university counselling</p><small>If risk confirmed</small></div></div>
+                        <div class="step"><div class="step-dot pending">5</div><div class="step-line"><p>Follow-up welfare check (24 h)</p><small>Automated reminder</small></div></div>
                       </div>
-                      <span class="badge badge-amber">Open</span>
-                    </div>
-                    <div class="flag-body">
-                      <p><strong>Trigger:</strong> Missed 3 consecutive sessions. Mood journal scoring persistently below 3/10 for 14 days. No response to ambassador messages in 5 days.</p>
                     </div>
                     <div class="flag-actions">
-                      <button class="btn btn-secondary btn-sm">Contact user</button>
-                      <button class="btn btn-secondary btn-sm">Re-assign ambassador</button>
+                      <button class="btn btn-danger btn-sm">Escalate to counselling service</button>
+                      <button class="btn btn-primary btn-sm">Contact Alex directly</button>
+                      <button class="btn btn-secondary btn-sm">Message ambassador</button>
+                      <button class="btn btn-secondary btn-sm">View all notes</button>
+                      <button class="btn btn-secondary btn-sm">Mark resolved</button>
                     </div>
                   </div>
-
-                  <div class="flag-detail-card high">
-                    <div class="flag-header">
-                      <div>
-                        <div class="flag-meta"><span class="flag-sev high">High</span><span style="font-size:11px;color:var(--adm-txt-faint);">Yesterday · 2:15 PM</span></div>
-                        <p style="font-size:15px;font-weight:800;color:var(--adm-txt-head);margin-bottom:2px;">Casey Lee</p>
-                        <p style="font-size:12px;color:var(--adm-txt-muted);">Flagged by Ambassador Keiran Roberts · UCL</p>
-                      </div>
-                      <span class="badge badge-amber">Open</span>
-                    </div>
-                    <div class="flag-body">
-                      <p><strong>Trigger:</strong> Client disclosed significant financial hardship during session. Risk of housing instability. Referred for emergency support.</p>
-                    </div>
-                    <div class="flag-actions">
-                      <button class="btn btn-secondary btn-sm">View case notes</button>
-                      <button class="btn btn-secondary btn-sm">Contact student services</button>
-                    </div>
-                  </div>
-
-                  <div class="flag-detail-card medium">
-                    <div class="flag-header">
-                      <div>
-                        <div class="flag-meta"><span class="flag-sev medium">Medium</span><span style="font-size:11px;color:var(--adm-txt-faint);">28 Mar · 4:00 PM</span></div>
-                        <p style="font-size:15px;font-weight:800;color:var(--adm-txt-head);margin-bottom:2px;">Sam Kowalski</p>
-                        <p style="font-size:12px;color:var(--adm-txt-muted);">AI journal analysis · Manchester</p>
-                      </div>
-                      <span class="badge badge-blue">Monitoring</span>
-                    </div>
-                    <div class="flag-body">
-                      <p><strong>Trigger:</strong> AI detected language patterns associated with persistent low mood in 5 consecutive journal entries. No direct crisis language present.</p>
-                    </div>
-                    <div class="flag-actions">
-                      <button class="btn btn-secondary btn-sm">Review journal entries</button>
-                    </div>
-                  </div>
-
-                  <div class="flag-detail-card medium">
-                    <div class="flag-header">
-                      <div>
-                        <div class="flag-meta"><span class="flag-sev medium">Medium</span><span style="font-size:11px;color:var(--adm-txt-faint);">27 Mar · 11:20 AM</span></div>
-                        <p style="font-size:15px;font-weight:800;color:var(--adm-txt-head);margin-bottom:2px;">Riley Ahmed</p>
-                        <p style="font-size:12px;color:var(--adm-txt-muted);">Self-reported via wellbeing check-in · Leeds</p>
-                      </div>
-                      <span class="badge badge-blue">Monitoring</span>
-                    </div>
-                    <div class="flag-body">
-                      <p><strong>Trigger:</strong> User self-reported panic attack during weekly check-in. Has support from ambassador. Monitoring mood trend.</p>
-                    </div>
-                    <div class="flag-actions">
-                      <button class="btn btn-secondary btn-sm">View check-in history</button>
-                    </div>
-                  </div>
-
                 </div>
               </div>
 

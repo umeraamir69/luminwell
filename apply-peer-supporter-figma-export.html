@@ -1,0 +1,3094 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- Regenerate: python3 scripts/build-apply-peer-figma-export.py  |  Open from repo root so logo.png loads. -->
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Apply as peer supporter — Figma export (all screens)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap" rel="stylesheet" />
+  <style>
+/* === onboarding.css === */
+/* ============================================================
+   Luminwell — Onboarding Design System
+   Target: high school & university students seeking mental support
+   Principles: trauma-informed, calm, minimal, accessible (WCAG 2.1 AA)
+   ============================================================ */
+
+/* ------ Tokens ------ */
+:root {
+  --navy:        #175d92;
+  --navy-deep:   #124a75;
+  --navy-pale:   #e8f1fc;
+  --teal:        #2d9676;
+  --teal-pale:   #eaf5f1;
+  --bg-a:        #ddeeff;
+  --bg-b:        #eaf5f1;
+  --surface:     #ffffff;
+  --text:        #0f172a;
+  --text-muted:  #64748b;
+  --text-soft:   #94a3b8;
+  --border:      #e2e8f0;
+  --border-focus: rgba(23, 93, 146, 0.45);
+  --r-sm:  10px;
+  --r-md:  16px;
+  --r-lg:  24px;
+  --shadow-card: 0 24px 64px rgba(23, 93, 146, 0.11), 0 4px 18px rgba(0, 0, 0, 0.05);
+  --font:         "DM Sans", system-ui, -apple-system, sans-serif;
+  --font-display: "Fraunces", Georgia, serif;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --t: 0.18s ease;
+}
+
+/* ------ Reset ------ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-font-smoothing: antialiased; font-size: 16px; }
+
+/* ------ Page ------ */
+body {
+  min-height: 100vh;
+  min-height: 100dvh;
+  font-family: var(--font);
+  color: var(--text);
+  background: linear-gradient(150deg, var(--bg-a) 0%, #f0f7ff 45%, var(--bg-b) 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 16px 20px;
+  position: relative;
+  gap: 0;
+}
+
+/* ------ Page-enter animation ------ */
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(22px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0)   scale(1);    }
+}
+
+/* ------ Card ------ */
+.ob-card {
+  background: var(--surface);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-card);
+  width: 100%;
+  max-width: 468px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: cardIn 0.42s var(--ease) both;
+}
+
+/* ------ Card Header ------ */
+.ob-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22px 28px 0;
+}
+
+.ob-logo {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--navy);
+  letter-spacing: -0.025em;
+  text-decoration: none;
+  line-height: 1;
+}
+
+.ob-skip {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-decoration: none;
+  padding: 7px 12px;
+  border-radius: 8px;
+  transition: color var(--t), background var(--t);
+}
+.ob-skip:hover { color: var(--navy); background: var(--navy-pale); }
+
+/* ------ Stepper ------ */
+.ob-stepper {
+  padding: 18px 28px 22px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.ob-step-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.ob-step-label strong {
+  color: var(--navy);
+  font-weight: 700;
+}
+
+.ob-dots {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 300px;
+}
+
+.ob-dot {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+  transition: all 0.25s ease;
+}
+
+.ob-dot--todo {
+  background: #f1f5f9;
+  color: var(--text-soft);
+  border: 2px solid var(--border);
+}
+
+.ob-dot--current {
+  background: var(--navy);
+  color: #fff;
+  box-shadow: 0 0 0 5px rgba(23, 93, 146, 0.14);
+}
+
+.ob-dot--done {
+  background: var(--teal);
+  color: #fff;
+}
+
+.ob-dot--done svg {
+  width: 13px;
+  height: 13px;
+}
+
+.ob-line {
+  flex: 1;
+  height: 2px;
+  background: var(--border);
+  margin: 0 5px;
+  border-radius: 2px;
+  transition: background 0.3s ease;
+}
+
+.ob-line--done { background: var(--teal); }
+
+/* ------ Illustration ------ */
+.ob-art {
+  position: relative;
+  background: linear-gradient(180deg, #eef5ff 0%, #f8fbff 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 24px 28px;
+  overflow: hidden;
+}
+
+.ob-art::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 70% 60% at 50% 55%, rgba(45, 150, 118, 0.07) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.ob-art img {
+  position: relative;
+  max-width: 220px;
+  max-height: 165px;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  display: block;
+  filter: drop-shadow(0 10px 28px rgba(23, 93, 146, 0.13));
+}
+
+/* ------ Card Body ------ */
+.ob-body {
+  padding: 28px 32px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.ob-question {
+  font-family: var(--font-display);
+  font-size: clamp(18px, 4vw, 21px);
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.3;
+  letter-spacing: -0.015em;
+  margin-bottom: 8px;
+}
+
+.ob-context {
+  font-size: 13.5px;
+  color: var(--text-muted);
+  line-height: 1.6;
+  max-width: 340px;
+  margin: 0 auto 24px;
+}
+
+/* ------ Select ------ */
+.ob-select-wrap {
+  position: relative;
+  width: 100%;
+  margin-bottom: 4px;
+}
+
+.ob-select {
+  width: 100%;
+  padding: 14px 44px 14px 18px;
+  font-family: inherit;
+  font-size: 15px;
+  color: var(--text);
+  background: #f8fafc;
+  border: 1.5px solid var(--border);
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  transition: border-color var(--t), box-shadow var(--t), background var(--t);
+}
+
+.ob-select:focus {
+  outline: none;
+  border-color: var(--navy);
+  box-shadow: 0 0 0 3px rgba(23, 93, 146, 0.13);
+  background: #fff;
+}
+
+.ob-select-arrow {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: var(--text-muted);
+}
+
+/* ------ Pills ------ */
+.ob-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 4px;
+}
+
+.ob-pill { position: relative; }
+
+.ob-pill input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.ob-pill label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 22px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: #f8fafc;
+  border: 1.5px solid var(--border);
+  border-radius: 999px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all var(--t);
+  user-select: none;
+}
+
+.ob-pill label:hover {
+  border-color: rgba(23, 93, 146, 0.4);
+  color: var(--navy);
+  background: var(--navy-pale);
+}
+
+.ob-pill input:checked + label {
+  border-color: var(--navy);
+  color: var(--navy);
+  background: var(--navy-pale);
+  box-shadow: 0 0 0 1.5px rgba(23, 93, 146, 0.18);
+}
+
+.ob-pill input:focus-visible + label {
+  outline: 2px solid var(--navy);
+  outline-offset: 3px;
+}
+
+/* ------ Inline skip ------ */
+.ob-inline-skip {
+  text-align: center;
+  margin-top: 10px;
+}
+
+.ob-inline-skip a {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+  text-decoration: none;
+  border-bottom: 1px dashed #cbd5e1;
+  padding-bottom: 1px;
+  transition: color var(--t), border-color var(--t);
+}
+
+.ob-inline-skip a:hover { color: var(--navy); border-bottom-color: var(--navy); }
+
+/* ------ Card Footer ------ */
+.ob-footer {
+  padding: 20px 32px 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Privacy badge */
+.ob-privacy {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  padding: 11px 15px;
+  background: var(--teal-pale);
+  border-radius: var(--r-sm);
+  font-size: 12.5px;
+  color: var(--teal);
+  line-height: 1.5;
+}
+
+.ob-privacy svg {
+  flex-shrink: 0;
+  margin-top: 1px;
+  width: 14px;
+  height: 14px;
+  stroke: var(--teal);
+  stroke-width: 2;
+  fill: none;
+}
+
+/* Actions row */
+.ob-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.ob-actions--right { justify-content: flex-end; }
+
+/* Settings note */
+.ob-settings-note {
+  text-align: center;
+  font-size: 11.5px;
+  color: var(--text-soft);
+}
+
+/* ------ Buttons ------ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 13px 28px;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  border: 1.5px solid transparent;
+  text-decoration: none;
+  min-height: 48px;
+  transition: background var(--t), color var(--t), border-color var(--t),
+              box-shadow var(--t), transform var(--t);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.btn--ghost {
+  background: transparent;
+  color: var(--text-muted);
+  border-color: var(--border);
+}
+.btn--ghost:hover {
+  border-color: rgba(23, 93, 146, 0.4);
+  color: var(--navy);
+  background: var(--navy-pale);
+}
+
+.btn--primary {
+  background: var(--navy);
+  color: #fff;
+  border-color: var(--navy);
+  min-width: 120px;
+}
+.btn--primary:not(.btn--disabled):hover {
+  background: var(--navy-deep);
+  border-color: var(--navy-deep);
+  box-shadow: 0 4px 16px rgba(23, 93, 146, 0.38);
+  transform: translateY(-1px);
+}
+.btn--primary:not(.btn--disabled):active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+.btn--disabled {
+  background: #e2e8f0 !important;
+  color: #aab4be !important;
+  border-color: #e2e8f0 !important;
+  cursor: not-allowed !important;
+  pointer-events: none;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+/* ------ 988 Crisis bar ------ */
+.ob-crisis {
+  margin-top: 18px;
+  font-size: 13px;
+  color: var(--navy);
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  opacity: 0.82;
+}
+
+.ob-crisis a {
+  font-weight: 700;
+  color: var(--navy);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(23, 93, 146, 0.45);
+}
+
+.ob-crisis a:hover { color: var(--navy-deep); border-bottom-color: var(--navy-deep); }
+
+/* ------ Utility ------ */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+/* ------ Responsive ------ */
+@media (max-width: 500px) {
+  body {
+    padding: 0;
+    justify-content: flex-start;
+    background: #fff;
+  }
+
+  .ob-card {
+    border-radius: 0;
+    box-shadow: none;
+    min-height: 100dvh;
+    animation: none;
+  }
+
+  .ob-art { padding: 24px 20px 20px; }
+  .ob-body { padding: 22px 24px 8px; }
+  .ob-footer { padding: 16px 24px 24px; }
+  .ob-header { padding: 18px 20px 0; }
+  .ob-stepper { padding: 14px 20px 18px; }
+
+  .ob-pills { flex-direction: column; align-items: stretch; }
+  .ob-pill label { text-align: center; justify-content: center; }
+
+  .ob-crisis { display: none; }
+}
+
+
+/* === apply-peer-supporter-vars.css === */
+/* Public “apply as peer supporter” flow — maps admin wizard tokens for amb-add-wizard.css */
+
+body.apply-peer-page {
+  --adm-bg: #f8f9fb;
+  --adm-surface: #ffffff;
+  --adm-border: rgba(12, 25, 41, 0.1);
+  --adm-border-lt: rgba(12, 25, 41, 0.05);
+  --adm-blue: #2d9676;
+  --adm-blue-dk: #1d6e55;
+  --adm-blue-lt: #eaf5f1;
+  --adm-blue-xlt: #f4faf7;
+  --adm-teal: #175d92;
+  --adm-teal-lt: #e0eef8;
+  --adm-green: #059669;
+  --adm-red: #dc2626;
+  --adm-txt-head: #0c1929;
+  --adm-txt-body: #334155;
+  --adm-txt-muted: #64748b;
+  --adm-txt-faint: #94a3b8;
+  --adm-r-sm: 10px;
+  --adm-r-md: 14px;
+  --adm-r-lg: 20px;
+}
+
+body.apply-peer-page .ob-card.apply-peer-wide {
+  max-width: 740px;
+}
+
+.apply-peer-hero {
+  padding: 0 28px 8px;
+  border-bottom: 1px solid var(--border, #e2e8f0);
+  margin-bottom: 8px;
+}
+.apply-peer-hero h1 {
+  font-family: var(--font-display, Georgia, serif);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--text, #0f172a);
+  letter-spacing: -0.02em;
+  margin-bottom: 4px;
+}
+.apply-peer-hero p {
+  font-size: 13px;
+  color: var(--text-muted, #64748b);
+  margin: 0;
+}
+
+.apply-peer-inner {
+  padding: 0 28px 28px;
+}
+
+.apply-peer-page .form-group {
+  margin-bottom: 18px;
+}
+.apply-peer-page .form-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--adm-txt-head);
+  margin-bottom: 6px;
+  letter-spacing: 0.1px;
+}
+.apply-peer-page .form-input,
+.apply-peer-page .form-select,
+.apply-peer-page textarea.form-input {
+  width: 100%;
+  padding: 10px 13px;
+  border: 1px solid var(--adm-border);
+  border-radius: var(--adm-r-sm);
+  font-size: 13px;
+  color: var(--adm-txt-body);
+  background: var(--adm-surface);
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  font-family: "DM Sans", system-ui, sans-serif;
+}
+.apply-peer-page .form-input:focus,
+.apply-peer-page .form-select:focus,
+.apply-peer-page textarea.form-input:focus {
+  border-color: var(--adm-blue);
+  box-shadow: 0 0 0 3px rgba(45, 150, 118, 0.1);
+}
+.apply-peer-page textarea.form-input {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.apply-peer-page .card {
+  background: var(--adm-surface);
+  border-radius: var(--adm-r-md);
+  border: 1px solid var(--adm-border);
+  box-shadow: 0 1px 4px rgba(12, 25, 41, 0.06);
+  overflow: hidden;
+  min-width: 0;
+  max-width: 100%;
+}
+
+
+/* === amb-add-wizard.css === */
+/* Luminwell — shared ambassador / peer-supporter wizard UI
+   Requires --adm-* tokens (admin.css or apply-peer-supporter-vars.css). */
+
+/* Multi-page stepper (admin-amb-add-1…5, apply-peer-supporter-1…5) */
+a.step-node {
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+.step-node--current .step-circle {
+  background: linear-gradient(135deg, #2d9676, #175d92);
+  border-color: transparent;
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(45, 150, 118, 0.35);
+}
+.step-node--current .step-label {
+  color: var(--adm-blue);
+}
+.step-node--done .step-circle {
+  background: var(--adm-green);
+  border-color: transparent;
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.2);
+}
+.step-node--done .step-label {
+  color: var(--adm-green);
+  font-weight: 700;
+}
+a.step-node.step-node--done:hover .step-circle {
+  filter: brightness(1.05);
+}
+.step-connector--done {
+  background: var(--adm-green);
+}
+
+/* Single-page wizard (admin-amb-add.html) */
+.step-radio {
+  display: none;
+}
+.step-panel {
+  display: none;
+}
+html:has(#step-1:checked) .step-panel[data-step="1"] {
+  display: block;
+}
+html:has(#step-2:checked) .step-panel[data-step="2"] {
+  display: block;
+}
+html:has(#step-3:checked) .step-panel[data-step="3"] {
+  display: block;
+}
+html:has(#step-4:checked) .step-panel[data-step="4"] {
+  display: block;
+}
+html:has(#step-5:checked) .step-panel[data-step="5"] {
+  display: block;
+}
+
+.step-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+}
+.step-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  position: relative;
+  z-index: 1;
+}
+.step-circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 800;
+  border: 2px solid var(--adm-border);
+  background: var(--adm-surface);
+  color: var(--adm-txt-muted);
+  transition: all 0.25s;
+}
+.step-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--adm-txt-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  transition: color 0.25s;
+}
+.step-connector {
+  width: 60px;
+  height: 2px;
+  background: var(--adm-border);
+  margin: 0;
+  margin-bottom: 22px;
+  flex-shrink: 0;
+  transition: background 0.25s;
+}
+
+html:has(#step-1:checked) .step-node[data-for="1"] .step-circle,
+html:has(#step-2:checked) .step-node[data-for="2"] .step-circle,
+html:has(#step-3:checked) .step-node[data-for="3"] .step-circle,
+html:has(#step-4:checked) .step-node[data-for="4"] .step-circle,
+html:has(#step-5:checked) .step-node[data-for="5"] .step-circle {
+  background: linear-gradient(135deg, #2d9676, #175d92);
+  border-color: transparent;
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(45, 150, 118, 0.35);
+}
+html:has(#step-1:checked) .step-node[data-for="1"] .step-label,
+html:has(#step-2:checked) .step-node[data-for="2"] .step-label,
+html:has(#step-3:checked) .step-node[data-for="3"] .step-label,
+html:has(#step-4:checked) .step-node[data-for="4"] .step-label,
+html:has(#step-5:checked) .step-node[data-for="5"] .step-label {
+  color: var(--adm-blue);
+}
+
+html:has(#step-2:checked) .step-node[data-for="1"] .step-circle,
+html:has(#step-3:checked) .step-node[data-for="1"] .step-circle,
+html:has(#step-3:checked) .step-node[data-for="2"] .step-circle,
+html:has(#step-4:checked) .step-node[data-for="1"] .step-circle,
+html:has(#step-4:checked) .step-node[data-for="2"] .step-circle,
+html:has(#step-4:checked) .step-node[data-for="3"] .step-circle,
+html:has(#step-5:checked) .step-node[data-for="1"] .step-circle,
+html:has(#step-5:checked) .step-node[data-for="2"] .step-circle,
+html:has(#step-5:checked) .step-node[data-for="3"] .step-circle,
+html:has(#step-5:checked) .step-node[data-for="4"] .step-circle {
+  background: var(--adm-green);
+  border-color: transparent;
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.2);
+}
+
+html:has(#step-2:checked) .step-connector[data-after="1"],
+html:has(#step-3:checked) .step-connector[data-after="1"],
+html:has(#step-3:checked) .step-connector[data-after="2"],
+html:has(#step-4:checked) .step-connector[data-after="1"],
+html:has(#step-4:checked) .step-connector[data-after="2"],
+html:has(#step-4:checked) .step-connector[data-after="3"],
+html:has(#step-5:checked) .step-connector[data-after="1"],
+html:has(#step-5:checked) .step-connector[data-after="2"],
+html:has(#step-5:checked) .step-connector[data-after="3"],
+html:has(#step-5:checked) .step-connector[data-after="4"] {
+  background: var(--adm-green);
+}
+
+.form-shell {
+  max-width: 740px;
+  margin: 0 auto;
+}
+.step-title {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--adm-txt-head);
+  letter-spacing: -0.3px;
+  margin-bottom: 4px;
+}
+.step-desc {
+  font-size: 13px;
+  color: var(--adm-txt-muted);
+  margin-bottom: 24px;
+}
+.form-section {
+  margin-bottom: 28px;
+}
+.form-section-title {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--adm-txt-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  margin-bottom: 14px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--adm-border);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.form-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.form-grid-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 14px;
+}
+
+.photo-upload-area {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+.photo-placeholder {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--adm-blue-lt), var(--adm-teal-lt));
+  border: 2px dashed var(--adm-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.photo-upload-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: var(--adm-r-sm);
+  border: 1.5px solid var(--adm-border);
+  background: var(--adm-surface);
+  font-family: "DM Sans", sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--adm-txt-body);
+  cursor: pointer;
+}
+.photo-upload-note {
+  font-size: 11px;
+  color: var(--adm-txt-faint);
+  margin-top: 4px;
+}
+
+.skill-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.skill-chip input[type="checkbox"] {
+  display: none;
+}
+.skill-chip label {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 13px;
+  border-radius: 20px;
+  border: 1.5px solid var(--adm-border);
+  background: var(--adm-surface);
+  font-family: "DM Sans", sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--adm-txt-muted);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.skill-chip input:checked + label {
+  background: var(--adm-blue-lt);
+  border-color: var(--adm-blue);
+  color: var(--adm-blue-dk);
+}
+.skill-chip label:hover {
+  border-color: var(--adm-blue);
+  color: var(--adm-blue);
+}
+
+.radio-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.radio-pill input[type="radio"] {
+  display: none;
+}
+.radio-pill label {
+  padding: 7px 16px;
+  border-radius: 20px;
+  border: 1.5px solid var(--adm-border);
+  background: var(--adm-surface);
+  font-family: "DM Sans", sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--adm-txt-muted);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.radio-pill input:checked + label {
+  background: linear-gradient(135deg, #eaf5f1, #f0faf6);
+  border-color: var(--adm-blue);
+  color: var(--adm-blue-dk);
+  font-weight: 700;
+}
+
+.avail-grid {
+  border: 1px solid var(--adm-border);
+  border-radius: var(--adm-r-md);
+  overflow: hidden;
+  overflow-x: auto;
+}
+.avail-grid-head {
+  display: grid;
+  grid-template-columns: 112px repeat(7, minmax(36px, 1fr));
+  background: var(--adm-bg);
+  border-bottom: 1px solid var(--adm-border);
+  min-width: 520px;
+}
+.avail-grid-head-cell {
+  padding: 8px 4px;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--adm-txt-muted);
+  border-right: 1px solid var(--adm-border-lt);
+}
+.avail-grid-head-cell:last-child {
+  border-right: none;
+}
+.avail-grid-row {
+  display: grid;
+  grid-template-columns: 112px repeat(7, minmax(36px, 1fr));
+  border-bottom: 1px solid var(--adm-border-lt);
+  min-width: 520px;
+}
+.avail-grid-row:last-child {
+  border-bottom: none;
+}
+.avail-row-label {
+  padding: 10px 12px;
+  background: var(--adm-bg);
+  border-right: 1px solid var(--adm-border);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 4px;
+  min-height: 48px;
+}
+.avail-row-label__title {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--adm-txt-muted);
+  line-height: 1.25;
+}
+.avail-row-label__time {
+  font-size: 9px;
+  font-weight: 600;
+  color: var(--adm-txt-faint);
+  line-height: 1.2;
+  letter-spacing: 0.02em;
+}
+.avail-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-right: 1px solid var(--adm-border-lt);
+  padding: 6px 4px;
+}
+.avail-cell:last-child {
+  border-right: none;
+}
+.avail-check {
+  display: none;
+}
+.avail-check + label {
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  border: 1.5px solid var(--adm-border);
+  background: var(--adm-surface);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.15s;
+  position: relative;
+  box-sizing: border-box;
+}
+.avail-check:checked + label {
+  background: var(--adm-blue);
+  border-color: var(--adm-blue);
+}
+.avail-check:checked + label::after {
+  content: "";
+  display: block;
+  width: 5px;
+  height: 9px;
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+  margin-bottom: 2px;
+  box-sizing: border-box;
+}
+
+.checklist-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: var(--adm-r-sm);
+  border: 1.5px solid var(--adm-border);
+  margin-bottom: 10px;
+  background: var(--adm-surface);
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+.checklist-item input {
+  display: none;
+}
+.checklist-check {
+  width: 20px;
+  height: 20px;
+  border-radius: 6px;
+  border: 1.5px solid var(--adm-border);
+  background: var(--adm-surface);
+  flex-shrink: 0;
+  margin-top: 1px;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.checklist-check svg {
+  display: none;
+}
+.checklist-item:has(input:checked) {
+  border-color: var(--adm-blue);
+  background: var(--adm-blue-xlt);
+}
+.checklist-item:has(input:checked) .checklist-check {
+  background: var(--adm-blue);
+  border-color: var(--adm-blue);
+}
+.checklist-item:has(input:checked) .checklist-check svg {
+  display: block;
+}
+.checklist-text {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--adm-txt-body);
+  line-height: 1.5;
+}
+
+.review-block {
+  background: var(--adm-surface);
+  border: 1px solid var(--adm-border);
+  border-radius: var(--adm-r-md);
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+.review-block-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: var(--adm-bg);
+  border-bottom: 1px solid var(--adm-border);
+}
+.review-block-title {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--adm-txt-head);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+.review-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--adm-border-lt);
+}
+.review-row:last-child {
+  border-bottom: none;
+}
+.review-key {
+  font-size: 12px;
+  color: var(--adm-txt-muted);
+  font-weight: 500;
+}
+.review-val {
+  font-size: 12px;
+  color: var(--adm-txt-head);
+  font-weight: 700;
+  text-align: right;
+  max-width: 60%;
+}
+
+.step-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 0 0;
+  border-top: 1px solid var(--adm-border);
+  margin-top: 32px;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.btn-step-next {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 24px;
+  border-radius: var(--adm-r-sm);
+  background: linear-gradient(135deg, #2d9676, #175d92);
+  color: #fff;
+  font-family: "DM Sans", sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(45, 150, 118, 0.3);
+  transition: box-shadow 0.15s;
+  text-decoration: none;
+}
+.btn-step-next:hover {
+  box-shadow: 0 6px 20px rgba(45, 150, 118, 0.4);
+}
+.btn-step-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 20px;
+  border-radius: var(--adm-r-sm);
+  background: var(--adm-surface);
+  border: 1.5px solid var(--adm-border);
+  color: var(--adm-txt-body);
+  font-family: "DM Sans", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.15s;
+  text-decoration: none;
+}
+.btn-step-back:hover {
+  border-color: var(--adm-blue);
+  color: var(--adm-blue);
+}
+.step-counter {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--adm-txt-faint);
+}
+
+.info-tip {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  background: var(--adm-blue-xlt);
+  border: 1px solid var(--adm-blue-lt);
+  border-radius: var(--adm-r-sm);
+  padding: 12px 14px;
+  margin-bottom: 20px;
+  font-size: 12px;
+  color: var(--adm-blue-dk);
+  line-height: 1.5;
+}
+
+/* Native <select> ignores vertical padding unless appearance is reset — align with text inputs */
+.form-select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  box-sizing: border-box;
+  line-height: 1.45;
+  min-height: calc(1.45em + 20px + 2px);
+  padding-right: 2.5rem;
+  background-color: var(--adm-surface, #fff);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 6l4 4 4-4'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px;
+  cursor: pointer;
+}
+.form-select::-ms-expand {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  .form-grid-2,
+  .form-grid-3 {
+    grid-template-columns: 1fr;
+  }
+  .step-connector {
+    width: 24px;
+  }
+}
+
+
+/* === landing-chrome.css === */
+/* Shared top navigation + footer (aligned with landing.html) */
+
+:root {
+  --lw-navy: #175d92;
+  --lw-navy-deep: #0f3154;
+  --lw-navy-mid: #1a6aaa;
+  --lw-navy-pale: #e8f1fc;
+  --lw-teal: #2d9676;
+  --lw-teal-deep: #1d6e55;
+  --lw-mint: #7ee8c8;
+  --lw-surface: #ffffff;
+  --lw-text: #0f172a;
+  --lw-text-mid: #1e3a5f;
+  --lw-text-muted: #64748b;
+  --lw-text-soft: #94a3b8;
+  --lw-border: #e2e8f0;
+  --lw-font: "DM Sans", system-ui, -apple-system, sans-serif;
+  --lw-font-display: "Fraunces", Georgia, serif;
+}
+
+body.lw-public-shell {
+  margin: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  padding: 0 !important;
+  background: var(--lw-surface);
+  gap: 0;
+}
+
+body.lw-public-shell .lw-public-main {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 28px 16px 40px;
+  box-sizing: border-box;
+}
+
+.wrap {
+  width: 100%;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 28px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+/* Buttons (nav) */
+.lw-nav .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  font-family: var(--lw-font);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  border: 1.5px solid transparent;
+  border-radius: 11px;
+  padding: 10px 20px;
+  min-height: 44px;
+  transition: background 0.17s ease, color 0.17s ease, border-color 0.17s ease,
+    box-shadow 0.17s ease, transform 0.17s ease;
+  white-space: nowrap;
+}
+.lw-nav .btn svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.lw-nav .btn--ghost {
+  background: transparent;
+  color: var(--lw-text-muted);
+  border-color: var(--lw-border);
+}
+.lw-nav .btn--ghost:hover {
+  border-color: rgba(23, 93, 146, 0.4);
+  color: var(--lw-navy);
+  background: var(--lw-navy-pale);
+}
+
+.lw-nav .btn--navy {
+  background: var(--lw-navy);
+  color: #fff;
+  border-color: var(--lw-navy);
+}
+.lw-nav .btn--navy:hover {
+  background: var(--lw-navy-deep);
+  border-color: var(--lw-navy-deep);
+  box-shadow: 0 4px 18px rgba(23, 93, 146, 0.4);
+  transform: translateY(-1px);
+}
+
+/* Nav */
+.lw-nav.nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border-bottom: 1px solid rgba(15, 23, 42, 0.07);
+  flex-shrink: 0;
+}
+.lw-nav .nav__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  height: 64px;
+}
+.lw-nav .nav__brand {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+.lw-nav .nav__logo {
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+}
+.lw-nav .nav__wordmark {
+  font-family: var(--lw-font-display);
+  font-size: 19px;
+  font-weight: 600;
+  color: var(--lw-navy);
+  letter-spacing: -0.02em;
+}
+.lw-nav .nav__links {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.lw-nav .nav__links a {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--lw-text-muted);
+  text-decoration: none;
+  padding: 8px 14px;
+  border-radius: 9px;
+  transition: color 0.14s, background 0.14s;
+}
+.lw-nav .nav__links a:hover {
+  color: var(--lw-navy);
+  background: var(--lw-navy-pale);
+}
+.lw-nav .nav__links a.is-active {
+  color: var(--lw-navy);
+  background: var(--lw-navy-pale);
+  font-weight: 600;
+}
+.lw-nav .nav__right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.lw-nav .nav__crisis {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--lw-navy);
+  text-decoration: none;
+  padding: 7px 13px;
+  border-radius: 10px;
+  border: 1.5px solid rgba(23, 93, 146, 0.28);
+  transition: background 0.14s, border-color 0.14s;
+}
+.lw-nav .nav__crisis:hover {
+  background: var(--lw-navy-pale);
+  border-color: var(--lw-navy);
+}
+.lw-nav .nav__crisis svg {
+  width: 13px;
+  height: 13px;
+  flex-shrink: 0;
+}
+
+/* Footer */
+.lw-footer.footer {
+  background: #08192b;
+  color: rgba(255, 255, 255, 0.6);
+  padding: 52px 0 30px;
+  flex-shrink: 0;
+  margin-top: auto;
+}
+.lw-footer .footer__grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 36px;
+  padding-bottom: 36px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+.lw-footer .footer__brand-name {
+  font-family: var(--lw-font-display);
+  font-size: 20px;
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: -0.02em;
+  margin-bottom: 9px;
+}
+.lw-footer .footer__brand-desc {
+  font-size: 13px;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.45);
+  margin-bottom: 18px;
+  max-width: 260px;
+}
+.lw-footer .footer__crisis-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--lw-mint);
+  text-decoration: none;
+  border: 1px solid rgba(126, 232, 200, 0.28);
+  padding: 8px 13px;
+  border-radius: 9px;
+  transition: background 0.14s;
+}
+.lw-footer .footer__crisis-link:hover {
+  background: rgba(126, 232, 200, 0.07);
+}
+.lw-footer .footer__col-h {
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.3);
+  margin-bottom: 14px;
+}
+.lw-footer .footer__links {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  margin: 0;
+  padding: 0;
+}
+.lw-footer .footer__links a {
+  font-size: 13.5px;
+  color: rgba(255, 255, 255, 0.52);
+  text-decoration: none;
+  transition: color 0.14s;
+}
+.lw-footer .footer__links a:hover {
+  color: #fff;
+}
+.lw-footer .footer__bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding-top: 22px;
+  font-size: 12.5px;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+@media (max-width: 920px) {
+  .lw-footer .footer__grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 620px) {
+  .lw-nav .nav__links {
+    display: none;
+  }
+  .lw-nav .nav__crisis span {
+    display: none;
+  }
+  .lw-footer .footer__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* === apply-peer-polish.css === */
+/* Apply as peer supporter — page frame, typography, breathing room */
+
+body.apply-peer-page {
+  --adm-txt-muted: #4a5568;
+  --adm-txt-body: #2d3748;
+  --adm-txt-faint: #7b8794;
+  background: linear-gradient(165deg, #e8eef5 0%, #f1f4f8 28%, #f5f7fa 55%, #eef1f6 100%);
+  background-attachment: fixed;
+}
+
+body.apply-peer-page.lw-public-shell .lw-public-main {
+  padding: clamp(40px, 5vw, 56px) clamp(16px, 4vw, 40px) 64px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Main card: same max width on every apply step */
+body.apply-peer-page .ob-card.apply-peer-wide {
+  width: 100%;
+  max-width: min(1140px, calc(100vw - 32px));
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 20px;
+  border: 1px solid rgba(23, 93, 146, 0.08);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.9) inset,
+    0 4px 24px rgba(15, 49, 84, 0.06),
+    0 12px 48px rgba(15, 49, 84, 0.04);
+}
+
+/* Page header */
+body.apply-peer-page .apply-peer-hero {
+  padding: clamp(20px, 3vw, 28px) clamp(24px, 4vw, 40px) clamp(18px, 2.5vw, 24px);
+  margin-bottom: 0;
+  border-bottom: 1px solid rgba(12, 25, 41, 0.07);
+  background: linear-gradient(180deg, #fafbfc 0%, #ffffff 100%);
+}
+
+body.apply-peer-page .apply-peer-hero h1 {
+  font-family: "Fraunces", Georgia, "Times New Roman", serif;
+  font-size: clamp(1.5rem, 2.8vw, 2rem);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+  color: var(--adm-txt-head);
+  margin-bottom: 12px;
+}
+
+body.apply-peer-page .apply-peer-hero p {
+  font-family: "DM Sans", system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--adm-txt-muted);
+  max-width: 62ch;
+  margin: 0;
+}
+
+body.apply-peer-page .apply-peer-inner {
+  padding: clamp(16px, 2.5vw, 24px) clamp(24px, 4vw, 40px) clamp(28px, 3vw, 44px);
+}
+
+/* Step titles inside form card */
+body.apply-peer-page .step-title {
+  font-family: "Fraunces", Georgia, serif;
+  font-size: clamp(1.25rem, 2vw, 1.5rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin-bottom: 8px;
+}
+
+body.apply-peer-page .step-desc {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--adm-txt-muted);
+  margin-bottom: 28px;
+}
+
+body.apply-peer-page .form-section-title {
+  font-size: 11.5px;
+  letter-spacing: 0.08em;
+  color: var(--adm-txt-body);
+  opacity: 0.85;
+}
+
+/* Form controls — slightly larger for readability */
+body.apply-peer-page .form-label {
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+body.apply-peer-page .form-input,
+body.apply-peer-page .form-select,
+body.apply-peer-page textarea.form-input {
+  font-size: 15px;
+  line-height: 1.45;
+  padding: 12px 14px;
+  border-radius: 11px;
+}
+
+/* Taller selects to match apply flow inputs (12px vertical padding — amb-add-wizard.css base uses 10px) */
+body.apply-peer-page .form-select {
+  min-height: calc(1.45em + 24px + 2px);
+  padding-right: 2.75rem;
+  background-position: right 14px center;
+}
+
+body.apply-peer-page .form-group {
+  margin-bottom: 20px;
+}
+
+body.apply-peer-page .form-grid-2 {
+  gap: 20px 22px;
+}
+
+body.apply-peer-page .photo-upload-note {
+  font-size: 12px;
+  color: var(--adm-txt-muted);
+}
+
+body.apply-peer-page .photo-upload-area {
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+/* Card body padding (replaces tight inline styles) */
+body.apply-peer-page .apply-peer-card-body {
+  padding: clamp(28px, 3.5vw, 40px) clamp(24px, 3.5vw, 40px) clamp(32px, 3.5vw, 48px) !important;
+}
+
+body.apply-peer-page .form-section {
+  margin-bottom: 36px;
+}
+
+/* Form card: section rhythm, chips, footer (all steps, single column) */
+body.apply-peer-page .apply-peer-card-body .form-section-title {
+  margin-bottom: 18px;
+  padding-bottom: 12px;
+}
+
+body.apply-peer-page .apply-peer-card-body .form-section:not(:first-of-type) {
+  padding-top: 4px;
+}
+
+body.apply-peer-page .apply-peer-card-body .form-grid-2 {
+  gap: 22px 26px;
+}
+
+body.apply-peer-page .apply-peer-card-body .skill-chips {
+  gap: 10px 12px;
+  margin-top: 2px;
+}
+
+body.apply-peer-page .apply-peer-card-body .form-group:has(.skill-chips) .form-label {
+  margin-bottom: 12px;
+}
+
+body.apply-peer-page .apply-peer-card-body .step-nav {
+  padding-top: 24px;
+  margin-top: 40px;
+}
+
+/* Optional reflection block above the form (step 1) */
+body.apply-peer-page .apply-split__scribe {
+  padding: 24px 28px;
+  border-radius: 16px;
+  border: 1px solid var(--adm-border, rgba(12, 25, 41, 0.1));
+  background: linear-gradient(
+    165deg,
+    var(--adm-blue-xlt, #f4faf7) 0%,
+    var(--adm-surface, #fff) 55%
+  );
+  box-shadow: 0 1px 3px rgba(12, 25, 41, 0.04);
+  margin-bottom: 24px;
+}
+
+body.apply-peer-page .apply-scribe__lead {
+  font-size: 15px;
+  line-height: 1.65;
+  margin-bottom: 16px;
+}
+
+body.apply-peer-page .apply-split__scribe textarea.form-input {
+  min-height: 112px;
+  font-size: 15px;
+}
+
+body.apply-peer-page .apply-peer-inner .step-indicator {
+  margin-bottom: 28px;
+}
+
+@media (max-width: 900px) {
+  body.apply-peer-page .apply-peer-inner .step-indicator {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 10px;
+    margin-bottom: 18px;
+    scrollbar-width: thin;
+  }
+
+  body.apply-peer-page .apply-peer-inner .step-connector {
+    width: 36px;
+    flex-shrink: 0;
+  }
+}
+
+@media (max-width: 520px) {
+  body.apply-peer-page .ob-card.apply-peer-wide {
+    max-width: 100%;
+  }
+
+  body.apply-peer-page .apply-split__scribe {
+    padding: 16px 14px;
+  }
+
+  body.apply-peer-page .apply-scribe__lead {
+    font-size: 13px;
+  }
+}
+
+/* Thanks page */
+body.apply-peer-page .apply-peer-thanks-inner {
+  padding-top: 8px;
+  padding-bottom: 40px;
+}
+
+body.apply-peer-page .apply-peer-thanks-footnote {
+  margin-top: 24px;
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--adm-txt-muted);
+}
+
+body.apply-peer-page .apply-peer-thanks-footnote a {
+  color: #175d92;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+body.apply-peer-page .apply-peer-thanks-footnote a:hover {
+  text-decoration: underline;
+}
+
+
+/* === apply-peer-figma-export-extra.css === */
+/* Stacked screens for HTML→Figma export (apply-peer-supporter-figma-export.html) */
+
+body.apply-peer-figma-bundle {
+  display: block;
+  min-height: auto;
+  margin: 0;
+  padding: 0 !important;
+}
+
+/* Each full screen stacks vertically */
+.apply-peer-figma-bundle .figma-apply-screen {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+  box-sizing: border-box;
+  border-bottom: 4px solid rgba(23, 93, 146, 0.22);
+}
+
+.apply-peer-figma-bundle .figma-apply-screen .lw-public-main {
+  flex: 1;
+}
+
+/* Step labels for designers */
+.apply-peer-figma-bundle .figma-screen-label {
+  font: 700 11px/1.2 "DM Sans", system-ui, sans-serif;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #175d92;
+  background: rgba(23, 93, 146, 0.08);
+  padding: 8px 16px;
+  text-align: center;
+  border-bottom: 1px solid rgba(23, 93, 146, 0.12);
+  flex-shrink: 0;
+}
+
+  </style>
+</head>
+<body class="apply-peer-page apply-peer-figma-bundle lw-public-shell">
+<!--
+  html.to.figma: six screens stacked top to bottom. Blue-gray bars = screen breaks.
+  Designer labels: .figma-screen-label (remove in production if you reuse this pattern).
+-->
+
+  <section class="figma-apply-screen" aria-label="Step 1 — Personal">
+    <div class="figma-screen-label">Step 1 — Personal</div>
+<nav class="nav lw-nav" aria-label="Main navigation">
+    <div class="wrap">
+      <div class="nav__inner">
+        <a class="nav__brand" href="landing.html">
+          <img class="nav__logo" src="logo.png" alt="Luminwell" width="34" height="34" decoding="async" />
+          <span class="nav__wordmark">Luminwell</span>
+        </a>
+
+        <ul class="nav__links">
+          <li><a href="landing.html#how-it-works">How it Works</a></li>
+          <li><a href="landing.html#matching">Matching</a></li>
+          <li><a href="landing.html#ambassadors">Ambassadors</a></li>
+          <li><a href="ambassador.html">Ambassador</a></li>
+          <li><a href="landing.html#pricing">Pricing</a></li>
+        </ul>
+
+        <div class="nav__right">
+          <a class="nav__crisis" href="tel:988" aria-label="Call 988 crisis lifeline">
+            <svg fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+            <span>988 Crisis</span>
+          </a>
+          <a class="btn btn--ghost" href="index.html">Log In</a>
+          <a class="btn btn--navy" href="onboarding-01-age.html">Get Started</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+
+
+  <main class="lw-public-main" id="f0-main-content">
+  <div class="ob-card apply-peer-wide">
+    <div class="apply-peer-hero">
+      <h1>Apply as a peer supporter</h1>
+      <p>Step 1 of 5 — this application is for students who want to volunteer through Luminwell. It is separate from the admin panel and ambassador dashboard.</p>
+    </div>
+
+    <div class="apply-peer-inner">
+      <div class="step-indicator">
+          <div class="step-node step-node--current">
+            <div class="step-circle">1</div>
+            <span class="step-label">Personal</span>
+          </div>
+          <div class="step-connector" data-after="1"></div>
+          <div class="step-node">
+            <div class="step-circle">2</div>
+            <span class="step-label">Background</span>
+          </div>
+          <div class="step-connector" data-after="2"></div>
+          <div class="step-node">
+            <div class="step-circle">3</div>
+            <span class="step-label">Skills</span>
+          </div>
+          <div class="step-connector" data-after="3"></div>
+          <div class="step-node">
+            <div class="step-circle">4</div>
+            <span class="step-label">Availability</span>
+          </div>
+          <div class="step-connector" data-after="4"></div>
+          <div class="step-node">
+            <div class="step-circle">5</div>
+            <span class="step-label">Review</span>
+          </div>
+      </div>
+
+      <div class="apply-split__scribe">
+            <p class="apply-scribe__lead"><strong>Peer support</strong> is about listening and signposting with clear boundaries — not clinical advice. If you like, share in your own words what draws you to volunteering (optional).</p>
+            <label class="form-label" for="f0-why-volunteer">Why peer support, for you?</label>
+            <textarea id="f0-why-volunteer" name="f0-why_volunteer" class="form-input" rows="4" placeholder="e.g. I'd like to give back after my own experience accessing support at university…" autocomplete="off"></textarea>
+          </div>
+
+      <div class="card">
+        <div class="card-body apply-peer-card-body">
+            <div class="step-title">About you</div>
+            <p class="step-desc">We use this to contact you about your application.</p>
+
+            <!-- Photo -->
+            <div>
+            <div class="photo-upload-area">
+            <div class="photo-placeholder">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--adm-txt-faint)" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </div>
+            <div>
+            <button class="photo-upload-btn">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            Upload photo
+            </button>
+            <p class="photo-upload-note">JPG, PNG or WEBP · Max 5MB · Square recommended</p>
+            </div>
+            </div>
+            </div>
+
+            <div class="form-section">
+            <div class="form-section-title">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            Name &amp; Contact
+            </div>
+            <div class="form-grid-2">
+            <div class="form-group">
+            <label class="form-label">First name <span style="color:var(--adm-red);">*</span></label>
+            <input class="form-input" type="text" placeholder="e.g. Maya">
+            </div>
+            <div class="form-group">
+            <label class="form-label">Last name <span style="color:var(--adm-red);">*</span></label>
+            <input class="form-input" type="text" placeholder="e.g. Johnson">
+            </div>
+            <div class="form-group">
+            <label class="form-label">Email address <span style="color:var(--adm-red);">*</span></label>
+            <input class="form-input" type="email" placeholder="e.g. maya.j@university.ac.uk">
+            </div>
+            <div class="form-group">
+            <label class="form-label">Phone number</label>
+            <input class="form-input" type="tel" placeholder="e.g. +44 7700 900000">
+            </div>
+            </div>
+            </div>
+
+            <div class="form-section">
+            <div class="form-section-title">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            Demographics
+            </div>
+            <div class="form-grid-2">
+            <div class="form-group">
+            <label class="form-label">Date of birth</label>
+            <input class="form-input" type="date">
+            </div>
+            <div class="form-group">
+            <label class="form-label">Age group</label>
+            <select class="form-select">
+            <option value="">Select age group</option>
+            <option>18–20</option>
+            <option>21–25</option>
+            <option>26–30</option>
+            <option>31–35</option>
+            <option>36+</option>
+            </select>
+            </div>
+            <div class="form-group">
+            <label class="form-label">Gender identity</label>
+            <select class="form-select">
+            <option value="">Prefer not to say</option>
+            <option>Woman</option>
+            <option>Man</option>
+            <option>Non-binary</option>
+            <option>Other / self-describe</option>
+            </select>
+            </div>
+            <div class="form-group">
+            <label class="form-label">Location (city)</label>
+            <input class="form-input" type="text" placeholder="e.g. Manchester">
+            </div>
+            </div>
+            </div>
+
+            <div class="form-section">
+            <div class="form-section-title">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            Languages
+            </div>
+            <div class="form-group">
+            <label class="form-label">Languages spoken</label>
+            <div class="skill-chips">
+            <span class="skill-chip"><input type="checkbox" id="f0-lang-en"><label for="f0-lang-en">English</label></span>
+            <span class="skill-chip"><input type="checkbox" id="f0-lang-fr"><label for="f0-lang-fr">French</label></span>
+            <span class="skill-chip"><input type="checkbox" id="f0-lang-es"><label for="f0-lang-es">Spanish</label></span>
+            <span class="skill-chip"><input type="checkbox" id="f0-lang-ar"><label for="f0-lang-ar">Arabic</label></span>
+            <span class="skill-chip"><input type="checkbox" id="f0-lang-zh"><label for="f0-lang-zh">Mandarin</label></span>
+            <span class="skill-chip"><input type="checkbox" id="f0-lang-hi"><label for="f0-lang-hi">Hindi</label></span>
+            <span class="skill-chip"><input type="checkbox" id="f0-lang-ur"><label for="f0-lang-ur">Urdu</label></span>
+            <span class="skill-chip"><input type="checkbox" id="f0-lang-pt"><label for="f0-lang-pt">Portuguese</label></span>
+            <span class="skill-chip"><input type="checkbox" id="f0-lang-de"><label for="f0-lang-de">German</label></span>
+            </div>
+            </div>
+            </div>
+
+            <div class="step-nav">
+            <span class="step-counter">Step 1 of 5</span>
+            <a href="apply-peer-supporter-2.html" class="btn-step-next">
+            Continue
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+            </a>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  </main>
+
+  <footer class="footer lw-footer" aria-label="Site footer">
+    <div class="wrap">
+      <div class="footer__grid">
+
+        <div>
+          <div class="footer__brand-name">Luminwell</div>
+          <p class="footer__brand-desc">Peer mental health support for students and young adults. Judgment-free, private, and accessible.</p>
+          <a class="footer__crisis-link" href="tel:988">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            988 Crisis Line &mdash; always available
+          </a>
+        </div>
+
+        <div>
+          <div class="footer__col-h">Platform</div>
+          <ul class="footer__links">
+            <li><a href="landing.html#how-it-works">How it Works</a></li>
+            <li><a href="landing.html#matching">Matching</a></li>
+            <li><a href="landing.html#ambassadors">Ambassadors</a></li>
+            <li><a href="ambassador.html">Ambassador hub</a></li>
+            <li><a href="landing.html#pricing">Pricing</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <div class="footer__col-h">Support</div>
+          <ul class="footer__links">
+            <li><a href="#">Help Centre</a></li>
+            <li><a href="#">Community Forum</a></li>
+            <li><a href="#">Crisis Resources</a></li>
+            <li><a href="#">Contact Us</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <div class="footer__col-h">Legal</div>
+          <ul class="footer__links">
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms of Service</a></li>
+            <li><a href="#">Accessibility</a></li>
+            <li><a href="#">Cookie Policy</a></li>
+          </ul>
+        </div>
+
+      </div>
+      <div class="footer__bottom">
+        <span>&copy; 2026 Luminwell. All rights reserved.</span>
+        <span>Built with care for student wellbeing.</span>
+      </div>
+    </div>
+  </footer>
+
+  </section>
+
+  <section class="figma-apply-screen" aria-label="Step 2 — Background">
+    <div class="figma-screen-label">Step 2 — Background</div>
+<nav class="nav lw-nav" aria-label="Main navigation">
+    <div class="wrap">
+      <div class="nav__inner">
+        <a class="nav__brand" href="landing.html">
+          <img class="nav__logo" src="logo.png" alt="Luminwell" width="34" height="34" decoding="async" />
+          <span class="nav__wordmark">Luminwell</span>
+        </a>
+
+        <ul class="nav__links">
+          <li><a href="landing.html#how-it-works">How it Works</a></li>
+          <li><a href="landing.html#matching">Matching</a></li>
+          <li><a href="landing.html#ambassadors">Ambassadors</a></li>
+          <li><a href="ambassador.html">Ambassador</a></li>
+          <li><a href="landing.html#pricing">Pricing</a></li>
+        </ul>
+
+        <div class="nav__right">
+          <a class="nav__crisis" href="tel:988" aria-label="Call 988 crisis lifeline">
+            <svg fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+            <span>988 Crisis</span>
+          </a>
+          <a class="btn btn--ghost" href="index.html">Log In</a>
+          <a class="btn btn--navy" href="onboarding-01-age.html">Get Started</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+
+
+  <main class="lw-public-main" id="f1-main-content">
+  <div class="ob-card apply-peer-wide">
+    <div class="apply-peer-hero">
+      <h1>Apply as a peer supporter</h1>
+      <p>Step 2 of 5 — this application is for students who want to volunteer through Luminwell. It is separate from the admin panel and ambassador dashboard.</p>
+    </div>
+
+    <div class="apply-peer-inner">
+      <div class="step-indicator">
+          <a href="apply-peer-supporter-1.html" class="step-node step-node--done">
+            <div class="step-circle">1</div>
+            <span class="step-label">Personal</span>
+          </a>
+          <div class="step-connector step-connector--done" data-after="1"></div>
+          <div class="step-node step-node--current">
+            <div class="step-circle">2</div>
+            <span class="step-label">Background</span>
+          </div>
+          <div class="step-connector" data-after="2"></div>
+          <div class="step-node">
+            <div class="step-circle">3</div>
+            <span class="step-label">Skills</span>
+          </div>
+          <div class="step-connector" data-after="3"></div>
+          <div class="step-node">
+            <div class="step-circle">4</div>
+            <span class="step-label">Availability</span>
+          </div>
+          <div class="step-connector" data-after="4"></div>
+          <div class="step-node">
+            <div class="step-circle">5</div>
+            <span class="step-label">Review</span>
+          </div>
+      </div>
+
+      <div class="card">
+        <div class="card-body apply-peer-card-body">
+            <div class="step-title">Education &amp; experience</div>
+            <p class="step-desc">Your course and any listening, mentoring, or wellbeing experience.</p>
+
+            <div class="form-section">
+            <div class="form-section-title">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+            University &amp; Course
+            </div>
+            <div class="form-grid-2">
+            <div class="form-group">
+            <label class="form-label">University / Institution <span style="color:var(--adm-red);">*</span></label>
+            <input class="form-input" type="text" placeholder="e.g. University of Manchester">
+            </div>
+            <div class="form-group">
+            <label class="form-label">Course / Subject</label>
+            <input class="form-input" type="text" placeholder="e.g. Psychology">
+            </div>
+            <div class="form-group">
+            <label class="form-label">Year of study / graduation</label>
+            <select class="form-select">
+            <option>Year 1</option>
+            <option>Year 2</option>
+            <option>Year 3</option>
+            <option selected>Year 4 / Masters</option>
+            <option>PhD / Postgrad</option>
+            <option>Graduate (alumni)</option>
+            </select>
+            </div>
+            <div class="form-group">
+            <label class="form-label">Student ID (optional)</label>
+            <input class="form-input" type="text" placeholder="e.g. 11234567">
+            </div>
+            </div>
+            </div>
+
+            <div class="form-section">
+            <div class="form-section-title">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            Qualifications &amp; Training
+            </div>
+            <div class="form-group" style="margin-bottom:14px;">
+            <label class="form-label">Relevant certifications or training</label>
+            <textarea class="form-input" rows="3" style="resize:vertical;" placeholder="e.g. Mental Health First Aid (MHFA), CBT fundamentals, Samaritans listening skills…"></textarea>
+            </div>
+            <div class="form-group">
+            <label class="form-label">Years of peer support / mentoring experience</label>
+            <div class="radio-pills" style="margin-top:8px;">
+            <span class="radio-pill"><input type="radio" name="f1-exp" id="f1-exp-0"><label for="f1-exp-0">Less than 1 year</label></span>
+            <span class="radio-pill"><input type="radio" name="f1-exp" id="f1-exp-1"><label for="f1-exp-1">1–2 years</label></span>
+            <span class="radio-pill"><input type="radio" name="f1-exp" id="f1-exp-2"><label for="f1-exp-2">2–3 years</label></span>
+            <span class="radio-pill"><input type="radio" name="f1-exp" id="f1-exp-3" checked><label for="f1-exp-3">3–5 years</label></span>
+            <span class="radio-pill"><input type="radio" name="f1-exp" id="f1-exp-4"><label for="f1-exp-4">5+ years</label></span>
+            </div>
+            </div>
+            </div>
+
+            <div class="form-section">
+            <div class="form-section-title">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            Previous Platform Experience
+            </div>
+            <div class="form-grid-2">
+            <div class="form-group">
+            <label class="form-label">Previous ambassador at another platform?</label>
+            <select class="form-select">
+            <option>No, this is my first time</option>
+            <option>Yes — similar platform</option>
+            <option>Yes — university scheme</option>
+            </select>
+            </div>
+            <div class="form-group">
+            <label class="form-label">DBS check status</label>
+            <select class="form-select">
+            <option>Not yet completed</option>
+            <option>In progress</option>
+            <option>Completed (valid)</option>
+            <option>Completed (enhanced)</option>
+            </select>
+            </div>
+            </div>
+            </div>
+
+            <div class="step-nav">
+            <a href="apply-peer-supporter-1.html" class="btn-step-back">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+            Back
+            </a>
+            <span class="step-counter">Step 2 of 5</span>
+            <a href="apply-peer-supporter-3.html" class="btn-step-next">
+            Continue
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+            </a>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  </main>
+
+  <footer class="footer lw-footer" aria-label="Site footer">
+    <div class="wrap">
+      <div class="footer__grid">
+
+        <div>
+          <div class="footer__brand-name">Luminwell</div>
+          <p class="footer__brand-desc">Peer mental health support for students and young adults. Judgment-free, private, and accessible.</p>
+          <a class="footer__crisis-link" href="tel:988">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            988 Crisis Line &mdash; always available
+          </a>
+        </div>
+
+        <div>
+          <div class="footer__col-h">Platform</div>
+          <ul class="footer__links">
+            <li><a href="landing.html#how-it-works">How it Works</a></li>
+            <li><a href="matching.html">Matching</a></li>
+            <li><a href="landing.html#ambassadors">Ambassadors</a></li>
+            <li><a href="ambassador.html">Ambassador hub</a></li>
+            <li><a href="pricing.html">Pricing</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <div class="footer__col-h">Support</div>
+          <ul class="footer__links">
+            <li><a href="#">Help Centre</a></li>
+            <li><a href="#">Community Forum</a></li>
+            <li><a href="#">Crisis Resources</a></li>
+            <li><a href="#">Contact Us</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <div class="footer__col-h">Legal</div>
+          <ul class="footer__links">
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms of Service</a></li>
+            <li><a href="#">Accessibility</a></li>
+            <li><a href="#">Cookie Policy</a></li>
+          </ul>
+        </div>
+
+      </div>
+      <div class="footer__bottom">
+        <span>&copy; 2026 Luminwell. All rights reserved.</span>
+        <span>Built with care for student wellbeing.</span>
+      </div>
+    </div>
+  </footer>
+
+  </section>
+
+  <section class="figma-apply-screen" aria-label="Step 3 — Skills">
+    <div class="figma-screen-label">Step 3 — Skills</div>
+<nav class="nav lw-nav" aria-label="Main navigation">
+    <div class="wrap">
+      <div class="nav__inner">
+        <a class="nav__brand" href="landing.html">
+          <img class="nav__logo" src="logo.png" alt="Luminwell" width="34" height="34" decoding="async" />
+          <span class="nav__wordmark">Luminwell</span>
+        </a>
+
+        <ul class="nav__links">
+          <li><a href="landing.html#how-it-works">How it Works</a></li>
+          <li><a href="landing.html#matching">Matching</a></li>
+          <li><a href="landing.html#ambassadors">Ambassadors</a></li>
+          <li><a href="ambassador.html">Ambassador</a></li>
+          <li><a href="landing.html#pricing">Pricing</a></li>
+        </ul>
+
+        <div class="nav__right">
+          <a class="nav__crisis" href="tel:988" aria-label="Call 988 crisis lifeline">
+            <svg fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+            <span>988 Crisis</span>
+          </a>
+          <a class="btn btn--ghost" href="index.html">Log In</a>
+          <a class="btn btn--navy" href="onboarding-01-age.html">Get Started</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+
+
+  <main class="lw-public-main" id="f2-main-content">
+  <div class="ob-card apply-peer-wide">
+    <div class="apply-peer-hero">
+      <h1>Apply as a peer supporter</h1>
+      <p>Step 3 of 5 — this application is for students who want to volunteer through Luminwell. It is separate from the admin panel and ambassador dashboard.</p>
+    </div>
+
+    <div class="apply-peer-inner">
+      <div class="step-indicator">
+          <a href="apply-peer-supporter-1.html" class="step-node step-node--done">
+            <div class="step-circle">1</div>
+            <span class="step-label">Personal</span>
+          </a>
+          <div class="step-connector step-connector--done" data-after="1"></div>
+          <a href="apply-peer-supporter-2.html" class="step-node step-node--done">
+            <div class="step-circle">2</div>
+            <span class="step-label">Background</span>
+          </a>
+          <div class="step-connector step-connector--done" data-after="2"></div>
+          <div class="step-node step-node--current">
+            <div class="step-circle">3</div>
+            <span class="step-label">Skills</span>
+          </div>
+          <div class="step-connector" data-after="3"></div>
+          <div class="step-node">
+            <div class="step-circle">4</div>
+            <span class="step-label">Availability</span>
+          </div>
+          <div class="step-connector" data-after="4"></div>
+          <div class="step-node">
+            <div class="step-circle">5</div>
+            <span class="step-label">Review</span>
+          </div>
+      </div>
+
+      <div class="card">
+        <div class="card-body apply-peer-card-body">
+            <div class="step-title">Where you can offer support</div>
+            <p class="step-desc">Choose topics you feel able to support peers with. Our team uses this for matching if you are approved.</p>
+
+            <div class="info-tip">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            Select all that apply. If you join the programme, we use this to match you thoughtfully with students who opt in.
+            </div>
+
+            <div class="form-section">
+            <div class="form-section-title">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+            Mental Wellbeing
+            </div>
+            <div class="skill-chips">
+            <span class="skill-chip"><input type="checkbox" id="f2-sk-anxiety"><label for="f2-sk-anxiety">Anxiety</label></span>
+            <span class="skill-chip"><input type="checkbox" id="f2-sk-depression"><label for="f2-sk-depression">Low mood / Depression</label></span>
+            <span class="skill-chip"><input type="checkbox" id="f2-sk-stress"><label for="f2-sk-stress">Stress management</label></span>
+            <span class="skill-chip"><input type="checkbox" id="f2-sk-loneliness"><label for="f2-sk-loneliness">Loneliness &amp; isolation</label></span>
+            <span class="skill-chip"><input type="checkbox" id="f2-sk-trauma"><label for="f2-sk-trauma">Trauma-informed support</label></span>
+            <span class="skill-chip"><input type="checkbox" id="f2-sk-mindfulness"><label for="f2-sk-mindfulness">Mindfulness</label></span>
+            <span class="skill-chip"><input type="checkbox" id="f2-sk-identity"><label for="f2-sk-identity">Identity &amp; belonging</label></span>
+            <span class="skill-chip"><input type="checkbox" id="f2-sk-grief"><label for="f2-sk-grief">Grief &amp; loss</label></span>
+            </div>
+            </div>
+
+            <div class="form-section">
+            <div class="form-section-title">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+            Academic &amp; Career
+            </div>
+            <div class="skill-chips">
+            <span class="skill-chip"><input type="checkbox" id="f2-sk-academic"><label for="f2-sk-academic">Academic pressure</label></span>
+            <span class="skill-chip"><input type="checkbox" id="f2-sk-exams"><label for="f2-sk-exams">Exam anxiety</label></span>
+            <span class="skill-chip"><input type="checkbox" id="f2-sk-career"><label for="f2-sk-career">Career uncertainty</label></span>
+            <span class="skill-chip"><input type="checkbox" id="f2-sk-goals"><label for="f2-sk-goals">Goal setting</label></span>
+            <span class="skill-chip"><input type="checkbox" id="f2-sk-motivation"><label for="f2-sk-motivation">Motivation &amp; focus</label></span>
+            <span class="skill-chip"><input type="checkbox" id="f2-sk-procras"><label for="f2-sk-procras">Procrastination</label></span>
+            </div>
+            </div>
+
+            <div class="form-section">
+            <div class="form-section-title">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            Relationships &amp; Life
+            </div>
+            <div class="skill-chips">
+            <span class="skill-chip"><input type="checkbox" id="f2-sk-relations"><label for="f2-sk-relations">Relationships</label></span>
+            <span class="skill-chip"><input type="checkbox" id="f2-sk-family"><label for="f2-sk-family">Family dynamics</label></span>
+            <span class="skill-chip"><input type="checkbox" id="f2-sk-sleep"><label for="f2-sk-sleep">Sleep &amp; self-care</label></span>
+            <span class="skill-chip"><input type="checkbox" id="f2-sk-finance"><label for="f2-sk-finance">Financial stress</label></span>
+            <span class="skill-chip"><input type="checkbox" id="f2-sk-transition"><label for="f2-sk-transition">Life transitions</label></span>
+            <span class="skill-chip"><input type="checkbox" id="f2-sk-resilience"><label for="f2-sk-resilience">Resilience building</label></span>
+            </div>
+            </div>
+
+            <div class="form-section">
+            <div class="form-section-title">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            Approach &amp; Techniques
+            </div>
+            <div class="skill-chips">
+            <span class="skill-chip"><input type="checkbox" id="f2-sk-cbt"><label for="f2-sk-cbt">CBT techniques</label></span>
+            <span class="skill-chip"><input type="checkbox" id="f2-sk-act"><label for="f2-sk-act">ACT / Acceptance</label></span>
+            <span class="skill-chip"><input type="checkbox" id="f2-sk-journalling"><label for="f2-sk-journalling">Journalling</label></span>
+            <span class="skill-chip"><input type="checkbox" id="f2-sk-coaching"><label for="f2-sk-coaching">Coaching approach</label></span>
+            <span class="skill-chip"><input type="checkbox" id="f2-sk-breathing"><label for="f2-sk-breathing">Breathwork</label></span>
+            <span class="skill-chip"><input type="checkbox" id="f2-sk-active"><label for="f2-sk-active">Active listening</label></span>
+            </div>
+            </div>
+
+            <div class="step-nav">
+            <a href="apply-peer-supporter-2.html" class="btn-step-back">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+            Back
+            </a>
+            <span class="step-counter">Step 3 of 5</span>
+            <a href="apply-peer-supporter-4.html" class="btn-step-next">
+            Continue
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+            </a>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  </main>
+
+  <footer class="footer lw-footer" aria-label="Site footer">
+    <div class="wrap">
+      <div class="footer__grid">
+
+        <div>
+          <div class="footer__brand-name">Luminwell</div>
+          <p class="footer__brand-desc">Peer mental health support for students and young adults. Judgment-free, private, and accessible.</p>
+          <a class="footer__crisis-link" href="tel:988">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            988 Crisis Line &mdash; always available
+          </a>
+        </div>
+
+        <div>
+          <div class="footer__col-h">Platform</div>
+          <ul class="footer__links">
+            <li><a href="landing.html#how-it-works">How it Works</a></li>
+            <li><a href="matching.html">Matching</a></li>
+            <li><a href="landing.html#ambassadors">Ambassadors</a></li>
+            <li><a href="ambassador.html">Ambassador hub</a></li>
+            <li><a href="pricing.html">Pricing</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <div class="footer__col-h">Support</div>
+          <ul class="footer__links">
+            <li><a href="#">Help Centre</a></li>
+            <li><a href="#">Community Forum</a></li>
+            <li><a href="#">Crisis Resources</a></li>
+            <li><a href="#">Contact Us</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <div class="footer__col-h">Legal</div>
+          <ul class="footer__links">
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms of Service</a></li>
+            <li><a href="#">Accessibility</a></li>
+            <li><a href="#">Cookie Policy</a></li>
+          </ul>
+        </div>
+
+      </div>
+      <div class="footer__bottom">
+        <span>&copy; 2026 Luminwell. All rights reserved.</span>
+        <span>Built with care for student wellbeing.</span>
+      </div>
+    </div>
+  </footer>
+
+  </section>
+
+  <section class="figma-apply-screen" aria-label="Step 4 — Availability">
+    <div class="figma-screen-label">Step 4 — Availability</div>
+<nav class="nav lw-nav" aria-label="Main navigation">
+    <div class="wrap">
+      <div class="nav__inner">
+        <a class="nav__brand" href="landing.html">
+          <img class="nav__logo" src="logo.png" alt="Luminwell" width="34" height="34" decoding="async" />
+          <span class="nav__wordmark">Luminwell</span>
+        </a>
+
+        <ul class="nav__links">
+          <li><a href="landing.html#how-it-works">How it Works</a></li>
+          <li><a href="landing.html#matching">Matching</a></li>
+          <li><a href="landing.html#ambassadors">Ambassadors</a></li>
+          <li><a href="ambassador.html">Ambassador</a></li>
+          <li><a href="landing.html#pricing">Pricing</a></li>
+        </ul>
+
+        <div class="nav__right">
+          <a class="nav__crisis" href="tel:988" aria-label="Call 988 crisis lifeline">
+            <svg fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+            <span>988 Crisis</span>
+          </a>
+          <a class="btn btn--ghost" href="index.html">Log In</a>
+          <a class="btn btn--navy" href="onboarding-01-age.html">Get Started</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+
+
+  <main class="lw-public-main" id="f3-main-content">
+  <div class="ob-card apply-peer-wide">
+    <div class="apply-peer-hero">
+      <h1>Apply as a peer supporter</h1>
+      <p>Step 4 of 5 — this application is for students who want to volunteer through Luminwell. It is separate from the admin panel and ambassador dashboard.</p>
+    </div>
+
+    <div class="apply-peer-inner">
+      <div class="step-indicator">
+          <a href="apply-peer-supporter-1.html" class="step-node step-node--done">
+            <div class="step-circle">1</div>
+            <span class="step-label">Personal</span>
+          </a>
+          <div class="step-connector step-connector--done" data-after="1"></div>
+          <a href="apply-peer-supporter-2.html" class="step-node step-node--done">
+            <div class="step-circle">2</div>
+            <span class="step-label">Background</span>
+          </a>
+          <div class="step-connector step-connector--done" data-after="2"></div>
+          <a href="apply-peer-supporter-3.html" class="step-node step-node--done">
+            <div class="step-circle">3</div>
+            <span class="step-label">Skills</span>
+          </a>
+          <div class="step-connector step-connector--done" data-after="3"></div>
+          <div class="step-node step-node--current">
+            <div class="step-circle">4</div>
+            <span class="step-label">Availability</span>
+          </div>
+          <div class="step-connector" data-after="4"></div>
+          <div class="step-node">
+            <div class="step-circle">5</div>
+            <span class="step-label">Review</span>
+          </div>
+      </div>
+
+      <div class="card">
+        <div class="card-body apply-peer-card-body">
+            <div class="step-title">Availability &amp; style</div>
+            <p class="step-desc">Roughly when could you take sessions, and how do you prefer to connect?</p>
+
+            <div class="form-section">
+            <div class="form-section-title">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+            Capacity
+            </div>
+            <div class="form-grid-2" style="margin-bottom:14px;">
+            <div class="form-group">
+            <label class="form-label">How many peers could you support at once</label>
+            <div class="radio-pills" style="margin-top:8px;flex-wrap:wrap;">
+            <span class="radio-pill"><input type="radio" name="f3-maxcli" id="f3-mc-4"><label for="f3-mc-4">Up to 4</label></span>
+            <span class="radio-pill"><input type="radio" name="f3-maxcli" id="f3-mc-6"><label for="f3-mc-6">Up to 6</label></span>
+            <span class="radio-pill"><input type="radio" name="f3-maxcli" id="f3-mc-8" checked><label for="f3-mc-8">Up to 8</label></span>
+            <span class="radio-pill"><input type="radio" name="f3-maxcli" id="f3-mc-10"><label for="f3-mc-10">Up to 10</label></span>
+            </div>
+            </div>
+            <div class="form-group">
+            <label class="form-label">Preferred session format</label>
+            <div class="radio-pills" style="margin-top:8px;">
+            <span class="radio-pill"><input type="radio" name="f3-fmt" id="f3-fmt-video" checked><label for="f3-fmt-video">Video</label></span>
+            <span class="radio-pill"><input type="radio" name="f3-fmt" id="f3-fmt-audio"><label for="f3-fmt-audio">Audio</label></span>
+            <span class="radio-pill"><input type="radio" name="f3-fmt" id="f3-fmt-text"><label for="f3-fmt-text">Text</label></span>
+            <span class="radio-pill"><input type="radio" name="f3-fmt" id="f3-fmt-any"><label for="f3-fmt-any">Any</label></span>
+            </div>
+            </div>
+            </div>
+            <div class="form-group">
+            <label class="form-label">Preferred weekly hours for sessions</label>
+            <div class="radio-pills" style="margin-top:8px;">
+            <span class="radio-pill"><input type="radio" name="f3-hrs" id="f3-hrs-2"><label for="f3-hrs-2">1–2 hours</label></span>
+            <span class="radio-pill"><input type="radio" name="f3-hrs" id="f3-hrs-4" checked><label for="f3-hrs-4">3–4 hours</label></span>
+            <span class="radio-pill"><input type="radio" name="f3-hrs" id="f3-hrs-6"><label for="f3-hrs-6">5–6 hours</label></span>
+            <span class="radio-pill"><input type="radio" name="f3-hrs" id="f3-hrs-8"><label for="f3-hrs-8">7–8 hours</label></span>
+            <span class="radio-pill"><input type="radio" name="f3-hrs" id="f3-hrs-more"><label for="f3-hrs-more">8+ hours</label></span>
+            </div>
+            </div>
+            </div>
+
+            <div class="form-section">
+            <div class="form-section-title">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            Weekly Availability
+            </div>
+            <p style="font-size:12px;color:var(--adm-txt-muted);margin-bottom:12px;">Tick when you are usually available for sessions.</p>
+
+            <div class="avail-grid">
+            <div class="avail-grid-head">
+            <div class="avail-grid-head-cell" style="text-align:left;padding-left:12px;"></div>
+            <div class="avail-grid-head-cell">Mon</div>
+            <div class="avail-grid-head-cell">Tue</div>
+            <div class="avail-grid-head-cell">Wed</div>
+            <div class="avail-grid-head-cell">Thu</div>
+            <div class="avail-grid-head-cell">Fri</div>
+            <div class="avail-grid-head-cell">Sat</div>
+            <div class="avail-grid-head-cell">Sun</div>
+            </div>
+            <!-- Morning -->
+            <div class="avail-grid-row">
+            <div class="avail-row-label"><span class="avail-row-label__title">Morning</span><span class="avail-row-label__time">8am–12pm</span></div>
+            <div class="avail-cell"><input type="checkbox" id="f3-am-mon" class="avail-check"><label for="f3-am-mon"></label></div>
+            <div class="avail-cell"><input type="checkbox" id="f3-am-tue" class="avail-check" checked><label for="f3-am-tue"></label></div>
+            <div class="avail-cell"><input type="checkbox" id="f3-am-wed" class="avail-check" checked><label for="f3-am-wed"></label></div>
+            <div class="avail-cell"><input type="checkbox" id="f3-am-thu" class="avail-check"><label for="f3-am-thu"></label></div>
+            <div class="avail-cell"><input type="checkbox" id="f3-am-fri" class="avail-check" checked><label for="f3-am-fri"></label></div>
+            <div class="avail-cell"><input type="checkbox" id="f3-am-sat" class="avail-check"><label for="f3-am-sat"></label></div>
+            <div class="avail-cell"><input type="checkbox" id="f3-am-sun" class="avail-check"><label for="f3-am-sun"></label></div>
+            </div>
+            <!-- Afternoon -->
+            <div class="avail-grid-row">
+            <div class="avail-row-label"><span class="avail-row-label__title">Afternoon</span><span class="avail-row-label__time">12pm–5pm</span></div>
+            <div class="avail-cell"><input type="checkbox" id="f3-pm-mon" class="avail-check" checked><label for="f3-pm-mon"></label></div>
+            <div class="avail-cell"><input type="checkbox" id="f3-pm-tue" class="avail-check"><label for="f3-pm-tue"></label></div>
+            <div class="avail-cell"><input type="checkbox" id="f3-pm-wed" class="avail-check"><label for="f3-pm-wed"></label></div>
+            <div class="avail-cell"><input type="checkbox" id="f3-pm-thu" class="avail-check" checked><label for="f3-pm-thu"></label></div>
+            <div class="avail-cell"><input type="checkbox" id="f3-pm-fri" class="avail-check"><label for="f3-pm-fri"></label></div>
+            <div class="avail-cell"><input type="checkbox" id="f3-pm-sat" class="avail-check" checked><label for="f3-pm-sat"></label></div>
+            <div class="avail-cell"><input type="checkbox" id="f3-pm-sun" class="avail-check"><label for="f3-pm-sun"></label></div>
+            </div>
+            <!-- Evening -->
+            <div class="avail-grid-row">
+            <div class="avail-row-label"><span class="avail-row-label__title">Evening</span><span class="avail-row-label__time">5pm–9pm</span></div>
+            <div class="avail-cell"><input type="checkbox" id="f3-eve-mon" class="avail-check"><label for="f3-eve-mon"></label></div>
+            <div class="avail-cell"><input type="checkbox" id="f3-eve-tue" class="avail-check" checked><label for="f3-eve-tue"></label></div>
+            <div class="avail-cell"><input type="checkbox" id="f3-eve-wed" class="avail-check"><label for="f3-eve-wed"></label></div>
+            <div class="avail-cell"><input type="checkbox" id="f3-eve-thu" class="avail-check"><label for="f3-eve-thu"></label></div>
+            <div class="avail-cell"><input type="checkbox" id="f3-eve-fri" class="avail-check" checked><label for="f3-eve-fri"></label></div>
+            <div class="avail-cell"><input type="checkbox" id="f3-eve-sat" class="avail-check"><label for="f3-eve-sat"></label></div>
+            <div class="avail-cell"><input type="checkbox" id="f3-eve-sun" class="avail-check"><label for="f3-eve-sun"></label></div>
+            </div>
+            </div>
+            </div>
+
+            <div class="form-section">
+            <div class="form-section-title">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            Bio &amp; Motivation
+            </div>
+            <div class="form-group" style="margin-bottom:14px;">
+            <label class="form-label">Public bio <span style="color:var(--adm-txt-faint);">(shown to students before they choose to match)</span></label>
+            <textarea class="form-input" rows="3" style="resize:vertical;" placeholder="A short, warm bio — e.g. "I'm a final-year Psychology student passionate about student mental health…""></textarea>
+            <p style="font-size:11px;color:var(--adm-txt-faint);margin-top:4px;">Max 200 characters recommended</p>
+            </div>
+            <div class="form-group">
+            <label class="form-label">Why do you want to volunteer as a peer supporter?</label>
+            <textarea class="form-input" rows="3" style="resize:vertical;" placeholder="Anything else you want our team to know…"></textarea>
+            </div>
+            </div>
+
+            <div class="step-nav">
+            <a href="apply-peer-supporter-3.html" class="btn-step-back">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+            Back
+            </a>
+            <span class="step-counter">Step 4 of 5</span>
+            <a href="apply-peer-supporter-5.html" class="btn-step-next">
+            Review &amp; Confirm
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+            </a>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  </main>
+
+  <footer class="footer lw-footer" aria-label="Site footer">
+    <div class="wrap">
+      <div class="footer__grid">
+
+        <div>
+          <div class="footer__brand-name">Luminwell</div>
+          <p class="footer__brand-desc">Peer mental health support for students and young adults. Judgment-free, private, and accessible.</p>
+          <a class="footer__crisis-link" href="tel:988">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            988 Crisis Line &mdash; always available
+          </a>
+        </div>
+
+        <div>
+          <div class="footer__col-h">Platform</div>
+          <ul class="footer__links">
+            <li><a href="landing.html#how-it-works">How it Works</a></li>
+            <li><a href="matching.html">Matching</a></li>
+            <li><a href="landing.html#ambassadors">Ambassadors</a></li>
+            <li><a href="ambassador.html">Ambassador hub</a></li>
+            <li><a href="pricing.html">Pricing</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <div class="footer__col-h">Support</div>
+          <ul class="footer__links">
+            <li><a href="#">Help Centre</a></li>
+            <li><a href="#">Community Forum</a></li>
+            <li><a href="#">Crisis Resources</a></li>
+            <li><a href="#">Contact Us</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <div class="footer__col-h">Legal</div>
+          <ul class="footer__links">
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms of Service</a></li>
+            <li><a href="#">Accessibility</a></li>
+            <li><a href="#">Cookie Policy</a></li>
+          </ul>
+        </div>
+
+      </div>
+      <div class="footer__bottom">
+        <span>&copy; 2026 Luminwell. All rights reserved.</span>
+        <span>Built with care for student wellbeing.</span>
+      </div>
+    </div>
+  </footer>
+
+  </section>
+
+  <section class="figma-apply-screen" aria-label="Step 5 — Review">
+    <div class="figma-screen-label">Step 5 — Review</div>
+<nav class="nav lw-nav" aria-label="Main navigation">
+    <div class="wrap">
+      <div class="nav__inner">
+        <a class="nav__brand" href="landing.html">
+          <img class="nav__logo" src="logo.png" alt="Luminwell" width="34" height="34" decoding="async" />
+          <span class="nav__wordmark">Luminwell</span>
+        </a>
+
+        <ul class="nav__links">
+          <li><a href="landing.html#how-it-works">How it Works</a></li>
+          <li><a href="landing.html#matching">Matching</a></li>
+          <li><a href="landing.html#ambassadors">Ambassadors</a></li>
+          <li><a href="ambassador.html">Ambassador</a></li>
+          <li><a href="landing.html#pricing">Pricing</a></li>
+        </ul>
+
+        <div class="nav__right">
+          <a class="nav__crisis" href="tel:988" aria-label="Call 988 crisis lifeline">
+            <svg fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+            <span>988 Crisis</span>
+          </a>
+          <a class="btn btn--ghost" href="index.html">Log In</a>
+          <a class="btn btn--navy" href="onboarding-01-age.html">Get Started</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+
+
+  <main class="lw-public-main" id="f4-main-content">
+  <div class="ob-card apply-peer-wide">
+    <div class="apply-peer-hero">
+      <h1>Apply as a peer supporter</h1>
+      <p>Step 5 of 5 — this application is for students who want to volunteer through Luminwell. It is separate from the admin panel and ambassador dashboard.</p>
+    </div>
+
+    <div class="apply-peer-inner">
+      <div class="step-indicator">
+          <a href="apply-peer-supporter-1.html" class="step-node step-node--done">
+            <div class="step-circle">1</div>
+            <span class="step-label">Personal</span>
+          </a>
+          <div class="step-connector step-connector--done" data-after="1"></div>
+          <a href="apply-peer-supporter-2.html" class="step-node step-node--done">
+            <div class="step-circle">2</div>
+            <span class="step-label">Background</span>
+          </a>
+          <div class="step-connector step-connector--done" data-after="2"></div>
+          <a href="apply-peer-supporter-3.html" class="step-node step-node--done">
+            <div class="step-circle">3</div>
+            <span class="step-label">Skills</span>
+          </a>
+          <div class="step-connector step-connector--done" data-after="3"></div>
+          <a href="apply-peer-supporter-4.html" class="step-node step-node--done">
+            <div class="step-circle">4</div>
+            <span class="step-label">Availability</span>
+          </a>
+          <div class="step-connector step-connector--done" data-after="4"></div>
+          <div class="step-node step-node--current">
+            <div class="step-circle">5</div>
+            <span class="step-label">Review</span>
+          </div>
+      </div>
+
+      <div class="card">
+        <div class="card-body apply-peer-card-body">
+            <div class="step-title">Review &amp; submit</div>
+            <p class="step-desc">Check your answers before submitting your application.</p>
+
+            <div class="info-tip">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:1px;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            After you submit, our team will review your application. We will email you about the next steps. You are not committing to anything until you have been accepted and trained.
+            </div>
+
+            <!-- Review: Personal -->
+            <div class="review-block">
+            <div class="review-block-head">
+            <span class="review-block-title">About you</span>
+            <a href="apply-peer-supporter-1.html" style="font-size:12px;color:var(--adm-blue);font-weight:700;cursor:pointer;text-decoration:none;">Edit →</a>
+            </div>
+            <div class="review-row"><span class="review-key">Full name</span><span class="review-val">Maya Johnson</span></div>
+            <div class="review-row"><span class="review-key">Email</span><span class="review-val">maya.j@manchester.ac.uk</span></div>
+            <div class="review-row"><span class="review-key">Age group</span><span class="review-val">21–25</span></div>
+            <div class="review-row"><span class="review-key">Location</span><span class="review-val">Manchester</span></div>
+            <div class="review-row"><span class="review-key">Languages</span><span class="review-val">English, French</span></div>
+            </div>
+
+            <!-- Review: Background -->
+            <div class="review-block">
+            <div class="review-block-head">
+            <span class="review-block-title">Education &amp; experience</span>
+            <a href="apply-peer-supporter-2.html" style="font-size:12px;color:var(--adm-blue);font-weight:700;cursor:pointer;text-decoration:none;">Edit →</a>
+            </div>
+            <div class="review-row"><span class="review-key">University</span><span class="review-val">University of Manchester</span></div>
+            <div class="review-row"><span class="review-key">Course</span><span class="review-val">Psychology</span></div>
+            <div class="review-row"><span class="review-key">Experience</span><span class="review-val">3–5 years</span></div>
+            <div class="review-row"><span class="review-key">DBS check</span><span class="review-val" style="color:var(--adm-green);">Completed (enhanced)</span></div>
+            <div class="review-row"><span class="review-key">Certifications</span><span class="review-val">Mental Health First Aid (MHFA), CBT fundamentals</span></div>
+            </div>
+
+            <!-- Review: Skills -->
+            <div class="review-block">
+            <div class="review-block-head">
+            <span class="review-block-title">Where you can offer support</span>
+            <a href="apply-peer-supporter-3.html" style="font-size:12px;color:var(--adm-blue);font-weight:700;cursor:pointer;text-decoration:none;">Edit →</a>
+            </div>
+            <div class="review-row">
+            <span class="review-key">Selected areas</span>
+            <span class="review-val">
+            <div style="display:flex;flex-wrap:wrap;gap:5px;justify-content:flex-end;">
+            <span style="background:var(--adm-blue-lt);color:var(--adm-blue-dk);border-radius:20px;padding:2px 9px;font-size:11px;font-weight:700;">Anxiety</span>
+            <span style="background:var(--adm-blue-lt);color:var(--adm-blue-dk);border-radius:20px;padding:2px 9px;font-size:11px;font-weight:700;">Academic pressure</span>
+            <span style="background:var(--adm-blue-lt);color:var(--adm-blue-dk);border-radius:20px;padding:2px 9px;font-size:11px;font-weight:700;">CBT techniques</span>
+            <span style="background:var(--adm-blue-lt);color:var(--adm-blue-dk);border-radius:20px;padding:2px 9px;font-size:11px;font-weight:700;">Goal setting</span>
+            <span style="background:var(--adm-blue-lt);color:var(--adm-blue-dk);border-radius:20px;padding:2px 9px;font-size:11px;font-weight:700;">Resilience</span>
+            </div>
+            </span>
+            </div>
+            </div>
+
+            <!-- Review: Availability -->
+            <div class="review-block">
+            <div class="review-block-head">
+            <span class="review-block-title">Availability &amp; style</span>
+            <a href="apply-peer-supporter-4.html" style="font-size:12px;color:var(--adm-blue);font-weight:700;cursor:pointer;text-decoration:none;">Edit →</a>
+            </div>
+            <div class="review-row"><span class="review-key">Max clients</span><span class="review-val">Up to 8</span></div>
+            <div class="review-row"><span class="review-key">Format</span><span class="review-val">Video · Audio</span></div>
+            <div class="review-row"><span class="review-key">Weekly hours</span><span class="review-val">3–4 hours</span></div>
+            <div class="review-row">
+            <span class="review-key">Available slots</span>
+            <span class="review-val">
+            <div style="display:flex;flex-wrap:wrap;gap:5px;justify-content:flex-end;">
+            <span style="background:var(--adm-teal-lt);color:var(--adm-teal);border-radius:20px;padding:2px 9px;font-size:11px;font-weight:700;">Tue AM</span>
+            <span style="background:var(--adm-teal-lt);color:var(--adm-teal);border-radius:20px;padding:2px 9px;font-size:11px;font-weight:700;">Wed AM</span>
+            <span style="background:var(--adm-teal-lt);color:var(--adm-teal);border-radius:20px;padding:2px 9px;font-size:11px;font-weight:700;">Fri AM</span>
+            <span style="background:var(--adm-teal-lt);color:var(--adm-teal);border-radius:20px;padding:2px 9px;font-size:11px;font-weight:700;">Mon PM</span>
+            <span style="background:var(--adm-teal-lt);color:var(--adm-teal);border-radius:20px;padding:2px 9px;font-size:11px;font-weight:700;">Tue Eve</span>
+            </div>
+            </span>
+            </div>
+            </div>
+
+            <!-- Agreement -->
+            <div style="background:var(--adm-bg);border:1px solid var(--adm-border);border-radius:var(--adm-r-md);padding:18px;margin-bottom:4px;">
+              <p style="font-size:12px;font-weight:800;color:var(--adm-txt-head);margin-bottom:12px;">Declarations</p>
+
+              <label class="checklist-item">
+                <input type="checkbox" id="f4-pub-agree1">
+                <div class="checklist-check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+                <span class="checklist-text">I confirm the information I have provided is accurate to the best of my knowledge.</span>
+              </label>
+              <label class="checklist-item">
+                <input type="checkbox" id="f4-pub-agree2">
+                <div class="checklist-check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+                <span class="checklist-text">I understand peer supporters are not a substitute for emergency or clinical services, and I will follow Luminwell safeguarding guidance if accepted.</span>
+              </label>
+              <label class="checklist-item">
+                <input type="checkbox" id="f4-pub-agree3">
+                <div class="checklist-check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+                <span class="checklist-text">I agree to my application data being processed in line with the Privacy Policy.</span>
+              </label>
+            </div>
+
+            <div class="step-nav">
+            <a href="apply-peer-supporter-4.html" class="btn-step-back">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+            Back
+            </a>
+            <span class="step-counter">Step 5 of 5</span>
+            <a href="apply-peer-supporter-thanks.html" class="btn-step-next" style="background:linear-gradient(135deg,#2d9676,#134a75);box-shadow:0 4px 16px rgba(45,150,118,.35);">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            Submit application
+            </a>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  </main>
+
+  <footer class="footer lw-footer" aria-label="Site footer">
+    <div class="wrap">
+      <div class="footer__grid">
+
+        <div>
+          <div class="footer__brand-name">Luminwell</div>
+          <p class="footer__brand-desc">Peer mental health support for students and young adults. Judgment-free, private, and accessible.</p>
+          <a class="footer__crisis-link" href="tel:988">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            988 Crisis Line &mdash; always available
+          </a>
+        </div>
+
+        <div>
+          <div class="footer__col-h">Platform</div>
+          <ul class="footer__links">
+            <li><a href="landing.html#how-it-works">How it Works</a></li>
+            <li><a href="matching.html">Matching</a></li>
+            <li><a href="landing.html#ambassadors">Ambassadors</a></li>
+            <li><a href="ambassador.html">Ambassador hub</a></li>
+            <li><a href="pricing.html">Pricing</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <div class="footer__col-h">Support</div>
+          <ul class="footer__links">
+            <li><a href="#">Help Centre</a></li>
+            <li><a href="#">Community Forum</a></li>
+            <li><a href="#">Crisis Resources</a></li>
+            <li><a href="#">Contact Us</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <div class="footer__col-h">Legal</div>
+          <ul class="footer__links">
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms of Service</a></li>
+            <li><a href="#">Accessibility</a></li>
+            <li><a href="#">Cookie Policy</a></li>
+          </ul>
+        </div>
+
+      </div>
+      <div class="footer__bottom">
+        <span>&copy; 2026 Luminwell. All rights reserved.</span>
+        <span>Built with care for student wellbeing.</span>
+      </div>
+    </div>
+  </footer>
+
+  </section>
+
+  <section class="figma-apply-screen" aria-label="Thank you">
+    <div class="figma-screen-label">Thank you</div>
+<nav class="nav lw-nav" aria-label="Main navigation">
+    <div class="wrap">
+      <div class="nav__inner">
+        <a class="nav__brand" href="landing.html">
+          <img class="nav__logo" src="logo.png" alt="Luminwell" width="34" height="34" decoding="async" />
+          <span class="nav__wordmark">Luminwell</span>
+        </a>
+
+        <ul class="nav__links">
+          <li><a href="landing.html#how-it-works">How it Works</a></li>
+          <li><a href="matching.html">Matching</a></li>
+          <li><a href="landing.html#ambassadors">Ambassadors</a></li>
+          <li><a href="ambassador.html">Ambassador</a></li>
+          <li><a href="pricing.html">Pricing</a></li>
+        </ul>
+
+        <div class="nav__right">
+          <a class="nav__crisis" href="tel:988" aria-label="Call 988 crisis lifeline">
+            <svg fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+            <span>988 Crisis</span>
+          </a>
+          <a class="btn btn--ghost" href="index.html">Log In</a>
+          <a class="btn btn--navy" href="onboarding-01-age.html">Get Started</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="lw-public-main" id="f5-main-content">
+  <div class="ob-card apply-peer-wide" style="text-align:center;">
+    <div class="apply-peer-hero" style="border-bottom:none;">
+      <h1>Thank you</h1>
+      <p>We have received your peer supporter application. Our team will review it and email you with next steps. Nothing is final until you have been accepted and completed onboarding.</p>
+    </div>
+
+    <div class="apply-peer-inner apply-peer-thanks-inner">
+      <a class="btn btn--primary" href="index.html">Back to Luminwell</a>
+      <p class="apply-peer-thanks-footnote">
+        Need to fix something? Start again from <a href="apply-peer-supporter-1.html">step 1</a>.
+      </p>
+    </div>
+  </div>
+  </main>
+
+  <footer class="footer lw-footer" aria-label="Site footer">
+    <div class="wrap">
+      <div class="footer__grid">
+
+        <div>
+          <div class="footer__brand-name">Luminwell</div>
+          <p class="footer__brand-desc">Peer mental health support for students and young adults. Judgment-free, private, and accessible.</p>
+          <a class="footer__crisis-link" href="tel:988">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            988 Crisis Line &mdash; always available
+          </a>
+        </div>
+
+        <div>
+          <div class="footer__col-h">Platform</div>
+          <ul class="footer__links">
+            <li><a href="landing.html#how-it-works">How it Works</a></li>
+            <li><a href="matching.html">Matching</a></li>
+            <li><a href="landing.html#ambassadors">Ambassadors</a></li>
+            <li><a href="ambassador.html">Ambassador hub</a></li>
+            <li><a href="pricing.html">Pricing</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <div class="footer__col-h">Support</div>
+          <ul class="footer__links">
+            <li><a href="#">Help Centre</a></li>
+            <li><a href="#">Community Forum</a></li>
+            <li><a href="#">Crisis Resources</a></li>
+            <li><a href="#">Contact Us</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <div class="footer__col-h">Legal</div>
+          <ul class="footer__links">
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms of Service</a></li>
+            <li><a href="#">Accessibility</a></li>
+            <li><a href="#">Cookie Policy</a></li>
+          </ul>
+        </div>
+
+      </div>
+      <div class="footer__bottom">
+        <span>&copy; 2026 Luminwell. All rights reserved.</span>
+        <span>Built with care for student wellbeing.</span>
+      </div>
+    </div>
+  </footer>
+
+  </section>
+
+</body>
+</html>

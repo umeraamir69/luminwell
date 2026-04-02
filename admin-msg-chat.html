@@ -10,8 +10,22 @@
 <style>
 
   /* ── Override main content to fill height ── */
-  .admin-main { display: flex; flex-direction: column; overflow: hidden; }
-  .admin-content { flex: 1; overflow: hidden; padding: 0; display: flex; flex-direction: column; }
+  .admin-main {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-width: 0;
+    max-width: 100%;
+  }
+  .admin-content {
+    flex: 1;
+    overflow: hidden;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    max-width: 100%;
+  }
 
   /* ── Messaging shell ── */
   .msg-shell {
@@ -19,6 +33,8 @@
     flex: 1;
     overflow: hidden;
     background: var(--adm-bg);
+    min-width: 0;
+    max-width: 100%;
   }
 
   /* ══════════════════════════════════════════

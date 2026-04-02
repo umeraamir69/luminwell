@@ -22,15 +22,9 @@
       --surface: #ffffff;
       --text: #0c1929;
       --text-muted: #64748b;
-      --bubble-user: #175d92;
-      --bubble-assistant: #e8f1fa;
-      --pill-bg: #dbeafe;
-      --pill-text: #1e3a5f;
-      --star: #fbbf24;
       --border-subtle: rgba(12, 25, 41, 0.09);
       --shadow-soft: 0 1px 2px rgba(12, 25, 41, 0.05), 0 8px 28px rgba(12, 25, 41, 0.06);
       --radius-ui: 12px;
-      --radius-bubble: 14px;
       --radius-full: 9999px;
       --sidebar-width: 268px;
       --font: "DM Sans", system-ui, -apple-system, sans-serif;
@@ -180,8 +174,11 @@
       color: var(--text-on-sidebar);
       font-size: 13px;
       font-weight: 600;
+      font-family: inherit;
+      text-decoration: none;
       cursor: pointer;
       transition: background 0.15s ease, border-color 0.15s ease;
+      box-sizing: border-box;
     }
 
     .sidebar__new:hover {
@@ -246,6 +243,7 @@
     }
 
     .sb-recent__btn {
+      display: block;
       width: 100%;
       padding: 8px 10px;
       border: none;
@@ -254,16 +252,14 @@
       color: inherit;
       cursor: pointer;
       text-align: left;
+      text-decoration: none;
+      font: inherit;
       transition: background 0.15s ease;
+      box-sizing: border-box;
     }
 
     .sb-recent__btn:hover {
       background: var(--sidebar-hover);
-    }
-
-    .sb-recent__btn.is-current {
-      background: var(--sidebar-active);
-      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
     }
 
     .sb-recent__title {
@@ -453,17 +449,6 @@
       flex-shrink: 0;
     }
 
-    .topbar__thread {
-      font-size: 13px;
-      font-weight: 600;
-      letter-spacing: -0.02em;
-      color: var(--text);
-      max-width: min(380px, 42vw);
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
     .topbar__right {
       display: flex;
       align-items: center;
@@ -520,24 +505,9 @@
       position: relative;
     }
 
-    .main[data-view="home"] .panel--chat {
-      display: none;
-    }
-
-    .main[data-view="home"] .panel--home {
-      display: flex;
-    }
-
-    .main[data-view="chat"] .panel--home {
-      display: none;
-    }
-
-    .main[data-view="chat"] .panel--chat {
-      display: flex;
-    }
-
     /* Home landing — calm, welcoming (trauma-informed palette) */
     .panel--home {
+      display: flex;
       flex: 1;
       flex-direction: column;
       align-items: stretch;
@@ -662,9 +632,9 @@
     }
 
     .composer--home {
-      min-height: 48px;
-      padding: 6px 6px 6px 12px;
-      border-radius: 14px;
+      min-height: 72px;
+      padding: 12px 12px 12px 16px;
+      border-radius: 16px;
       border: 1px solid rgba(148, 163, 184, 0.28);
       box-shadow: 0 2px 16px rgba(15, 23, 42, 0.06);
       background: rgba(255, 255, 255, 0.75);
@@ -678,12 +648,35 @@
     }
 
     .composer--home .composer__input {
-      font-size: 15px;
+      font-size: 16px;
+    }
+
+    .composer--home .composer__btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+    }
+
+    .composer--home .composer__btn--send {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+    }
+
+    .composer--home .composer__icon {
+      width: 20px;
+      height: 20px;
+    }
+
+    .composer--home .composer__btn--send .composer__icon {
+      width: 19px;
+      height: 19px;
     }
 
     .composer--home input.composer__input {
-      height: 44px;
-      min-height: 44px;
+      height: 52px;
+      min-height: 52px;
+      padding: 4px 8px;
     }
 
     /* Home — what we offer */
@@ -726,13 +719,27 @@
       background: rgba(255, 255, 255, 0.85);
       border: 1px solid rgba(148, 163, 184, 0.18);
       box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
-      transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+      text-decoration: none;
+      color: inherit;
+      cursor: pointer;
+      transition: border-color 0.22s ease, box-shadow 0.22s ease, transform 0.22s ease,
+        background 0.22s ease;
     }
 
     .home-offer__item:hover {
-      border-color: rgba(23, 93, 146, 0.22);
-      box-shadow: 0 8px 24px rgba(23, 93, 146, 0.08);
-      transform: translateY(-2px);
+      border-color: rgba(23, 93, 146, 0.38);
+      background: linear-gradient(145deg, rgba(224, 238, 252, 0.65) 0%, rgba(255, 255, 255, 0.98) 55%, rgba(234, 250, 245, 0.4) 100%);
+      box-shadow: 0 14px 36px rgba(23, 93, 146, 0.14), 0 4px 12px rgba(45, 150, 118, 0.06);
+      transform: translateY(-3px);
+    }
+
+    .home-offer__item:focus-visible {
+      outline: 2px solid var(--sidebar);
+      outline-offset: 3px;
+    }
+
+    .home-offer__item:active {
+      transform: translateY(-1px);
     }
 
     .home-offer__icon {
@@ -746,6 +753,14 @@
       background: linear-gradient(145deg, rgba(232, 228, 244, 0.9), rgba(238, 245, 242, 0.95));
       color: var(--sidebar);
       border: 1px solid rgba(23, 93, 146, 0.12);
+      transition: background 0.22s ease, border-color 0.22s ease, color 0.22s ease, transform 0.22s ease;
+    }
+
+    .home-offer__item:hover .home-offer__icon {
+      background: linear-gradient(145deg, rgba(23, 93, 146, 0.14), rgba(45, 150, 118, 0.12));
+      border-color: rgba(23, 93, 146, 0.28);
+      color: var(--sidebar-deep);
+      transform: scale(1.04);
     }
 
     .home-offer__icon svg {
@@ -759,6 +774,11 @@
       font-weight: 700;
       letter-spacing: -0.02em;
       color: #0f172a;
+      transition: color 0.2s ease;
+    }
+
+    .home-offer__item:hover h3 {
+      color: var(--sidebar);
     }
 
     .home-offer__item p {
@@ -776,6 +796,9 @@
 
     @media (prefers-reduced-motion: reduce) {
       .home-offer__item:hover {
+        transform: none;
+      }
+      .home-offer__item:hover .home-offer__icon {
         transform: none;
       }
     }
@@ -796,292 +819,13 @@
       }
     }
 
-    /* Chat */
-    .panel--chat {
-      flex: 1;
-      flex-direction: column;
-      min-height: 0;
-    }
-
-    .chat-top {
-      flex-shrink: 0;
-      padding: 10px 24px 12px;
-      border-bottom: 1px solid var(--border-subtle);
-      background: rgba(255, 255, 255, 0.5);
-    }
-
-    .chat-top__sub {
-      margin: 0;
-      font-size: 12px;
-      font-weight: 500;
-      color: var(--text-muted);
-    }
-
-    .chat-scroll {
-      flex: 1;
-      overflow-y: auto;
-      padding: 16px 24px 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      max-width: 920px;
-      width: 100%;
-      margin: 0 auto;
-    }
-
-    .msg {
-      display: flex;
-      flex-direction: column;
-      max-width: 88%;
-    }
-
-    .msg--user {
-      align-self: flex-end;
-      align-items: flex-end;
-    }
-
-    .msg--assistant {
-      align-self: flex-start;
-      align-items: flex-start;
-    }
-
-    .msg__bubble {
-      padding: 10px 14px;
-      border-radius: var(--radius-bubble);
-      font-size: 14px;
-      line-height: 1.55;
-      font-weight: 400;
-    }
-
-    .msg--user .msg__bubble {
-      background: var(--bubble-user);
-      color: #fff;
-      border-bottom-right-radius: 5px;
-    }
-
-    .msg--assistant .msg__bubble {
-      background: var(--bubble-assistant);
-      color: var(--text);
-      border-bottom-left-radius: 5px;
-    }
-
-    .msg__time {
-      margin-top: 5px;
-      font-size: 10px;
-      font-weight: 500;
-      color: var(--text-muted);
-    }
-
-    /* In-chat: provider cards + feedback */
-    .chat-block {
-      align-self: stretch;
-      max-width: 100%;
-      padding-left: 0;
-      margin-top: 4px;
-    }
-
-    .card-strip {
-      display: flex;
-      gap: 12px;
-      overflow-x: auto;
-      padding-bottom: 6px;
-      scrollbar-width: thin;
-      -webkit-overflow-scrolling: touch;
-    }
-
-    .card-strip::-webkit-scrollbar {
-      height: 4px;
-    }
-
-    .card-strip::-webkit-scrollbar-thumb {
-      background: rgba(12, 25, 41, 0.15);
-      border-radius: 4px;
-    }
-
-    .pro-card {
-      flex: 1 1 200px;
-      min-width: 200px;
-      max-width: 280px;
-      padding: 14px;
-      background: var(--surface);
-      border: 1px solid var(--border-subtle);
-      border-radius: 11px;
-      box-shadow: 0 1px 3px rgba(12, 25, 41, 0.04);
-    }
-
-    .pro-card__head {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 10px;
-    }
-
-    .pro-card__avatar {
-      width: 40px;
-      height: 40px;
-      border-radius: var(--radius-full);
-      background: linear-gradient(145deg, #94a3b8, #64748b);
-      flex-shrink: 0;
-    }
-
-    .pro-card__avatar--b {
-      background: linear-gradient(145deg, #7dd3c0, #3d9a84);
-    }
-
-    .pro-card__avatar--c {
-      background: linear-gradient(145deg, #c4b5fd, #7c6fd6);
-    }
-
-    .pro-card__name {
-      font-size: 14px;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      color: var(--text);
-      line-height: 1.25;
-    }
-
-    .pro-card__tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-bottom: 10px;
-    }
-
-    .pro-card__tag {
-      padding: 3px 8px;
-      border-radius: var(--radius-full);
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--pill-text);
-      background: var(--pill-bg);
-    }
-
-    .pro-card__desc {
-      margin: 0;
-      font-size: 12px;
-      line-height: 1.5;
-      color: var(--text-muted);
-      font-weight: 400;
-      display: -webkit-box;
-      -webkit-line-clamp: 4;
-      line-clamp: 4;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-
-    .pro-card__rating {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-top: 12px;
-    }
-
-    .pro-card__stars {
-      display: flex;
-      gap: 2px;
-      color: var(--star);
-    }
-
-    .pro-card__stars svg {
-      width: 14px;
-      height: 14px;
-      fill: var(--star);
-      stroke: none;
-    }
-
-    .pro-card__score {
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--text);
-    }
-
-    .pro-card__actions {
-      display: flex;
-      gap: 8px;
-      margin-top: 14px;
-    }
-
-    .pro-card__btn {
-      flex: 1;
-      height: 34px;
-      border-radius: 9px;
-      font-size: 12px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
-    }
-
-    .pro-card__btn--skip {
-      border: 1px solid var(--border-subtle);
-      background: var(--surface);
-      color: var(--text);
-    }
-
-    .pro-card__btn--skip:hover {
-      background: rgba(12, 25, 41, 0.04);
-    }
-
-    .pro-card__btn--save {
-      border: none;
-      background: var(--sidebar);
-      color: #fff;
-    }
-
-    .pro-card__btn--save:hover {
-      background: var(--sidebar-deep);
-    }
-
-    .chat-feedback {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      margin-top: 12px;
-      padding-top: 2px;
-    }
-
-    .chat-feedback__btn {
-      width: 28px;
-      height: 28px;
-      border: 1px solid #e5e7eb;
-      border-radius: 8px;
-      background: var(--surface);
-      color: #64748b;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
-    }
-
-    .chat-feedback__btn:hover {
-      background: rgba(12, 25, 41, 0.04);
-      color: var(--text);
-      border-color: rgba(12, 25, 41, 0.12);
-    }
-
-    .chat-feedback__btn svg {
-      width: 14px;
-      height: 14px;
-    }
-
-    .chat-feedback__hint {
-      margin: 0 0 0 6px;
-      font-size: 11px;
-      font-weight: 500;
-      color: #64748b;
-    }
-
-    /* Slim composer (shared) */
+    /* Composer (home) */
     .composer-slot {
       flex-shrink: 0;
       padding: 12px 24px 20px;
       width: 100%;
       max-width: 560px;
       margin: 0 auto;
-    }
-
-    .main[data-view="chat"] .composer-slot {
-      max-width: 920px;
     }
 
     .composer {
@@ -1175,27 +919,6 @@
       color: var(--text-muted);
     }
 
-    .panel--chat .composer {
-      align-items: flex-end;
-      min-height: 64px;
-      padding: 8px 6px 8px 10px;
-    }
-
-    .panel--chat .composer__tools {
-      align-self: flex-end;
-      padding-bottom: 4px;
-    }
-
-    .panel--chat .composer__btn--send {
-      align-self: flex-end;
-      margin-bottom: 2px;
-    }
-
-    .panel--chat textarea.composer__input {
-      min-height: 56px;
-      max-height: 200px;
-    }
-
     .panel--home .composer-slot {
       width: 100%;
       max-width: none;
@@ -1230,23 +953,23 @@
       </div>
 
       <div class="sidebar__block">
-        <button type="button" class="sidebar__new" id="btn-new-chat" title="New chat">
+        <a href="chat.html" class="sidebar__new" title="New chat">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M12 5v14M5 12h14" />
           </svg>
           <span class="sb-label">New chat</span>
-        </button>
+        </a>
       </div>
 
       <div class="sidebar__block">
         <div class="sidebar__label">Menu</div>
         <nav class="sb-nav" aria-label="Sections">
-          <button type="button" class="sb-nav__link is-active" data-go="home" id="nav-home" title="Home">
+          <a href="index.html" class="sb-nav__link is-active" title="Home" aria-current="page">
             <svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M3 10.5L12 4l9 6.5V20a1 1 0 01-1 1h-5v-7H9v7H4a1 1 0 01-1-1v-9.5z" />
             </svg>
             <span class="sb-label">Home</span>
-          </button>
+          </a>
           <a href="#" class="sb-nav__link" title="Book">
             <svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <rect x="4" y="5" width="16" height="15" rx="2" />
@@ -1274,28 +997,36 @@
             </svg>
             <span class="sb-label">Calendar</span>
           </a>
+          <a href="apply-peer-supporter-1.html" class="sb-nav__link" title="Volunteer as a peer supporter">
+            <svg class="sb-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M17 21v-2a4 4 0 01-4-4H5a4 4 0 01-4 4v2" />
+              <circle cx="9" cy="7" r="4" />
+              <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" />
+            </svg>
+            <span class="sb-label">Become a supporter</span>
+          </a>
         </nav>
       </div>
 
       <div class="sidebar__block sidebar__block--fill">
         <div class="sidebar__label">Recent chats</div>
         <div class="sb-recent" role="list" id="recent-list">
-          <button type="button" class="sb-recent__btn" role="listitem" data-thread="Peer matching · housing &amp; anxiety">
+          <a href="chat.html" class="sb-recent__btn" role="listitem">
             <div class="sb-recent__title">Peer matching · housing &amp; anxiety</div>
             <div class="sb-recent__meta">Today</div>
-          </button>
-          <button type="button" class="sb-recent__btn" role="listitem" data-thread="Sleep &amp; mood check-in">
+          </a>
+          <a href="chat.html" class="sb-recent__btn" role="listitem">
             <div class="sb-recent__title">Sleep &amp; mood check-in</div>
             <div class="sb-recent__meta">Yesterday</div>
-          </button>
-          <button type="button" class="sb-recent__btn" role="listitem" data-thread="Mindfulness &amp; stress tools">
+          </a>
+          <a href="chat.html" class="sb-recent__btn" role="listitem">
             <div class="sb-recent__title">Mindfulness &amp; stress tools</div>
             <div class="sb-recent__meta">Mar 26</div>
-          </button>
-          <button type="button" class="sb-recent__btn" role="listitem" data-thread="Journal · private reflection">
+          </a>
+          <a href="chat.html" class="sb-recent__btn" role="listitem">
             <div class="sb-recent__title">Journal · private reflection</div>
             <div class="sb-recent__meta">Mar 24</div>
-          </button>
+          </a>
         </div>
       </div>
 
@@ -1338,11 +1069,10 @@
 
     </aside>
 
-    <main class="main" id="main" data-view="home">
+    <main class="main">
       <header class="topbar">
         <div class="topbar__left">
           <img class="topbar__logo-img" src="logo.png" width="40" height="40" alt="Luminwell" decoding="async" />
-          <span class="topbar__thread" id="topbar-title" hidden></span>
         </div>
         <div class="topbar__right">
           <a class="topbar__crisis" href="tel:988" title="988 Suicide &amp; Crisis Lifeline — available 24/7">988 Lifeline</a>
@@ -1428,7 +1158,7 @@
             <h2 id="home-offer-heading" class="home-offer__title">What Luminwell offers</h2>
             <p class="home-offer__lede">Support that meets you where you are—clear, private, and easy to navigate.</p>
             <div class="home-offer__grid">
-              <div class="home-offer__item">
+              <a href="chat.html" class="home-offer__item">
                 <div class="home-offer__icon" aria-hidden="true">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 01-8 8H6l-3 3V12a8 8 0 018-8h5a8 8 0 018 8z" /></svg>
                 </div>
@@ -1436,8 +1166,8 @@
                   <h3>Guided conversation</h3>
                   <p>Chat in plain language, one step at a time—so you’re never flooded with choices.</p>
                 </div>
-              </div>
-              <div class="home-offer__item">
+              </a>
+              <a href="matching.html" class="home-offer__item">
                 <div class="home-offer__icon" aria-hidden="true">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M9 11a4 4 0 100-8 4 4 0 000 8zM23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" /></svg>
                 </div>
@@ -1445,8 +1175,8 @@
                   <h3>Peer &amp; professional matching</h3>
                   <p>Transparent matches—see experience, focus areas, and level of care that fits you.</p>
                 </div>
-              </div>
-              <div class="home-offer__item">
+              </a>
+              <a href="session-book-choose-counsellor.html" class="home-offer__item">
                 <div class="home-offer__icon" aria-hidden="true">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="16" height="15" rx="2" /><path d="M8 3v4M16 3v4M4 11h16" /></svg>
                 </div>
@@ -1454,8 +1184,8 @@
                   <h3>Book sessions</h3>
                   <p>Schedule support with clear date, time, and format—no guesswork.</p>
                 </div>
-              </div>
-              <div class="home-offer__item">
+              </a>
+              <a href="journal-pin.html" class="home-offer__item">
                 <div class="home-offer__icon" aria-hidden="true">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5c0-1 1-2 2.2-1.7C8.3 3.8 10 5.2 12 5.2S15.7 3.8 17.8 3.3C19 3 20 4 20 5v13c0 1-1 1.7-2.2 1.4-2-.4-3.8-1.6-5.8-1.6S8.2 19.4 6.2 19.8 4 19 4 18V5z" /><path d="M12 5.2v14.5" /></svg>
                 </div>
@@ -1463,8 +1193,8 @@
                   <h3>Private journal</h3>
                   <p>A password-protected place for reflection—your words stay yours.</p>
                 </div>
-              </div>
-              <div class="home-offer__item">
+              </a>
+              <a href="landing.html#how-it-works" class="home-offer__item">
                 <div class="home-offer__icon" aria-hidden="true">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 016 6c0 4-6 12-6 12S6 13 6 9a6 6 0 016-6z" /><circle cx="12" cy="9" r="2" /></svg>
                 </div>
@@ -1472,8 +1202,8 @@
                   <h3>Mindfulness &amp; coping tools</h3>
                   <p>Short exercises and resources for stress, sleep, and grounding.</p>
                 </div>
-              </div>
-              <div class="home-offer__item">
+              </a>
+              <a href="tel:988" class="home-offer__item">
                 <div class="home-offer__icon" aria-hidden="true">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" /></svg>
                 </div>
@@ -1481,162 +1211,9 @@
                   <h3>Crisis support</h3>
                   <p><strong>988</strong> is one tap away in the bar above—24/7, whenever you need it.</p>
                 </div>
-              </div>
+              </a>
             </div>
           </section>
-        </div>
-      </div>
-
-      <!-- Active chat -->
-      <div class="panel--chat" aria-hidden="true">
-        <header class="chat-top">
-          <p class="chat-top__sub" id="chat-sub">Today · Transparent peer matching</p>
-        </header>
-
-        <div class="chat-scroll" aria-label="Messages">
-          <div class="msg msg--user">
-            <div class="msg__bubble">I need help with housing stress and anxiety — can you suggest people to talk to?</div>
-            <span class="msg__time">9:41 AM</span>
-          </div>
-          <div class="msg msg--assistant">
-            <div class="msg__bubble">
-              Based on what you shared—housing stress and anxiety—I’ve matched you with supporters whose experience and training line up with that (you’ll always see why a match was suggested). Save anyone you’d like to connect with, or skip for now. There’s no wrong choice.
-            </div>
-            <span class="msg__time">9:41 AM</span>
-          </div>
-
-          <div class="chat-block">
-            <div class="card-strip" role="list">
-              <article class="pro-card" role="listitem">
-                <div class="pro-card__head">
-                  <div class="pro-card__avatar" aria-hidden="true"></div>
-                  <div class="pro-card__name">Dr. Sarah Chen</div>
-                </div>
-                <div class="pro-card__tags">
-                  <span class="pro-card__tag">Housing</span>
-                  <span class="pro-card__tag">Anxiety</span>
-                </div>
-                <p class="pro-card__desc">
-                  Specialized · Licensed therapist (trauma-informed). Life transitions, financial and housing-related stress, and sleep. Video sessions; evening hours.
-                </p>
-                <div class="pro-card__rating">
-                  <span class="pro-card__stars" aria-label="4.9 out of 5 stars">
-                    <svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4 2 7L12 17l-6.5 5 2-7L2 9h7l3-7z" /></svg>
-                    <svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4 2 7L12 17l-6.5 5 2-7L2 9h7l3-7z" /></svg>
-                    <svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4 2 7L12 17l-6.5 5 2-7L2 9h7l3-7z" /></svg>
-                    <svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4 2 7L12 17l-6.5 5 2-7L2 9h7l3-7z" /></svg>
-                    <svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4 2 7L12 17l-6.5 5 2-7L2 9h7l3-7z" /></svg>
-                  </span>
-                  <span class="pro-card__score">4.9/5</span>
-                </div>
-                <div class="pro-card__actions">
-                  <button type="button" class="pro-card__btn pro-card__btn--skip">Skip</button>
-                  <button type="button" class="pro-card__btn pro-card__btn--save">Save</button>
-                </div>
-              </article>
-
-              <article class="pro-card" role="listitem">
-                <div class="pro-card__head">
-                  <div class="pro-card__avatar pro-card__avatar--b" aria-hidden="true"></div>
-                  <div class="pro-card__name">James Miller</div>
-                </div>
-                <div class="pro-card__tags">
-                  <span class="pro-card__tag">Stress</span>
-                  <span class="pro-card__tag">Career</span>
-                </div>
-                <p class="pro-card__desc">
-                  Specialized · Counselor (CBT-informed). Workplace burnout, major life changes, and stress. Collaborative, clear booking—you’ll always see date, time, and format up front.
-                </p>
-                <div class="pro-card__rating">
-                  <span class="pro-card__stars" aria-label="4.8 out of 5 stars">
-                    <svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4 2 7L12 17l-6.5 5 2-7L2 9h7l3-7z" /></svg>
-                    <svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4 2 7L12 17l-6.5 5 2-7L2 9h7l3-7z" /></svg>
-                    <svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4 2 7L12 17l-6.5 5 2-7L2 9h7l3-7z" /></svg>
-                    <svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4 2 7L12 17l-6.5 5 2-7L2 9h7l3-7z" /></svg>
-                    <svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4 2 7L12 17l-6.5 5 2-7L2 9h7l3-7z" /></svg>
-                  </span>
-                  <span class="pro-card__score">4.8/5</span>
-                </div>
-                <div class="pro-card__actions">
-                  <button type="button" class="pro-card__btn pro-card__btn--skip">Skip</button>
-                  <button type="button" class="pro-card__btn pro-card__btn--save">Save</button>
-                </div>
-              </article>
-
-              <article class="pro-card" role="listitem">
-                <div class="pro-card__head">
-                  <div class="pro-card__avatar pro-card__avatar--c" aria-hidden="true"></div>
-                  <div class="pro-card__name">Aisha Okonkwo</div>
-                </div>
-                <div class="pro-card__tags">
-                  <span class="pro-card__tag">Anxiety</span>
-                  <span class="pro-card__tag">Family</span>
-                </div>
-                <p class="pro-card__desc">
-                  Peer · Trained peer supporter with lived experience around housing insecurity and family stress. Sliding scale; identity-protected journal-style notes available.
-                </p>
-                <div class="pro-card__rating">
-                  <span class="pro-card__stars" aria-label="5 out of 5 stars">
-                    <svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4 2 7L12 17l-6.5 5 2-7L2 9h7l3-7z" /></svg>
-                    <svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4 2 7L12 17l-6.5 5 2-7L2 9h7l3-7z" /></svg>
-                    <svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4 2 7L12 17l-6.5 5 2-7L2 9h7l3-7z" /></svg>
-                    <svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4 2 7L12 17l-6.5 5 2-7L2 9h7l3-7z" /></svg>
-                    <svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4 2 7L12 17l-6.5 5 2-7L2 9h7l3-7z" /></svg>
-                  </span>
-                  <span class="pro-card__score">5.0/5</span>
-                </div>
-                <div class="pro-card__actions">
-                  <button type="button" class="pro-card__btn pro-card__btn--skip">Skip</button>
-                  <button type="button" class="pro-card__btn pro-card__btn--save">Save</button>
-                </div>
-              </article>
-            </div>
-
-            <div class="chat-feedback">
-              <button type="button" class="chat-feedback__btn" aria-label="Helpful">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3zM7 22H4a2 2 0 01-2-2v-7a2 2 0 012-2h3" />
-                </svg>
-              </button>
-              <button type="button" class="chat-feedback__btn" aria-label="Not helpful">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M10 15v4a3 3 0 003 3l4-9V2H5.72a2 2 0 00-2 1.7l-1.38 9a2 2 0 002 2.3zm7-13h2.67A2.31 2.31 0 0122 4v7a2.31 2.31 0 01-2.33 2H17" />
-                </svg>
-              </button>
-              <p class="chat-feedback__hint">Was this helpful?</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="composer-slot">
-          <div class="composer" role="group" aria-label="Message composer">
-            <div class="composer__tools">
-              <button type="button" class="composer__btn" aria-label="Response options">
-                <svg class="composer__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-                  <line x1="4" y1="21" x2="4" y2="14" />
-                  <line x1="4" y1="10" x2="4" y2="3" />
-                  <line x1="12" y1="21" x2="12" y2="12" />
-                  <line x1="12" y1="8" x2="12" y2="3" />
-                  <line x1="20" y1="21" x2="20" y2="16" />
-                  <line x1="20" y1="12" x2="20" y2="3" />
-                  <circle cx="4" cy="12" r="1.8" fill="currentColor" stroke="none" />
-                  <circle cx="12" cy="10" r="1.8" fill="currentColor" stroke="none" />
-                  <circle cx="20" cy="14" r="1.8" fill="currentColor" stroke="none" />
-                </svg>
-              </button>
-              <button type="button" class="composer__btn" aria-label="Attach file">
-                <svg class="composer__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48" />
-                </svg>
-              </button>
-            </div>
-            <textarea class="composer__input" id="input-chat" rows="2" placeholder="Share what’s on your mind…" aria-label="Message"></textarea>
-            <button type="button" class="composer__btn composer__btn--send" aria-label="Send">
-              <svg class="composer__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" />
-              </svg>
-            </button>
-          </div>
         </div>
       </div>
       </div>
@@ -1645,56 +1222,20 @@
 
   <script>
     (function () {
-      var main = document.getElementById("main");
-      var navHome = document.getElementById("nav-home");
-      var btnNew = document.getElementById("btn-new-chat");
-      var recentList = document.getElementById("recent-list");
-      var topbarTitle = document.getElementById("topbar-title");
-
-      function setView(view, threadAttr) {
-        main.setAttribute("data-view", view);
-        var homeActive = view === "home";
-        navHome.classList.toggle("is-active", homeActive);
-        if (homeActive) {
-          main.removeAttribute("data-thread");
-          topbarTitle.textContent = "";
-          topbarTitle.setAttribute("hidden", "");
-        } else if (threadAttr) {
-          main.setAttribute("data-thread", threadAttr);
-        }
-        var active = main.getAttribute("data-thread") || "";
-        Array.prototype.forEach.call(recentList.querySelectorAll(".sb-recent__btn"), function (btn) {
-          var t = btn.getAttribute("data-thread") || "";
-          btn.classList.toggle("is-current", !homeActive && t === active);
+      var sendHome = document.getElementById("send-home");
+      var inputHome = document.getElementById("input-home");
+      function goChat() {
+        window.location.href = "chat.html";
+      }
+      if (sendHome) sendHome.addEventListener("click", goChat);
+      if (inputHome) {
+        inputHome.addEventListener("keydown", function (e) {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            goChat();
+          }
         });
       }
-
-      function escapeHtml(s) {
-        var d = document.createElement("div");
-        d.textContent = s;
-        return d.innerHTML;
-      }
-
-      navHome.addEventListener("click", function () {
-        setView("home");
-      });
-
-      btnNew.addEventListener("click", function () {
-        setView("home");
-      });
-
-      recentList.addEventListener("click", function (e) {
-        var btn = e.target.closest(".sb-recent__btn");
-        if (!btn) return;
-        var title = btn.getAttribute("data-thread") || "";
-        topbarTitle.removeAttribute("hidden");
-        topbarTitle.innerHTML = escapeHtml(title);
-        document.getElementById("chat-sub").textContent =
-          btn.querySelector(".sb-recent__meta").textContent.trim() + " · Peer support";
-        setView("chat", title);
-      });
-
-      setView("home");
 
       /* —— Sidebar collapse —— */
       var sidebar = document.querySelector('.sidebar');

@@ -8,19 +8,8 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="admin.css">
 <style>
-  /* ── Tab visibility ── */
-  html:has(#amb-tab-active:checked)   .amb-panels #amb-panel-active   { display: block; }
-  html:has(#amb-tab-pending:checked)  .amb-panels #amb-panel-pending  { display: block; }
-  html:has(#amb-tab-inactive:checked) .amb-panels #amb-panel-inactive { display: block; }
-
-  /* ── Active tab label highlight ── */
-  html:has(#amb-tab-active:checked)   label[for="amb-tab-active"],
-  html:has(#amb-tab-pending:checked)  label[for="amb-tab-pending"],
-  html:has(#amb-tab-inactive:checked) label[for="amb-tab-inactive"] {
-    color: var(--adm-blue);
-    border-bottom-color: var(--adm-blue);
-    font-weight: 700;
-  }
+  /* Active list lives on this page; Pending / Inactive are separate HTML files */
+  #amb-panel-active.tab-panel { display: block; }
 
   /* ── Row selection: highlight selected row ── */
   html:has(#as-1:checked)  tr[data-amb="1"],
@@ -167,14 +156,143 @@
   .adp-rating-val { font-size: 28px; font-weight: 900; color: var(--adm-txt-head); line-height: 1; }
   .adp-rating-stars { color: #f59e0b; font-size: 16px; letter-spacing: 2px; }
   .adp-rating-reviews { font-size: 11px; color: var(--adm-txt-muted); margin-top: 2px; }
+
+  /* ── Page hero CTAs (stack on small screens) ── */
+  .ambassadors-hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+  }
+  @media (max-width: 640px) {
+    .ambassadors-hero-actions {
+      flex-direction: column;
+      align-items: stretch;
+      width: 100%;
+    }
+    .ambassadors-hero-actions .btn {
+      flex: 0 0 auto;
+      width: 100%;
+      justify-content: center;
+    }
+  }
+
+  /* ── Detail slide-over: full-width on phones/tablets ── */
+  @media (max-width: 768px) {
+    .amb-detail-overlay {
+      width: 100%;
+      max-width: 100%;
+      transform: translateX(100%);
+    }
+  }
+
+  /* ── Pending applications list ── */
+  .amb-pending-stack {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .amb-app-card {
+    border: 1px solid var(--adm-border);
+    border-radius: var(--adm-r-md);
+    overflow: hidden;
+  }
+  .amb-app-card__head {
+    background: var(--adm-bg);
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--adm-border);
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .amb-app-card__head .user-cell { min-width: 0; flex: 1 1 200px; }
+  .amb-app-card__head .user-sub { overflow-wrap: anywhere; word-break: break-word; }
+  .amb-app-card__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    justify-content: flex-end;
+    flex: 1 1 auto;
+  }
+  @media (max-width: 520px) {
+    .amb-pending-stack { padding: 12px; gap: 12px; }
+    .amb-app-card__head { padding: 12px 14px; }
+    .amb-app-card__actions {
+      width: 100%;
+      justify-content: flex-start;
+    }
+    .amb-app-card__actions .btn { flex: 1 1 calc(50% - 4px); min-width: 0; justify-content: center; }
+  }
+
+  /* ── Data tables ── */
+  .amb-panels .data-table .user-cell { min-width: 0; }
+  .amb-panels .data-table .user-sub {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+  .amb-panels .data-table .capacity-bar { min-width: 0; flex-shrink: 1; }
+  .amb-panels .data-table .star-rating { letter-spacing: 0.5px; }
+
+  @media (max-width: 400px) {
+    .amb-panels .pagination-btns {
+      max-width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      flex-wrap: nowrap;
+      padding-bottom: 6px;
+      justify-content: flex-start;
+    }
+  }
+
+  /* ── Detail panel body ── */
+  @media (max-width: 480px) {
+    .adp-section { padding: 14px 16px; }
+    .adp-head { padding: 18px 16px; padding-right: 48px; }
+    .adp-rating {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    .adp-rating-val { font-size: 24px; }
+    .adp-session-row {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 6px;
+    }
+    .adp-actions-row {
+      flex-direction: column;
+    }
+    .adp-actions-row .btn {
+      flex: none !important;
+      width: 100%;
+    }
+  }
+
+  /* ── Top alert banner ── */
+  .amb-review-alert {
+    margin-bottom: 20px;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .amb-review-alert .alert-body { flex: 1 1 200px; min-width: 0; }
+  .amb-review-alert__cta { margin-left: auto; }
+  @media (max-width: 520px) {
+    .amb-review-alert__cta {
+      width: 100%;
+      margin-left: 0;
+      justify-content: center;
+      text-align: center;
+    }
+    .amb-review-alert button[title="Dismiss"] { margin-left: auto; }
+  }
 </style>
 </head>
 <body>
-
-<!-- Tab state inputs -->
-<input type="radio" name="amb-tabs" id="amb-tab-active"   class="tab-check" checked>
-<input type="radio" name="amb-tabs" id="amb-tab-pending"  class="tab-check">
-<input type="radio" name="amb-tabs" id="amb-tab-inactive" class="tab-check">
 
 <!-- Ambassador selection radio inputs -->
 <input type="radio" name="amb-sel" id="as-1"  class="state-input as-radio">
@@ -258,9 +376,9 @@
           <h1>Ambassadors</h1>
           <p>Manage peer supporters — approvals, performance &amp; caseloads</p>
         </div>
-        <div class="page-hero-actions">
+        <div class="page-hero-actions ambassadors-hero-actions">
           <a href="#" class="btn btn-white">Export CSV</a>
-          <a href="admin-amb-add.html" class="btn btn-primary" style="background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);color:#fff;text-decoration:none;">
+          <a href="admin-amb-add-1.html" class="btn btn-primary" style="background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);color:#fff;text-decoration:none;">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right:5px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add Ambassador
           </a>
         </div>
@@ -275,12 +393,12 @@
       </div>
 
       <!-- Pending approvals banner -->
-      <div class="alert alert-amber" style="margin-bottom:20px;align-items:center;">
+      <div class="alert alert-amber amb-review-alert">
         <span class="alert-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"/><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/></svg></span>
-        <div class="alert-body" style="flex:1;">
+        <div class="alert-body">
           <strong>3 ambassador applications awaiting approval</strong>
         </div>
-        <label for="amb-tab-pending" class="btn btn-sm" style="background:var(--adm-amber);color:#fff;border:none;cursor:pointer;white-space:nowrap;margin-left:auto;">Review now →</label>
+        <a href="admin-ambassadors-pending.html" class="btn btn-sm amb-review-alert__cta" style="background:var(--adm-amber);color:#fff;border:none;cursor:pointer;white-space:nowrap;text-decoration:none;">Review now →</a>
         <button onclick="this.closest('.alert').remove()" style="background:none;border:none;cursor:pointer;color:#92400e;opacity:.6;padding:4px;margin-left:8px;display:flex;align-items:center;" title="Dismiss">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </button>
@@ -288,9 +406,9 @@
 
       <div class="card">
         <div class="tabs-row">
-          <label for="amb-tab-active"  class="tab-lbl">Active <span class="badge badge-green"  style="font-size:10px;padding:1px 7px;">47</span></label>
-          <label for="amb-tab-pending" class="tab-lbl">Pending <span class="badge badge-amber" style="font-size:10px;padding:1px 7px;">3</span></label>
-          <label for="amb-tab-inactive" class="tab-lbl">Inactive <span class="badge badge-slate" style="font-size:10px;padding:1px 7px;">8</span></label>
+          <a href="admin-ambassadors.html" class="tab-lbl is-active" aria-current="page">Active <span class="badge badge-green"  style="font-size:10px;padding:1px 7px;">47</span></a>
+          <a href="admin-ambassadors-pending.html" class="tab-lbl">Pending <span class="badge badge-amber" style="font-size:10px;padding:1px 7px;">3</span></a>
+          <a href="admin-ambassadors-inactive.html" class="tab-lbl">Inactive <span class="badge badge-slate" style="font-size:10px;padding:1px 7px;">8</span></a>
         </div>
 
         <div class="filter-bar">
@@ -459,96 +577,6 @@
             <div class="pagination">
               <span class="pagination-info">Showing 1–10 of 47 active ambassadors</span>
               <div class="pagination-btns"><button class="page-btn">‹</button><button class="page-btn active">1</button><button class="page-btn">2</button><button class="page-btn">3</button><button class="page-btn">5</button><button class="page-btn">›</button></div>
-            </div>
-          </div>
-
-          <!-- ── Pending applications ── -->
-          <div id="amb-panel-pending" class="tab-panel">
-            <div style="padding:20px;display:flex;flex-direction:column;gap:16px;">
-
-              <div style="border:1px solid var(--adm-border);border-radius:var(--adm-r-md);overflow:hidden;">
-                <div style="background:var(--adm-bg);padding:14px 20px;border-bottom:1px solid var(--adm-border);display:flex;align-items:center;justify-content:space-between;">
-                  <div class="user-cell"><div class="user-ava green">JR</div><div><div class="user-name">Jamie Rivera</div><div class="user-sub">Univ. of Manchester · Applied 28 Mar 2026</div></div></div>
-                  <div style="display:flex;gap:8px;align-items:center;">
-                    <span class="badge badge-amber">Awaiting review</span>
-                    <button class="btn btn-primary btn-sm">Approve</button>
-                    <button class="btn btn-danger btn-sm">Decline</button>
-                  </div>
-                </div>
-                <div class="amb-stat-row">
-                  <div><p style="font-size:11px;color:var(--adm-txt-muted);font-weight:700;margin-bottom:4px;">MOTIVATION</p><p style="font-size:13px;color:var(--adm-txt-body);">"I want to support others through the same challenges I faced in first year."</p></div>
-                  <div><p style="font-size:11px;color:var(--adm-txt-muted);font-weight:700;margin-bottom:4px;">SPECIALISMS APPLIED</p><div style="display:flex;gap:4px;flex-wrap:wrap;"><span class="badge badge-blue">Anxiety</span><span class="badge badge-blue">Academic stress</span><span class="badge badge-blue">Loneliness</span></div></div>
-                  <div><p style="font-size:11px;color:var(--adm-txt-muted);font-weight:700;margin-bottom:4px;">AVAILABILITY</p><p style="font-size:13px;color:var(--adm-txt-body);">Mon, Wed, Fri afternoons · 10 h/wk</p></div>
-                </div>
-              </div>
-
-              <div style="border:1px solid var(--adm-border);border-radius:var(--adm-r-md);overflow:hidden;">
-                <div style="background:var(--adm-bg);padding:14px 20px;border-bottom:1px solid var(--adm-border);display:flex;align-items:center;justify-content:space-between;">
-                  <div class="user-cell"><div class="user-ava blue">PL</div><div><div class="user-name">Priya Lal</div><div class="user-sub">UCL · Applied 27 Mar 2026</div></div></div>
-                  <div style="display:flex;gap:8px;align-items:center;"><span class="badge badge-amber">Awaiting review</span><button class="btn btn-primary btn-sm">Approve</button><button class="btn btn-danger btn-sm">Decline</button></div>
-                </div>
-                <div class="amb-stat-row">
-                  <div><p style="font-size:11px;color:var(--adm-txt-muted);font-weight:700;margin-bottom:4px;">MOTIVATION</p><p style="font-size:13px;color:var(--adm-txt-body);">"Completed mental health first aid training and want to give back."</p></div>
-                  <div><p style="font-size:11px;color:var(--adm-txt-muted);font-weight:700;margin-bottom:4px;">SPECIALISMS APPLIED</p><div style="display:flex;gap:4px;flex-wrap:wrap;"><span class="badge badge-teal">CBT</span><span class="badge badge-teal">Grief</span><span class="badge badge-teal">Goal setting</span></div></div>
-                  <div><p style="font-size:11px;color:var(--adm-txt-muted);font-weight:700;margin-bottom:4px;">AVAILABILITY</p><p style="font-size:13px;color:var(--adm-txt-body);">Tue, Thu, Sat mornings · 8 h/wk</p></div>
-                </div>
-              </div>
-
-              <div style="border:1px solid var(--adm-border);border-radius:var(--adm-r-md);overflow:hidden;">
-                <div style="background:var(--adm-bg);padding:14px 20px;border-bottom:1px solid var(--adm-border);display:flex;align-items:center;justify-content:space-between;">
-                  <div class="user-cell"><div class="user-ava amber">TN</div><div><div class="user-name">Thomas Ngu</div><div class="user-sub">King's College London · Applied 26 Mar 2026</div></div></div>
-                  <div style="display:flex;gap:8px;align-items:center;"><span class="badge badge-amber">Awaiting review</span><button class="btn btn-primary btn-sm">Approve</button><button class="btn btn-danger btn-sm">Decline</button></div>
-                </div>
-                <div class="amb-stat-row">
-                  <div><p style="font-size:11px;color:var(--adm-txt-muted);font-weight:700;margin-bottom:4px;">MOTIVATION</p><p style="font-size:13px;color:var(--adm-txt-body);">"Passionate about reducing stigma around men's mental health."</p></div>
-                  <div><p style="font-size:11px;color:var(--adm-txt-muted);font-weight:700;margin-bottom:4px;">SPECIALISMS APPLIED</p><div style="display:flex;gap:4px;flex-wrap:wrap;"><span class="badge badge-purple">Identity</span><span class="badge badge-purple">Social anxiety</span></div></div>
-                  <div><p style="font-size:11px;color:var(--adm-txt-muted);font-weight:700;margin-bottom:4px;">AVAILABILITY</p><p style="font-size:13px;color:var(--adm-txt-body);">Weekends + Wed evenings · 6 h/wk</p></div>
-                </div>
-              </div>
-
-            </div>
-          </div>
-
-          <!-- ── Inactive ── -->
-          <div id="amb-panel-inactive" class="tab-panel">
-            <div class="data-table-wrap">
-              <table class="data-table">
-                <thead><tr><th>Ambassador</th><th>University</th><th>Last active</th><th>Reason</th><th>Sessions total</th><th></th></tr></thead>
-                <tbody>
-                  <tr>
-                    <td><div class="user-cell"><div class="user-ava" style="background:#f1f5f9;color:#94a3b8;">FP</div><div><div class="user-name">Felix Park</div><div class="user-sub">felix.p@manchester.ac.uk</div></div></div></td>
-                    <td style="font-size:12px;">Manchester</td>
-                    <td style="font-size:12px;color:var(--adm-txt-muted);">14 Feb 2026</td>
-                    <td><span class="badge badge-slate">Graduated</span></td>
-                    <td style="font-weight:700;color:var(--adm-txt-head);">87</td>
-                    <td><a href="admin-amb-detail.html" class="row-link">View →</a></td>
-                  </tr>
-                  <tr>
-                    <td><div class="user-cell"><div class="user-ava" style="background:#f1f5f9;color:#94a3b8;">CH</div><div><div class="user-name">Clara Hayes</div><div class="user-sub">c.hayes@ucl.ac.uk</div></div></div></td>
-                    <td style="font-size:12px;">UCL</td>
-                    <td style="font-size:12px;color:var(--adm-txt-muted);">2 Jan 2026</td>
-                    <td><span class="badge badge-slate">On leave</span></td>
-                    <td style="font-weight:700;color:var(--adm-txt-head);">34</td>
-                    <td><a href="admin-amb-detail.html" class="row-link">View →</a></td>
-                  </tr>
-                  <tr>
-                    <td><div class="user-cell"><div class="user-ava" style="background:#f1f5f9;color:#94a3b8;">RK</div><div><div class="user-name">Rina Kobayashi</div><div class="user-sub">r.kobayashi@warwick.ac.uk</div></div></div></td>
-                    <td style="font-size:12px;">Warwick</td>
-                    <td style="font-size:12px;color:var(--adm-txt-muted);">5 Dec 2025</td>
-                    <td><span class="badge badge-slate">Personal reasons</span></td>
-                    <td style="font-weight:700;color:var(--adm-txt-head);">52</td>
-                    <td><a href="admin-amb-detail.html" class="row-link">View →</a></td>
-                  </tr>
-                  <tr>
-                    <td><div class="user-cell"><div class="user-ava" style="background:#f1f5f9;color:#94a3b8;">BM</div><div><div class="user-name">Ben Moore</div><div class="user-sub">b.moore@exeter.ac.uk</div></div></div></td>
-                    <td style="font-size:12px;">Exeter</td>
-                    <td style="font-size:12px;color:var(--adm-txt-muted);">19 Nov 2025</td>
-                    <td><span class="badge badge-slate">Year abroad</span></td>
-                    <td style="font-weight:700;color:var(--adm-txt-head);">23</td>
-                    <td><a href="admin-amb-detail.html" class="row-link">View →</a></td>
-                  </tr>
-                </tbody>
-              </table>
             </div>
           </div>
 
